@@ -115,20 +115,48 @@ for (const [from, cands] of votes) {
   const [to, mods] = ranked[0];
   if (ranked.length > 1 && ranked[1][1].size === mods.size) { ambiguous.push([from, ranked.map((r) => r[0])]); continue; }
   if (!real.has(to)) continue;                       // destination must exist in the target
-  if (mods.size < MIN_MODS) { weak.push([from, to, mods.size]); continue; }
+  // The simple name decides how much evidence is needed, and the first run on real jar pairs showed
+  // exactly why. Every single-source MOVE it held back was correct (GameRules -> gamerules.GameRules,
+  // FogRenderer -> fog.FogRenderer); every single-source RENAME was invented by the one-in-one-out
+  // package heuristic (Tickable -> TextureManager, ConfirmLinkScreen -> GenericMessageScreen). A
+  // preserved simple name plus a verified destination is evidence; a changed one is a guess.
+  const isMove = from.split('.').pop() === to.split('.').pop();
+  if (!isMove && mods.size < MIN_MODS) { weak.push([from, to, mods.size]); continue; }
   kept.push({ fromFqcn: from, toFqcn: to, fromSimple: from.split('.').pop(), toSimple: to.split('.').pop(),
-    verified: true, kind: from.split('.').pop() === to.split('.').pop() ? 'move' : 'rename',
-    source: 'jar-groundtruth', evidence: `${mods.size} independent mods: ${[...mods].slice(0, 3).join(', ')}` });
+    verified: true, kind: isMove ? 'move' : 'rename', ...(isMove ? { chainable: true } : {}),
+    source: 'jar-groundtruth',
+    evidence: `${mods.size} mod${mods.size > 1 ? 's' : ''}: ${[...mods].slice(0, 3).join(', ')}; destination verified` });
 }
 
 console.log(`  usable jar pairs   : ${usable} of ${pairs.length}`);
 console.log(`  candidates         : ${votes.size}`);
-console.log(`  KEPT (>=${MIN_MODS} mods)   : ${kept.length}`);
-console.log(`  too little evidence: ${weak.length}`);
+console.log(`  KEPT               : ${kept.length}  (${kept.filter((k) => k.kind === 'move').length} moves, ${kept.filter((k) => k.kind === 'rename').length} renames)`);
+console.log(`  renames held back  : ${weak.length}  (a rename needs ${MIN_MODS} independent mods)`);
 console.log(`  ambiguous          : ${ambiguous.length}`);
 for (const k of kept.slice(0, 25)) console.log(`    ✓ ${k.fromFqcn}\n        → ${k.toFqcn}   (${k.evidence})`);
 if (weak.length) { console.log(`\n  held back — real but only seen once or twice:`); for (const [f, t, n] of weak.slice(0, 10)) console.log(`    · ${f} → ${t}  (${n})`); }
 
+const BLOCK = `${args.from || 'mined'}->${TO}`;
 const OUT = args.out || `ladder.${TO}.json`;
-fs.writeFileSync(OUT, JSON.stringify({ [`${args.from || 'mined'}->${TO}`]: { renames: kept, advisories: [], deleted: [] } }, null, 1) + '\n');
+fs.writeFileSync(OUT, JSON.stringify({ [BLOCK]: { renames: kept, advisories: [], deleted: [] } }, null, 1) + '\n');
 console.log(`\n  wrote ${OUT}`);
+
+if (!process.argv.includes('--apply')) { console.log(`  --apply folds these into rules.json's "${BLOCK}" block`); process.exit(0); }
+const RULES = path.join(HERE, 'rules.json');
+const data = JSON.parse(fs.readFileSync(RULES, 'utf8'));
+if (!data[BLOCK]) data[BLOCK] = { renames: [], advisories: [], deleted: [] };
+const have = new Map((data[BLOCK].renames || []).map((r) => [r.fromFqcn, r.toFqcn]));
+let added = 0, clash = 0;
+for (const k of kept) {
+  const prev = have.get(k.fromFqcn);
+  if (prev === k.toFqcn) continue;
+  // An existing rule was established some other way; jar evidence does not get to overrule it.
+  if (prev) { console.log(`    ! ${k.fromFqcn} already maps to ${prev}, keeping that`); clash++; continue; }
+  data[BLOCK].renames.push(k); have.set(k.fromFqcn, k.toFqcn); added++;
+}
+const out = JSON.stringify(data, null, 2) + '\n';
+JSON.parse(out);
+fs.copyFileSync(RULES, RULES + '.bak');
+fs.writeFileSync(RULES + '.tmp', out);
+fs.renameSync(RULES + '.tmp', RULES);
+console.log(`  added ${added} rule(s) to "${BLOCK}"${clash ? `, ${clash} left alone` : ''}  (backup: rules.json.bak)`);
