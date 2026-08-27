@@ -43,6 +43,24 @@ export class ClassFile {
     }
   }
 
+  // Every member this class reaches for: (owner, name, descriptor). These are exactly the links the
+  // JVM resolves at runtime, so checking them against the target jars predicts NoClassDefFoundError
+  // and NoSuchMethodError before the game is ever launched.
+  *refs() {
+    const byIndex = new Map(this.entries.map((e) => [e.index, e]));
+    const utf8 = (i) => { const e = byIndex.get(i); return e && e.tag === 1 ? this.buf.toString('latin1', e.start + 3, e.end) : null; };
+    const className = (i) => { const e = byIndex.get(i); return e && e.tag === 7 ? utf8(this.buf.readUInt16BE(e.start + 1)) : null; };
+    for (const e of this.entries) {
+      if (e.tag !== 9 && e.tag !== 10 && e.tag !== 11) continue;
+      const owner = className(this.buf.readUInt16BE(e.start + 1));
+      const nat = byIndex.get(this.buf.readUInt16BE(e.start + 3));
+      if (!owner || !nat || nat.tag !== 12) continue;
+      const name = utf8(this.buf.readUInt16BE(nat.start + 1));
+      const desc = utf8(this.buf.readUInt16BE(nat.start + 3));
+      if (name && desc) yield { kind: e.tag === 9 ? 'field' : 'method', owner, name, desc };
+    }
+  }
+
   // Only entries that are plain printable ASCII are safe to rewrite. Anything else is a string
   // literal with real text in it — possibly modified-UTF8 — and is none of our business.
   static isPlain(s) { return /^[\x20-\x7E]*$/.test(s); }

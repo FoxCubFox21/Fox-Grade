@@ -81,6 +81,12 @@ for (const u of units) for (const e of classesOf(u)) {
 
 // ── rules ────────────────────────────────────────────────────────────────────────────────────
 const data = JSON.parse(fs.readFileSync(path.join(HERE, 'rules.json'), 'utf8'));
+// Intermediary tables are generated per install rather than shipped (they are a join over Mojang's
+// own mappings). Fold in any that have been built — released Fabric mods are unportable without one.
+for (const f of fs.readdirSync(HERE).filter((x) => /^intermediary\.[\d.]+\.json$/.test(x))) {
+  try { for (const [k, v] of Object.entries(JSON.parse(fs.readFileSync(path.join(HERE, f), 'utf8')))) if (!data[k]) data[k] = v; }
+  catch { console.error(`  ! ignoring unreadable ${f}`); }
+}
 const VER = /(\d+)\.(\d+)(?:\.(\d+))?/;
 const verOf = (s) => { const m = String(s).match(VER); return m ? [+m[1], +m[2], +(m[3] || 0)] : null; };
 const cmp = (a, b) => a[0] - b[0] || a[1] - b[1] || a[2] - b[2];

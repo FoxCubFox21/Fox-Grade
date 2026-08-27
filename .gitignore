@@ -8,3 +8,6 @@ accepted-contrib.json
 my-rules.json
 rules.json.bak
 rules.json.tmp
+.cache/
+intermediary.*.json
+ladder.*.json

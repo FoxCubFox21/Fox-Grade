@@ -73,8 +73,26 @@ A rename whose destination isn't in the target jars is **declined**, not written
 two of the three bad names in the run above. The survivor is real ambiguity: `Biomes` maps to two
 classes that both exist in 26.2.
 
-**What this does not prove.** No remapped mod has been launched in-game yet. `javap` proves a class
-is well-formed, not that the port is correct. Renaming also cannot touch a genuine API redesign, and
+**Check it before you launch it.** `jar-verify.mjs` resolves every method and field the jar reaches
+for against the real target jars, walking superclasses the way the JVM does. Each unresolved link is
+a crash waiting on that code path.
+
+```bash
+node jar-verify.mjs ported.jar --classpath "$MC_JARS"
+```
+
+On an unmodified mod built for the target it reports 87/87 links resolved — that control is what
+makes a non-zero count meaningful.
+
+**A worked example, including the part that failed.** AppleSkin 1.21.1 → 26.2: 87.8% of type
+references remapped and all 315 member tokens resolved, but verification found **72 links that would
+still crash**. 26.2 rewrote rendering (`GuiGraphics` is gone, 17 links into it), turned
+`InteractionResult` from an enum into an interface, and changed `ClickEvent`'s constructor. No
+renaming fixes any of that — it is exactly the Tier 2 work described above. The mod is not portable
+by remapping alone, and the tool says so instead of writing a jar that loads and then dies.
+
+**What this does not prove.** No remapped mod has been launched in-game yet. Link resolution and
+`javap` prove a jar is well-formed and internally consistent, not that the port behaves correctly. Renaming also cannot touch a genuine API redesign, and
 a mixin whose target method was deleted needs a new injection point, not a new name — both are
 reported rather than guessed at. Patch jars you own, for yourself; most mod licences don't permit
 redistributing a modified build.
