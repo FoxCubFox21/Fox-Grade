@@ -46,9 +46,41 @@ node fox-grade.mjs ./src --from 1.16.5 --to 26.2 \
 
 Compiles the port, and on failure feeds the true signatures from `javap` back in to fix it.
 
+## Patch a compiled jar, no source needed
+
+```bash
+node jar-remap.mjs mod.jar --from 1.16.5 --to 26.2 --classpath "$MC_JARS"   # report
+node jar-remap.mjs mod.jar --from 1.16.5 --to 26.2 --classpath ... --out new.jar
+```
+
+Class, method and field names don't live in bytecode — they live in the constant pool, and the
+instructions only hold indices into it. So a rename is a **string edit**, and nothing else in the
+file refers to a byte offset. No decompiler, no javac, no ASM, no stack map recomputation, and no
+access to the mod's build environment. It works on jars whose own code was obfuscated by their
+author, because it only touches names that appear in the tables.
+
+Bundled `META-INF/jars/` dependencies are remapped too. Entries it doesn't change keep their
+original compressed bytes, so assets and configs stay bit-identical. The input is never written to.
+
+| Measured | |
+|---|---|
+| Classes parsed across 28 production jars | 13,853 — 0 failures |
+| Remapped classes accepted by `javap` | 260 / 260 |
+| Round-trip recovery vs. known ground truth | 52 / 53 |
+| Names invented that don't exist in the target | 1 |
+
+A rename whose destination isn't in the target jars is **declined**, not written — that alone killed
+two of the three bad names in the run above. The survivor is real ambiguity: `Biomes` maps to two
+classes that both exist in 26.2.
+
+**What this does not prove.** No remapped mod has been launched in-game yet. `javap` proves a class
+is well-formed, not that the port is correct. Renaming also cannot touch a genuine API redesign, and
+a mixin whose target method was deleted needs a new injection point, not a new name — both are
+reported rather than guessed at. Patch jars you own, for yourself; most mod licences don't permit
+redistributing a modified build.
+
 ## What it won't do
 
-- **Rewrite mods you downloaded.** It ports source. A compiled jar with no source is out of scope.
 - **Invent replacements.** When an API was deleted rather than renamed, it says so and explains the
   new pattern instead of guessing a class that compiles but is wrong.
 - **Handle pre-1.14 confidently.** Mojang published no mappings before 1.14.4; coverage drops to ~65%
