@@ -11,35 +11,59 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      # First, before anything else runs on this content.
+      - name: Block secrets
+        run: |
+          # Built from pieces so this line does not match itself — a self-matching scanner
+          # fails every PR and teaches everyone to ignore it.
+          PAT="sk-ant"'-api|gh[porsu]_[A-Za-z0-9]{20,}|xox[baprs]-[A-Za-z0-9-]{10,}'
+          if grep -rlE "$PAT" . --exclude-dir=.git; then
+            echo "::error::a credential appears in this PR"; exit 1
+          fi
+
       - uses: actions/setup-node@v4
         with: { node-version: '20' }
-      - uses: actions/setup-java@v4
-        with: { distribution: 'temurin', java-version: '21' }
 
-      - name: Fetch the target Minecraft jar
-        run: |
-          VER="${MC_VERSION:-1.20.1}"
-          URL=$(curl -sL https://launchermeta.mojang.com/mc/game/version_manifest_v2.json \
-            | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const j=JSON.parse(s);
-                const v=j.versions.find(x=>x.id===process.env.VER)||j.versions[0];console.log(v.url)})')
-          META=$(curl -sL "$URL")
-          echo "$META" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{
-            console.log(JSON.parse(s).downloads.client.url)})' | xargs curl -sL -o client.jar
-          echo "$PWD/client.jar" > /tmp/foxgrade_cp.txt
-          ls -la client.jar
-
-      - name: Re-verify every submitted rule
+      # A rule can only be checked against the jar for the version it produces names for. Checking a
+      # 1.16.5 rule against a 26.2 jar rejects correct rules, so fetch a jar per version claimed.
+      - name: Verify each rule against its own version's jar
         run: |
           shopt -s nullglob
+          FILES=(contrib/*.json)
+          [ ${#FILES[@]} -eq 0 ] && { echo "no contributions in this PR"; exit 0; }
+
+          ALL=$(node contrib-versions.mjs "${FILES[@]}")
+          VERSIONS=$(echo "$ALL" | head -8)
+          echo "versions claimed: $(echo $ALL | tr '\n' ' ')"
+          # A dropped version is not a passed version. Say so, or a capped run reads as full coverage.
+          SKIPPED=$(echo "$ALL" | tail -n +9)
+          [ -n "$SKIPPED" ] && echo "::warning::jar budget is 8 versions; rules for $(echo $SKIPPED | tr '\n' ' ') were NOT checked and stay held"
+          MANIFEST=$(curl -sL https://launchermeta.mojang.com/mc/game/version_manifest_v2.json)
+
           fail=0
-          for f in contrib/*.json; do
-            echo "── $f"
-            node verify-contrib.mjs "$f" --classpath "$(cat /tmp/foxgrade_cp.txt)" || fail=1
+          for VER in $VERSIONS; do
+            URL=$(echo "$MANIFEST" | VER="$VER" node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{
+              const v=JSON.parse(s).versions.find(x=>x.id===process.env.VER);console.log(v?v.url:"")})')
+            if [ -z "$URL" ]; then echo "::warning::no such Minecraft version: $VER — its rules stay held"; continue; fi
+            curl -sL "$URL" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{
+              console.log(JSON.parse(s).downloads.client.url)})' | xargs curl -sL -o "mc-$VER.jar"
+
+            for f in "${FILES[@]}"; do
+              echo "── $f  @  $VER"
+              node verify-contrib.mjs "$f" --classpath "$PWD/mc-$VER.jar" --target "$VER" || fail=1
+            done
+            rm -f "mc-$VER.jar"
           done
           exit $fail
 
-      - name: Block secrets
+      # Runs even when verification failed, so a contributor sees which entries survive
+      # and exactly why the others don't, rather than just a red X.
+      - name: Preview what would land
+        if: always()
         run: |
-          if grep -rlE 'sk-ant-api|gh[porsu]_[A-Za-z0-9]{20,}' . --exclude-dir=.git; then
-            echo "::error::a credential appears in this PR"; exit 1
-          fi
+          shopt -s nullglob
+          for f in contrib/*.json; do
+            echo "── $f"
+            node merge-contrib.mjs "$f" || true
+          done

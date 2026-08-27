@@ -60,6 +60,11 @@ Compiles the port, and on failure feeds the true signatures from `javap` back in
 Every install can contribute what it discovers — see [`contrib/`](contrib/README.md). Submissions carry
 proof, contain only class-name pairs, and are re-verified by CI against the real jars before merging.
 
+Merging is a second gate, not a formality: `merge-contrib.mjs` re-runs every check that depends on the
+current rule set, refuses a batch that disagrees with itself, tags what it lands so it can be reverted
+in one command, and deliberately never re-exports a contributed rule — so one mistake can't come back
+looking like independent corroboration.
+
 ## Licence
 
 MIT — see [LICENSE](LICENSE). Data sources and their terms: [NOTICE.md](NOTICE.md).
