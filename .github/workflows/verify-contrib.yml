@@ -1,0 +1,45 @@
+name: Verify contributed rules
+
+# Community rule submissions are re-verified here against the real Minecraft jars.
+# Nothing is trusted because it was submitted — every claim is re-established from scratch.
+on:
+  pull_request:
+    paths: ['contrib/**.json', 'rules.json']
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - uses: actions/setup-java@v4
+        with: { distribution: 'temurin', java-version: '21' }
+
+      - name: Fetch the target Minecraft jar
+        run: |
+          VER="${MC_VERSION:-1.20.1}"
+          URL=$(curl -sL https://launchermeta.mojang.com/mc/game/version_manifest_v2.json \
+            | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const j=JSON.parse(s);
+                const v=j.versions.find(x=>x.id===process.env.VER)||j.versions[0];console.log(v.url)})')
+          META=$(curl -sL "$URL")
+          echo "$META" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{
+            console.log(JSON.parse(s).downloads.client.url)})' | xargs curl -sL -o client.jar
+          echo "$PWD/client.jar" > /tmp/foxgrade_cp.txt
+          ls -la client.jar
+
+      - name: Re-verify every submitted rule
+        run: |
+          shopt -s nullglob
+          fail=0
+          for f in contrib/*.json; do
+            echo "── $f"
+            node verify-contrib.mjs "$f" --classpath "$(cat /tmp/foxgrade_cp.txt)" || fail=1
+          done
+          exit $fail
+
+      - name: Block secrets
+        run: |
+          if grep -rlE 'sk-ant-api|gh[porsu]_[A-Za-z0-9]{20,}' . --exclude-dir=.git; then
+            echo "::error::a credential appears in this PR"; exit 1
+          fi

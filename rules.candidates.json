@@ -1,0 +1,4939 @@
+{
+ "26.2": {
+  "renames": []
+ },
+ "1.8->1.16": {
+  "renames": []
+ },
+ "1-8final->1-8-9final": {
+  "renames": []
+ },
+ "1-8-9final->1-10-2final": {
+  "renames": []
+ },
+ "1-12-2-final->1-14-4-partial": {
+  "renames": []
+ },
+ "1-15-2-final->1-16-3-final": {
+  "renames": []
+ },
+ "1.12.x->1.14.x": {
+  "renames": []
+ },
+ "1.14.x->1.15.x": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.server.MinecraftServer",
+    "toFqcn": "net.minecraft.util.Util",
+    "fromSimple": "MinecraftServer",
+    "toSimple": "Util",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:TeamTwilight/twilightforest@1.14.x->1.15.x",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "1.15.x->1.16.x": {
+  "renames": []
+ },
+ "1.16.x->1.17.x": {
+  "renames": []
+ },
+ "1.16.5->1.18.2": {
+  "renames": []
+ },
+ "1.18.2->1.19.x": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.world.level.block.Block",
+    "toFqcn": "net.minecraft.util.RandomSource",
+    "fromSimple": "Block",
+    "toSimple": "RandomSource",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:CoFH/CoFHCore@1.18.2->1.19.x",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "1.19.x->1.20.x": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.world.item.ItemStack",
+    "toFqcn": "net.minecraft.world.effect.MobEffectInstance",
+    "fromSimple": "ItemStack",
+    "toSimple": "MobEffectInstance",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:CoFH/CoFHCore@1.19.x->1.20.x",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.entity.player.Player",
+    "toFqcn": "net.minecraft.world.entity.Entity",
+    "fromSimple": "Player",
+    "toSimple": "Entity",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:CoFH/CoFHCore@1.19.x->1.20.x",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "com.mojang.math.Matrix4f",
+    "toFqcn": "net.minecraft.core.registries.BuiltInRegistries",
+    "fromSimple": "Matrix4f",
+    "toSimple": "BuiltInRegistries",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:CoFH/CoFHCore@1.19.x->1.20.x",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.nbt.CompoundTag",
+    "toFqcn": "net.minecraft.util.Mth",
+    "fromSimple": "CompoundTag",
+    "toSimple": "Mth",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:CoFH/CoFHCore@1.19.x->1.20.x",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "1.10.2->1.11.2": {
+  "renames": []
+ },
+ "1.12->1.14.x": {
+  "renames": []
+ },
+ "create:mc1.17/dev->mc1.18/dev": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.util.profiling.ProfilerFiller",
+    "toFqcn": "net.minecraft.server.packs.resources.ResourceManagerReloadListener",
+    "fromSimple": "ProfilerFiller",
+    "toSimple": "ResourceManagerReloadListener",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Creators-of-Create/Create@mc1.17/dev->mc1.18/dev",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.tags.SetTag",
+    "toFqcn": "net.minecraft.tags.TagKey",
+    "fromSimple": "SetTag",
+    "toSimple": "TagKey",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Creators-of-Create/Create@mc1.17/dev->mc1.18/dev",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.level.block.FireBlock",
+    "toFqcn": "net.minecraft.world.level.block.BaseFireBlock",
+    "fromSimple": "FireBlock",
+    "toSimple": "BaseFireBlock",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Creators-of-Create/Create@mc1.17/dev->mc1.18/dev",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.core.BlockPos",
+    "toFqcn": "net.minecraft.world.level.block.entity.BlockEntity",
+    "fromSimple": "BlockPos",
+    "toSimple": "BlockEntity",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Creators-of-Create/Create@mc1.17/dev->mc1.18/dev",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.tags.BlockTags",
+    "toFqcn": "net.minecraft.world.level.block.LayeredCauldronBlock",
+    "fromSimple": "BlockTags",
+    "toSimple": "LayeredCauldronBlock",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Creators-of-Create/Create@mc1.17/dev->mc1.18/dev",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.util.Mth",
+    "toFqcn": "net.minecraft.world.level.block.HorizontalDirectionalBlock",
+    "fromSimple": "Mth",
+    "toSimple": "HorizontalDirectionalBlock",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Creators-of-Create/Create@mc1.17/dev->mc1.18/dev",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.item.crafting.ShapedRecipe",
+    "toFqcn": "net.minecraft.tags.ItemTags",
+    "fromSimple": "ShapedRecipe",
+    "toSimple": "ItemTags",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Creators-of-Create/Create@mc1.17/dev->mc1.18/dev",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.level.TickList",
+    "toFqcn": "net.minecraft.world.ticks.LevelTickAccess",
+    "fromSimple": "TickList",
+    "toSimple": "LevelTickAccess",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Creators-of-Create/Create@mc1.17/dev->mc1.18/dev",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.entity.Entity",
+    "toFqcn": "net.minecraft.world.level.block.Blocks",
+    "fromSimple": "Entity",
+    "toSimple": "Blocks",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Creators-of-Create/Create@mc1.17/dev->mc1.18/dev",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "create:mc1.18/dev->mc1.19/dev": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.world.entity.ai.village.poi.PoiType",
+    "toFqcn": "net.minecraft.world.entity.ai.village.poi.PoiTypes",
+    "fromSimple": "PoiType",
+    "toSimple": "PoiTypes",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Creators-of-Create/Create@mc1.18/dev->mc1.19/dev",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.client.renderer.ItemBlockRenderTypes",
+    "toFqcn": "net.minecraft.util.RandomSource",
+    "fromSimple": "ItemBlockRenderTypes",
+    "toSimple": "RandomSource",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Creators-of-Create/Create@mc1.18/dev->mc1.19/dev",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "create:mc1.19/dev->mc1.19.3/dev": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.server.packs.resources.ResourceManager",
+    "toFqcn": "net.minecraft.server.packs.resources.ResourceProvider",
+    "fromSimple": "ResourceManager",
+    "toSimple": "ResourceProvider",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Creators-of-Create/Create@mc1.19/dev->mc1.19.3/dev",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.level.block.LayeredCauldronBlock",
+    "toFqcn": "net.minecraft.tags.BlockTags",
+    "fromSimple": "LayeredCauldronBlock",
+    "toSimple": "BlockTags",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Creators-of-Create/Create@mc1.19/dev->mc1.19.3/dev",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.util.Mth",
+    "toFqcn": "net.minecraft.core.registries.BuiltInRegistries",
+    "fromSimple": "Mth",
+    "toSimple": "BuiltInRegistries",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Creators-of-Create/Create@mc1.19/dev->mc1.19.3/dev",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "create:mc1.19.3/dev->mc1.20.1/dev": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.world.level.storage.loot.LootContext",
+    "toFqcn": "net.minecraft.world.level.storage.loot.LootParams",
+    "fromSimple": "LootContext",
+    "toSimple": "LootParams",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Creators-of-Create/Create@mc1.19.3/dev->mc1.20.1/dev",
+    "evidence": 2,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.core.BlockPos",
+    "toFqcn": "net.minecraft.client.renderer.LevelRenderer",
+    "fromSimple": "BlockPos",
+    "toSimple": "LevelRenderer",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Creators-of-Create/Create@mc1.19.3/dev->mc1.20.1/dev",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.level.LightLayer",
+    "toFqcn": "net.minecraft.core.BlockPos",
+    "fromSimple": "LightLayer",
+    "toSimple": "BlockPos",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Creators-of-Create/Create@mc1.19.3/dev->mc1.20.1/dev",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.item.context.UseOnContext",
+    "toFqcn": "net.minecraft.world.phys.Vec3",
+    "fromSimple": "UseOnContext",
+    "toSimple": "Vec3",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Creators-of-Create/Create@mc1.19.3/dev->mc1.20.1/dev",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.tags.BlockTags",
+    "toFqcn": "net.minecraft.world.level.block.LayeredCauldronBlock",
+    "fromSimple": "BlockTags",
+    "toSimple": "LayeredCauldronBlock",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Creators-of-Create/Create@mc1.19.3/dev->mc1.20.1/dev",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.level.storage.loot.LootContext.Builder",
+    "toFqcn": "net.minecraft.world.level.storage.loot.LootParams",
+    "fromSimple": "Builder",
+    "toSimple": "LootParams",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Creators-of-Create/Create@mc1.19.3/dev->mc1.20.1/dev",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.sounds.SoundEvents",
+    "toFqcn": "net.minecraft.world.level.block.state.properties.BlockSetType",
+    "fromSimple": "SoundEvents",
+    "toSimple": "BlockSetType",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Creators-of-Create/Create@mc1.19.3/dev->mc1.20.1/dev",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.damagesource.IndirectEntityDamageSource",
+    "toFqcn": "net.minecraft.tags.DamageTypeTags",
+    "fromSimple": "IndirectEntityDamageSource",
+    "toSimple": "DamageTypeTags",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Creators-of-Create/Create@mc1.19.3/dev->mc1.20.1/dev",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "create:mc1.20.1/dev->mc1.21.1/dev": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.world.level.block.GlassBlock",
+    "toFqcn": "net.minecraft.world.level.block.TransparentBlock",
+    "fromSimple": "GlassBlock",
+    "toSimple": "TransparentBlock",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Creators-of-Create/Create@mc1.20.1/dev->mc1.21.1/dev",
+    "evidence": 2,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.core.registries.Registries",
+    "toFqcn": "net.minecraft.core.registries.BuiltInRegistries",
+    "fromSimple": "Registries",
+    "toSimple": "BuiltInRegistries",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Creators-of-Create/Create@mc1.20.1/dev->mc1.21.1/dev",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.phys.AABB",
+    "toFqcn": "net.minecraft.core.HolderLookup",
+    "fromSimple": "AABB",
+    "toSimple": "HolderLookup",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Creators-of-Create/Create@mc1.20.1/dev->mc1.21.1/dev",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.entity.ai.attributes.AttributeInstance",
+    "toFqcn": "net.minecraft.world.entity.ai.attributes.Attributes",
+    "fromSimple": "AttributeInstance",
+    "toSimple": "Attributes",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Creators-of-Create/Create@mc1.20.1/dev->mc1.21.1/dev",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.level.chunk.LevelChunk",
+    "toFqcn": "net.minecraft.core.HolderLookup",
+    "fromSimple": "LevelChunk",
+    "toSimple": "HolderLookup",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Creators-of-Create/Create@mc1.20.1/dev->mc1.21.1/dev",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.level.block.TorchBlock",
+    "toFqcn": "net.minecraft.world.level.block.BaseTorchBlock",
+    "fromSimple": "TorchBlock",
+    "toSimple": "BaseTorchBlock",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Creators-of-Create/Create@mc1.20.1/dev->mc1.21.1/dev",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "Applied-Energistics-2:rv3-1.7.10->rv4-1.10": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.client.particle.EntityFX",
+    "toFqcn": "net.minecraft.client.particle.Particle",
+    "fromSimple": "EntityFX",
+    "toSimple": "Particle",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@rv3-1.7.10->rv4-1.10",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "Applied-Energistics-2:rv5-1.11->rv5-1.12": {
+  "renames": []
+ },
+ "Applied-Energistics-2:rv5-1.12->7.x-1.15": {
+  "renames": []
+ },
+ "Applied-Energistics-2:7.x-1.15->8.1.x-1.16.x": {
+  "renames": []
+ },
+ "Applied-Energistics-2:8.1.x-1.16.x->8.0.x-1.16.1": {
+  "renames": []
+ },
+ "Applied-Energistics-2:8.0.x-1.16.1->fabric/1.17": {
+  "renames": []
+ },
+ "Applied-Energistics-2:fabric/1.17->fabric/1.18.1": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.world.inventory.MenuType",
+    "toFqcn": "net.minecraft.world.entity.player.Player",
+    "fromSimple": "MenuType",
+    "toSimple": "Player",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@fabric/1.17->fabric/1.18.1",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.server.MinecraftServer",
+    "toFqcn": "net.minecraft.server.level.ServerLevel",
+    "fromSimple": "MinecraftServer",
+    "toSimple": "ServerLevel",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@fabric/1.17->fabric/1.18.1",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "com.mojang.authlib.GameProfile",
+    "toFqcn": "net.minecraft.network.chat.Component",
+    "fromSimple": "GameProfile",
+    "toSimple": "Component",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@fabric/1.17->fabric/1.18.1",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "Applied-Energistics-2:fabric/1.18.1->fabric/1.18.2": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.world.item.ItemStack",
+    "toFqcn": "net.minecraft.world.item.crafting.Recipe",
+    "fromSimple": "ItemStack",
+    "toSimple": "Recipe",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@fabric/1.18.1->fabric/1.18.2",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.client.gui.screens.Screen",
+    "toFqcn": "net.minecraft.client.renderer.Rect2i",
+    "fromSimple": "Screen",
+    "toSimple": "Rect2i",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@fabric/1.18.1->fabric/1.18.2",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.level.block.entity.BlockEntity",
+    "toFqcn": "net.minecraft.network.FriendlyByteBuf",
+    "fromSimple": "BlockEntity",
+    "toSimple": "FriendlyByteBuf",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@fabric/1.18.1->fabric/1.18.2",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "Applied-Energistics-2:fabric/1.18.2->1.19-deprecation": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.world.level.biome.Biome",
+    "toFqcn": "net.minecraft.util.RandomSource",
+    "fromSimple": "Biome",
+    "toSimple": "RandomSource",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@fabric/1.18.2->1.19-deprecation",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "Applied-Energistics-2:1.19-deprecation->fabric/1.19.2": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.nbt.CompoundTag",
+    "toFqcn": "net.minecraft.world.item.ItemStack",
+    "fromSimple": "CompoundTag",
+    "toSimple": "ItemStack",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@1.19-deprecation->fabric/1.19.2",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.level.storage.loot.predicates.BonusLevelTableCondition",
+    "toFqcn": "net.minecraft.world.level.storage.loot.entries.TagEntry",
+    "fromSimple": "BonusLevelTableCondition",
+    "toSimple": "TagEntry",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@1.19-deprecation->fabric/1.19.2",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.client.gui.screens.Screen",
+    "toFqcn": "net.minecraft.client.renderer.Rect2i",
+    "fromSimple": "Screen",
+    "toSimple": "Rect2i",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@1.19-deprecation->fabric/1.19.2",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.level.block.entity.BlockEntity",
+    "toFqcn": "net.minecraft.network.FriendlyByteBuf",
+    "fromSimple": "BlockEntity",
+    "toSimple": "FriendlyByteBuf",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@1.19-deprecation->fabric/1.19.2",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "Applied-Energistics-2:fabric/1.19.2->fabric/1.19.3": {
+  "renames": [
+   {
+    "fromFqcn": "com.mojang.math.Vector3f",
+    "toFqcn": "net.minecraft.util.Mth",
+    "fromSimple": "Vector3f",
+    "toSimple": "Mth",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@fabric/1.19.2->fabric/1.19.3",
+    "evidence": 2,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "com.mojang.math.Quaternion",
+    "toFqcn": "net.minecraft.util.Mth",
+    "fromSimple": "Quaternion",
+    "toSimple": "Mth",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@fabric/1.19.2->fabric/1.19.3",
+    "evidence": 2,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "Applied-Energistics-2:fabric/1.19.3->forge/1.19.4": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.world.level.block.state.properties.BooleanProperty",
+    "toFqcn": "net.minecraft.world.level.block.state.properties.EnumProperty",
+    "fromSimple": "BooleanProperty",
+    "toSimple": "EnumProperty",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@fabric/1.19.3->forge/1.19.4",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.flag.FeatureFlagSet",
+    "toFqcn": "net.minecraft.network.chat.Component",
+    "fromSimple": "FeatureFlagSet",
+    "toSimple": "Component",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@fabric/1.19.3->forge/1.19.4",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.level.chunk.LevelChunk",
+    "toFqcn": "net.minecraft.world.level.chunk.ChunkAccess",
+    "fromSimple": "LevelChunk",
+    "toSimple": "ChunkAccess",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@fabric/1.19.3->forge/1.19.4",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "Applied-Energistics-2:forge/1.19.4->fabric/1.20.1": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.world.level.storage.loot.LootContext",
+    "toFqcn": "net.minecraft.world.level.storage.loot.LootParams",
+    "fromSimple": "LootContext",
+    "toSimple": "LootParams",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@forge/1.19.4->fabric/1.20.1",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.nbt.CompoundTag",
+    "toFqcn": "net.minecraft.nbt.Tag",
+    "fromSimple": "CompoundTag",
+    "toSimple": "Tag",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@forge/1.19.4->fabric/1.20.1",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.server.level.ChunkHolder",
+    "toFqcn": "net.minecraft.server.level.FullChunkStatus",
+    "fromSimple": "ChunkHolder",
+    "toSimple": "FullChunkStatus",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@forge/1.19.4->fabric/1.20.1",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.item.Item.Properties",
+    "toFqcn": "net.minecraft.world.inventory.TransientCraftingContainer",
+    "fromSimple": "Properties",
+    "toSimple": "TransientCraftingContainer",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@forge/1.19.4->fabric/1.20.1",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.data.recipes.LegacyUpgradeRecipeBuilder",
+    "toFqcn": "net.minecraft.data.recipes.SmithingTransformRecipeBuilder",
+    "fromSimple": "LegacyUpgradeRecipeBuilder",
+    "toSimple": "SmithingTransformRecipeBuilder",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@forge/1.19.4->fabric/1.20.1",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.level.chunk.ChunkAccess",
+    "toFqcn": "net.minecraft.world.level.chunk.LevelChunk",
+    "fromSimple": "ChunkAccess",
+    "toSimple": "LevelChunk",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@forge/1.19.4->fabric/1.20.1",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.level.block.entity.SignBlockEntity",
+    "toFqcn": "net.minecraft.world.level.block.entity.SignText",
+    "fromSimple": "SignBlockEntity",
+    "toSimple": "SignText",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@forge/1.19.4->fabric/1.20.1",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "Applied-Energistics-2:fabric/1.20.1->1.20.4": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.world.level.block.state.BlockBehaviour",
+    "toFqcn": "net.minecraft.world.entity.Entity",
+    "fromSimple": "BlockBehaviour",
+    "toSimple": "Entity",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@fabric/1.20.1->1.20.4",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.inventory.AbstractContainerMenu",
+    "toFqcn": "net.minecraft.network.chat.Component",
+    "fromSimple": "AbstractContainerMenu",
+    "toSimple": "Component",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@fabric/1.20.1->1.20.4",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.client.gui.screens.inventory.AbstractContainerScreen",
+    "toFqcn": "net.minecraft.world.item.crafting.RecipeHolder",
+    "fromSimple": "AbstractContainerScreen",
+    "toSimple": "RecipeHolder",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@fabric/1.20.1->1.20.4",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.level.chunk.LevelChunk",
+    "toFqcn": "net.minecraft.world.level.chunk.ChunkAccess",
+    "fromSimple": "LevelChunk",
+    "toSimple": "ChunkAccess",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@fabric/1.20.1->1.20.4",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.item.ItemStack",
+    "toFqcn": "net.minecraft.world.level.material.Fluid",
+    "fromSimple": "ItemStack",
+    "toSimple": "Fluid",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@fabric/1.20.1->1.20.4",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "Applied-Energistics-2:1.20.4->1.21.1": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.world.item.Items",
+    "toFqcn": "net.minecraft.world.item.crafting.SmithingRecipeInput",
+    "fromSimple": "Items",
+    "toSimple": "SmithingRecipeInput",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@1.20.4->1.21.1",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "com.mojang.logging.LogUtils",
+    "toFqcn": "net.minecraft.core.HolderLookup",
+    "fromSimple": "LogUtils",
+    "toSimple": "HolderLookup",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@1.20.4->1.21.1",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.core.registries.BuiltInRegistries",
+    "toFqcn": "net.minecraft.world.level.storage.loot.LootTable",
+    "fromSimple": "BuiltInRegistries",
+    "toSimple": "LootTable",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@1.20.4->1.21.1",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.SimpleContainer",
+    "toFqcn": "net.minecraft.world.item.crafting.SingleRecipeInput",
+    "fromSimple": "SimpleContainer",
+    "toSimple": "SingleRecipeInput",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@1.20.4->1.21.1",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.nbt.StringTag",
+    "toFqcn": "net.minecraft.core.component.DataComponents",
+    "fromSimple": "StringTag",
+    "toSimple": "DataComponents",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@1.20.4->1.21.1",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "Applied-Energistics-2:1.21.1->1.21.4": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.world.level.block.state.properties.DirectionProperty",
+    "toFqcn": "net.minecraft.world.level.block.state.properties.EnumProperty",
+    "fromSimple": "DirectionProperty",
+    "toSimple": "EnumProperty",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@1.21.1->1.21.4",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.util.Mth",
+    "toFqcn": "net.minecraft.util.ARGB",
+    "fromSimple": "Mth",
+    "toSimple": "ARGB",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@1.21.1->1.21.4",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.item.Tiers",
+    "toFqcn": "net.minecraft.world.item.ToolMaterial",
+    "fromSimple": "Tiers",
+    "toSimple": "ToolMaterial",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@1.21.1->1.21.4",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.level.chunk.storage.ChunkSerializer",
+    "toFqcn": "net.minecraft.world.level.chunk.storage.SerializableChunkData",
+    "fromSimple": "ChunkSerializer",
+    "toSimple": "SerializableChunkData",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@1.21.1->1.21.4",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.entity.MobSpawnType",
+    "toFqcn": "net.minecraft.world.entity.EntitySpawnReason",
+    "fromSimple": "MobSpawnType",
+    "toSimple": "EntitySpawnReason",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@1.21.1->1.21.4",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.level.portal.DimensionTransition",
+    "toFqcn": "net.minecraft.world.level.portal.TeleportTransition",
+    "fromSimple": "DimensionTransition",
+    "toSimple": "TeleportTransition",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@1.21.1->1.21.4",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "Applied-Energistics-2:1.21.4->1.21.5": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.world.item.Item.Properties",
+    "toFqcn": "net.minecraft.world.item.component.TooltipDisplay",
+    "fromSimple": "Properties",
+    "toSimple": "TooltipDisplay",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@1.21.4->1.21.5",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.level.saveddata.SavedData",
+    "toFqcn": "net.minecraft.world.level.saveddata.SavedDataType",
+    "fromSimple": "SavedData",
+    "toSimple": "SavedDataType",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@1.21.4->1.21.5",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.item.component.Unbreakable",
+    "toFqcn": "net.minecraft.util.Unit",
+    "fromSimple": "Unbreakable",
+    "toSimple": "Unit",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@1.21.4->1.21.5",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.data.recipes.RecipeBuilder",
+    "toFqcn": "net.minecraft.world.item.component.TooltipDisplay",
+    "fromSimple": "RecipeBuilder",
+    "toSimple": "TooltipDisplay",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@1.21.4->1.21.5",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "Applied-Energistics-2:1.21.5->1.21.8": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.core.HolderLookup",
+    "toFqcn": "net.minecraft.network.chat.ComponentSerialization",
+    "fromSimple": "HolderLookup",
+    "toSimple": "ComponentSerialization",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@1.21.5->1.21.8",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "Applied-Energistics-2:1.21.8->1.21.9": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.client.gui.screens.inventory.AbstractContainerScreen",
+    "toFqcn": "net.minecraft.client.Minecraft",
+    "fromSimple": "AbstractContainerScreen",
+    "toSimple": "Minecraft",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@1.21.8->1.21.9",
+    "evidence": 2,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.client.particle.TextureSheetParticle",
+    "toFqcn": "net.minecraft.client.renderer.texture.TextureAtlasSprite",
+    "fromSimple": "TextureSheetParticle",
+    "toSimple": "TextureAtlasSprite",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@1.21.8->1.21.9",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "Applied-Energistics-2:1.21.9->1.21.10": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.client.Camera",
+    "toFqcn": "net.minecraft.util.ARGB",
+    "fromSimple": "Camera",
+    "toSimple": "ARGB",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@1.21.9->1.21.10",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.item.ItemStack",
+    "toFqcn": "net.minecraft.world.item.Item",
+    "fromSimple": "ItemStack",
+    "toSimple": "Item",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:AppliedEnergistics/Applied-Energistics-2@1.21.9->1.21.10",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "Applied-Energistics-2:1.21.10->1.21.11": {
+  "renames": []
+ },
+ "ImmersiveEngineering:1.7.10->1.8.9": {
+  "renames": []
+ },
+ "ImmersiveEngineering:1.8.9->1.9.4": {
+  "renames": []
+ },
+ "ImmersiveEngineering:1.9.4->1.10.2": {
+  "renames": []
+ },
+ "ImmersiveEngineering:1.10.2->1.11.2": {
+  "renames": []
+ },
+ "ImmersiveEngineering:1.11.2->1.13pre": {
+  "renames": []
+ },
+ "ImmersiveEngineering:1.13pre->1.14": {
+  "renames": []
+ },
+ "ImmersiveEngineering:1.14->1.15": {
+  "renames": []
+ },
+ "ImmersiveEngineering:1.15->1.16": {
+  "renames": []
+ },
+ "ImmersiveEngineering:1.16->1.16.3": {
+  "renames": []
+ },
+ "ImmersiveEngineering:1.16.3->1.16.4": {
+  "renames": []
+ },
+ "ImmersiveEngineering:1.16.4->1.16.5": {
+  "renames": []
+ },
+ "ImmersiveEngineering:1.16.5->1.17.1": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.world.level.block.state.properties.Property",
+    "toFqcn": "net.minecraft.world.level.block.state.properties.BooleanProperty",
+    "fromSimple": "Property",
+    "toSimple": "BooleanProperty",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:BluSunrize/ImmersiveEngineering@1.16.5->1.17.1",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.core.NonNullList",
+    "toFqcn": "net.minecraft.core.Registry",
+    "fromSimple": "NonNullList",
+    "toSimple": "Registry",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:BluSunrize/ImmersiveEngineering@1.16.5->1.17.1",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "com.mojang.math.Matrix4f",
+    "toFqcn": "com.mojang.blaze3d.systems.RenderSystem",
+    "fromSimple": "Matrix4f",
+    "toSimple": "RenderSystem",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:BluSunrize/ImmersiveEngineering@1.16.5->1.17.1",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "com.mojang.blaze3d.platform.Lighting",
+    "toFqcn": "net.minecraft.client.renderer.Rect2i",
+    "fromSimple": "Lighting",
+    "toSimple": "Rect2i",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:BluSunrize/ImmersiveEngineering@1.16.5->1.17.1",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.server.level.ColumnPos",
+    "toFqcn": "net.minecraft.nbt.Tag",
+    "fromSimple": "ColumnPos",
+    "toSimple": "Tag",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:BluSunrize/ImmersiveEngineering@1.16.5->1.17.1",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.core.BlockPos",
+    "toFqcn": "net.minecraft.core.Vec3i",
+    "fromSimple": "BlockPos",
+    "toSimple": "Vec3i",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:BluSunrize/ImmersiveEngineering@1.16.5->1.17.1",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "ImmersiveEngineering:1.17.1->1.18": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.world.level.levelgen.synth.SurfaceNoise",
+    "toFqcn": "net.minecraft.world.level.levelgen.synth.PerlinSimplexNoise",
+    "fromSimple": "SurfaceNoise",
+    "toSimple": "PerlinSimplexNoise",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:BluSunrize/ImmersiveEngineering@1.17.1->1.18",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.item.crafting.CraftingRecipe",
+    "toFqcn": "net.minecraft.world.inventory.CraftingContainer",
+    "fromSimple": "CraftingRecipe",
+    "toSimple": "CraftingContainer",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:BluSunrize/ImmersiveEngineering@1.17.1->1.18",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "ImmersiveEngineering:1.18->1.18.1": {
+  "renames": []
+ },
+ "ImmersiveEngineering:1.18.1->1.18.2": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.tags.ItemTags",
+    "toFqcn": "net.minecraft.tags.TagKey",
+    "fromSimple": "ItemTags",
+    "toSimple": "TagKey",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:BluSunrize/ImmersiveEngineering@1.18.1->1.18.2",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.core.NonNullList",
+    "toFqcn": "com.mojang.datafixers.util.Pair",
+    "fromSimple": "NonNullList",
+    "toSimple": "Pair",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:BluSunrize/ImmersiveEngineering@1.18.1->1.18.2",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.nbt.CompoundTag",
+    "toFqcn": "net.minecraft.world.level.material.Fluids",
+    "fromSimple": "CompoundTag",
+    "toSimple": "Fluids",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:BluSunrize/ImmersiveEngineering@1.18.1->1.18.2",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "ImmersiveEngineering:1.18.2->1.19": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.world.item.crafting.RecipeType",
+    "toFqcn": "net.minecraft.world.item.crafting.Recipe",
+    "fromSimple": "RecipeType",
+    "toSimple": "Recipe",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:BluSunrize/ImmersiveEngineering@1.18.2->1.19",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "com.mojang.blaze3d.vertex.VertexFormatElement.Type",
+    "toFqcn": "net.minecraft.world.phys.Vec3",
+    "fromSimple": "Type",
+    "toSimple": "Vec3",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:BluSunrize/ImmersiveEngineering@1.18.2->1.19",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.nbt.ListTag",
+    "toFqcn": "net.minecraft.world.item.enchantment.Enchantment",
+    "fromSimple": "ListTag",
+    "toSimple": "Enchantment",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:BluSunrize/ImmersiveEngineering@1.18.2->1.19",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.level.block.state.BlockBehaviour",
+    "toFqcn": "net.minecraft.core.Registry",
+    "fromSimple": "BlockBehaviour",
+    "toSimple": "Registry",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:BluSunrize/ImmersiveEngineering@1.18.2->1.19",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.level.block.entity.BannerPattern",
+    "toFqcn": "net.minecraft.core.Registry",
+    "fromSimple": "BannerPattern",
+    "toSimple": "Registry",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:BluSunrize/ImmersiveEngineering@1.18.2->1.19",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.client.resources.language.I18n",
+    "toFqcn": "net.minecraft.util.RandomSource",
+    "fromSimple": "I18n",
+    "toSimple": "RandomSource",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:BluSunrize/ImmersiveEngineering@1.18.2->1.19",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "ImmersiveEngineering:1.19.1->1.19.2": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.network.syncher.EntityDataSerializers",
+    "toFqcn": "net.minecraft.world.entity.player.Player",
+    "fromSimple": "EntityDataSerializers",
+    "toSimple": "Player",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:BluSunrize/ImmersiveEngineering@1.19.1->1.19.2",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "com.mojang.datafixers.util.Function3",
+    "toFqcn": "net.minecraft.world.item.context.BlockPlaceContext",
+    "fromSimple": "Function3",
+    "toSimple": "BlockPlaceContext",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:BluSunrize/ImmersiveEngineering@1.19.1->1.19.2",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.phys.HitResult",
+    "toFqcn": "net.minecraft.world.damagesource.DamageSource",
+    "fromSimple": "HitResult",
+    "toSimple": "DamageSource",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:BluSunrize/ImmersiveEngineering@1.19.1->1.19.2",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "ImmersiveEngineering:1.19.2->1.19.3": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.server.MinecraftServer",
+    "toFqcn": "net.minecraft.server.level.ServerLevel",
+    "fromSimple": "MinecraftServer",
+    "toSimple": "ServerLevel",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:BluSunrize/ImmersiveEngineering@1.19.2->1.19.3",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "com.mojang.math.Matrix4f",
+    "toFqcn": "net.minecraft.core.registries.Registries",
+    "fromSimple": "Matrix4f",
+    "toSimple": "Registries",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:BluSunrize/ImmersiveEngineering@1.19.2->1.19.3",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "ImmersiveEngineering:1.19.3->1.19.4": {
+  "renames": []
+ },
+ "ImmersiveEngineering:1.19.4->1.20.1": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.world.level.storage.loot.LootContext.Builder",
+    "toFqcn": "net.minecraft.world.level.storage.loot.LootParams",
+    "fromSimple": "Builder",
+    "toSimple": "LootParams",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:BluSunrize/ImmersiveEngineering@1.19.4->1.20.1",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.level.block.SimpleWaterloggedBlock",
+    "toFqcn": "net.minecraft.world.level.block.LiquidBlockContainer",
+    "fromSimple": "SimpleWaterloggedBlock",
+    "toSimple": "LiquidBlockContainer",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:BluSunrize/ImmersiveEngineering@1.19.4->1.20.1",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.level.storage.loot.LootContext",
+    "toFqcn": "net.minecraft.world.level.storage.loot.LootParams",
+    "fromSimple": "LootContext",
+    "toSimple": "LootParams",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:BluSunrize/ImmersiveEngineering@1.19.4->1.20.1",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.server.level.ChunkHolder",
+    "toFqcn": "net.minecraft.server.level.FullChunkStatus",
+    "fromSimple": "ChunkHolder",
+    "toSimple": "FullChunkStatus",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:BluSunrize/ImmersiveEngineering@1.19.4->1.20.1",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "ImmersiveEngineering:1.20.1->1.20.4": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.world.level.block.Block",
+    "toFqcn": "net.minecraft.core.Holder",
+    "fromSimple": "Block",
+    "toSimple": "Holder",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:BluSunrize/ImmersiveEngineering@1.20.1->1.20.4",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "ImmersiveEngineering:1.20.4->1.21.1": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.world.level.Level",
+    "toFqcn": "net.minecraft.core.component.DataComponents",
+    "fromSimple": "Level",
+    "toSimple": "DataComponents",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:BluSunrize/ImmersiveEngineering@1.20.4->1.21.1",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.core.Holder",
+    "toFqcn": "net.minecraft.resources.ResourceKey",
+    "fromSimple": "Holder",
+    "toSimple": "ResourceKey",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:BluSunrize/ImmersiveEngineering@1.20.4->1.21.1",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.item.enchantment.ProtectionEnchantment",
+    "toFqcn": "net.minecraft.world.entity.ai.attributes.Attributes",
+    "fromSimple": "ProtectionEnchantment",
+    "toSimple": "Attributes",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:BluSunrize/ImmersiveEngineering@1.20.4->1.21.1",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "JustEnoughItems:1.8.9->1.9": {
+  "renames": []
+ },
+ "JustEnoughItems:1.9->1.10": {
+  "renames": []
+ },
+ "JustEnoughItems:1.10->1.11": {
+  "renames": []
+ },
+ "JustEnoughItems:1.11->1.12-FG3": {
+  "renames": []
+ },
+ "JustEnoughItems:1.12-FG3->1.13": {
+  "renames": []
+ },
+ "JustEnoughItems:1.13->1.14": {
+  "renames": []
+ },
+ "JustEnoughItems:1.14->1.15": {
+  "renames": []
+ },
+ "JustEnoughItems:1.15->1.16": {
+  "renames": []
+ },
+ "JustEnoughItems:1.16->1.17": {
+  "renames": []
+ },
+ "refinedstorage:support/1.6.x->support/1.7.x": {
+  "renames": []
+ },
+ "refinedstorage:support/1.7.x->support/1.8.x": {
+  "renames": []
+ },
+ "refinedstorage:support/1.8.x->support/1.9.x": {
+  "renames": []
+ },
+ "refinedstorage:support/1.9.x->release/1.9.2-beta.2": {
+  "renames": []
+ },
+ "refinedstorage:release/1.9.2-beta.2->support/1.10.x": {
+  "renames": []
+ },
+ "Botania:1.7.10-final->1.10-final": {
+  "renames": []
+ },
+ "Botania:1.10-final->1.11": {
+  "renames": []
+ },
+ "Botania:1.11->1.12-final": {
+  "renames": []
+ },
+ "Botania:1.12-final->1.14-final": {
+  "renames": []
+ },
+ "Botania:1.14-final->1.16.x-forge": {
+  "renames": [
+   {
+    "fromFqcn": "com.mojang.blaze3d.platform.GLX",
+    "toFqcn": "com.mojang.blaze3d.systems.RenderSystem",
+    "fromSimple": "GLX",
+    "toSimple": "RenderSystem",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:VazkiiMods/Botania@1.14-final->1.16.x-forge",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "Botania:1.16.x-forge->1.17.x-fabric": {
+  "renames": []
+ },
+ "RoughlyEnoughItems:legacy/3.x-1.14->legacy/3.x-1.15": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.client.render.GuiLighting",
+    "toFqcn": "com.mojang.blaze3d.systems.RenderSystem",
+    "fromSimple": "GuiLighting",
+    "toSimple": "RenderSystem",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:shedaniel/RoughlyEnoughItems@legacy/3.x-1.14->legacy/3.x-1.15",
+    "evidence": 2,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "ModMenu:1.15.2->1.16.1": {
+  "renames": []
+ },
+ "ModMenu:1.17.1->1.18.2": {
+  "renames": []
+ },
+ "ModMenu:1.18.2->1.19.0": {
+  "renames": []
+ },
+ "ModMenu:1.19.3->1.19.4": {
+  "renames": []
+ },
+ "ModMenu:1.19.4->1.20.1": {
+  "renames": []
+ },
+ "Jade:1.17-fabric->1.18": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.ChatFormatting",
+    "toFqcn": "net.minecraft.client.gui.Font",
+    "fromSimple": "ChatFormatting",
+    "toSimple": "Font",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Snownee/Jade@1.17-fabric->1.18",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "Jade:1.18->1.18.2-fabric": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.world.level.material.Fluid",
+    "toFqcn": "net.minecraft.world.level.block.Blocks",
+    "fromSimple": "Fluid",
+    "toSimple": "Blocks",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Snownee/Jade@1.18->1.18.2-fabric",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "Jade:1.18.2-fabric->1.19-fabric": {
+  "renames": []
+ },
+ "Jade:1.19-fabric->1.19.1-fabric": {
+  "renames": []
+ },
+ "Jade:1.19.1-fabric->1.19.3-fabric": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.client.gui.Font",
+    "toFqcn": "net.minecraft.ChatFormatting",
+    "fromSimple": "Font",
+    "toSimple": "ChatFormatting",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Snownee/Jade@1.19.1-fabric->1.19.3-fabric",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "com.mojang.math.Matrix4f",
+    "toFqcn": "net.minecraft.util.FormattedCharSequence",
+    "fromSimple": "Matrix4f",
+    "toSimple": "FormattedCharSequence",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Snownee/Jade@1.19.1-fabric->1.19.3-fabric",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "Jade:1.19.3-fabric->1.19.4-fabric": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.world.entity.animal.horse.AbstractChestedHorse",
+    "toFqcn": "net.minecraft.world.entity.animal.camel.Camel",
+    "fromSimple": "AbstractChestedHorse",
+    "toSimple": "Camel",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Snownee/Jade@1.19.3-fabric->1.19.4-fabric",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "Jade:1.19.4-fabric->1.20-fabric": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.world.level.Level",
+    "toFqcn": "net.minecraft.nbt.CompoundTag",
+    "fromSimple": "Level",
+    "toSimple": "CompoundTag",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Snownee/Jade@1.19.4-fabric->1.20-fabric",
+    "evidence": 2,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.client.gui.components.Button",
+    "toFqcn": "net.minecraft.network.chat.MutableComponent",
+    "fromSimple": "Button",
+    "toSimple": "MutableComponent",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Snownee/Jade@1.19.4-fabric->1.20-fabric",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "Jade:1.20-fabric->1.20.2-fabric": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.core.registries.BuiltInRegistries",
+    "toFqcn": "net.minecraft.client.Minecraft",
+    "fromSimple": "BuiltInRegistries",
+    "toSimple": "Minecraft",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Snownee/Jade@1.20-fabric->1.20.2-fabric",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "Jade:1.20.2-fabric->1.20.3-fabric": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity",
+    "toFqcn": "net.minecraft.world.RandomizableContainer",
+    "fromSimple": "RandomizableContainerBlockEntity",
+    "toSimple": "RandomizableContainer",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Snownee/Jade@1.20.2-fabric->1.20.3-fabric",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "Jade:1.20.3-fabric->1.20.5-fabric": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.nbt.NbtUtils",
+    "toFqcn": "net.minecraft.world.item.Item",
+    "fromSimple": "NbtUtils",
+    "toSimple": "Item",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Snownee/Jade@1.20.3-fabric->1.20.5-fabric",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "com.mojang.authlib.GameProfile",
+    "toFqcn": "net.minecraft.world.item.component.ResolvableProfile",
+    "fromSimple": "GameProfile",
+    "toSimple": "ResolvableProfile",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Snownee/Jade@1.20.3-fabric->1.20.5-fabric",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "com.mojang.brigadier.CommandDispatcher",
+    "toFqcn": "com.mojang.brigadier.builder.LiteralArgumentBuilder",
+    "fromSimple": "CommandDispatcher",
+    "toSimple": "LiteralArgumentBuilder",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Snownee/Jade@1.20.3-fabric->1.20.5-fabric",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.SharedConstants",
+    "toFqcn": "net.minecraft.util.StringUtil",
+    "fromSimple": "SharedConstants",
+    "toSimple": "StringUtil",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Snownee/Jade@1.20.3-fabric->1.20.5-fabric",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "Jade:1.20.5-fabric->1.21-fabric": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.tags.BlockTags",
+    "toFqcn": "net.minecraft.world.level.block.Block",
+    "fromSimple": "BlockTags",
+    "toSimple": "Block",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Snownee/Jade@1.20.5-fabric->1.21-fabric",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "Jade:1.21-fabric->1.21.2-fabric": {
+  "renames": []
+ },
+ "Jade:1.21.4-fabric->1.21.5-fabric": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.world.item.enchantment.ItemEnchantments",
+    "toFqcn": "net.minecraft.world.item.component.TooltipDisplay",
+    "fromSimple": "ItemEnchantments",
+    "toSimple": "TooltipDisplay",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Snownee/Jade@1.21.4-fabric->1.21.5-fabric",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "com.mojang.datafixers.util.Pair",
+    "toFqcn": "net.minecraft.core.component.DataComponentType",
+    "fromSimple": "Pair",
+    "toSimple": "DataComponentType",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Snownee/Jade@1.21.4-fabric->1.21.5-fabric",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "com.mojang.text2speech.Narrator",
+    "toFqcn": "net.minecraft.client.GameNarrator",
+    "fromSimple": "Narrator",
+    "toSimple": "GameNarrator",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Snownee/Jade@1.21.4-fabric->1.21.5-fabric",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "Jade:1.21.5-fabric->1.21.6-fabric": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.client.resources.language.I18n",
+    "toFqcn": "net.minecraft.network.chat.Component",
+    "fromSimple": "I18n",
+    "toSimple": "Component",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Snownee/Jade@1.21.5-fabric->1.21.6-fabric",
+    "evidence": 2,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.level.block.entity.trialspawner.TrialSpawnerData",
+    "toFqcn": "net.minecraft.world.level.block.entity.trialspawner.TrialSpawnerStateData",
+    "fromSimple": "TrialSpawnerData",
+    "toSimple": "TrialSpawnerStateData",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Snownee/Jade@1.21.5-fabric->1.21.6-fabric",
+    "evidence": 2,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "net.minecraft.world.level.block.BushBlock",
+    "toFqcn": "net.minecraft.world.level.block.NetherWartBlock",
+    "fromSimple": "BushBlock",
+    "toSimple": "NetherWartBlock",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Snownee/Jade@1.21.5-fabric->1.21.6-fabric",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "Jade:1.21.6-fabric->1.21.9-fabric": {
+  "renames": [
+   {
+    "fromFqcn": "net.minecraft.client.gui.components.events.GuiEventListener",
+    "toFqcn": "net.minecraft.client.input.MouseButtonEvent",
+    "fromSimple": "GuiEventListener",
+    "toSimple": "MouseButtonEvent",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Snownee/Jade@1.21.6-fabric->1.21.9-fabric",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   },
+   {
+    "fromFqcn": "com.mojang.blaze3d.font.GlyphInfo",
+    "toFqcn": "net.minecraft.client.gui.font.glyphs.BakedGlyph",
+    "fromSimple": "GlyphInfo",
+    "toSimple": "BakedGlyph",
+    "verified": true,
+    "chainable": true,
+    "source": "wild:Snownee/Jade@1.21.6-fabric->1.21.9-fabric",
+    "evidence": 1,
+    "note": "mined from a real human-shipped port (unanimous across files)",
+    "kind": "rename",
+    "rejected": "single-source 1:1 inference — unverified"
+   }
+  ]
+ },
+ "matcher:1.12.2->1.14.4": {
+  "note": "STRUCTURAL MATCHER OUTPUT — ~70% accurate on anchors. NOT trusted, NOT applied. Use as ranked candidates for AI/human verification only.",
+  "renames": [
+   {
+    "fromObf": "aad",
+    "toObf": "arn",
+    "score": 1.25,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "aan",
+    "toObf": "asa",
+    "score": 1.25,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "abc",
+    "toObf": "aso",
+    "score": 1.25,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "axf",
+    "toObf": "bwl",
+    "score": 1.25,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "axh",
+    "toObf": "bwr",
+    "score": 1.25,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "axi",
+    "toObf": "bwt",
+    "score": 1.25,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "biz",
+    "toObf": "czh",
+    "score": 1.25,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bjq",
+    "toObf": "czv",
+    "score": 1.25,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bjw",
+    "toObf": "dah",
+    "score": 1.25,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "blt",
+    "toObf": "dcr",
+    "score": 1.25,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "byu",
+    "toObf": "drk",
+    "score": 1.25,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "byz",
+    "toObf": "drt",
+    "score": 1.25,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bza",
+    "toObf": "drv",
+    "score": 1.25,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bzj",
+    "toObf": "dse",
+    "score": 1.25,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bzy",
+    "toObf": "dsx",
+    "score": 1.25,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cal",
+    "toObf": "dtl",
+    "score": 1.25,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cap",
+    "toObf": "dtu",
+    "score": 1.25,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cas",
+    "toObf": "dtx",
+    "score": 1.25,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cay",
+    "toObf": "dud",
+    "score": 1.25,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cbk",
+    "toObf": "duu",
+    "score": 1.25,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "nm",
+    "toObf": "rb",
+    "score": 1.25,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "wj",
+    "toObf": "aju",
+    "score": 1.25,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bnn",
+    "toObf": "dex",
+    "score": 1.245,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bua",
+    "toObf": "dmm",
+    "score": 1.239,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "adf",
+    "toObf": "auv",
+    "score": 1.237,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "aej",
+    "toObf": "awo",
+    "score": 1.237,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "hl",
+    "toObf": "ju",
+    "score": 1.236,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "aaq",
+    "toObf": "asd",
+    "score": 1.232,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "aas",
+    "toObf": "ase",
+    "score": 1.232,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "aca",
+    "toObf": "atm",
+    "score": 1.231,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cad",
+    "toObf": "dtc",
+    "score": 1.231,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "blz",
+    "toObf": "dcx",
+    "score": 1.23,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bmg",
+    "toObf": "ddf",
+    "score": 1.23,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bmw",
+    "toObf": "dea",
+    "score": 1.23,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cac",
+    "toObf": "dtb",
+    "score": 1.23,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cbl",
+    "toObf": "duv",
+    "score": 1.23,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "caa",
+    "toObf": "dsz",
+    "score": 1.226,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "us",
+    "toObf": "ahy",
+    "score": 1.225,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "zw",
+    "toObf": "arc",
+    "score": 1.225,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "aag",
+    "toObf": "ars",
+    "score": 1.224,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "hk",
+    "toObf": "js",
+    "score": 1.221,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "biq",
+    "toObf": "cyv",
+    "score": 1.22,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bjb",
+    "toObf": "czj",
+    "score": 1.22,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "aau",
+    "toObf": "asg",
+    "score": 1.219,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bmm",
+    "toObf": "ddp",
+    "score": 1.217,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bxi",
+    "toObf": "dpq",
+    "score": 1.217,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "byp",
+    "toObf": "dre",
+    "score": 1.217,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ho",
+    "toObf": "jx",
+    "score": 1.217,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "vm",
+    "toObf": "aiu",
+    "score": 1.214,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bnf",
+    "toObf": "deq",
+    "score": 1.212,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "blj",
+    "toObf": "dck",
+    "score": 1.21,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "hp",
+    "toObf": "jy",
+    "score": 1.207,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "aeo",
+    "toObf": "awu",
+    "score": 1.205,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bll",
+    "toObf": "dcm",
+    "score": 1.204,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bmb",
+    "toObf": "dcz",
+    "score": 1.204,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bmt",
+    "toObf": "ddw",
+    "score": 1.203,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "aam",
+    "toObf": "arz",
+    "score": 1.201,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "aks",
+    "toObf": "beq",
+    "score": 1.2,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bmq",
+    "toObf": "ddt",
+    "score": 1.2,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bmv",
+    "toObf": "ddz",
+    "score": 1.2,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bna",
+    "toObf": "dej",
+    "score": 1.2,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ael",
+    "toObf": "awl",
+    "score": 1.198,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bkx",
+    "toObf": "dbt",
+    "score": 1.198,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bkz",
+    "toObf": "dbv",
+    "score": 1.198,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bmk",
+    "toObf": "ddm",
+    "score": 1.198,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "aer",
+    "toObf": "awx",
+    "score": 1.192,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "acm",
+    "toObf": "aty",
+    "score": 1.187,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "adl",
+    "toObf": "ave",
+    "score": 1.183,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "zv",
+    "toObf": "ara",
+    "score": 1.183,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "abz",
+    "toObf": "atl",
+    "score": 1.182,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cbe",
+    "toObf": "dum",
+    "score": 1.18,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bnb",
+    "toObf": "dek",
+    "score": 1.179,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "blh",
+    "toObf": "dci",
+    "score": 1.167,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bnw",
+    "toObf": "dfi",
+    "score": 1.163,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bkm",
+    "toObf": "dbk",
+    "score": 1.159,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bky",
+    "toObf": "dbu",
+    "score": 1.159,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "blc",
+    "toObf": "dbz",
+    "score": 1.157,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "vq",
+    "toObf": "aiy",
+    "score": 1.153,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "blm",
+    "toObf": "dcn",
+    "score": 1.15,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "aao",
+    "toObf": "asb",
+    "score": 1.141,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "blf",
+    "toObf": "dcf",
+    "score": 1.141,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cbn",
+    "toObf": "drb",
+    "score": 1.139,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bkq",
+    "toObf": "dbn",
+    "score": 1.136,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bla",
+    "toObf": "dbw",
+    "score": 1.134,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bue",
+    "toObf": "dmq",
+    "score": 1.132,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bno",
+    "toObf": "dey",
+    "score": 1.13,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bkv",
+    "toObf": "dbr",
+    "score": 1.116,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bjy",
+    "toObf": "daj",
+    "score": 1.1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bjz",
+    "toObf": "dak",
+    "score": 1.1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "acl",
+    "toObf": "atx",
+    "score": 1.098,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "aem",
+    "toObf": "awr",
+    "score": 1.096,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "blu",
+    "toObf": "dcs",
+    "score": 1.096,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ve",
+    "toObf": "ain",
+    "score": 1.085,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "abd",
+    "toObf": "asp",
+    "score": 1.072,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "aez",
+    "toObf": "axg",
+    "score": 1.064,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "wb",
+    "toObf": "ajl",
+    "score": 1.046,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bmh",
+    "toObf": "ddh",
+    "score": 1.043,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bok",
+    "toObf": "dft",
+    "score": 1.022,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ble",
+    "toObf": "dce",
+    "score": 1.012,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "afi",
+    "toObf": "aya",
+    "score": 1.008,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "aed",
+    "toObf": "awg",
+    "score": 1.006,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "aa",
+    "toObf": "ak",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "abh",
+    "toObf": "ast",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "abr",
+    "toObf": "atd",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "abt",
+    "toObf": "atf",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "abu",
+    "toObf": "atg",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ae",
+    "toObf": "ao",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "aee",
+    "toObf": "awh",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "af",
+    "toObf": "ap",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "afw",
+    "toObf": "ays",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ai",
+    "toObf": "au",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ak",
+    "toObf": "az",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "aki",
+    "toObf": "bea",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "al",
+    "toObf": "ba",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "am",
+    "toObf": "bb",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "amm",
+    "toObf": "bhc",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ana",
+    "toObf": "bia",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ao",
+    "toObf": "be",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ap",
+    "toObf": "bf",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "av",
+    "toObf": "bl",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "awx",
+    "toObf": "bvy",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "awy",
+    "toObf": "bvz",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ax",
+    "toObf": "bn",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "axm",
+    "toObf": "bxe",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "axs",
+    "toObf": "bxn",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ayq",
+    "toObf": "byq",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "az",
+    "toObf": "bq",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ba",
+    "toObf": "br",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bb",
+    "toObf": "bs",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bc",
+    "toObf": "bt",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bd",
+    "toObf": "bu",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bdc",
+    "toObf": "clq",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "be",
+    "toObf": "bv",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "beg",
+    "toObf": "cnm",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bia",
+    "toObf": "cug",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bii",
+    "toObf": "cyn",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bis",
+    "toObf": "cyx",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bkb",
+    "toObf": "dam",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bma",
+    "toObf": "dcy",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bop",
+    "toObf": "dfx",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bow",
+    "toObf": "dge",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bro",
+    "toObf": "djr",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bsd",
+    "toObf": "dkh",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bsf",
+    "toObf": "dkj",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bsg",
+    "toObf": "dkk",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bvd",
+    "toObf": "ctz",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bwe",
+    "toObf": "doo",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "byr",
+    "toObf": "drg",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bys",
+    "toObf": "drh",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "byw",
+    "toObf": "dro",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "byx",
+    "toObf": "drp",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bzd",
+    "toObf": "dry",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bze",
+    "toObf": "drz",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bzi",
+    "toObf": "dsd",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bzn",
+    "toObf": "dsj",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bzr",
+    "toObf": "dso",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bzs",
+    "toObf": "dsp",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cak",
+    "toObf": "dtk",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "can",
+    "toObf": "dtp",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cao",
+    "toObf": "dtt",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "car",
+    "toObf": "dtw",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cav",
+    "toObf": "dua",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "caw",
+    "toObf": "dub",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cbb",
+    "toObf": "dug",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cbf",
+    "toObf": "dss",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cbi",
+    "toObf": "dus",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cbm",
+    "toObf": "duw",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ccz",
+    "toObf": "dnm",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cdb",
+    "toObf": "cuu",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cea",
+    "toObf": "cvc",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ceb",
+    "toObf": "cvd",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cef",
+    "toObf": "dxl",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cet",
+    "toObf": "wn",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cez",
+    "toObf": "dxy",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cgz",
+    "toObf": "dzz",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "chh",
+    "toObf": "eaf",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "chv",
+    "toObf": "eav",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "chx",
+    "toObf": "eax",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "chz",
+    "toObf": "eaz",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cib",
+    "toObf": "ebb",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "gh",
+    "toObf": "in",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "gi",
+    "toObf": "io",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "gu",
+    "toObf": "ja",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "gx",
+    "toObf": "jd",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "gz",
+    "toObf": "jf",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ha",
+    "toObf": "jg",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "hc",
+    "toObf": "jj",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "hd",
+    "toObf": "jk",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "hg",
+    "toObf": "jn",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "hj",
+    "toObf": "jr",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "hq",
+    "toObf": "jz",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "hu",
+    "toObf": "kd",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "jp",
+    "toObf": "md",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "jv",
+    "toObf": "mj",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "kl",
+    "toObf": "nb",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "kv",
+    "toObf": "no",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "net.minecraft.client.ClientBrandRetriever",
+    "toObf": "net.minecraft.client.ClientBrandRetriever",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "nj",
+    "toObf": "qy",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "no",
+    "toObf": "rd",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ox",
+    "toObf": "vz",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "pg",
+    "toObf": "xq",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "pn",
+    "toObf": "xx",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "pt",
+    "toObf": "yd",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "qz",
+    "toObf": "zn",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ra",
+    "toObf": "zo",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "rp",
+    "toObf": "aae",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "s",
+    "toObf": "aa",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "t",
+    "toObf": "ac",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "u",
+    "toObf": "ad",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ub",
+    "toObf": "ahi",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ud",
+    "toObf": "ahj",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "uq",
+    "toObf": "ahw",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "v",
+    "toObf": "ae",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "vo",
+    "toObf": "aiw",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "vv",
+    "toObf": "ajc",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "wf",
+    "toObf": "ajq",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "wg",
+    "toObf": "ajr",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "x",
+    "toObf": "ag",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "y",
+    "toObf": "ai",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "z",
+    "toObf": "aj",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "zj",
+    "toObf": "aqc",
+    "score": 1,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "yl",
+    "toObf": "aon",
+    "score": 0.996,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "gy",
+    "toObf": "je",
+    "score": 0.994,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bks",
+    "toObf": "dbq",
+    "score": 0.993,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bzp",
+    "toObf": "dsl",
+    "score": 0.99,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bnc",
+    "toObf": "den",
+    "score": 0.989,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "gj",
+    "toObf": "iq",
+    "score": 0.989,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "buk",
+    "toObf": "cuw",
+    "score": 0.988,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ccy",
+    "toObf": "dnl",
+    "score": 0.988,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "adi",
+    "toObf": "avb",
+    "score": 0.986,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cgq",
+    "toObf": "dzm",
+    "score": 0.986,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "yd",
+    "toObf": "aod",
+    "score": 0.986,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "adp",
+    "toObf": "avi",
+    "score": 0.985,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ahy",
+    "toObf": "bbo",
+    "score": 0.985,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "vp",
+    "toObf": "aix",
+    "score": 0.985,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bkw",
+    "toObf": "dbs",
+    "score": 0.982,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cfp",
+    "toObf": "dyj",
+    "score": 0.982,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "pp",
+    "toObf": "xz",
+    "score": 0.982,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "aec",
+    "toObf": "awf",
+    "score": 0.98,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ag",
+    "toObf": "aq",
+    "score": 0.98,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "axe",
+    "toObf": "bwf",
+    "score": 0.98,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bfx",
+    "toObf": "cqa",
+    "score": 0.98,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cbt",
+    "toObf": "dve",
+    "score": 0.98,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cch",
+    "toObf": "dvz",
+    "score": 0.98,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ccp",
+    "toObf": "dwj",
+    "score": 0.98,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "o",
+    "toObf": "w",
+    "score": 0.98,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "vl",
+    "toObf": "ait",
+    "score": 0.98,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ww",
+    "toObf": "amu",
+    "score": 0.98,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bly",
+    "toObf": "dcw",
+    "score": 0.979,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ab",
+    "toObf": "al",
+    "score": 0.978,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ah",
+    "toObf": "ar",
+    "score": 0.978,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ane",
+    "toObf": "bif",
+    "score": 0.978,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "aw",
+    "toObf": "bm",
+    "score": 0.978,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "axc",
+    "toObf": "bwd",
+    "score": 0.978,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "n",
+    "toObf": "v",
+    "score": 0.978,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bnr",
+    "toObf": "dfb",
+    "score": 0.977,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bgm",
+    "toObf": "crl",
+    "score": 0.975,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bmj",
+    "toObf": "ddk",
+    "score": 0.975,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "caj",
+    "toObf": "dti",
+    "score": 0.975,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cat",
+    "toObf": "dty",
+    "score": 0.975,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cby",
+    "toObf": "dvl",
+    "score": 0.975,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cbz",
+    "toObf": "dvm",
+    "score": 0.975,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "w",
+    "toObf": "af",
+    "score": 0.975,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "xa",
+    "toObf": "ana",
+    "score": 0.975,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bxj",
+    "toObf": "dpr",
+    "score": 0.973,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bzf",
+    "toObf": "dsa",
+    "score": 0.972,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "aeb",
+    "toObf": "awd",
+    "score": 0.971,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "byv",
+    "toObf": "drm",
+    "score": 0.971,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bzx",
+    "toObf": "dsw",
+    "score": 0.971,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cax",
+    "toObf": "duc",
+    "score": 0.971,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cbh",
+    "toObf": "duq",
+    "score": 0.971,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ph",
+    "toObf": "xr",
+    "score": 0.971,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "adm",
+    "toObf": "avf",
+    "score": 0.969,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bwx",
+    "toObf": "dpd",
+    "score": 0.967,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cam",
+    "toObf": "dtn",
+    "score": 0.967,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "chy",
+    "toObf": "eay",
+    "score": 0.967,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ji",
+    "toObf": "lt",
+    "score": 0.964,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "k",
+    "toObf": "s",
+    "score": 0.964,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ze",
+    "toObf": "app",
+    "score": 0.963,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "akn",
+    "toObf": "beh",
+    "score": 0.96,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bir",
+    "toObf": "cyw",
+    "score": 0.96,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "chu",
+    "toObf": "eau",
+    "score": 0.96,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "tw",
+    "toObf": "ahd",
+    "score": 0.96,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ahg",
+    "toObf": "bas",
+    "score": 0.958,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cdr",
+    "toObf": "dxc",
+    "score": 0.957,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ad",
+    "toObf": "an",
+    "score": 0.956,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ahp",
+    "toObf": "bba",
+    "score": 0.956,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "at",
+    "toObf": "bj",
+    "score": 0.956,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cdc",
+    "toObf": "cuv",
+    "score": 0.956,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "xc",
+    "toObf": "anc",
+    "score": 0.956,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cck",
+    "toObf": "dwd",
+    "score": 0.955,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "adh",
+    "toObf": "ava",
+    "score": 0.953,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "adr",
+    "toObf": "avk",
+    "score": 0.953,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cbv",
+    "toObf": "dvg",
+    "score": 0.953,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cdh",
+    "toObf": "dws",
+    "score": 0.953,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cex",
+    "toObf": "dxt",
+    "score": 0.953,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "zt",
+    "toObf": "aqv",
+    "score": 0.953,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ccl",
+    "toObf": "dwf",
+    "score": 0.951,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bgh",
+    "toObf": "cqt",
+    "score": 0.95,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bup",
+    "toObf": "dna",
+    "score": 0.95,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ccq",
+    "toObf": "dwk",
+    "score": 0.95,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "chw",
+    "toObf": "eaw",
+    "score": 0.95,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "rk",
+    "toObf": "zy",
+    "score": 0.95,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ug",
+    "toObf": "ahl",
+    "score": 0.95,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "wh",
+    "toObf": "ajs",
+    "score": 0.95,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bda",
+    "toObf": "clp",
+    "score": 0.949,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cbw",
+    "toObf": "dvj",
+    "score": 0.949,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bwv",
+    "toObf": "dpa",
+    "score": 0.948,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "adq",
+    "toObf": "avj",
+    "score": 0.947,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "akf",
+    "toObf": "bdx",
+    "score": 0.947,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "aq",
+    "toObf": "bg",
+    "score": 0.947,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ccf",
+    "toObf": "dvx",
+    "score": 0.947,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cei",
+    "toObf": "xc",
+    "score": 0.943,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "hn",
+    "toObf": "jw",
+    "score": 0.943,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "jj",
+    "toObf": "lv",
+    "score": 0.943,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "fo",
+    "toObf": "fj",
+    "score": 0.942,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "buo",
+    "toObf": "dmz",
+    "score": 0.941,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bge",
+    "toObf": "cqo",
+    "score": 0.94,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bvy",
+    "toObf": "doi",
+    "score": 0.94,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "i",
+    "toObf": "q",
+    "score": 0.94,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "vd",
+    "toObf": "aim",
+    "score": 0.94,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bfh",
+    "toObf": "cor",
+    "score": 0.936,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ahl",
+    "toObf": "bax",
+    "score": 0.933,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ahn",
+    "toObf": "bay",
+    "score": 0.933,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ake",
+    "toObf": "bdw",
+    "score": 0.933,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "amh",
+    "toObf": "bgv",
+    "score": 0.933,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bov",
+    "toObf": "dgd",
+    "score": 0.933,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cfj",
+    "toObf": "dye",
+    "score": 0.931,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "je",
+    "toObf": "lo",
+    "score": 0.931,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "avg",
+    "toObf": "btp",
+    "score": 0.929,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bhy",
+    "toObf": "cxz",
+    "score": 0.929,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cfz",
+    "toObf": "dyq",
+    "score": 0.929,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bak",
+    "toObf": "ccz",
+    "score": 0.927,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bko",
+    "toObf": "dbm",
+    "score": 0.927,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "oj",
+    "toObf": "vb",
+    "score": 0.927,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cev",
+    "toObf": "xn",
+    "score": 0.926,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bhi",
+    "toObf": "cth",
+    "score": 0.925,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "hf",
+    "toObf": "jm",
+    "score": 0.924,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ayi",
+    "toObf": "byh",
+    "score": 0.923,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bbm",
+    "toObf": "cda",
+    "score": 0.923,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "nb",
+    "toObf": "qn",
+    "score": 0.923,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "xq",
+    "toObf": "anq",
+    "score": 0.923,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ahw",
+    "toObf": "bbm",
+    "score": 0.92,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "qx",
+    "toObf": "zl",
+    "score": 0.92,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "aev",
+    "toObf": "axc",
+    "score": 0.919,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bls",
+    "toObf": "dcq",
+    "score": 0.917,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bme",
+    "toObf": "ddc",
+    "score": 0.916,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ayr",
+    "toObf": "byr",
+    "score": 0.915,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bvo",
+    "toObf": "dny",
+    "score": 0.915,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bga",
+    "toObf": "cqi",
+    "score": 0.913,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bww",
+    "toObf": "dpb",
+    "score": 0.913,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "acv",
+    "toObf": "auj",
+    "score": 0.912,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ahq",
+    "toObf": "bbd",
+    "score": 0.912,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cfs",
+    "toObf": "wr",
+    "score": 0.911,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ays",
+    "toObf": "bys",
+    "score": 0.908,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "amj",
+    "toObf": "bgx",
+    "score": 0.907,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bxg",
+    "toObf": "dpn",
+    "score": 0.907,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ur",
+    "toObf": "ahx",
+    "score": 0.905,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "boi",
+    "toObf": "dfq",
+    "score": 0.902,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "aih",
+    "toObf": "bby",
+    "score": 0.9,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "blb",
+    "toObf": "dby",
+    "score": 0.9,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bwk",
+    "toObf": "dou",
+    "score": 0.9,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cfw",
+    "toObf": "dyn",
+    "score": 0.9,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "he",
+    "toObf": "jl",
+    "score": 0.9,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "net.minecraft.client.main.Main",
+    "toObf": "net.minecraft.client.main.Main",
+    "score": 0.897,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "aak",
+    "toObf": "ari",
+    "score": 0.892,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "aqi",
+    "toObf": "bon",
+    "score": 0.891,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "amk",
+    "toObf": "bgy",
+    "score": 0.888,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "beh",
+    "toObf": "cnn",
+    "score": 0.888,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "awf",
+    "toObf": "bux",
+    "score": 0.887,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "cgs",
+    "toObf": "dzo",
+    "score": 0.887,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "qg",
+    "toObf": "yq",
+    "score": 0.887,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "vg",
+    "toObf": "aio",
+    "score": 0.885,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "buy",
+    "toObf": "dng",
+    "score": 0.884,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "sn",
+    "toObf": "abx",
+    "score": 0.879,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "afh",
+    "toObf": "axv",
+    "score": 0.878,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bmp",
+    "toObf": "dds",
+    "score": 0.877,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "all",
+    "toObf": "bft",
+    "score": 0.876,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "bif",
+    "toObf": "cyk",
+    "score": 0.873,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ccx",
+    "toObf": "dmy",
+    "score": 0.873,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "acd",
+    "toObf": "atq",
+    "score": 0.869,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "biv",
+    "toObf": "cyz",
+    "score": 0.867,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "boc",
+    "toObf": "dfk",
+    "score": 0.867,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "boe",
+    "toObf": "dfm",
+    "score": 0.867,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "aqr",
+    "toObf": "hg",
+    "score": 0.866,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "rc",
+    "toObf": "zs",
+    "score": 0.866,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "aip",
+    "toObf": "bcj",
+    "score": 0.861,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "c",
+    "toObf": "e",
+    "score": 0.86,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "r",
+    "toObf": "z",
+    "score": 0.86,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "sd",
+    "toObf": "aav",
+    "score": 0.86,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "afd",
+    "toObf": "axw",
+    "score": 0.858,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "caq",
+    "toObf": "dtv",
+    "score": 0.858,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "fa",
+    "toObf": "fb",
+    "score": 0.858,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "blg",
+    "toObf": "dch",
+    "score": 0.852,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "nf",
+    "toObf": "cf",
+    "score": 0.85,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "sg",
+    "toObf": "aaz",
+    "score": 0.85,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ta",
+    "toObf": "acw",
+    "score": 0.849,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "ac",
+    "toObf": "am",
+    "score": 0.848,
+    "verified": false,
+    "source": "structural-matcher"
+   },
+   {
+    "fromObf": "tc",
+    "toObf": "acz",
+    "score": 0.846,
+    "verified": false,
+    "source": "structural-matcher"
+   }
+  ]
+ }
+}

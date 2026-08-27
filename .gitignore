@@ -1,0 +1,8 @@
+set-api-key.sh
+*.key
+*.log
+node_modules/
+.cache/
+sample/
+accepted-contrib.json
+my-rules.json
