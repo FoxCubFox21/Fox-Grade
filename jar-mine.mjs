@@ -48,6 +48,14 @@ for (const f of fs.readdirSync(HERE).filter((x) => /^intermediary\.[\d.]+\.json$
   inter.set(v, new Map((blk?.renames || []).map((r) => [r.fromFqcn, r.toFqcn])));
 }
 
+// The intermediary table doubles as a full class list for the SOURCE version: it names every class
+// that existed there. That makes two decisive checks possible, and both had to be learned the hard
+// way — 24 jar pairs produced PlayerModelPart -> PlayerSkin (the old class is still right there in
+// 26.2, so nothing renamed it) and ItemRenderer -> EntityRenderDispatcher (the destination already
+// existed in 1.21.1, so the mod merely started calling a different class that was always there).
+const sourceClasses = new Set();
+for (const p of pairs) { const m = inter.get(p.from); if (m) for (const v of m.values()) sourceClasses.add(v); }
+
 function mcTypes(jarPath, interMap) {
   const out = new Set();
   const scan = (buf) => {
@@ -109,7 +117,7 @@ for (const p of pairs) {
   }
 }
 
-const kept = [], weak = [], ambiguous = [];
+const kept = [], weak = [], ambiguous = [], stillThere = [], preExisting = [];
 for (const [from, cands] of votes) {
   const ranked = [...cands].sort((a, b) => b[1].size - a[1].size);
   const [to, mods] = ranked[0];
@@ -120,6 +128,8 @@ for (const [from, cands] of votes) {
   // FogRenderer -> fog.FogRenderer); every single-source RENAME was invented by the one-in-one-out
   // package heuristic (Tickable -> TextureManager, ConfirmLinkScreen -> GenericMessageScreen). A
   // preserved simple name plus a verified destination is evidence; a changed one is a guess.
+  if (real.has(from)) { stillThere.push([from, to]); continue; }        // never renamed; it is still there
+  if (sourceClasses.size && sourceClasses.has(to)) { preExisting.push([from, to]); continue; }
   const isMove = from.split('.').pop() === to.split('.').pop();
   if (!isMove && mods.size < MIN_MODS) { weak.push([from, to, mods.size]); continue; }
   kept.push({ fromFqcn: from, toFqcn: to, fromSimple: from.split('.').pop(), toSimple: to.split('.').pop(),
@@ -132,6 +142,8 @@ console.log(`  usable jar pairs   : ${usable} of ${pairs.length}`);
 console.log(`  candidates         : ${votes.size}`);
 console.log(`  KEPT               : ${kept.length}  (${kept.filter((k) => k.kind === 'move').length} moves, ${kept.filter((k) => k.kind === 'rename').length} renames)`);
 console.log(`  renames held back  : ${weak.length}  (a rename needs ${MIN_MODS} independent mods)`);
+console.log(`  old class still in ${TO} : ${stillThere.length}  (so it was not renamed)`);
+console.log(`  target predates the hop : ${preExisting.length}  (already existed in ${args.from || 'the source'})`);
 console.log(`  ambiguous          : ${ambiguous.length}`);
 for (const k of kept.slice(0, 25)) console.log(`    ✓ ${k.fromFqcn}\n        → ${k.toFqcn}   (${k.evidence})`);
 if (weak.length) { console.log(`\n  held back — real but only seen once or twice:`); for (const [f, t, n] of weak.slice(0, 10)) console.log(`    · ${f} → ${t}  (${n})`); }
