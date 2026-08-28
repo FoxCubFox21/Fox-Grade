@@ -247,8 +247,9 @@ That last row is the one that matters. The port independently arrived at exactly
 maintainer used, verified against their real build — not by copying it, but from the relocation
 table and a compile loop.
 
-**It runs.** Launched on 26.2, the saturation overlay renders on the hunger bar — the mod's actual
-job. That is one mod across one narrow hop, not a general claim, but it is the whole pipeline
+**It runs, and it behaves.** Launched on 26.2: the saturation overlay renders on the hunger bar,
+held food previews what it would restore, and the F3 additions are present. All three of the mod's
+features, not just the one that proved it loaded. That is one mod across one narrow hop, not a general claim, but it is the whole pipeline
 working end to end on a compiled jar: intermediary→mojmap translation, class remapping, member
 remapping, a relocation found by diffing two game jars, one source-level fix compiled back in, and a
 mixin retargeted at the class its injection point moved to.
