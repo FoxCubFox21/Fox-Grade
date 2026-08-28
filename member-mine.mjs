@@ -63,7 +63,8 @@ const oldIdx = index(args.old), newIdx = index(args.new);
 console.log(`  ${path.basename(args.old)}: ${oldIdx.size.toLocaleString()} classes`);
 console.log(`  ${path.basename(args.new)}: ${newIdx.size.toLocaleString()} classes`);
 
-const renames = [];       // {owner, kind, desc, from, to}
+const renames = [];       // confident: exactly one candidate could fit
+const guesses = [];       // plausible but not certain — opt-in via --best-guess, never silent
 const removed = [];       // gone with no same-descriptor replacement
 let shared = 0, examined = 0;
 for (const [cls, oldMembers] of oldIdx) {
@@ -123,10 +124,19 @@ for (const [cls, oldMembers] of oldIdx) {
         && (x.kind === 'method' || distinctive(k));
       const ok = oneCandidate && (strong || (soleMatch && (bestRun >= 5 || (distinctive(k) && bestRun >= 3))));
       if (!best || !ok) {
-        removed.push({ owner: cls, kind: x.kind, name: x.name, desc: x.desc,
-          why: !oneCandidate ? `${newCount.get(k)} members in the new class share this descriptor — cannot choose`
-            : tie ? 'two candidates match the name equally well'
-            : bestRun ? `best name overlap only ${bestRun} chars` : 'names share nothing; descriptor alone is not evidence' });
+        const why = !best ? 'no candidate at all'
+          : !oneCandidate ? `${newCount.get(k)} members in the new class share this descriptor`
+          : tie ? 'two candidates match the name equally well'
+          : bestRun ? `best name overlap only ${bestRun} chars` : 'names share nothing';
+        // A rejected match is not the same as no information. Where a plausible candidate exists,
+        // keep it — with its rivals and their scores — so --best-guess can offer it and the user can
+        // see exactly what was chosen over what. Refusing outright throws the evidence away too.
+        if (best && bestRun >= 4) {
+          const alts = as.filter((y) => !synthetic(y.name))
+            .map((y) => ({ name: y.name, run: commonRun(x.name, y.name) }))
+            .sort((p2, q) => q.run - p2.run).slice(0, 4);
+          guesses.push({ owner: cls, kind: x.kind, desc: x.desc, from: x.name, to: best.name, shared: bestRun, why, alternatives: alts });
+        } else removed.push({ owner: cls, kind: x.kind, name: x.name, desc: x.desc, why });
         continue;
       }
       renames.push({ owner: cls, kind: x.kind, desc: x.desc, from: x.name, to: best.name, shared: bestRun });
@@ -146,7 +156,8 @@ if (contested.length) {
 }
 
 console.log(`  classes in both        : ${examined.toLocaleString()}`);
-console.log(`  MEMBER RENAMES         : ${renames.length}`);
+console.log(`  MEMBER RENAMES         : ${renames.length}   (confident: one candidate could fit)`);
+console.log(`  best-guess candidates  : ${guesses.length}   (plausible; applied only with --best-guess)`);
 console.log(`  removed, no replacement: ${removed.length}`);
 const methods = renames.filter((r) => r.kind === 'method').length;
 console.log(`                           ${methods} methods, ${renames.length - methods} fields`);
@@ -157,6 +168,6 @@ const OUT = args.out || path.join(HERE, `members.${args.from || 'old'}-${args.to
 fs.writeFileSync(OUT, JSON.stringify({
   schema: 1, from: args.from || null, to: args.to || null,
   source: 'jar-diff: unique descriptor match within one class',
-  renames, removed: removed.slice(0, 4000),
+  renames, guesses, removed: removed.slice(0, 4000),
 }, null, 1) + '\n');
 console.log(`\n  wrote ${path.basename(OUT)}`);

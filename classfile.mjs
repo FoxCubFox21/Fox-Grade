@@ -161,7 +161,7 @@ export function applyMemberRenames(cf, lookup) {
     const i = nextIndex++; natIndex.set(k, i); return i;
   };
 
-  const applied = [];
+  const applied = [], guessed = [];
   for (const e of cf.entries) {
     if (e.tag !== 9 && e.tag !== 10 && e.tag !== 11) continue;
     const owner = classNameOf(b.readUInt16BE(e.start + 1));
@@ -170,10 +170,12 @@ export function applyMemberRenames(cf, lookup) {
     const nameIdx = b.readUInt16BE(nat.start + 1), descIdx = b.readUInt16BE(nat.start + 3);
     const name = utf8Of(nameIdx), desc = utf8Of(descIdx);
     if (!name || !desc) continue;
-    const to = lookup(owner, e.tag === 9 ? 'field' : 'method', name, desc);
+    const hit = lookup(owner, e.tag === 9 ? 'field' : 'method', name, desc);
+    const to = hit && (typeof hit === 'string' ? hit : hit.to);
     if (!to || to === name) continue;
     patches.push({ off: e.start + 3, val: allocNat(allocUtf8(to), descIdx) });
     applied.push(`${owner}.${name} -> ${to}`);
+    if (hit && hit.guess) guessed.push(hit.guess);
   }
   if (!patches.length) return null;
   if (nextIndex > 0xffff) throw new Error('constant pool would overflow 64k entries');
@@ -182,7 +184,7 @@ export function applyMemberRenames(cf, lookup) {
   head.writeUInt16BE(nextIndex, 8);
   const pool = Buffer.from(b.subarray(cf.poolStart, cf.poolEnd));
   for (const p of patches) pool.writeUInt16BE(p.val, p.off - cf.poolStart);
-  return { buf: Buffer.concat([head, pool, ...appended, b.subarray(cf.poolEnd)]), applied };
+  return { buf: Buffer.concat([head, pool, ...appended, b.subarray(cf.poolEnd)]), applied, guessed };
 }
 
 // Pull out every type name this class mentions. Class entries hold `a/b/C` directly; descriptors and

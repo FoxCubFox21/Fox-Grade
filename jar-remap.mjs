@@ -19,7 +19,7 @@ import { readZip, inflateEntry, writeZip } from './zipfile.mjs';
 import { ClassFile, referencedTypes, makeReplacer, applyMemberRenames } from './classfile.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
-const FLAGS = new Set(['quiet', 'no-nested']);
+const FLAGS = new Set(['quiet', 'no-nested', 'best-guess']);
 const args = {}, pos = [];
 for (let i = 2; i < process.argv.length; i++) {
   const t = process.argv[i];
@@ -164,15 +164,26 @@ if (memberTokens.size) {
 // Over a narrow version hop this is where all the work is: Mojang barely moves classes between point
 // releases, so the class table above matches nothing and every broken link is a member instead.
 const memberRenames = new Map();   // owner \t kind \t name \t desc -> newName
-let memberRuleCount = 0;
+const guessRules = new Map();
+let memberRuleCount = 0, guessRuleCount = 0;
 for (const f of fs.readdirSync(HERE).filter((x) => /^members\.[\d.]+-[\d.]+\.json$/.test(x))) {
   const m = f.match(/^members\.([\d.]+)-([\d.]+)\.json$/);
   const a2 = verOf(m[1]), b2 = verOf(m[2]);
   if ((fv && cmp(a2, fv) < 0) || (tv && cmp(b2, tv) > 0)) continue;   // outside the span being crossed
   try {
-    for (const r of JSON.parse(fs.readFileSync(path.join(HERE, f), 'utf8')).renames || []) {
+    const tbl = JSON.parse(fs.readFileSync(path.join(HERE, f), 'utf8'));
+    for (const r of tbl.renames || []) {
       memberRenames.set(`${r.owner}\t${r.kind}\t${r.from}\t${r.desc}`, r.to);
       memberRuleCount++;
+    }
+    // Guesses are plausible but not certain — several members could fit, or the names only partly
+    // agree. Off by default, because a wrong one links cleanly and behaves differently; on request,
+    // because refusing outright leaves a jar that simply crashes instead. Every one is written to a
+    // report next to the jar, with the rivals it beat, so nothing is applied silently.
+    if (args['best-guess']) for (const r of tbl.guesses || []) {
+      const k = `${r.owner}\t${r.kind}\t${r.from}\t${r.desc}`;
+      if (memberRenames.has(k)) continue;                 // a confident rule always wins
+      memberRenames.set(k, r.to); guessRules.set(k, r); guessRuleCount++;
     }
   } catch { console.error(`  ! ignoring unreadable ${f}`); }
 }
@@ -183,7 +194,11 @@ for (const [k, v] of [...memberRenames]) {
   const moved = types.get(owner);
   if (moved) memberRenames.set(`${moved}\t${kind}\t${name}\t${desc}`, v);
 }
-const memberLookup = (owner, kind, name, desc) => memberRenames.get(`${owner}\t${kind}\t${name}\t${desc}`) || null;
+const memberLookup = (owner, kind, name, desc) => {
+  const k = `${owner}\t${kind}\t${name}\t${desc}`;
+  const to = memberRenames.get(k);
+  return to ? { to, guess: guessRules.has(k) ? k : null } : null;
+};
 
 // ── report ───────────────────────────────────────────────────────────────────────────────────
 const pct = (n, d) => d ? `${(100 * n / d).toFixed(1)}%` : '—';
@@ -194,6 +209,7 @@ console.log(`    naming scheme      : ${scheme ? `${scheme.match(/^scheme:(\w+)@
 if (!TARGET) console.log(`    ⚠ no --classpath, so no rename could be confirmed against the real ${TO} jars`);
 console.log(`\n    remappable         : ${types.size}  ${pct(types.size, referenced.size)}`);
 if (memberRuleCount) console.log(`    member rules       : ${memberRuleCount} for this span`);
+if (guessRuleCount) console.log(`    best-guess rules   : ${guessRuleCount}  ⚠ plausible, not certain — see the report`);
 console.log(`    already correct    : ${alreadyOk.length}`);
 console.log(`    NO EQUIVALENT      : ${removed.length}   ← these cannot be fixed by renaming`);
 console.log(`    unresolved         : ${unresolved.length}   ← Tier 2: needs a real code change`);
@@ -216,6 +232,7 @@ if (removed.length || unresolved.length || phantom.length) {
 // ── write ────────────────────────────────────────────────────────────────────────────────────
 const stats = {};
 let memberHits = 0;
+const guessesUsed = new Set();
 const replacer = makeReplacer(types, members, stats);
 function remapUnit(buf) {
   const entries = readZip(buf);
@@ -235,7 +252,7 @@ function remapUnit(buf) {
     let bytes = new ClassFile(original).rewrite(replacer);
     if (memberRenames.size) {
       const mem = applyMemberRenames(new ClassFile(bytes || original), memberLookup);
-      if (mem) { bytes = mem.buf; memberHits += mem.applied.length; }
+      if (mem) { bytes = mem.buf; memberHits += mem.applied.length; for (const a of mem.guessed) guessesUsed.add(a); }
     }
     if (bytes) repl.set(e.name, bytes);
   }
@@ -245,4 +262,22 @@ function remapUnit(buf) {
 const out = remapUnit(rootBuf) || rootBuf;
 fs.writeFileSync(args.out, out);
 console.log(`\n  wrote ${args.out}  (${stats.types || 0} type refs, ${stats.members || 0} token refs, ${memberHits} member call sites rewritten)`);
+if (guessesUsed.size) {
+  const lines = ['# Best-guess member renames applied', '',
+    `Jar: ${path.basename(args.out)}   ${guessesUsed.size} guess(es) applied.`, '',
+    'Each of these was NOT certain: either several members in the target class share the descriptor,',
+    'or the names only partly agree. The chosen one is listed first with the rivals it beat. If the',
+    'mod misbehaves in a way that matches one of these, this is the first place to look.', ''];
+  for (const k of guessesUsed) {
+    const g = guessRules.get(k); if (!g) continue;
+    lines.push(`## ${g.owner.replace(/\//g, '.')}.${g.from}`, `- descriptor: \`${g.desc}\``,
+      `- **chosen: ${g.to}** (${g.shared} characters shared)`, `- why not certain: ${g.why}`);
+    const rivals = (g.alternatives || []).filter((a) => a.name !== g.to);
+    if (rivals.length) lines.push(`- rejected: ${rivals.map((a) => `${a.name} (${a.run})`).join(', ')}`);
+    lines.push('');
+  }
+  const rp = args.out.replace(/\.jar$/, '') + '.guesses.md';
+  fs.writeFileSync(rp, lines.join('\n'));
+  console.log(`  ⚠ ${guessesUsed.size} best-guess rename(s) applied — every one listed in ${path.basename(rp)}`);
+}
 console.log(`  the original is untouched. Verify by launching the game — a jar that loads is not a jar that works.`);

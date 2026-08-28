@@ -154,7 +154,35 @@ Modest, and the reason is the interesting part. What remains is not renames the 
 `Minecraft.getChatListener()`, `getToastManager()`, `renderBuffers()` and `Gui.getGuiTicks()` have no
 counterpart in 26.2 at all. They were removed, not renamed, and no mapping fixes that.
 
-**The table refuses to guess.** `Minecraft.setScreen` has three same-descriptor candidates in 26.2,
+### When you want the guess anyway
+
+Refusing outright is the right default and the wrong only option — it leaves you with a jar that
+crashes rather than one worth testing. `--best-guess` applies the uncertain matches too:
+
+```bash
+node jar-remap.mjs mod.jar --from 26.1 --to 26.2 --classpath "$MC" --best-guess --out new.jar
+```
+
+The rule is that a guess is never silent. Every one is written to `new.guesses.md` beside the jar,
+with the candidates it beat and their scores:
+
+```
+## net.minecraft.client.renderer.state.level.LevelRenderState.haveGlowingEntities
+- descriptor: `Z`
+- **chosen: shouldShowEntityOutlines** (5 characters shared)
+- why not certain: 4 members in the new class share this descriptor
+- rejected: render3dCrosshair (2), shouldResetChunkLayerSampler (2), shouldResetSkyRenderer (2)
+```
+
+That one is almost certainly right — glowing entities *are* the outline effect — which the character
+score alone could never tell you. A human reading the report can see that in a second; the miner
+cannot. That is the point of the report.
+
+483 such candidates exist for 26.1 → 26.2 against 72 confident rules. They buy a little: bobby
+5 → 4 broken links, freecam 6 → 5. Not more, because most of what remains was never a rename —
+`Gui.getGuiTicks()` has no counterpart in 26.2 at all, so no setting recovers it.
+
+**The confident table still refuses to guess.** `Minecraft.setScreen` has three same-descriptor candidates in 26.2,
 so it is reported as unresolvable rather than matched to the best-scoring name. An earlier version
 did guess: `ClientChunkCache.getLoadedEmptySections()` became four methods in 26.2 —
 added/removed × sections/chunks — and name similarity picked `addedEmptySections` (16 characters
