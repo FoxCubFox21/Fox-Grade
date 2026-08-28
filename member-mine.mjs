@@ -105,6 +105,12 @@ for (const [cls, oldMembers] of oldIdx) {
         if (run > bestRun) { best = y; bestRun = run; tie = false; }
         else if (run === bestRun && bestRun > 0) tie = true;
       }
+      // Never choose between several members that share a descriptor. ClientChunkCache turned one
+      // getLoadedEmptySections() into four LongOpenHashSet getters — added/removed x sections/chunks
+      // — and name similarity happily picked addedEmptySections (16 chars shared) over
+      // removedEmptySections (15). It links, and it means the opposite. That is the silently-wrong
+      // failure Tier 2 refuses, so it is refused here too: a broken link you can trace is better.
+      const oneCandidate = newCount.get(k) === 1;
       const soleMatch = unique && gs.length === 1 && as.length === 1;
       // A bare 6-character overlap is not enough on its own: FOG_SNIPPET and
       // MATRICES_PROJECTION_SNIPPET both "matched" WORLD_TEXT_SNIPPET on the shared word. Require a
@@ -115,10 +121,12 @@ for (const [cls, oldMembers] of oldIdx) {
       // This does lose correct pairs, which is the right trade for a table applied automatically.
       const strong = !tie && bestRun >= 8 && bestRun >= Math.min(x.name.length, best.name.length) * 0.6
         && (x.kind === 'method' || distinctive(k));
-      const ok = strong || (soleMatch && (bestRun >= 5 || (distinctive(k) && bestRun >= 3)));
+      const ok = oneCandidate && (strong || (soleMatch && (bestRun >= 5 || (distinctive(k) && bestRun >= 3))));
       if (!best || !ok) {
         removed.push({ owner: cls, kind: x.kind, name: x.name, desc: x.desc,
-          why: tie ? 'two candidates match the name equally well' : bestRun ? `best name overlap only ${bestRun} chars` : 'names share nothing; descriptor alone is not evidence' });
+          why: !oneCandidate ? `${newCount.get(k)} members in the new class share this descriptor — cannot choose`
+            : tie ? 'two candidates match the name equally well'
+            : bestRun ? `best name overlap only ${bestRun} chars` : 'names share nothing; descriptor alone is not evidence' });
         continue;
       }
       renames.push({ owner: cls, kind: x.kind, desc: x.desc, from: x.name, to: best.name, shared: bestRun });

@@ -132,10 +132,34 @@ Four gates, each added because the previous version produced a specific wrong an
 `_SNIPPET` suffix. Tightening further costs correct pairs like `updateNarration →
 updateWidgetNarration`, so it is documented rather than tuned away.
 
-These are **not yet applied**. Rewriting a member name in the constant pool is not the same as
-rewriting a class name: a class name is globally unique, while `setScreen` may appear as a UTF-8
-entry shared with unrelated uses. Applying them safely means rewriting `NameAndType` per call site
-against the matching owner, and that is not built yet.
+### Applying them
+
+A class name is globally unique in a constant pool, so rewriting its UTF-8 entry in place is sound.
+A member name is not — `setScreen` may be a method on three unrelated classes and a string literal
+besides, all sharing one entry. So nothing is edited in place: for each call site whose
+`(owner, name, descriptor)` matches, a new `NameAndType` is appended to the pool and only that
+reference is repointed. Everything after the pool is copied byte for byte.
+
+The result is checked by the JVM itself — every rewritten class is fed to a `ClassLoader` and must
+define without `ClassFormatError` or `VerifyError`. 260 classes across four mods: zero malformed.
+
+| 26.1 → 26.2 | call sites rewritten | broken links |
+|---|---|---|
+| freecam | 1 | 7 → 6 |
+| entityculling | 2 | 15 → 13 |
+| moreculling | 1 | 14 → 13 |
+| appleskin, bobby, continuity | 0 | unchanged |
+
+Modest, and the reason is the interesting part. What remains is not renames the table missed —
+`Minecraft.getChatListener()`, `getToastManager()`, `renderBuffers()` and `Gui.getGuiTicks()` have no
+counterpart in 26.2 at all. They were removed, not renamed, and no mapping fixes that.
+
+**The table refuses to guess.** `Minecraft.setScreen` has three same-descriptor candidates in 26.2,
+so it is reported as unresolvable rather than matched to the best-scoring name. An earlier version
+did guess: `ClientChunkCache.getLoadedEmptySections()` became four methods in 26.2 —
+added/removed × sections/chunks — and name similarity picked `addedEmptySections` (16 characters
+shared) over `removedEmptySections` (15). It links cleanly and means the opposite. That is the same
+silently-wrong failure Tier 2 refuses, so it is refused here too.
 
 ## Tier 2: what renaming cannot express
 

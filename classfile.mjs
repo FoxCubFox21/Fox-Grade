@@ -119,6 +119,72 @@ export class ClassFile {
   }
 }
 
+// Apply member renames — the one thing a plain UTF-8 edit cannot do safely.
+//
+// A class name is globally unique, so rewriting its UTF-8 entry in place is sound. A member name is
+// not: "setScreen" may be the name of a method on three unrelated classes and a string literal
+// besides, all sharing one UTF-8 entry. Renaming that entry would rewrite every one of them.
+//
+// So nothing is edited in place. For each Methodref/Fieldref whose (owner, name, descriptor) matches
+// a rule, a NameAndType carrying the new name is appended to the constant pool and only that ref is
+// repointed at it. Entries are reused when they already exist. Everything after the pool is copied
+// verbatim, because no part of a class file refers to a byte offset inside the pool.
+//
+// lookup(owner, kind, name, desc) -> newName | null
+export function applyMemberRenames(cf, lookup) {
+  const b = cf.buf;
+  const byIndex = new Map(cf.entries.map((e) => [e.index, e]));
+  const utf8Of = (i) => { const e = byIndex.get(i); return e && e.tag === 1 ? b.toString('latin1', e.start + 3, e.end) : null; };
+  const classNameOf = (i) => { const e = byIndex.get(i); return e && e.tag === 7 ? utf8Of(b.readUInt16BE(e.start + 1)) : null; };
+
+  const utf8Index = new Map();
+  for (const e of cf.entries) if (e.tag === 1) { const v = b.toString('latin1', e.start + 3, e.end); if (!utf8Index.has(v)) utf8Index.set(v, e.index); }
+  const natIndex = new Map();
+  for (const e of cf.entries) if (e.tag === 12) natIndex.set(`${b.readUInt16BE(e.start + 1)}\t${b.readUInt16BE(e.start + 3)}`, e.index);
+
+  // constant_pool_count is (highest index + 1), so it is also the next free index.
+  let nextIndex = b.readUInt16BE(8);
+  const appended = [], patches = [];
+  const allocUtf8 = (v) => {
+    if (utf8Index.has(v)) return utf8Index.get(v);
+    const bytes = Buffer.from(v, 'latin1');
+    if (bytes.length > 0xffff) throw new Error('member name too long');
+    const head = Buffer.alloc(3); head[0] = 1; head.writeUInt16BE(bytes.length, 1);
+    appended.push(head, bytes);
+    const i = nextIndex++; utf8Index.set(v, i); return i;
+  };
+  const allocNat = (nameIdx, descIdx) => {
+    const k = `${nameIdx}\t${descIdx}`;
+    if (natIndex.has(k)) return natIndex.get(k);
+    const e = Buffer.alloc(5); e[0] = 12; e.writeUInt16BE(nameIdx, 1); e.writeUInt16BE(descIdx, 3);
+    appended.push(e);
+    const i = nextIndex++; natIndex.set(k, i); return i;
+  };
+
+  const applied = [];
+  for (const e of cf.entries) {
+    if (e.tag !== 9 && e.tag !== 10 && e.tag !== 11) continue;
+    const owner = classNameOf(b.readUInt16BE(e.start + 1));
+    const nat = byIndex.get(b.readUInt16BE(e.start + 3));
+    if (!owner || !nat || nat.tag !== 12) continue;
+    const nameIdx = b.readUInt16BE(nat.start + 1), descIdx = b.readUInt16BE(nat.start + 3);
+    const name = utf8Of(nameIdx), desc = utf8Of(descIdx);
+    if (!name || !desc) continue;
+    const to = lookup(owner, e.tag === 9 ? 'field' : 'method', name, desc);
+    if (!to || to === name) continue;
+    patches.push({ off: e.start + 3, val: allocNat(allocUtf8(to), descIdx) });
+    applied.push(`${owner}.${name} -> ${to}`);
+  }
+  if (!patches.length) return null;
+  if (nextIndex > 0xffff) throw new Error('constant pool would overflow 64k entries');
+
+  const head = Buffer.from(b.subarray(0, cf.poolStart));
+  head.writeUInt16BE(nextIndex, 8);
+  const pool = Buffer.from(b.subarray(cf.poolStart, cf.poolEnd));
+  for (const p of patches) pool.writeUInt16BE(p.val, p.off - cf.poolStart);
+  return { buf: Buffer.concat([head, pool, ...appended, b.subarray(cf.poolEnd)]), applied };
+}
+
 // Pull out every type name this class mentions. Class entries hold `a/b/C` directly; descriptors and
 // generic signatures hold them as `La/b/C;` or `La/b/C<...>`, so both forms have to be swept.
 const TYPE_IN_DESC = /L([\w/$]+)([;<])/g;

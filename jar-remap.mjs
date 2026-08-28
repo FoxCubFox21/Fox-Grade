@@ -16,7 +16,7 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { readZip, inflateEntry, writeZip } from './zipfile.mjs';
-import { ClassFile, referencedTypes, makeReplacer } from './classfile.mjs';
+import { ClassFile, referencedTypes, makeReplacer, applyMemberRenames } from './classfile.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const FLAGS = new Set(['quiet', 'no-nested']);
@@ -160,6 +160,31 @@ if (memberTokens.size) {
   }
 }
 
+// ── member renames, keyed by (owner, name, descriptor) ───────────────────────────────────────
+// Over a narrow version hop this is where all the work is: Mojang barely moves classes between point
+// releases, so the class table above matches nothing and every broken link is a member instead.
+const memberRenames = new Map();   // owner \t kind \t name \t desc -> newName
+let memberRuleCount = 0;
+for (const f of fs.readdirSync(HERE).filter((x) => /^members\.[\d.]+-[\d.]+\.json$/.test(x))) {
+  const m = f.match(/^members\.([\d.]+)-([\d.]+)\.json$/);
+  const a2 = verOf(m[1]), b2 = verOf(m[2]);
+  if ((fv && cmp(a2, fv) < 0) || (tv && cmp(b2, tv) > 0)) continue;   // outside the span being crossed
+  try {
+    for (const r of JSON.parse(fs.readFileSync(path.join(HERE, f), 'utf8')).renames || []) {
+      memberRenames.set(`${r.owner}\t${r.kind}\t${r.from}\t${r.desc}`, r.to);
+      memberRuleCount++;
+    }
+  } catch { console.error(`  ! ignoring unreadable ${f}`); }
+}
+// A rule names its owner at the SOURCE version, but by the time member renaming runs the class table
+// has already respelled that owner. Index both forms so a rule still fires after a package move.
+for (const [k, v] of [...memberRenames]) {
+  const [owner, kind, name, desc] = k.split('\t');
+  const moved = types.get(owner);
+  if (moved) memberRenames.set(`${moved}\t${kind}\t${name}\t${desc}`, v);
+}
+const memberLookup = (owner, kind, name, desc) => memberRenames.get(`${owner}\t${kind}\t${name}\t${desc}`) || null;
+
 // ── report ───────────────────────────────────────────────────────────────────────────────────
 const pct = (n, d) => d ? `${(100 * n / d).toFixed(1)}%` : '—';
 console.log(`  ${path.basename(JAR)}${units.length > 1 ? `  (+${units.length - 1} bundled jar${units.length > 2 ? 's' : ''})` : ''}`);
@@ -168,6 +193,7 @@ console.log(`    minecraft types    : ${referenced.size}`);
 console.log(`    naming scheme      : ${scheme ? `${scheme.match(/^scheme:(\w+)@([\d.]+)/).slice(1).join(' @ ')}  (${schemeHits} hits)` : 'mojmap / already readable'}`);
 if (!TARGET) console.log(`    ⚠ no --classpath, so no rename could be confirmed against the real ${TO} jars`);
 console.log(`\n    remappable         : ${types.size}  ${pct(types.size, referenced.size)}`);
+if (memberRuleCount) console.log(`    member rules       : ${memberRuleCount} for this span`);
 console.log(`    already correct    : ${alreadyOk.length}`);
 console.log(`    NO EQUIVALENT      : ${removed.length}   ← these cannot be fixed by renaming`);
 console.log(`    unresolved         : ${unresolved.length}   ← Tier 2: needs a real code change`);
@@ -189,6 +215,7 @@ if (removed.length || unresolved.length || phantom.length) {
 
 // ── write ────────────────────────────────────────────────────────────────────────────────────
 const stats = {};
+let memberHits = 0;
 const replacer = makeReplacer(types, members, stats);
 function remapUnit(buf) {
   const entries = readZip(buf);
@@ -202,13 +229,20 @@ function remapUnit(buf) {
     // A modified jar can never satisfy the original signature, so the stale signature files go.
     if (/^META-INF\/.*\.(SF|RSA|DSA|EC)$/i.test(e.name)) continue;
     if (!e.name.endsWith('.class')) continue;
-    const out = new ClassFile(inflateEntry(e)).rewrite(replacer);
-    if (out) repl.set(e.name, out);
+    // Types first, then members: a member rule names its owner, so that owner has to already be
+    // spelled the way this class file now spells it.
+    const original = inflateEntry(e);
+    let bytes = new ClassFile(original).rewrite(replacer);
+    if (memberRenames.size) {
+      const mem = applyMemberRenames(new ClassFile(bytes || original), memberLookup);
+      if (mem) { bytes = mem.buf; memberHits += mem.applied.length; }
+    }
+    if (bytes) repl.set(e.name, bytes);
   }
   if (!repl.size) return null;
   return writeZip(entries.filter((e) => !/^META-INF\/.*\.(SF|RSA|DSA|EC)$/i.test(e.name)), repl);
 }
 const out = remapUnit(rootBuf) || rootBuf;
 fs.writeFileSync(args.out, out);
-console.log(`\n  wrote ${args.out}  (${stats.types || 0} type refs, ${stats.members || 0} member refs rewritten)`);
+console.log(`\n  wrote ${args.out}  (${stats.types || 0} type refs, ${stats.members || 0} token refs, ${memberHits} member call sites rewritten)`);
 console.log(`  the original is untouched. Verify by launching the game — a jar that loads is not a jar that works.`);
