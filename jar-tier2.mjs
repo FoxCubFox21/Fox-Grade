@@ -23,7 +23,7 @@ import { readZip, inflateEntry, writeZip } from './zipfile.mjs';
 import { ClassFile } from './classfile.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
-const FLAGS = new Set(['dry', 'foxai', 'ollama', 'keep']);
+const FLAGS = new Set(['dry', 'foxai', 'ollama', 'keep', 'allow-stubs']);
 const args = {}, pos = [];
 for (let i = 2; i < process.argv.length; i++) {
   const t = process.argv[i];
@@ -221,6 +221,20 @@ for (const c of candidates) {
     results.push([cls, 'unrecompilable']); continue;
   }
 
+  // If a class that no longer exists appears in this file's OWN method signatures, no body-only
+  // edit can fix it: the signature must change, and every caller in the jar links to the old one as
+  // compiled bytecode. That is a coordinated change across several files, which is a decision rather
+  // than a repair — so say so instead of spending three model calls rediscovering it.
+  const ownSigs = spawnSync('javap', ['-p', '-s', '-cp', `${JAR}:${cp}`, cls.replace(/\//g, '.')], { encoding: 'utf8', maxBuffer: 32e6 }).stdout || '';
+  const missingClasses = [...new Set(c.bad.filter((b) => b.why === 'class missing').map((b) => b.owner))];
+  const inSignature = missingClasses.filter((m) => ownSigs.includes(`L${m};`));
+  if (inSignature.length) {
+    say(`     ${inSignature.map((m) => m.replace(/\//g, '.')).join(', ')} appears in this class's own method signatures.`);
+    say('     Fixing it means changing signatures other classes link to — a coordinated change, not a repair.');
+    results.push([cls, `needs signature change (${inSignature.map((m) => m.split('/').pop()).join(', ')})`]);
+    continue;
+  }
+
   const facts = [];
   for (const b of c.bad.slice(0, 12)) {
     const dotted = b.owner.replace(/\//g, '.');
@@ -289,14 +303,34 @@ ${source}
     if (!declCache.get(r.owner) || !resolves(r.owner, `${r.name} ${r.desc}`)) after.push(r);
   }
   if (after.length >= c.bad.length) { say(`     rejected: ${c.bad.length} broken links before, ${after.length} after`); results.push([cls, `no improvement (${c.bad.length}→${after.length})`]); continue; }
-  say(`     accepted: ${c.bad.length} → ${after.length} broken links`);
+  // "Compiles, and fewer broken links" is NOT the same as "ported". A model that cannot find the
+  // replacement API can always satisfy both gates by deleting the feature — and it did exactly that
+  // here, turning isRotten() into a constant false and assuming naturalRegeneration is on. Both
+  // gates went green while the mod quietly stopped working.
+  //
+  // A broken link at least crashes where it is reached: loud, and traceable. A stub returns
+  // plausible wrong data forever. So stubs are refused by default, keeping the original bytecode,
+  // and never hidden when they are allowed.
+  const stubs = (ported.source.match(/\/\/\s*FOXGRADE:/g) || []).length;
+  if (stubs) {
+    const what = (ported.source.match(/\/\/\s*FOXGRADE:[^\n]*/g) || []).slice(0, 3).map((l) => l.replace(/\/\/\s*FOXGRADE:\s*/, '').trim());
+    say(`     compiles and resolves, but REMOVES ${stubs} piece(s) of behaviour rather than porting them:`);
+    for (const w of what) say(`       · ${w.slice(0, 96)}`);
+    if (!args['allow-stubs']) {
+      say('     refused — a crash you can trace beats silently wrong behaviour. --allow-stubs to keep it.');
+      results.push([cls, `refused: would remove ${stubs} behaviour(s)`]);
+      continue;
+    }
+    say('     kept anyway (--allow-stubs)');
+  }
+  say(`     accepted: ${c.bad.length} → ${after.length} broken links${stubs ? `, with ${stubs} stub(s)` : ''}`);
   replacements.set(c.name, ported.bytes);
   // Inner classes are compiled alongside and must travel with it.
   for (const f of fs.readdirSync(path.dirname(path.join(ported.dir, cls + '.class')))) {
     if (!f.startsWith(simple + '$') || !f.endsWith('.class')) continue;
     replacements.set(path.dirname(c.name) + '/' + f, fs.readFileSync(path.join(path.dirname(path.join(ported.dir, cls + '.class')), f)));
   }
-  results.push([cls, `fixed ${c.bad.length - after.length} link(s)`]);
+  results.push([cls, `fixed ${c.bad.length - after.length} link(s)${stubs ? ` (${stubs} STUBBED — behaviour removed)` : ''}`]);
 }
 
 console.log(`\n  ── results ──`);
