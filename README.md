@@ -1,6 +1,7 @@
 # Fox-Grade
 
-Port Minecraft mod source across versions — and get told plainly when it doesn't know.
+Port Minecraft mods across versions — source or compiled jars — and get told plainly when it
+doesn't know.
 
 **156,478 mappings**, derived from Mojang's own published data and verified by compiling against real
 Minecraft jars. Not inferred, not guessed.
@@ -246,7 +247,13 @@ That last row is the one that matters. The port independently arrived at exactly
 maintainer used, verified against their real build — not by copying it, but from the relocation
 table and a compile loop.
 
-It has still not been launched. Every link resolving is necessary and not sufficient.
+**It runs.** Launched on 26.2, the saturation overlay renders on the hunger bar — the mod's actual
+job. That is one mod across one narrow hop, not a general claim, but it is the whole pipeline
+working end to end on a compiled jar: intermediary→mojmap translation, class remapping, member
+remapping, a relocation found by diffing two game jars, one source-level fix compiled back in, and a
+mixin retargeted at the class its injection point moved to.
+
+No source, no build environment, no maintainer involvement.
 
 ## Tier 2: what renaming cannot express
 
