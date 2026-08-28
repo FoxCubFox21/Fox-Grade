@@ -11772,6 +11772,505 @@
    ]
   }
  ],
+ "relocations": [
+  {
+   "owner": "com/mojang/blaze3d/opengl/GlDevice",
+   "name": "isZZeroToOne",
+   "desc": "()Z",
+   "via": "deviceInfo",
+   "host": "com/mojang/blaze3d/systems/DeviceInfo"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/GlRenderPass",
+   "name": "isClosed",
+   "desc": "()Z",
+   "via": "indexBuffer",
+   "host": "com/mojang/blaze3d/buffers/GpuBuffer"
+  },
+  {
+   "owner": "net/minecraft/client/KeyboardHandler",
+   "name": "showDebugChat",
+   "desc": "(Lnet/minecraft/network/chat/Component;)V",
+   "via": "minecraft",
+   "host": "net/minecraft/client/Minecraft"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "name": "addInitialScreens",
+   "desc": "(Ljava/util/List;)Z",
+   "via": "gui",
+   "host": "net/minecraft/client/gui/Gui"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "name": "openChatScreen",
+   "desc": "(Lnet/minecraft/client/gui/components/ChatComponent$ChatMethod;)V",
+   "via": "gui",
+   "host": "net/minecraft/client/gui/Gui"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "name": "setOverlay",
+   "desc": "(Lnet/minecraft/client/gui/screens/Overlay;)V",
+   "via": "gui",
+   "host": "net/minecraft/client/gui/Gui"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "name": "renderBuffers",
+   "desc": "()Lnet/minecraft/client/renderer/RenderBuffers;",
+   "via": "gameRenderer",
+   "host": "net/minecraft/client/renderer/GameRenderer"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "extractRenderState",
+   "desc": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "extractBossOverlay",
+   "desc": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "extractCameraOverlays",
+   "desc": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "extractSleepOverlay",
+   "desc": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "extractOverlayMessage",
+   "desc": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "extractTitle",
+   "desc": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "extractChat",
+   "desc": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "extractScoreboardSidebar",
+   "desc": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "extractTabList",
+   "desc": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "extractCrosshair",
+   "desc": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "extractEffects",
+   "desc": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "extractHotbarAndDecorations",
+   "desc": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "extractItemHotbar",
+   "desc": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "extractDemoOverlay",
+   "desc": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "extractSavingIndicator",
+   "desc": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "extractDebugOverlay",
+   "desc": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "extractSelectedItemName",
+   "desc": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "extractPlayerHealth",
+   "desc": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "extractVehicleHealth",
+   "desc": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "extractSubtitleOverlay",
+   "desc": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Z)V",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "canRenderCrosshairForSpectator",
+   "desc": "(Lnet/minecraft/world/phys/HitResult;)Z",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "getMobEffectSprite",
+   "desc": "(Lnet/minecraft/core/Holder;)Lnet/minecraft/resources/Identifier;",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "displayScoreboardSidebar",
+   "desc": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/scores/Objective;)V",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "getCameraPlayer",
+   "desc": "()Lnet/minecraft/world/entity/player/Player;",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "getPlayerVehicleWithHealth",
+   "desc": "()Lnet/minecraft/world/entity/LivingEntity;",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "getVehicleMaxHearts",
+   "desc": "(Lnet/minecraft/world/entity/LivingEntity;)I",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "getVisibleVehicleHeartRows",
+   "desc": "(I)I",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "extractArmor",
+   "desc": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/entity/player/Player;IIII)V",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "extractHearts",
+   "desc": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/entity/player/Player;IIIIFIIIZ)V",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "extractAirBubbles",
+   "desc": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/entity/player/Player;III)V",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "getAirBubbleYLine",
+   "desc": "(II)I",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "getCurrentAirSupplyBubble",
+   "desc": "(III)I",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "getEmptyBubbleDelayDuration",
+   "desc": "(IZ)I",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "playAirBubblePoppedSound",
+   "desc": "(ILnet/minecraft/world/entity/player/Player;I)V",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "extractFood",
+   "desc": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/entity/player/Player;II)V",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "extractTextureOverlay",
+   "desc": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/resources/Identifier;F)V",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "extractSpyglassOverlay",
+   "desc": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;F)V",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "extractPortalOverlay",
+   "desc": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;F)V",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "extractConfusionOverlay",
+   "desc": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;F)V",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "updateVignetteBrightness",
+   "desc": "(Lnet/minecraft/world/entity/Entity;)V",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "extractVignette",
+   "desc": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/entity/Entity;)V",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "extractSlot",
+   "desc": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IILnet/minecraft/client/DeltaTracker;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;I)V",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "setNowPlaying",
+   "desc": "(Lnet/minecraft/network/chat/Component;)V",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "setSubtitle",
+   "desc": "(Lnet/minecraft/network/chat/Component;)V",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "setTitle",
+   "desc": "(Lnet/minecraft/network/chat/Component;)V",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "setOverlayMessage",
+   "desc": "(Lnet/minecraft/network/chat/Component;Z)V",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "setTimes",
+   "desc": "(III)V",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "getChat",
+   "desc": "()Lnet/minecraft/client/gui/components/ChatComponent;",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "getGuiTicks",
+   "desc": "()I",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "getSpectatorGui",
+   "desc": "()Lnet/minecraft/client/gui/components/spectator/SpectatorGui;",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "getTabList",
+   "desc": "()Lnet/minecraft/client/gui/components/PlayerTabOverlay;",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "getBossOverlay",
+   "desc": "()Lnet/minecraft/client/gui/components/BossHealthOverlay;",
+   "via": "hud",
+   "host": "net/minecraft/client/gui/Hud"
+  },
+  {
+   "owner": "net/minecraft/client/gui/components/tabs/TabNavigationBar",
+   "name": "arrangeElements",
+   "desc": "()V",
+   "via": "layout",
+   "host": "net/minecraft/client/gui/layouts/FrameLayout"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/options/OptionsScreen",
+   "name": "added",
+   "desc": "()V",
+   "via": "lastScreen",
+   "host": "net/minecraft/client/gui/screens/Screen"
+  },
+  {
+   "owner": "net/minecraft/client/particle/ParticleGroup",
+   "name": "add",
+   "desc": "(Lnet/minecraft/client/particle/Particle;)V",
+   "via": "engine",
+   "host": "net/minecraft/client/particle/ParticleEngine"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/LevelRenderer",
+   "name": "setLevel",
+   "desc": "(Lnet/minecraft/client/multiplayer/ClientLevel;)V",
+   "via": "gameRenderer",
+   "host": "net/minecraft/client/renderer/GameRenderer"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/LevelRenderer",
+   "name": "offsetFrustum",
+   "desc": "(Lnet/minecraft/client/renderer/culling/Frustum;)Lnet/minecraft/client/renderer/culling/Frustum;",
+   "via": "sectionOcclusionGraph",
+   "host": "net/minecraft/client/renderer/SectionOcclusionGraph"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/LevelRenderer",
+   "name": "extractEntity",
+   "desc": "(Lnet/minecraft/world/entity/Entity;F)Lnet/minecraft/client/renderer/entity/state/EntityRenderState;",
+   "via": "entityRenderDispatcher",
+   "host": "net/minecraft/client/renderer/entity/EntityRenderDispatcher"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/ViewArea",
+   "name": "getSectionIndex",
+   "desc": "(III)I",
+   "via": "sections",
+   "host": "net/minecraft/client/RotatingSectionStorage"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/ViewArea",
+   "name": "containsSection",
+   "desc": "(III)Z",
+   "via": "sections",
+   "host": "net/minecraft/client/RotatingSectionStorage"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/chunk/SectionRenderDispatcher$RenderSection$CompileTask",
+   "name": "getRenderOrigin",
+   "desc": "()Lnet/minecraft/core/BlockPos;",
+   "via": "this$1",
+   "host": "net/minecraft/client/renderer/chunk/SectionRenderDispatcher$RenderSection"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/feature/FeatureRenderDispatcher",
+   "name": "endFrame",
+   "desc": "()V",
+   "via": "stagedVertexBuffer",
+   "host": "net/minecraft/client/renderer/StagedVertexBuffer"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/state/gui/pip/OversizedItemRenderState",
+   "name": "pose",
+   "desc": "()Lorg/joml/Matrix3x2f;",
+   "via": "guiItemRenderState",
+   "host": "net/minecraft/client/renderer/state/gui/GuiItemRenderState"
+  },
+  {
+   "owner": "net/minecraft/util/CubicSpline$Multipoint",
+   "name": "apply",
+   "desc": "(Ljava/lang/Object;)F",
+   "via": "coordinate",
+   "host": "net/minecraft/util/BoundedFloatFunction"
+  }
+ ],
  "removed": [
   {
    "owner": "com/mojang/blaze3d/opengl/BufferStorage$Immutable",

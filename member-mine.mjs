@@ -155,6 +155,40 @@ if (contested.length) {
   console.log(`  dropped, contested dest: ${contested.length}`);
 }
 
+// ── relocations: the member did not vanish, it moved to a delegate ───────────────────────────
+// Gui.getGuiTicks() looks removed, because nothing with that descriptor arrived in Gui. It was moved
+// to a new Hud class and is now reached as gui.hud.getGuiTicks() — same name, same descriptor, new
+// owner, one field hop away. A within-class diff can never see this, and it is a large share of what
+// gets written off as "removed with no replacement".
+//
+// Applying one is NOT a rename: inserting a getfield before the call shifts every later bytecode
+// offset and invalidates the stack map frames. So these are reported for Tier 2 to apply in source,
+// where it is a one-token edit.
+const declaresMember = new Map();          // "name\tdesc" -> [class]
+for (const [cls, ms] of newIdx) for (const m of ms) {
+  if (m.kind !== 'method') continue;
+  const k = `${m.name}\t${m.desc}`;
+  if (!declaresMember.has(k)) declaresMember.set(k, []);
+  declaresMember.get(k).push(cls);
+}
+const relocations = [];
+for (const r of removed) {
+  if (r.kind !== 'method' || !/nothing arrived/.test(r.why)) continue;
+  if (r.name.startsWith('<') || r.name.startsWith('lambda$') || r.name.startsWith('access$')) continue;   // structural, not relocatable
+  const hosts = declaresMember.get(`${r.name}\t${r.desc}`) || [];
+  if (!hosts.length) continue;
+  const ownerFields = (newIdx.get(r.owner) || []).filter((m) => m.kind === 'field');
+  const routes = [];
+  for (const h of hosts) {
+    if (h === r.owner) continue;
+    for (const f of ownerFields) if (f.desc === `L${h};`) routes.push({ via: f.name, host: h });
+  }
+  // Exactly one way through, or it is a guess about which delegate the caller meant.
+  if (routes.length === 1) relocations.push({ owner: r.owner, name: r.name, desc: r.desc, via: routes[0].via, host: routes[0].host });
+}
+console.log(`  RELOCATIONS            : ${relocations.length}   (member moved to a delegate field)`);
+for (const r of relocations.slice(0, 8)) console.log(`    ${r.owner.split('/').pop()}.${r.name}()  →  .${r.via}.${r.name}()   on ${r.host.split('/').pop()}`);
+
 console.log(`  classes in both        : ${examined.toLocaleString()}`);
 console.log(`  MEMBER RENAMES         : ${renames.length}   (confident: one candidate could fit)`);
 console.log(`  best-guess candidates  : ${guesses.length}   (plausible; applied only with --best-guess)`);
@@ -168,6 +202,6 @@ const OUT = args.out || path.join(HERE, `members.${args.from || 'old'}-${args.to
 fs.writeFileSync(OUT, JSON.stringify({
   schema: 1, from: args.from || null, to: args.to || null,
   source: 'jar-diff: unique descriptor match within one class',
-  renames, guesses, removed: removed.slice(0, 4000),
+  renames, guesses, relocations, removed: removed.slice(0, 4000),
 }, null, 1) + '\n');
 console.log(`\n  wrote ${path.basename(OUT)}`);

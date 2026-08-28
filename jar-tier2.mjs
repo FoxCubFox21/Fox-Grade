@@ -146,6 +146,16 @@ if (!CFR) { console.error('\n  no decompiler found — pass --cfr /path/to/cfr.j
 const rules = JSON.parse(fs.readFileSync(path.join(HERE, 'rules.json'), 'utf8'));
 const advisories = new Map();
 for (const a of (rules[TO]?.advisories || [])) if (a && typeof a === 'object' && a.when) advisories.set(a.when, a);
+// Relocations are the precise kind of fact worth handing a model: the member still exists, it just
+// moved behind a field. Applying that is a one-token source edit and impossible as a rename, because
+// inserting a getfield shifts every later bytecode offset and invalidates the stack map frames.
+const relocations = new Map();   // owner \t name \t desc -> {via, host}
+for (const f of fs.readdirSync(HERE).filter((x) => /^members\.[\d.]+-[\d.]+\.json$/.test(x))) {
+  try {
+    for (const r of JSON.parse(fs.readFileSync(path.join(HERE, f), 'utf8')).relocations || [])
+      relocations.set(`${r.owner}\t${r.name}\t${r.desc}`, r);
+  } catch { /* ignore */ }
+}
 function signaturesOf(cls) {
   const r = spawnSync('javap', ['-p', '-cp', cp, cls.replace(/\//g, '.')], { encoding: 'utf8', maxBuffer: 32e6 });
   return r.status === 0 && r.stdout ? r.stdout.split('\n').filter((l) => /^\s{2}\S/.test(l)).slice(0, 40).join('\n') : null;
@@ -238,6 +248,12 @@ for (const c of candidates) {
   const facts = [];
   for (const b of c.bad.slice(0, 12)) {
     const dotted = b.owner.replace(/\//g, '.');
+    const reloc = relocations.get(`${b.owner}\t${b.name}\t${b.desc}`);
+    if (reloc) {
+      facts.push(`- ${dotted}.${b.name}${b.desc} moved. It now lives on ${reloc.host.replace(/\//g, '.')}, reached through the`
+        + ` field \`${reloc.via}\`. Change the call to  <receiver>.${reloc.via}.${b.name}(...)  — same name, same arguments.`);
+      continue;
+    }
     facts.push(`- ${dotted}.${b.name} ${b.desc}  → ${b.why}`);
     const adv = advisories.get(dotted);
     if (adv) facts.push(`    ${dotted} has no direct replacement in ${TO}. Real ports used: ${adv.candidates.map((x) => x.fqcn).join(', ')}`);

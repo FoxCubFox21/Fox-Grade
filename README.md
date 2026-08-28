@@ -189,6 +189,41 @@ added/removed × sections/chunks — and name similarity picked `addedEmptySecti
 shared) over `removedEmptySections` (15). It links cleanly and means the opposite. That is the same
 silently-wrong failure Tier 2 refuses, so it is refused here too.
 
+## A member that looks deleted is often just moved
+
+`Gui.getGuiTicks()` appears to be gone from 26.2, so a within-class diff files it under "removed, no
+replacement". It was not removed. It moved to a new `Hud` class and is reached through a field:
+
+```java
+26.1:  gui.getGuiTicks()
+26.2:  gui.hud.getGuiTicks()
+```
+
+Same name, same descriptor, one field hop away. `member-mine.mjs` detects this — method gone from
+class A, present on class B with the same descriptor, and A holds exactly one field of type B —
+and found **71 such relocations** across 26.1 → 26.2, all previously written off as unfixable.
+
+They cannot be applied as renames. Inserting a `getfield` before the call shifts every later
+bytecode offset and invalidates the stack map frames. But in source it is a one-token edit, so the
+relocation is handed to Tier 2 as a precise instruction rather than something to guess at.
+
+### The result: a mod that verifies clean
+
+AppleSkin 26.1 → 26.2, its one remaining broken link:
+
+| | |
+|---|---|
+| Broken links | 1 → **0** |
+| Behaviour stubbed out | **0** |
+| Classes rejected by the JVM loader | **0** of 98 |
+| Minecraft members called, vs the author's own 26.2 build | **30 of 30 identical** |
+
+That last row is the one that matters. The port independently arrived at exactly the API the
+maintainer used, verified against their real build — not by copying it, but from the relocation
+table and a compile loop.
+
+It has still not been launched. Every link resolving is necessary and not sufficient.
+
 ## Tier 2: what renaming cannot express
 
 Some changes are not renames. In 26.2 `GuiGraphics` was not moved — it was dissolved into
