@@ -97,6 +97,46 @@ a mixin whose target method was deleted needs a new injection point, not a new n
 reported rather than guessed at. Patch jars you own, for yourself; most mod licences don't permit
 redistributing a modified build.
 
+## The narrow-hop test: where the real work turns out to be
+
+Wide gaps break classes. Narrow ones do not — and that changes what a porter needs.
+
+Testing 18 mods from **26.1 → 26.2** (one Minecraft release apart, no rendering rewrite in between):
+
+| | |
+|---|---|
+| Unported 26.1 jars on 26.2 | 1–18 broken links each |
+| Class renames mined from 18 jar pairs | 4 |
+| Class renames that applied to any test mod | **0** |
+| Broken links fixed by Tier 1 | **0** |
+
+Every failure was a **member** change: `Minecraft.setScreen` → `setScreenAndShow`,
+`Gui.getGuiTicks()` removed, `net.minecraft.util.Tuple` deleted. Class-level remapping is a no-op on
+exactly the hops most people want, because Mojang barely moves classes between point releases.
+
+`member-mine.mjs` diffs two Minecraft jars directly and recovers member renames — 98 across 26.1→26.2,
+71 methods and 27 fields, including a systematic drop of `get` prefixes (`getMainCamera` →
+`mainCamera`, 23 such). Unlike SRG or intermediary tokens, readable member names are **not** globally
+unique — `tick` exists on hundreds of classes — so every rule is keyed by `(owner, name, descriptor)`.
+
+Four gates, each added because the previous version produced a specific wrong answer:
+
+| Gate | What it killed |
+|---|---|
+| Descriptor unique across the whole class | `closed → canPersistentMap` (every boolean shares `Z`) |
+| Name overlap must corroborate | `tick → setClientLevelTeardownInProgress` |
+| No two members may claim one destination | `FOG_SNIPPET` and `MATRICES_PROJECTION_SNIPPET` both → `WORLD_TEXT_SNIPPET` |
+| Primitive-typed fields need the strict path | `elementsMask → MAX_VERTEX_ELEMENTS` |
+
+**One known error survives** in the 98: `FOG_SNIPPET → WORLD_TEXT_SNIPPET`, matched on the shared
+`_SNIPPET` suffix. Tightening further costs correct pairs like `updateNarration →
+updateWidgetNarration`, so it is documented rather than tuned away.
+
+These are **not yet applied**. Rewriting a member name in the constant pool is not the same as
+rewriting a class name: a class name is globally unique, while `setScreen` may appear as a UTF-8
+entry shared with unrelated uses. Applying them safely means rewriting `NameAndType` per call site
+against the matching owner, and that is not built yet.
+
 ## Tier 2: what renaming cannot express
 
 Some changes are not renames. In 26.2 `GuiGraphics` was not moved — it was dissolved into

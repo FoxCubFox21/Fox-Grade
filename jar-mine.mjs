@@ -55,6 +55,18 @@ for (const f of fs.readdirSync(HERE).filter((x) => /^intermediary\.[\d.]+\.json$
 // existed in 1.21.1, so the mod merely started calling a different class that was always there).
 const sourceClasses = new Set();
 for (const p of pairs) { const m = inter.get(p.from); if (m) for (const v of m.values()) sourceClasses.add(v); }
+// From 26.x on Minecraft is unobfuscated, so there is no intermediary table to read the source
+// version's class list from — the jar itself is the list. Without this the "destination already
+// existed" gate silently does nothing on exactly the hops where names are readable.
+if (args['source-classpath']) {
+  for (const j of args['source-classpath'].split(':')) {
+    if (!j.endsWith('.jar') || !fs.existsSync(j)) continue;
+    const r = spawnSync('unzip', ['-Z1', j, '*.class'], { encoding: 'utf8', maxBuffer: 64e6 });
+    if (r.status !== 0 || !r.stdout) continue;
+    for (const l of r.stdout.split('\n')) { const q = l.trim(); if (q.endsWith('.class')) sourceClasses.add(q.slice(0, -6).replace(/\//g, '.')); }
+  }
+}
+if (sourceClasses.size) console.log(`  source-version classes known: ${sourceClasses.size.toLocaleString()}`);
 
 function mcTypes(jarPath, interMap) {
   const out = new Set();

@@ -61,6 +61,32 @@ export class ClassFile {
     }
   }
 
+  // The class's own declared fields and methods. Reading these straight from the class file rather
+  // than shelling out to javap makes it cheap enough to diff two entire Minecraft jars.
+  declared() {
+    const b = this.buf;
+    const utf8 = (i) => { const e = this.entries.find((x) => x.index === i); return e && e.tag === 1 ? b.toString('latin1', e.start + 3, e.end) : null; };
+    const clsName = (i) => { const e = this.entries.find((x) => x.index === i); return e && e.tag === 7 ? utf8(b.readUInt16BE(e.start + 1)) : null; };
+    let p = this.poolEnd;
+    p += 2;                                        // access_flags
+    const thisClass = clsName(b.readUInt16BE(p)); p += 2;
+    const superClass = clsName(b.readUInt16BE(p)); p += 2;
+    p += 2 + b.readUInt16BE(p) * 2;                // interfaces
+    const members = [];
+    for (const kind of ['field', 'method']) {
+      const count = b.readUInt16BE(p); p += 2;
+      for (let i = 0; i < count; i++) {
+        p += 2;                                    // access_flags
+        const name = utf8(b.readUInt16BE(p)); p += 2;
+        const desc = utf8(b.readUInt16BE(p)); p += 2;
+        const attrs = b.readUInt16BE(p); p += 2;
+        for (let a = 0; a < attrs; a++) { p += 2; p += 4 + b.readUInt32BE(p); }
+        if (name && desc) members.push({ kind, name, desc });
+      }
+    }
+    return { name: thisClass, super: superClass, members };
+  }
+
   // Only entries that are plain printable ASCII are safe to rewrite. Anything else is a string
   // literal with real text in it — possibly modified-UTF8 — and is none of our business.
   static isPlain(s) { return /^[\x20-\x7E]*$/.test(s); }
