@@ -76,7 +76,10 @@ for (const u of units) for (const e of classesOf(u)) {
   classCount++;
   const cf = new ClassFile(inflateEntry(e));
   for (const t of referencedTypes(cf)) if (t.startsWith('net/minecraft/')) referenced.add(t);
-  for (const { value } of cf.utf8()) if (/^(method_\d+|field_\d+|func_\d+_[a-z]+_?|field_\d+_[a-z]+_?)$/.test(value)) memberTokens.add(value);
+  // comp_NNNN is the third token kind: Java record component accessors. Missing it left every
+  // record getter unmapped — FoodProperties.comp_2491 instead of .nutrition — which then looked
+  // like a redesign needing AI, when the mapping was sitting in the table all along.
+  for (const { value } of cf.utf8()) if (/^(method_\d+|field_\d+|comp_\d+|func_\d+_[a-z]+_?|field_\d+_[a-z]+_?)$/.test(value)) memberTokens.add(value);
 }
 
 // ── rules ────────────────────────────────────────────────────────────────────────────────────
