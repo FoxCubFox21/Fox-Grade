@@ -207,7 +207,31 @@ They cannot be applied as renames. Inserting a `getfield` before the call shifts
 bytecode offset and invalidates the stack map frames. But in source it is a one-token edit, so the
 relocation is handed to Tier 2 as a precise instruction rather than something to guess at.
 
+### Link checking is blind to mixins
+
+A mixin does not call its target — it names it as a string inside an annotation. Constant-pool link
+resolution cannot see that, so a jar this project had already declared clean crashed on launch:
+
+```
+@Inject on renderFoodPre could not find any targets matching 'extractFood' in Gui
+```
+
+Same relocation as before: `Gui.extractFood` and `Gui.extractHearts` had moved to `Hud`, so the
+mixin had to target `Hud`. `mixin-check.mjs` reads every mixin config, verifies each injection point
+still exists, and uses the relocation table to say what to do about it:
+
+```bash
+node mixin-check.mjs mod.jar --classpath "$MC" --out fixed.jar
+```
+
+Retargeting is a single constant edit — `@Mixin` stores its target once, and the exact-string match
+means `GuiGraphicsExtractor` cannot be hit by accident. It only fires when **every** broken target in
+a mixin moved to the same class; split across two, it says so and stops, because that means splitting
+the mixin, which is a decision.
+
 ### The result: a mod that verifies clean
+
+
 
 AppleSkin 26.1 → 26.2, its one remaining broken link:
 
