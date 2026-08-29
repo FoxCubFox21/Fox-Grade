@@ -394,6 +394,66 @@ has not been run yet, so treat this as one honest data point, not a verdict.
   there. It declines rather than guesses, so accuracy holds.
 - **Replace testing.** Compiling clean is necessary, not sufficient. Every port ships a report.
 
+## Asking the corpus for what a jar actually needs
+
+The other miners sweep a category and hope the output covers what is needed. `jar-verify` already
+produces the exact list of what is missing, and that list is a set of questions:
+
+```bash
+node demand-mine.mjs mod.jar --pairs pairs.json --classpath "$MC" --source-classpath mc-26.1.jar
+```
+
+```
+✓ LevelRenderer.extractVisibleEntities → render   [1 mod: iris]
+? Items.PINK_WOOL          — 18 mods searched, no replacement found
+? Gui.getChat()            — 18 mods searched, no replacement found
+```
+
+Failure becomes precise. "18 mods searched and none solved this" tells you whether to add corpus or
+whether it needs a person — which a bare count never did. And a fix matching no known pattern still
+surfaces, which is the only way a **missing category** announces itself; every category in this
+project so far came from noticing a crash, which is not a discovery process.
+
+Getting the demand list right needed two corrections, both the same mistake in opposite directions.
+Checking only declared members reported 40 phantom needs for cloth-config against a real 3, because
+`Button.active` and `MutableComponent.getString` are inherited. Then treating "the hierarchy left the
+indexed world" as absence swung it to reporting nothing at all, since every walk ends at
+`java.lang.Object`. Now: present, provably absent, or **unknowable** — and unknowable is never
+reported as missing.
+
+## Pooling what only observation can teach
+
+Class renames were the least valuable thing to share: they derive from mappings Mojang publishes, so
+every install can compute them alone. The categories worth pooling are the ones you can only learn by
+watching ports — member renames, relocations, and above all injection points, because a small number
+of Minecraft methods are hooked by a great many mods. One install holding sodium and iris learns
+facts that unblock mods it does not have.
+
+```bash
+node contrib-pack.mjs --out my-contribution.json      # facts AND unanswered questions
+node contrib-verify2.mjs my-contribution.json --classpath "$MC" --source-classpath mc-26.1.jar
+```
+
+The condition for sharing a fact is that the recipient can **re-derive** it. That is why the packer
+refuses guesses — 483 of them here — however plausible: a guess cannot be checked on the far end, and
+a pool of unverifiable guesses is indistinguishable from a pool of noise.
+
+Verification proves what is provable and says so about the rest:
+
+| provable | not provable |
+|---|---|
+| the target member exists | that an injection point is the *semantically right* hook |
+| the old one is genuinely gone | |
+| a relocation's field really has the host's type | |
+
+So injection points are accepted only on independent agreement and stay a tier below jar-derived
+facts. Against a submission with five poisoned entries spliced into 151 honest ones, all five were
+rejected and all 151 kept.
+
+**Open questions travel too.** "18 mods searched, no replacement for `Items.PINK_WOOL`" is a request
+somebody else's collection may answer, and pooling the questions lets the set find its own gaps
+instead of waiting for each person to hit them one at a time.
+
 ## Rules get better as people use it
 
 Every install can contribute what it discovers — see [`contrib/`](contrib/README.md). Submissions carry

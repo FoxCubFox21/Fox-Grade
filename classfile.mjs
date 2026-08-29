@@ -71,7 +71,9 @@ export class ClassFile {
     p += 2;                                        // access_flags
     const thisClass = clsName(b.readUInt16BE(p)); p += 2;
     const superClass = clsName(b.readUInt16BE(p)); p += 2;
-    p += 2 + b.readUInt16BE(p) * 2;                // interfaces
+    const ifCount = b.readUInt16BE(p); p += 2;
+    const interfaces = [];
+    for (let i = 0; i < ifCount; i++) { const n = clsName(b.readUInt16BE(p)); if (n) interfaces.push(n); p += 2; }
     const members = [];
     for (const kind of ['field', 'method']) {
       const count = b.readUInt16BE(p); p += 2;
@@ -84,7 +86,7 @@ export class ClassFile {
         if (name && desc) members.push({ kind, name, desc });
       }
     }
-    return { name: thisClass, super: superClass, members };
+    return { name: thisClass, super: superClass, interfaces, members };
   }
 
   // Only entries that are plain printable ASCII are safe to rewrite. Anything else is a string
