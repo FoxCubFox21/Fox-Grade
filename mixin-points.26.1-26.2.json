@@ -1,0 +1,213 @@
+{
+ "schema": 1,
+ "from": "26.1",
+ "to": "26.2",
+ "corroborated": [
+  {
+   "owner": "net/minecraft/client/renderer/LevelRenderer",
+   "from": "renderLevel",
+   "to": "render",
+   "mods": [
+    "bobby",
+    "sodium-fabric",
+    "iris-fabric",
+    "fabric-api",
+    "xaerominimap-fabric",
+    "voicechat-fabric"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/ItemInHandRenderer",
+   "from": "renderHandsWithItems",
+   "to": "submitHandsWithItems",
+   "mods": [
+    "freecam-fabric",
+    "iris-fabric"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "from": "destroy",
+   "to": "exitWorldAndClose",
+   "mods": [
+    "freecam-fabric",
+    "sodium-fabric",
+    "yet_another_config_lib_v",
+    "voicechat-fabric"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "from": "renderBuffers",
+   "to": "levelExtractor",
+   "mods": [
+    "sodium-fabric",
+    "voicechat-fabric"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/LevelRenderer",
+   "from": "extractBlockOutline",
+   "to": "submitBlockOutline",
+   "mods": [
+    "sodium-fabric",
+    "fabric-api",
+    "voicechat-fabric"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/LevelRenderer",
+   "from": "renderBlockOutline",
+   "to": "submitBlockOutline",
+   "mods": [
+    "sodium-fabric",
+    "fabric-api",
+    "voicechat-fabric"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/ScreenEffectRenderer",
+   "from": "renderScreenEffect",
+   "to": "submit",
+   "mods": [
+    "sodium-fabric",
+    "fabric-api"
+   ],
+   "source": "mixin-groundtruth"
+  }
+ ],
+ "single": [
+  {
+   "owner": "net/minecraft/client/renderer/GameRenderer",
+   "from": "getGameRenderState",
+   "to": "gameRenderState",
+   "mods": [
+    "sodium-fabric"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/feature/ShadowFeatureRenderer",
+   "from": "renderTranslucent",
+   "to": "prepare",
+   "mods": [
+    "sodium-fabric"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/SubmitNodeCollection",
+   "from": "clear",
+   "to": "submitMovingBlock",
+   "mods": [
+    "sodium-fabric"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/GameRenderer",
+   "from": "getMainCamera",
+   "to": "mainCamera",
+   "mods": [
+    "iris-fabric"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "from": "getMainRenderTarget",
+   "to": "gameRenderer",
+   "mods": [
+    "iris-fabric"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/GameRenderer",
+   "from": "getNightVisionScale",
+   "to": "nightVisionScale",
+   "mods": [
+    "iris-fabric"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/ItemInHandRenderer",
+   "from": "renderArmWithItem",
+   "to": "submitArmWithItem",
+   "mods": [
+    "iris-fabric"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/ScreenEffectRenderer",
+   "from": "renderWater",
+   "to": "submitWater",
+   "mods": [
+    "iris-fabric"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/feature/NameTagFeatureRenderer",
+   "from": "renderTranslucent",
+   "to": "buildGroup",
+   "mods": [
+    "iris-fabric"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/feature/FlameFeatureRenderer",
+   "from": "renderSolid",
+   "to": "prepare",
+   "mods": [
+    "iris-fabric"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/feature/ItemFeatureRenderer",
+   "from": "renderItem",
+   "to": "prepareSubmit",
+   "mods": [
+    "iris-fabric"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/SubmitNodeCollection",
+   "from": "submitModelPart",
+   "to": "submitBlockModel",
+   "mods": [
+    "iris-fabric"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/feature/TextFeatureRenderer",
+   "from": "renderTranslucent",
+   "to": "buildGroup",
+   "mods": [
+    "iris-fabric"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/GameRenderer",
+   "from": "extractGui",
+   "to": "extract",
+   "mods": [
+    "fabric-api"
+   ],
+   "source": "mixin-groundtruth"
+  }
+ ]
+}

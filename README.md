@@ -322,8 +322,31 @@ to start:
 written into the annotation. Rewriting those selectors fixes **28 of 168** mixin problems across the
 corpus (16.7%).
 
-The remaining 140 are genuinely deleted hooks, and no table fixes those: choosing a new injection
-point means understanding what the mod is trying to do.
+### Deleted hooks: read the answer out of the maintainer's own port
+
+Choosing a new injection point does require knowing what the mod is trying to do — but that decision
+has already been made, in the maintainer's released build for the target version. `mixin-mine.mjs`
+diffs each mixin class across a mod's two versions and reads the substitution back out.
+
+A single mod's choice is that author's decision. The **same** substitution across unrelated mods is a
+fact about the game, and only those apply generally:
+
+| corroborated | mods agreeing |
+|---|---|
+| `LevelRenderer.renderLevel → render` | 6 |
+| `Minecraft.destroy → exitWorldAndClose` | 4 |
+| `LevelRenderer.renderBlockOutline → submitBlockOutline` | 3 |
+| `ItemInHandRenderer.renderHandsWithItems → submitHandsWithItems` | 2 |
+
+Two guards were needed. A first pass paired every removed hook with whatever arrived in the same
+mixin, producing `setScreen → exitWorldAndClose` and `getMainCamera → render` — arbitrary matches
+from mixins where several hooks changed at once. Only a clean 1:1 counts now, and a substitution that
+contradicts a rename derived from the game jars themselves is dropped, since diffing the game is
+stronger evidence than one mod's mixin.
+
+Applied across the corpus this takes mixin problems from **168 to 121 (28% fixed)**: iris 90 → 68,
+sodium 22 → 15, xaeros 8 → 3, and bobby to zero. It scales with the corpus — every additional pair of
+mod versions is more mined decisions.
 
 ### The corpus, honestly
 
@@ -332,8 +355,8 @@ point means understanding what the mod is trying to do.
 | verdict | count |
 |---|---|
 | **CLEAN** — would launch | **0** |
-| **Links only** — mixins fine, some references broken | 6 |
-| **Blocked** — injection points gone | 12 |
+| **Links only** — mixins fine, some references broken | 7 |
+| **Blocked** — injection points gone | 11 |
 
 Iris alone accounts for 78 broken injection points, sodium 19, immediatelyfast 10. The split is
 about what a mod *does*: mods that read game state and draw an overlay are reachable; mods that

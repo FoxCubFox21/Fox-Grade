@@ -55,6 +55,19 @@ try {
     memberRenames.set(`${r.owner}\t${r.name}`, r.becomes);
 } catch { /* no overrides is fine */ }
 
+// Injection points chosen by the mods' own maintainers, read back out of their released builds.
+// These cover hooks that were DELETED rather than renamed, where no mapping exists and the answer
+// is a decision — one that has already been made and can simply be reused. Corroborated
+// substitutions (several unrelated mods landing on the same one) are treated as facts about the
+// game; a single mod's choice is that mod's decision and needs --best-guess.
+for (const f of fs.readdirSync(HERE).filter((x) => /^mixin-points\.[\d.]+-[\d.]+\.json$/.test(x))) {
+  try {
+    const t = JSON.parse(fs.readFileSync(path.join(HERE, f), 'utf8'));
+    for (const r of t.corroborated || []) if (!memberRenames.has(`${r.owner}\t${r.from}`)) memberRenames.set(`${r.owner}\t${r.from}`, r.to);
+    if (args['best-guess']) for (const r of t.single || []) if (!memberRenames.has(`${r.owner}\t${r.from}`)) memberRenames.set(`${r.owner}\t${r.from}`, r.to);
+  } catch { /* ignore */ }
+}
+
 // Relocations, so a broken target can be explained rather than merely reported.
 const relocs = new Map();   // "owner\tname" -> {host, via}
 for (const f of fs.readdirSync(HERE).filter((x) => /^members\.[\d.]+-[\d.]+\.json$/.test(x))) {
