@@ -23,12 +23,37 @@ import { readZip, inflateEntry } from './zipfile.mjs';
 import { ClassFile } from './classfile.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
+// Boolean flags must be declared, or "--best-guess --out x.jar" silently eats --out as its value
+// and the output is never written — which produced a whole sweep of before==after numbers.
+const FLAGS = new Set(['best-guess', 'quiet']);
 const args = {}, pos = [];
-for (let i = 2; i < process.argv.length; i++) { const t = process.argv[i]; t.startsWith('--') ? args[t.slice(2)] = process.argv[++i] : pos.push(t); }
+for (let i = 2; i < process.argv.length; i++) {
+  const t = process.argv[i];
+  if (!t.startsWith('--')) { pos.push(t); continue; }
+  const k = t.slice(2);
+  args[k] = FLAGS.has(k) ? true : process.argv[++i];
+}
 const JAR = pos[0];
 if (!JAR || !fs.existsSync(JAR)) { console.error('usage: node mixin-check.mjs <mod.jar> --classpath "<target jars>"'); process.exit(2); }
 const cp = args.classpath || (fs.existsSync('/tmp/foxgrade_cp.txt') ? fs.readFileSync('/tmp/foxgrade_cp.txt', 'utf8').trim() : '');
 if (!cp) { console.error('need --classpath'); process.exit(2); }
+
+// Member renames, so an injection point that was merely renamed can be rewritten rather than just
+// reported. A mixin names its target method as a plain string in an annotation, not as a Methodref,
+// so the normal member remapping never sees it — the rule can be sitting in the table while the
+// mixin still names the old method and Fabric refuses to start.
+const memberRenames = new Map();   // "owner\tname" -> newName
+for (const f of fs.readdirSync(HERE).filter((x) => /^members\.[\d.]+-[\d.]+\.json$/.test(x))) {
+  try {
+    const t = JSON.parse(fs.readFileSync(path.join(HERE, f), 'utf8'));
+    for (const r of t.renames || []) memberRenames.set(`${r.owner}\t${r.from}`, r.to);
+    if (args['best-guess']) for (const r of t.guesses || []) if (!memberRenames.has(`${r.owner}\t${r.from}`)) memberRenames.set(`${r.owner}\t${r.from}`, r.to);
+  } catch { /* ignore */ }
+}
+try {
+  for (const r of (JSON.parse(fs.readFileSync(path.join(HERE, 'members.overrides.json'), 'utf8')).renames || []))
+    memberRenames.set(`${r.owner}\t${r.name}`, r.becomes);
+} catch { /* no overrides is fine */ }
 
 // Relocations, so a broken target can be explained rather than merely reported.
 const relocs = new Map();   // "owner\tname" -> {host, via}
@@ -39,6 +64,24 @@ for (const f of fs.readdirSync(HERE).filter((x) => /^members\.[\d.]+-[\d.]+\.jso
 
 const entries = readZip(fs.readFileSync(JAR));
 const byName = new Map(entries.map((e) => [e.name, e]));
+
+// The SOURCE version's classes, which turn a loose guess into a precise test. A string in a mixin's
+// pool is only an injection target worth worrying about if it named a member of the target class
+// BEFORE and does not now. Without this the checker could only report targets it could explain via a
+// relocation, and stayed silent on ones that were merely renamed or deleted — which is most of them.
+const sourceMembers = new Map();   // class -> Set(member names)
+if (args['source-classpath']) {
+  for (const j of args['source-classpath'].split(':')) {
+    if (!j.endsWith('.jar') || !fs.existsSync(j)) continue;
+    for (const e of readZip(fs.readFileSync(j))) {
+      if (!e.name.endsWith('.class')) continue;
+      try {
+        const d = new ClassFile(inflateEntry(e)).declared();
+        if (d.name) sourceMembers.set(d.name, new Set(d.members.map((m) => m.name)));
+      } catch { /* skip */ }
+    }
+  }
+}
 
 // Which classes are mixins, from every mixin config in the jar.
 const mixinClasses = [];
@@ -54,13 +97,46 @@ if (!mixinClasses.length) { console.log('  no mixins in this jar'); process.exit
 // A mixin's target class is a Class constant in its own pool (from @Mixin), and the injection point
 // is a plain string constant (from @Inject(method="...")). Neither is a Methodref, which is exactly
 // why link checking cannot see them.
-function declaredMembers(cls) {
-  const r = spawnSync('javap', ['-p', '-cp', cp, cls.replace(/\//g, '.')], { encoding: 'utf8', maxBuffer: 32e6 });
-  if (r.status !== 0 || !r.stdout) return null;
-  const names = new Set();
-  for (const l of r.stdout.split('\n')) { const m = l.match(/([\w$]+)\s*\(/); if (m) names.add(m[1]); }
-  return names;
+// javap takes many classes per call and its startup dominates the cost. One spawn per target class
+// left a large mod like iris grinding for minutes; batching makes the whole sweep tractable.
+const memberCache = new Map();
+function preloadMembers(names) {
+  const todo = [...new Set(names)].filter((n) => !memberCache.has(n));
+  for (let i = 0; i < todo.length; i += 150) {
+    const batch = todo.slice(i, i + 150);
+    const r = spawnSync('javap', ['-p', '-cp', cp, ...batch.map((c) => c.replace(/\//g, '.'))], { encoding: 'utf8', maxBuffer: 512e6 });
+    if (r.stdout) for (const part of r.stdout.split(/\n(?=(?:Compiled from|public |final |abstract |class |interface |@))/)) {
+      const h = part.match(/\b(?:class|interface)\s+([\w.$]+)/);
+      if (!h) continue;
+      const names2 = new Set();
+      for (const l of part.split('\n')) {
+        const m = l.match(/([\w$]+)\s*\(/); if (m) { names2.add(m[1]); continue; }
+        // Fields too. Collecting only methods left the retarget guard blind to exactly the case it
+        // exists for: a mixin @Shadowing a FIELD of its original target. A method line ends in ");"
+        // so it cannot be caught here by accident.
+        const f = l.match(/^\s+.*?([\w$]+)\s*;\s*$/); if (f) names2.add(f[1]);
+      }
+      memberCache.set(h[1].replace(/\./g, '/'), names2);
+    }
+    for (const c of batch) if (!memberCache.has(c)) memberCache.set(c, null);
+  }
 }
+function declaredMembers(cls) {
+  if (!memberCache.has(cls)) preloadMembers([cls]);
+  return memberCache.get(cls);
+}
+
+// Collect every target across every mixin first, so the whole sweep costs a couple of javap calls.
+const allTargets = new Set();
+for (const { cls } of mixinClasses) {
+  const e = byName.get(cls + '.class');
+  if (!e) continue;
+  for (const { value } of new ClassFile(inflateEntry(e)).utf8()) {
+    if (!ClassFile.isPlain(value)) continue;
+    for (const m of value.matchAll(/L(net\/minecraft\/[\w/$]+);/g)) allTargets.add(m[1]);
+  }
+}
+preloadMembers([...allTargets]);
 
 let checked = 0;
 const problems = [];
@@ -82,9 +158,20 @@ for (const { cls, config } of mixinClasses) {
     if (!members) { problems.push({ cls, kind: 'target-class', detail: `target ${t.replace(/\//g, '.')} does not exist in the target version` }); continue; }
     for (const s of strings) {
       if (own.has(s) || members.has(s) || s.length < 4) continue;
-      // Only worry about a name that WAS a member of this class before, i.e. one a relocation knows.
       const rel = relocs.get(`${t}\t${s}`);
-      if (rel) problems.push({ cls, kind: 'moved', from: t, host: rel.host, detail: `@Inject target "${s}" is no longer on ${t.split('/').pop()} — it moved to ${rel.host.replace(/\//g, '.')}`, fix: `retarget this mixin at ${rel.host.replace(/\//g, '.')}` });
+      if (rel) { problems.push({ cls, kind: 'moved', from: t, host: rel.host, detail: `@Inject target "${s}" is no longer on ${t.split('/').pop()} — it moved to ${rel.host.replace(/\//g, '.')}`, fix: `retarget this mixin at ${rel.host.replace(/\//g, '.')}` }); continue; }
+      // Not explainable, but still broken: it named a member of this class in the source version and
+      // does not in the target. Fabric will refuse to start on it either way, so report it.
+      const was = sourceMembers.get(t);
+      if (!was || !was.has(s)) continue;
+      const renamed = memberRenames.get(`${t}\t${s}`);
+      if (renamed && members.has(renamed)) {
+        problems.push({ cls, kind: 'renamed', target: t, from: s, to: renamed,
+          detail: `@Inject/@Redirect target "${s}" was renamed to "${renamed}" on ${t.split('/').pop()}`,
+          fix: `rewrite the annotation's method selector` });
+        continue;
+      }
+      problems.push({ cls, kind: 'gone', detail: `@Inject/@Redirect target "${s}" existed on ${t.split('/').pop()} before and does not now`, fix: 'needs a new injection point — a decision, not a rewrite' });
     }
     checked++;
   }
@@ -112,25 +199,62 @@ console.log(problems.length
 // injections landed in two different places cannot be expressed as one @Mixin and needs splitting,
 // which is a decision rather than a rewrite.
 if (args.out && problems.length) {
+  // Renamed injection points first: the selector is a plain string, so rewriting it is exact. This
+  // is the answer to "why not inject where they do" — we already knew where, and simply never wrote
+  // it into the annotation.
+  const renamedByCls = new Map();
+  for (const p of problems.filter((x) => x.kind === 'renamed')) {
+    if (!renamedByCls.has(p.cls)) renamedByCls.set(p.cls, []);
+    renamedByCls.get(p.cls).push(p);
+  }
   const moved = problems.filter((p) => p.kind === 'moved' && p.host);
   const byMixin = new Map();
   for (const p of moved) { if (!byMixin.has(p.cls)) byMixin.set(p.cls, new Set()); byMixin.get(p.cls).add(`${p.from}\t${p.host}`); }
   const repl = new Map();
-  let fixed = 0, split = 0;
+  let fixed = 0, split = 0, selectors = 0;
+  for (const [cls, ps] of renamedByCls) {
+    const e = byName.get(cls + '.class');
+    if (!e) continue;
+    const map = new Map(ps.map((p) => [p.from, p.to]));
+    const out = new ClassFile(inflateEntry(e)).rewrite((v) => map.get(v) || null);
+    if (!out) continue;
+    repl.set(e.name, out); selectors += ps.length;
+    for (const p of ps) console.log(`  ✓ ${cls.split('/').pop()}: injection point ${p.from} → ${p.to}`);
+  }
   for (const [cls, moves] of byMixin) {
     const hosts = new Set([...moves].map((m) => m.split('\t')[1]));
     if (hosts.size !== 1) { console.log(`  ! ${cls.split('/').pop()}: targets moved to ${hosts.size} different classes — needs splitting by hand`); split++; continue; }
     const from = [...moves][0].split('\t')[0], to = [...hosts][0];
     const e = byName.get(cls + '.class');
+    // One method moving to a delegate does NOT mean the mixin moved. LevelRenderer holds a field of
+    // type EntityRenderDispatcher, so a single relocated method along that field made this retarget
+    // a mixin whose @Shadow of LevelRenderer's own entityRenderDispatcher field then had nowhere to
+    // resolve — and Fabric refused to start. If the mixin still needs anything that lives only on
+    // the original target, it still belongs there.
+    const oldMembers = memberCache.get(from), newMembers = memberCache.get(to);
+    if (oldMembers && newMembers) {
+      const cf2 = new ClassFile(inflateEntry(e));
+      const own2 = new Set(cf2.declared().members.map((m) => m.name));
+      const stillNeeded = [];
+      for (const { value } of cf2.utf8()) {
+        if (!ClassFile.isPlain(value) || !/^[\w$]+$/.test(value) || value.length < 4) continue;
+        if (own2.has(value)) continue;
+        if (oldMembers.has(value) && !newMembers.has(value)) stillNeeded.push(value);
+      }
+      if (stillNeeded.length) {
+        console.log(`  ! ${cls.split('/').pop()}: still uses ${[...new Set(stillNeeded)].slice(0, 3).join(', ')} from ${from.split('/').pop()} — not retargeted`);
+        continue;
+      }
+    }
     const out = new ClassFile(inflateEntry(e)).rewrite((v) => (v === `L${from};` ? `L${to};` : null));
     if (!out) { console.log(`  ! ${cls.split('/').pop()}: could not find its @Mixin target constant`); continue; }
     repl.set(e.name, out); fixed++;
     console.log(`  ✓ ${cls.split('/').pop()} retargeted: ${from.replace(/\//g, '.')} → ${to.replace(/\//g, '.')}`);
   }
-  if (fixed) {
+  if (fixed || selectors) {
     const { writeZip } = await import('./zipfile.mjs');
     fs.writeFileSync(args.out, writeZip(entries, repl));
-    console.log(`\n  wrote ${args.out} — ${fixed} mixin(s) retargeted${split ? `, ${split} left alone` : ''}`);
+    console.log(`\n  wrote ${args.out} — ${fixed} mixin(s) retargeted, ${selectors} injection point(s) renamed${split ? `, ${split} left alone` : ''}`);
     console.log('  re-run this check on it, then launch. A mixin that applies is not a mixin that works.');
   }
 }

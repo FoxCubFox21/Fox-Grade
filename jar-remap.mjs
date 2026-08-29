@@ -194,6 +194,22 @@ for (const [k, v] of [...memberRenames]) {
   const moved = types.get(owner);
   if (moved) memberRenames.set(`${moved}\t${kind}\t${name}\t${desc}`, v);
 }
+// Hand-verified substitutions, loaded last so they beat anything mined. These are the cases the
+// miner is structurally blind to — chiefly a member removed in favour of one that already existed,
+// which an arrived-only diff can never propose. They carry their own provenance and are counted
+// separately, so a table of derived facts is never quietly padded with human judgement.
+let overrideCount = 0;
+try {
+  const ov = JSON.parse(fs.readFileSync(path.join(HERE, 'members.overrides.json'), 'utf8'));
+  for (const r of ov.renames || []) {
+    const a2 = verOf(r.from), b2 = verOf(r.to);
+    if ((fv && cmp(a2, fv) < 0) || (tv && cmp(b2, tv) > 0)) continue;
+    memberRenames.set(`${r.owner}\t${r.kind}\t${r.name}\t${r.desc}`, r.becomes);
+    guessRules.delete(`${r.owner}\t${r.kind}\t${r.name}\t${r.desc}`);
+    overrideCount++;
+  }
+} catch { /* no overrides file is fine */ }
+
 const memberLookup = (owner, kind, name, desc) => {
   const k = `${owner}\t${kind}\t${name}\t${desc}`;
   const to = memberRenames.get(k);
@@ -209,6 +225,7 @@ console.log(`    naming scheme      : ${scheme ? `${scheme.match(/^scheme:(\w+)@
 if (!TARGET) console.log(`    ⚠ no --classpath, so no rename could be confirmed against the real ${TO} jars`);
 console.log(`\n    remappable         : ${types.size}  ${pct(types.size, referenced.size)}`);
 if (memberRuleCount) console.log(`    member rules       : ${memberRuleCount} for this span`);
+if (overrideCount) console.log(`    hand-verified      : ${overrideCount} substitution(s) the miner cannot derive`);
 if (guessRuleCount) console.log(`    best-guess rules   : ${guessRuleCount}  ⚠ plausible, not certain — see the report`);
 console.log(`    already correct    : ${alreadyOk.length}`);
 console.log(`    NO EQUIVALENT      : ${removed.length}   ← these cannot be fixed by renaming`);
@@ -231,7 +248,7 @@ if (removed.length || unresolved.length || phantom.length) {
 
 // ── write ────────────────────────────────────────────────────────────────────────────────────
 const stats = {};
-let memberHits = 0;
+let memberHits = 0, metaFixed = 0;
 const guessesUsed = new Set();
 const replacer = makeReplacer(types, members, stats);
 function remapUnit(buf) {
@@ -245,6 +262,25 @@ function remapUnit(buf) {
     }
     // A modified jar can never satisfy the original signature, so the stale signature files go.
     if (/^META-INF\/.*\.(SF|RSA|DSA|EC)$/i.test(e.name)) continue;
+    // Porting the bytecode is not enough: fabric.mod.json still declares the version range the mod
+    // was built for, and Fabric refuses to load outside it before any of our work is even reached.
+    //   Freecam requires minecraft >=26.1.0 <26.2.0-0, but 26.2 is present
+    // The dependency is narrowed to exactly the target, not widened to "*": this jar has been ported
+    // to one specific version and has no business claiming to run on others.
+    if (/(^|\/)fabric\.mod\.json$/.test(e.name)) {
+      try {
+        const meta = JSON.parse(inflateEntry(e).toString('utf8'));
+        let touched = false;
+        for (const field of ['depends', 'recommends', 'suggests', 'breaks', 'conflicts']) {
+          if (meta[field] && meta[field].minecraft !== undefined) {
+            if (field === 'depends') { meta[field].minecraft = TO; touched = true; }
+            else { delete meta[field].minecraft; touched = true; }
+          }
+        }
+        if (touched) { repl.set(e.name, Buffer.from(JSON.stringify(meta, null, 2) + '\n', 'utf8')); metaFixed++; }
+      } catch { console.error(`  ! could not parse ${e.name}; leaving its version range alone`); }
+      continue;
+    }
     if (!e.name.endsWith('.class')) continue;
     // Types first, then members: a member rule names its owner, so that owner has to already be
     // spelled the way this class file now spells it.
@@ -280,4 +316,5 @@ if (guessesUsed.size) {
   fs.writeFileSync(rp, lines.join('\n'));
   console.log(`  ⚠ ${guessesUsed.size} best-guess rename(s) applied — every one listed in ${path.basename(rp)}`);
 }
+if (metaFixed) console.log(`  ${metaFixed} fabric.mod.json version range(s) retargeted at ${TO}`);
 console.log(`  the original is untouched. Verify by launching the game — a jar that loads is not a jar that works.`);

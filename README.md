@@ -208,6 +208,20 @@ They cannot be applied as renames. Inserting a `getfield` before the call shifts
 bytecode offset and invalidates the stack map frames. But in source it is a one-token edit, so the
 relocation is handed to Tier 2 as a precise instruction rather than something to guess at.
 
+### Porting a jar is more than porting its code
+
+Four things broke a jar that had already passed every check, and none were about mappings:
+
+| | why it passed anyway |
+|---|---|
+| Data-descriptor flag left set on copied entries | `unzip -t` and any central-directory reader accept it; Fabric streams nested jars with `ZipInputStream`, which does not |
+| `fabric.mod.json` still declaring the old version range | the bytecode was checked; the manifest never was |
+| A mixin retargeted at a delegate class | one relocated method is not the whole mixin moving |
+| The guard against that, blind to fields | it collected method names only, and the shadow was a field |
+
+The jars are now validated the way the consumer reads them — streamed, recursing into nested jars —
+because reading a file correctly through one API says nothing about another.
+
 ### Link checking is blind to mixins
 
 A mixin does not call its target — it names it as a string inside an annotation. Constant-pool link
@@ -293,6 +307,45 @@ traceable. A stub returns plausible wrong data forever.
 
 So a port that removes behaviour is **refused by default**, the original bytecode is kept, and what
 would have been lost is printed. `--allow-stubs` overrides it, and still names every stub.
+
+### Injection points that were merely renamed
+
+A mixin names its target method as a plain string in an annotation, not as a method reference. So
+member remapping never saw it, and a rename sitting in the table went unapplied while Fabric refused
+to start:
+
+```
+@Redirect on redirectGetViewXRot: no target 'renderHandsWithItems' in ItemInHandRenderer
+```
+
+`ItemInHandRenderer.renderHandsWithItems → submitHandsWithItems` was already known. It just was not
+written into the annotation. Rewriting those selectors fixes **28 of 168** mixin problems across the
+corpus (16.7%).
+
+The remaining 140 are genuinely deleted hooks, and no table fixes those: choosing a new injection
+point means understanding what the mod is trying to do.
+
+### The corpus, honestly
+
+18 mods, 26.1 → 26.2, everything applied:
+
+| verdict | count |
+|---|---|
+| **CLEAN** — would launch | **0** |
+| **Links only** — mixins fine, some references broken | 6 |
+| **Blocked** — injection points gone | 12 |
+
+Iris alone accounts for 78 broken injection points, sodium 19, immediatelyfast 10. The split is
+about what a mod *does*: mods that read game state and draw an overlay are reachable; mods that
+modify rendering are not, because 26.2 rewrote rendering and every hook into it is a design
+decision.
+
+One mod has been ported end to end and verified in game: AppleSkin, whose single remaining broken
+link was closed by Tier 2. That is 1 of 18.
+
+**An earlier version of this table was wrong.** It reported 77 mixin problems where there are 167,
+because the checker only flagged failures it could explain via a relocation and stayed silent on
+anything simply deleted. A check that cannot observe a failure mode reports success.
 
 Measured on AppleSkin 1.21.1 → 26.2, all 8 files with broken links:
 

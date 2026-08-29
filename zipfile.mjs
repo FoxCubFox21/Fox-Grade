@@ -76,8 +76,16 @@ export function writeZip(entries, replacements = new Map()) {
       method = 8;
       raw = zlib.deflateRawSync(next, { level: 9 });
       crc = crc32(next); size = next.length; compSize = raw.length;
-      flags &= ~0x08;   // we write real sizes in the header, so no trailing data descriptor
     }
+    // Bit 3 says "sizes are zero here; a data descriptor follows the compressed data". We always
+    // write real sizes into the local header and never copy that trailing descriptor, so the bit
+    // must be cleared on EVERY entry — including ones passed through untouched.
+    //
+    // Leaving it set produced an archive that unzip -t and any central-directory reader accept
+    // happily, because they never look at the local header. Fabric uses ZipInputStream, which reads
+    // sequentially, trusts the flag, and walks straight off the end of the data:
+    //   ZipException: invalid entry size (expected 8 but got 25 bytes)
+    flags &= ~0x08;
     const name = Buffer.from(e.name, 'utf8');
     const lh = Buffer.alloc(30);
     lh.writeUInt32LE(LOCAL, 0); lh.writeUInt16LE(20, 4); lh.writeUInt16LE(flags, 6);
