@@ -284,6 +284,82 @@ function callAI(prompt) {
   const r = spawnSync('claude', ['-p', prompt], { encoding: 'utf8', maxBuffer: 64e6, timeout: 900000 });
   return r.stdout || '';
 }
+// Check the model's factual claims against the jars.
+//
+// Asked to port a call that needed a HolderGetter<Biome>, the model wrote "no static lookup exists
+// any more (VanillaRegistries was removed)" and built a broken workaround on top of that belief.
+// VanillaRegistries is in the 26.2 jar. The reasoning was confident, wrong, and load-bearing.
+//
+// Claims like that are checkable: they name a class, and either it is in the target or it is not.
+// So every such assertion is tested, and a false one is handed straight back — the model gets to
+// revise rather than have its conclusion silently trusted. This runs on the model's PROSE, not its
+// code, because a wrong belief shows up in the explanation before it shows up in the output.
+const REMOVAL_CLAIM = /\b([A-Z][\w$]{2,}(?:\.[A-Z][\w$]+)?)\b[^.\n]{0,60}?\b(?:was |is |has been |no longer |not )?(?:removed|deleted|gone|gone away|gutted|gone from|no longer exists?|gone in|does not exist|gone entirely)\b/g;
+function falseClaims(text) {
+  const bad = [];
+  const seen = new Set();
+  for (const m of text.matchAll(REMOVAL_CLAIM)) {
+    const name = m[1].split('.').pop();
+    if (seen.has(name) || name.length < 4) continue;
+    seen.add(name);
+    // Look for a class of that simple name anywhere in the target. Cheap and decisive: if javap can
+    // print it, "it was removed" is false.
+    const r = spawnSync('javap', ['-cp', cp, name.includes('.') ? name : `net.minecraft.${name}`], { encoding: 'utf8' });
+    let exists = r.status === 0;
+    if (!exists) {
+      const g = spawnSync('sh', ['-c', `unzip -Z1 "${cp.split(':')[0]}" 2>/dev/null | grep -m1 -E '/${name}\\.class$'`], { encoding: 'utf8' });
+      exists = !!(g.stdout || '').trim();
+      if (exists) bad.push({ name, found: g.stdout.trim().replace(/\.class$/, '').replace(/\//g, '.') });
+    } else bad.push({ name, found: name });
+  }
+  return bad;
+}
+
+// Let the model LOOK instead of pre-guessing what it will need.
+//
+// Everything above assembles context in advance: the broken links, same-shape candidates, producers
+// of a needed type. That is guessing what a question will be. Finding the route to a
+// HolderGetter<Biome> took a person six javap calls, each one chosen after seeing the last — which
+// is exactly what a one-shot prompt forbids. So before asking for code, run a short round of
+// questions: the model asks, javap answers, up to a few times.
+//
+// Queries are answered with javap and nothing else. It cannot run commands; it names a class and
+// gets its signatures back, which is the whole of what was needed here.
+const MAX_QUERIES = +(args.queries || 6);
+function answerQueries(text) {
+  const out = [];
+  for (const m of text.matchAll(/^\s*LOOKUP\s+([\w.$]+)\s*$/gm)) {
+    const cls = m[1];
+    const r = spawnSync('javap', ['-p', '-cp', cp, cls], { encoding: 'utf8', maxBuffer: 32e6 });
+    out.push(r.status === 0 && r.stdout
+      ? `--- ${cls}\n${r.stdout.split('\n').filter((l) => /^\s{2}\S/.test(l)).slice(0, 45).join('\n')}`
+      : `--- ${cls}\n(no such class in ${TO})`);
+  }
+  return out;
+}
+function gatherContext(basePrompt) {
+  const learned = [];
+  for (let round = 0; round < 2; round++) {
+    const ask = `${basePrompt}
+
+Before writing any code you may inspect the target version. Emit up to ${MAX_QUERIES} lines of the form
+
+  LOOKUP fully.qualified.ClassName
+
+and nothing else, to see that class's members. Ask about anything you need: a type you must construct,
+a class that might provide a factory, a replacement you suspect exists. If you already have enough,
+reply with the single word READY.
+${learned.length ? `\nAlready looked up:\n${learned.join('\n')}` : ''}`;
+    const reply = callAI(ask);
+    if (/^\s*READY\s*$/m.test(reply) && !/LOOKUP/.test(reply)) break;
+    const answers = answerQueries(reply);
+    if (!answers.length) break;
+    learned.push(...answers);
+    say(`     looked up ${answers.length} class(es)`);
+  }
+  return learned.length ? `\nWHAT YOU ASKED TO SEE:\n${learned.join('\n\n')}\n` : '';
+}
+
 const extractJava = (s) => {
   const fence = s.match(/```(?:java)?\n([\s\S]*?)```/);
   const code = fence ? fence[1] : s;
@@ -393,12 +469,24 @@ SOURCE:
 ${source}
 \`\`\``;
 
+  const looked = args['no-lookup'] ? '' : gatherContext(base);
+  const baseWithLookups = base.replace('SOURCE:', `${looked}\nSOURCE:`);
   let ported = null, lastErr = '';
   for (let attempt = 0; attempt <= REPAIRS; attempt++) {
-    const prompt = attempt === 0 ? base
-      : `${base}\n\nYour previous attempt did not compile. Fix exactly these errors:\n${lastErr.slice(0, 4000)}`;
+    const prompt = attempt === 0 ? baseWithLookups
+      : `${baseWithLookups}\n\nYour previous attempt did not compile. Fix exactly these errors:\n${lastErr.slice(0, 4000)}`;
     const out = extractJava(callAI(prompt));
     if (!out) { say(`     attempt ${attempt + 1}: no code returned`); continue; }
+    // Before spending a compile on it, test what it asserted. A wrong premise produces code built
+    // around a class it believes is gone, and no amount of compiling catches that.
+    const wrong = falseClaims(out);
+    if (wrong.length) {
+      say(`     claimed these are gone, but they exist: ${wrong.map((w) => w.name).join(', ')}`);
+      lastErr = `Your explanation asserted the following no longer exist. They DO exist in ${TO}:\n`
+        + wrong.map((w) => `  ${w.found}  — use LOOKUP on it if you need its members`).join('\n')
+        + `\nRedo the port without that assumption.`;
+      if (attempt < REPAIRS) continue;
+    }
     const cDir = path.join(outDir, 'build' + attempt);
     fs.mkdirSync(cDir, { recursive: true });
     const f = path.join(cDir, simple + '.java');
@@ -439,9 +527,28 @@ ${source}
   // A broken link at least crashes where it is reached: loud, and traceable. A stub returns
   // plausible wrong data forever. So stubs are refused by default, keeping the original bytecode,
   // and never hidden when they are allowed.
-  const stubs = (ported.source.match(/\/\/\s*FOXGRADE:/g) || []).length;
+  // The marker counts wherever it appears, not only after //. The model wrote its warning inside a
+  // /** javadoc */ block and the line-comment regex missed it, so a port that declares a field, never
+  // assigns it, and passes it to a call was accepted: compiles, every link resolves, null at runtime.
+  // It flagged its own uncertainty correctly and the detector could not see it.
+  const stubs = (ported.source.match(/FOXGRADE:/g) || []).length;
+  // Independently of any marker: a private field that is read but never assigned is a null at
+  // runtime, and neither javac nor link resolution objects to it. This is the shape of "compiles,
+  // resolves, and is broken" that both gates were built to catch and neither can see.
+  const unassigned = [];
+  for (const m of ported.source.matchAll(/^\s*private\s+(?:static\s+)?(?:final\s+)?[\w.<>$\[\], ]+?\s+(\w+)\s*;/gm)) {
+    const name = m[1];
+    const writes = new RegExp(`(?:^|[^.\\w])${name}\\s*=(?!=)`, 'm');
+    const reads = new RegExp(`(?:^|[^.\\w])${name}(?!\\s*=[^=])\\b`, 'g');
+    if (!writes.test(ported.source) && (ported.source.match(reads) || []).length > 1) unassigned.push(name);
+  }
+  if (unassigned.length) {
+    say(`     refused: ${unassigned.join(', ')} declared and used but never assigned — null at runtime`);
+    results.push([cls, `refused: ${unassigned.join(', ')} never assigned`]);
+    continue;
+  }
   if (stubs) {
-    const what = (ported.source.match(/\/\/\s*FOXGRADE:[^\n]*/g) || []).slice(0, 3).map((l) => l.replace(/\/\/\s*FOXGRADE:\s*/, '').trim());
+    const what = (ported.source.match(/FOXGRADE:[^\n]*/g) || []).slice(0, 3).map((l) => l.replace(/FOXGRADE:\s*/, '').trim());
     say(`     compiles and resolves, but REMOVES ${stubs} piece(s) of behaviour rather than porting them:`);
     for (const w of what) say(`       · ${w.slice(0, 96)}`);
     if (!args['allow-stubs']) {

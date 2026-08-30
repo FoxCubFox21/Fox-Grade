@@ -333,6 +333,44 @@ SurfaceRules.isBiome(new ResourceKey[]{DARK_AMARANTH_FOREST})
 signature, which breaks its callers, which cascades. That is a design change, and the tool is right
 to refuse it.
 
+### Letting it look, and not trusting what it concludes
+
+Everything above assembles context in advance, which is guessing what the question will be. Finding
+the route to a `HolderGetter<Biome>` took a person six `javap` calls, each chosen after seeing the
+last — exactly what a one-shot prompt forbids. So before writing code the model gets a round of
+questions: it emits `LOOKUP <class>`, javap answers, it can ask again. On the file that needed it, it
+inspected seven classes across two rounds and first-attempt compile errors fell from 14 to 4.
+
+Then it produced this, which compiles and whose every reference resolves:
+
+```java
+private static HolderGetter<Biome> biomeLookup;   // never assigned
+darkAmaranthForestSurfaceRules(biomeLookup)       // passes null
+```
+
+It had also asserted, confidently and in prose, that `VanillaRegistries` was removed. It is in the
+26.2 jar. The belief was wrong, load-bearing, and invisible to every check — code built around a
+class you think is gone is perfectly self-consistent.
+
+Three gates came out of that one file:
+
+- **A field read but never assigned is refused.** Independent of any marker, because this is the
+  exact shape — compiles, resolves, null at runtime — that the other two gates were built for and
+  neither could see.
+- **The `FOXGRADE:` marker counts anywhere.** It had matched only `//` comments, and the model wrote
+  its warning inside a `/** javadoc */` block. It flagged its own uncertainty correctly and the
+  detector was deaf to it.
+- **Removal claims are checked against the jars, before compiling.** "X was removed" names a class,
+  and either it is in the target or it is not. A false one is handed back:
+  *"VanillaRegistries DOES exist in 26.2 — redo the port without that assumption."* This runs on the
+  model's prose rather than its code, because a wrong belief appears in the explanation before it
+  appears in the output.
+
+The general lesson is narrower than "verify the output". A model's search can reach a false
+conclusion and then build something internally consistent on top of it, so **verification has to be
+independent of what the model believes about its own work** — including the parts it is most
+confident about.
+
 ### Compiling is not porting
 
 The obvious gates — javac accepts it, and the link checker shows fewer broken links — are both
