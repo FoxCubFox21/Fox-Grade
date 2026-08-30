@@ -305,6 +305,34 @@ Three things are refused rather than attempted:
   to the old one. Detected up front, so it costs no model calls.
 - **Ports that delete the feature.** See below.
 
+### Most "the AI could not fix it" was the harness starving it
+
+Tier 2's failure rate was quoted for a long time before it was a measurement of anything. Three
+separate faults made the model look incapable, and in each case it did the only sensible thing
+available — it cannot call a class that is not there, so it removed the call and said so, the stub
+refusal correctly rejected the result, and that was recorded as an AI failure.
+
+| looked like | actually was |
+|---|---|
+| "could not compile it" | Fabric API ships as a jar of jars, so its classes are invisible to javac |
+| "removed behaviour" | Fabric API methods reported broken, because `jar-verify` knew they resolve at runtime and `jar-tier2` had a second link check that did not |
+| "removed behaviour" | the mod's own declared dependency absent from the compile classpath |
+
+The middle one is the worst kind: two checks disagreeing, with the wrong one silently driving the
+work. Promenade's own 26.2 build makes the very call that was reported broken.
+
+Fixed, on one file with one genuine problem, the stub count went 4 → 1. The survivor is a real limit
+rather than a fourth gap:
+
+```java
+SurfaceRules.isBiome(new ResourceKey[]{DARK_AMARANTH_FOREST})
+```
+
+26.2 wants a `HolderGetter<Biome>` first, and there is none in scope — vanilla threads it down from a
+`BootstrapContext` at the registration site. Supplying it means changing the enclosing method's
+signature, which breaks its callers, which cascades. That is a design change, and the tool is right
+to refuse it.
+
 ### Compiling is not porting
 
 The obvious gates — javac accepts it, and the link checker shows fewer broken links — are both

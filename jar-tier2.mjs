@@ -16,6 +16,7 @@
 //   node jar-tier2.mjs remapped.jar --classpath "<target jars>" --to 26.2 --dry
 //   node jar-tier2.mjs remapped.jar --classpath ... --to 26.2 --out fixed.jar [--foxai]
 import fs from 'node:fs';
+import zlib from 'node:zlib';
 import path from 'node:path';
 import { spawnSync, spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
@@ -38,6 +39,11 @@ const MAX_FILES = +(args.max || 6);
 const REPAIRS = +(args.repair || 2);
 const cp = args.classpath || (fs.existsSync('/tmp/foxgrade_cp.txt') ? fs.readFileSync('/tmp/foxgrade_cp.txt', 'utf8').trim() : '');
 if (!cp) { console.error('need --classpath'); process.exit(2); }
+// Vineflower first: measured against CFR 0.152 on the same classes it produces far fewer errors in
+// its own output — ClothConfigScreen 62 -> 28, ClothConfigDemo 17 -> 2. That matters because the AI
+// inherits every decompiler artifact as a compile error it did not cause and must fix before it can
+// even reach the porting work.
+const VINEFLOWER = args.vineflower || [path.join(HERE, 'vineflower.jar'), '/private/tmp/claude-501/-Users-cassiusmehlhopt/0eb3c942-b1be-4cca-8473-756df2995ecd/scratchpad/vineflower.jar'].find((x) => fs.existsSync(x));
 const CFR = args.cfr || [path.join(process.env.HOME, 'camsnap-recovery/cfr.jar'), path.join(HERE, 'cfr.jar')].find((p) => fs.existsSync(p));
 
 const WORK = args.work || fs.mkdtempSync('/tmp/foxgrade-t2-');
@@ -88,6 +94,21 @@ function resolves(cls, key, seen = new Set()) {
   return d.supers.some((s) => resolves(s, key, seen));
 }
 
+// Members other mods call successfully on the TARGET version. Fabric API adds methods to vanilla
+// classes by mixin, so they are in no jar and resolve fine at runtime. jar-verify already knew this;
+// this tool had its own link check that did not, so Tier 2 was being handed non-problems and
+// spending model calls on them — promenade's own 26.2 build makes the very call reported broken.
+// Two checks that disagree is worse than either alone, because the wrong one silently drives work.
+const loaderProvided = new Set();
+if (args.corpus && fs.existsSync(args.corpus)) {
+  for (const f of fs.readdirSync(args.corpus)) {
+    if (!f.endsWith('.json.gz')) continue;
+    let rec; try { rec = JSON.parse(zlib.gunzipSync(fs.readFileSync(path.join(args.corpus, f)))); } catch { continue; }
+    for (const r of rec.new.refs || []) loaderProvided.add(r);
+  }
+  say(`  ${loaderProvided.size.toLocaleString()} member(s) known to resolve at runtime from the corpus`);
+}
+
 const rootBuf = fs.readFileSync(JAR);
 const entries = readZip(rootBuf);
 const fileRefs = new Map();   // entry name -> [{owner,name,desc}]
@@ -113,7 +134,9 @@ for (const [name, refs] of fileRefs) {
   const bad = [];
   for (const r of refs) {
     if (!declCache.get(r.owner)) { bad.push({ ...r, why: 'class missing' }); continue; }
-    if (!resolves(r.owner, `${r.name} ${r.desc}`)) bad.push({ ...r, why: 'member missing' });
+    if (resolves(r.owner, `${r.name} ${r.desc}`)) continue;
+    if (loaderProvided.has(`${r.owner}\t${r.name}\t${r.desc}`)) continue;   // provided by the loader
+    bad.push({ ...r, why: 'member missing' });
   }
   if (bad.length) broken.push({ name, bad });
 }
@@ -140,7 +163,17 @@ const candidates = broken.filter((b) => !isMixin(b.name)).slice(0, MAX_FILES);
 if (!candidates.length) { console.log('\n  nothing here that Tier 2 can safely attempt'); process.exit(0); }
 console.log(`\n    will attempt : ${candidates.length} file(s)`);
 if (args.dry) { for (const c of candidates) { console.log(`\n  ── ${c.name}`); for (const b of c.bad.slice(0, 6)) console.log(`      ${b.owner.replace(/\//g, '.')}.${b.name} ${b.desc}   (${b.why})`); } process.exit(0); }
-if (!CFR) { console.error('\n  no decompiler found — pass --cfr /path/to/cfr.jar'); process.exit(2); }
+if (!VINEFLOWER && !CFR) { console.error('\n  no decompiler found — pass --vineflower or --cfr'); process.exit(2); }
+say(`  decompiler: ${VINEFLOWER ? 'vineflower' : 'cfr'}`);
+// Vineflower works on a whole jar rather than one class, so decompile once and read files out of the
+// result. That is also fewer JVM starts than CFR's per-class invocation.
+let vfRoot = null;
+if (VINEFLOWER) {
+  vfRoot = path.join(WORK, 'vf');
+  fs.mkdirSync(vfRoot, { recursive: true });
+  const r = spawnSync('java', ['-jar', VINEFLOWER, '-dgs=1', '--silent', JAR, vfRoot], { encoding: 'utf8', maxBuffer: 256e6, timeout: 900000 });
+  if (r.status !== 0) { say('  vineflower failed; falling back to cfr'); vfRoot = null; }
+}
 
 // ── 2. advisories + real signatures, so the model is told facts rather than asked to recall them ──
 const rules = JSON.parse(fs.readFileSync(path.join(HERE, 'rules.json'), 'utf8'));
@@ -149,6 +182,17 @@ for (const a of (rules[TO]?.advisories || [])) if (a && typeof a === 'object' &&
 // Relocations are the precise kind of fact worth handing a model: the member still exists, it just
 // moved behind a field. Applying that is a one-token source edit and impossible as a rename, because
 // inserting a getfield shifts every later bytecode offset and invalidates the stack map frames.
+// Everything the miners derived, so a fact that failed to apply mechanically still reaches the model
+// rather than being silently withheld from it.
+const memberFacts = new Map();   // owner \t name -> newName
+for (const f of fs.readdirSync(HERE).filter((x) => /^(members|mixin-points)\.[\d.]+-[\d.]+\.json$/.test(x))) {
+  try {
+    const t = JSON.parse(fs.readFileSync(path.join(HERE, f), 'utf8'));
+    for (const r of [...(t.renames || []), ...(t.guesses || []), ...(t.corroborated || []), ...(t.single || [])])
+      if (r.owner && r.from && r.to) memberFacts.set(`${r.owner}\t${r.from}`, r.to);
+  } catch { /* ignore */ }
+}
+
 const relocations = new Map();   // owner \t name \t desc -> {via, host}
 for (const f of fs.readdirSync(HERE).filter((x) => /^members\.[\d.]+-[\d.]+\.json$/.test(x))) {
   try {
@@ -159,6 +203,23 @@ for (const f of fs.readdirSync(HERE).filter((x) => /^members\.[\d.]+-[\d.]+\.jso
 function signaturesOf(cls) {
   const r = spawnSync('javap', ['-p', '-cp', cp, cls.replace(/\//g, '.')], { encoding: 'utf8', maxBuffer: 32e6 });
   return r.status === 0 && r.stdout ? r.stdout.split('\n').filter((l) => /^\s{2}\S/.test(l)).slice(0, 40).join('\n') : null;
+}
+
+// The members of a class that carry a given descriptor. When a method is gone, these are the only
+// things it could plausibly have become — a far more useful answer than a dump of the whole class,
+// and small enough to always include. Previously the model was told "this method is missing" with
+// nothing at all about what the class does have, unless an advisory happened to exist.
+function sameShapeMembers(cls, desc) {
+  const r = spawnSync('javap', ['-p', '-s', '-cp', cp, cls.replace(/\//g, '.')], { encoding: 'utf8', maxBuffer: 32e6 });
+  if (r.status !== 0 || !r.stdout) return [];
+  const lines = r.stdout.split('\n'), out = [];
+  for (let i = 0; i < lines.length; i++) {
+    const d = lines[i].match(/^\s*descriptor:\s*(\S+)\s*$/);
+    if (!d || d[1] !== desc) continue;
+    const sig = (lines[i - 1] || '').trim();
+    if (sig) out.push(sig);
+  }
+  return out;
 }
 
 // ── 2b. a classpath javac can actually use ───────────────────────────────────────────────────
@@ -179,7 +240,31 @@ for (const j of cp.split(':')) {
   }
 }
 if (extra.length) say(`  unpacked ${extra.length} bundled library jar(s) for compilation`);
-const COMPILE_CP = [JAR, cp, ...extra].join(':');
+
+// A mod's declared dependencies are part of its compile classpath. Without them the model cannot
+// reference types it plainly needs — promenade depends on Biolith, and asked to port code calling
+// BiomePlacement with that class absent, the only thing it could do was delete the calls. That reads
+// as "the AI removed behaviour" when the real cause is a classpath this tool never assembled.
+const deps = [];
+if (args['deps-dir'] && fs.existsSync(args['deps-dir'])) {
+  for (const f of fs.readdirSync(args['deps-dir'])) if (f.endsWith('.jar')) deps.push(path.join(args['deps-dir'], f));
+}
+// Anything sitting next to the jar being ported is a plausible dependency too — a mods folder is
+// exactly the set of things that load together.
+if (args.mods && fs.existsSync(args.mods)) {
+  for (const f of fs.readdirSync(args.mods)) if (f.endsWith('.jar') && path.resolve(args.mods, f) !== path.resolve(JAR)) deps.push(path.join(args.mods, f));
+}
+if (deps.length) {
+  say(`  ${deps.length} dependency jar(s) on the compile classpath`);
+  for (const d of deps.slice(0, 40)) {
+    try { for (const e of readZip(fs.readFileSync(d)).filter((x) => /^META-INF\/jars\/.+\.jar$/.test(x.name))) {
+      const dest = path.join(LIBS, path.basename(e.name));
+      if (!fs.existsSync(dest)) fs.writeFileSync(dest, inflateEntry(e));
+      extra.push(dest);
+    } } catch { /* not a zip we can read */ }
+  }
+}
+const COMPILE_CP = [JAR, cp, ...extra, ...deps].join(':');
 
 // Annotations like @Nullable are compile-time only and their jar is not shipped with the game, so
 // they break the build without affecting behaviour. Dropping them is safer than inventing a stub.
@@ -215,9 +300,12 @@ for (const c of candidates) {
   say(`\n  ── ${cls}`);
   const outDir = path.join(WORK, simple);
   fs.mkdirSync(outDir, { recursive: true });
-  const d = spawnSync('java', ['-jar', CFR, JAR, '--extraclasspath', cp, '--outputdir', outDir, '--comments', 'false', '--silent', 'true', '--jarfilter', cls.replace(/\//g, '.')], { encoding: 'utf8', maxBuffer: 128e6, timeout: 300000 });
-  void d;
-  const srcPath = path.join(outDir, cls + '.java');
+  let srcPath = vfRoot ? path.join(vfRoot, cls + '.java') : null;
+  if (!srcPath || !fs.existsSync(srcPath)) {
+    if (!CFR) { say('     no source from vineflower and no cfr fallback — skipping'); results.push([cls, 'no source']); continue; }
+    spawnSync('java', ['-jar', CFR, JAR, '--extraclasspath', cp, '--outputdir', outDir, '--comments', 'false', '--silent', 'true', '--jarfilter', cls.replace(/\//g, '.')], { encoding: 'utf8', maxBuffer: 128e6, timeout: 300000 });
+    srcPath = path.join(outDir, cls + '.java');
+  }
   if (!fs.existsSync(srcPath)) { say('     decompile produced nothing — skipping'); results.push([cls, 'no source']); continue; }
   let source = stripAnnotations(fs.readFileSync(srcPath, 'utf8'));
   // Obfuscators emit identifiers the JVM accepts but Java source cannot express — a keyword as a
@@ -225,7 +313,11 @@ for (const c of candidates) {
   // port is, so it is not worth a model call. Checked PER LINE: joining lines first and testing for
   // characters below \x20 matches the newline separator itself and rejects every file.
   const KEYWORD_ID = /\b(?:if|else|for|while|new|null|class|int|void|return|this|super)\s*\(\)|\.\s*(?:if|else|for|while|new|null|class|int|void|return)\s*\(/;
-  const badLine = source.split('\n').find((l) => KEYWORD_ID.test(l) || /[^\x09\x20-\x7E]/.test(l));
+  // Strip string and char literals first. Non-ASCII inside a string is ordinary legal Java — a
+  // kaomoji in Component.literal("(・∀・)") had four perfectly good files written off as
+  // unrecompilable. Only a non-ASCII IDENTIFIER is a problem.
+  const noLiterals = (l) => l.replace(/"(\\.|[^"\\])*"/g, '""').replace(/'(\\.|[^'\\])*'/g, "''");
+  const badLine = source.split('\n').map(noLiterals).find((l) => KEYWORD_ID.test(l) || /[^\x09\x20-\x7E]/.test(l));
   if (badLine) {
     say(`     source has identifiers Java cannot express — skipping: ${badLine.trim().slice(0, 60)}`);
     results.push([cls, 'unrecompilable']); continue;
@@ -250,11 +342,21 @@ for (const c of candidates) {
     const dotted = b.owner.replace(/\//g, '.');
     const reloc = relocations.get(`${b.owner}\t${b.name}\t${b.desc}`);
     if (reloc) {
-      facts.push(`- ${dotted}.${b.name}${b.desc} moved. It now lives on ${reloc.host.replace(/\//g, '.')}, reached through the`
-        + ` field \`${reloc.via}\`. Change the call to  <receiver>.${reloc.via}.${b.name}(...)  — same name, same arguments.`);
+      // Naming the receiver's TYPE matters. Told only "reached through the field hud", the model
+      // wrote mc.hud.getGuiTicks() and dropped the Gui in between; the call site already has a Gui
+      // in hand and the field hangs off that, not off Minecraft.
+      facts.push(`- ${dotted}.${b.name}${b.desc} moved to ${reloc.host.replace(/\//g, '.')}.`
+        + ` Keep the existing receiver — it is a ${dotted.split('.').pop()} — and insert .${reloc.via} between it and the call:`
+        + `  <the ${dotted.split('.').pop()} you already have>.${reloc.via}.${b.name}(...)  Same name, same arguments.`);
       continue;
     }
     facts.push(`- ${dotted}.${b.name} ${b.desc}  → ${b.why}`);
+    // Same-descriptor members of the same class: the only shapes this could have become.
+    const shapes = sameShapeMembers(b.owner, b.desc);
+    if (shapes.length) facts.push(`    ${dotted} does still declare these with that exact signature — one of them is probably the replacement:\n      ${shapes.slice(0, 6).join('\n      ')}`);
+    else facts.push(`    Nothing on ${dotted} has that signature any more, so this is a redesign, not a rename.`);
+    const known = memberFacts.get(`${b.owner}\t${b.name}`);
+    if (known) facts.push(`    Derived from diffing the game jars: ${b.name} → ${known}`);
     const adv = advisories.get(dotted);
     if (adv) facts.push(`    ${dotted} has no direct replacement in ${TO}. Real ports used: ${adv.candidates.map((x) => x.fqcn).join(', ')}`);
   }
@@ -274,6 +376,10 @@ BROKEN LINKS — every one of these fails at runtime today:
 ${facts.join('\n')}
 
 ${sigBlocks.length ? `THE ACTUAL TARGET API (from javap — these signatures are ground truth, do not guess):\n${sigBlocks.join('\n\n')}\n` : ''}
+The source below is DECOMPILED, so it may not compile even before your changes: lost generic
+parameters, missing casts, a raw type where a parameterised one belongs. Fix those too — they are
+artifacts of decompilation, not part of the port, and they are not evidence about the target API.
+
 RULES:
 - Do NOT change the class name, or the name/parameters/return type of any public or protected
   method. Other classes in this jar are still compiled bytecode and link to these exact signatures;
@@ -305,7 +411,13 @@ ${source}
       if (fs.existsSync(built)) { ported = { source: out, bytes: fs.readFileSync(built), dir: cDir }; say(`     attempt ${attempt + 1}: compiles ✓`); break; }
       say(`     attempt ${attempt + 1}: compiled but produced no ${simple}.class`);
     } else {
-      lastErr = (jc.stderr || '').split('\n').filter((l) => /error:/.test(l)).slice(0, 12).join('\n');
+      // Keep javac's caret lines: they point at the offending expression, which the error text alone
+      // does not. Stripping them left the model guessing which of several similar calls was wrong.
+      const errLines = (jc.stderr || '').split('\n');
+      const keep = [];
+      for (let i = 0; i < errLines.length && keep.length < 40; i++)
+        if (/error:/.test(errLines[i])) keep.push(errLines[i], errLines[i + 1] || '', errLines[i + 2] || '');
+      lastErr = keep.join('\n');
       say(`     attempt ${attempt + 1}: ${(lastErr.match(/error:/g) || []).length} compile error(s)`);
     }
   }
