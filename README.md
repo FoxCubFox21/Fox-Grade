@@ -373,6 +373,33 @@ conclusion and then build something internally consistent on top of it, so **ver
 independent of what the model believes about its own work** — including the parts it is most
 confident about.
 
+### Changing signatures, and the limit underneath it
+
+Porting one class at a time forbids changing any method signature, because every other class in the
+jar still holds the old one as compiled bytecode. That is a limit of the method rather than the
+problem: recompile the callers alongside and it lifts.
+
+The call graph is already in hand from the constant pool, so a broken class is now ported together
+with everything in the jar that calls it, they compile together, and the group ships or none of it
+does — a caller whose signature changed is only correct beside the class it calls. Capped at four
+classes, because something called from thirty places is a refactor rather than a porting unit, and
+the wider the group the more one bad answer can damage.
+
+It did not rescue the case that motivated it, and the reason is worth stating. Promenade's
+`appendWorldGen()` has exactly one caller out of 162 classes, so the signature change was entirely
+tractable — but the value it needs does not exist anywhere up that chain. `SurfaceRules.isBiome` now
+wants a `HolderGetter<Biome>`, and the code runs at **mod initialisation**, before any world is
+loaded and before biome registries are populated. Threading the parameter upward reaches a caller
+with nothing to pass. The real fix is to defer building the rules until a registry exists, which
+changes *when* the code runs, not what it is called with.
+
+So there were two reasons this was blocked, and only the first was mine. What the group porting does
+buy is every case where the value *does* exist upstream, which is most signature changes.
+
+Worth noting how it fails now: earlier, denied any way to supply the argument, the model produced a
+field it never assigned — code that compiled and resolved and was null at runtime. With the gates in
+place it instead runs out of compile attempts, visibly. Failing loudly is the improvement.
+
 ### Compiling is not porting
 
 The obvious gates — javac accepts it, and the link checker shows fewer broken links — are both

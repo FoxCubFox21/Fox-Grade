@@ -159,6 +159,38 @@ if (brokenMixins.length) {
   console.log(`\n    ${brokenMixins.length} of these are MIXINS. A mixin whose target method was removed needs a new`);
   console.log(`    injection point, not new code — that is a decision for you, so they are left alone.`);
 }
+// ── who calls whom, so a signature change can be made coherently ──────────────────────────────
+// Porting one class at a time forbids changing any signature, because every other class still holds
+// the old one as compiled bytecode. That is a limit of the method, not of the problem: recompile the
+// callers alongside and the constraint lifts. Promenade needed exactly that — one caller, out of 162
+// classes.
+const callersOf = new Map();     // internal class name -> Set(classes in this jar that reference it)
+{
+  const own = new Set(entries.filter((e) => e.name.endsWith('.class')).map((e) => e.name.replace(/\.class$/, '')));
+  for (const e of entries) {
+    if (!e.name.endsWith('.class')) continue;
+    const me = e.name.replace(/\.class$/, '');
+    let cf; try { cf = new ClassFile(inflateEntry(e)); } catch { continue; }
+    for (const r of cf.refs()) {
+      const outer = r.owner.replace(/\$.*$/, '');
+      if (!own.has(r.owner) && !own.has(outer)) continue;
+      const key = own.has(r.owner) ? r.owner : outer;
+      if (key === me) continue;
+      if (!callersOf.has(key)) callersOf.set(key, new Set());
+      callersOf.get(key).add(me);
+    }
+  }
+}
+// A group is the broken class plus everything in this jar that calls it. Kept small deliberately: a
+// class called from thirty places is not a porting unit, it is a refactor, and the wider the group
+// the more of the jar a single bad answer can damage.
+const MAX_GROUP = +(args.group || 4);
+function groupFor(cls) {
+  const callers = [...(callersOf.get(cls) || [])].filter((c) => !isMixin(c + '.class'));
+  if (!callers.length || callers.length + 1 > MAX_GROUP) return null;
+  return callers;
+}
+
 const candidates = broken.filter((b) => !isMixin(b.name)).slice(0, MAX_FILES);
 if (!candidates.length) { console.log('\n  nothing here that Tier 2 can safely attempt'); process.exit(0); }
 console.log(`\n    will attempt : ${candidates.length} file(s)`);
@@ -445,7 +477,20 @@ for (const c of candidates) {
     }
   }
 
-  const base = `You are porting one Java class of a Minecraft mod to ${TO}. The class was already
+  // Bring the callers in when a signature may need to change. They are decompiled and offered
+  // alongside, and the no-signature-change rule is relaxed for exactly this set — everything outside
+  // it is still compiled bytecode holding the old shapes.
+  const group = args['no-group'] ? null : groupFor(cls);
+  const groupSrc = [];
+  if (group) {
+    for (const g of group) {
+      const gp = vfRoot ? path.join(vfRoot, g + '.java') : null;
+      if (gp && fs.existsSync(gp)) groupSrc.push({ cls: g, src: stripAnnotations(fs.readFileSync(gp, 'utf8')) });
+    }
+    if (groupSrc.length) say(`     porting with ${groupSrc.length} caller(s): ${groupSrc.map((x) => x.cls.split('/').pop()).join(', ')}`);
+  }
+
+  const base = `You are porting ${groupSrc.length ? 'a small group of Java classes' : 'one Java class'} of a Minecraft mod to ${TO}. The code was already
 name-remapped; what remains are genuine API redesigns.
 
 BROKEN LINKS — every one of these fails at runtime today:
@@ -457,17 +502,25 @@ parameters, missing casts, a raw type where a parameterised one belongs. Fix tho
 artifacts of decompilation, not part of the port, and they are not evidence about the target API.
 
 RULES:
-- Do NOT change the class name, or the name/parameters/return type of any public or protected
-  method. Other classes in this jar are still compiled bytecode and link to these exact signatures;
-  changing one breaks callers you cannot see. Change method BODIES.
+- Do NOT change any class name.
+${groupSrc.length
+  ? `- You MAY change method signatures, because every caller of them inside this jar is included
+  below and you are editing them together. Anything NOT shown is still compiled bytecode holding the
+  old shapes, so a signature reachable from outside this set must stay as it is.
+  If a value has to be threaded down from a caller, that is now available to you — do it.`
+  : `- Do NOT change the name, parameters or return type of any public or protected method. Other
+  classes in this jar are still compiled bytecode and link to these exact signatures; changing one
+  breaks callers you cannot see. Change method BODIES.`}
 - Use only members shown above or already in the file. If you cannot fix something without changing
   a signature, leave that part as it is and add // FOXGRADE: <what is needed>.
 - Output the complete file, nothing else.
 
-SOURCE:
+SOURCE — ${groupSrc.length ? `${groupSrc.length + 1} files. Return each one complete, separated by a line of the form  ===== FILE <class/name> =====` : 'one file. Output the complete file, nothing else.'}
+===== FILE ${cls} =====
 \`\`\`java
 ${source}
-\`\`\``;
+\`\`\`
+${groupSrc.map((g) => `===== FILE ${g.cls} =====\n\`\`\`java\n${g.src}\n\`\`\``).join('\n')}`;
 
   const looked = args['no-lookup'] ? '' : gatherContext(base);
   const baseWithLookups = base.replace('SOURCE:', `${looked}\nSOURCE:`);
@@ -475,8 +528,20 @@ ${source}
   for (let attempt = 0; attempt <= REPAIRS; attempt++) {
     const prompt = attempt === 0 ? baseWithLookups
       : `${baseWithLookups}\n\nYour previous attempt did not compile. Fix exactly these errors:\n${lastErr.slice(0, 4000)}`;
-    const out = extractJava(callAI(prompt));
-    if (!out) { say(`     attempt ${attempt + 1}: no code returned`); continue; }
+    const raw = callAI(prompt);
+    // Split a multi-file reply back into files. The marker is required rather than inferred: guessing
+    // where one class ends and the next begins would silently write half a file.
+    const files = [];
+    if (groupSrc.length) {
+      const parts = raw.split(/^=====\s*FILE\s+([\w/$.]+)\s*=====\s*$/m);
+      for (let i = 1; i < parts.length; i += 2) {
+        const code = extractJava(parts[i + 1] || '');
+        if (code) files.push({ cls: parts[i].replace(/\./g, '/'), code });
+      }
+    }
+    if (!files.length) { const one = extractJava(raw); if (one) files.push({ cls, code: one }); }
+    if (!files.length) { say(`     attempt ${attempt + 1}: no code returned`); continue; }
+    const out = files[0].code;
     // Before spending a compile on it, test what it asserted. A wrong premise produces code built
     // around a class it believes is gone, and no amount of compiling catches that.
     // Existence is checkable; SUITABILITY is not, and conflating them made this check harmful.
@@ -500,14 +565,25 @@ ${source}
     }
     const cDir = path.join(outDir, 'build' + attempt);
     fs.mkdirSync(cDir, { recursive: true });
-    const f = path.join(cDir, simple + '.java');
-    fs.writeFileSync(f, stripAnnotations(out));
+    // Every file in the group compiles together, so a changed signature and its caller are checked
+    // against each other rather than one at a time.
+    const written = [];
+    for (const fl of files) {
+      const fp = path.join(cDir, fl.cls.split('/').pop() + '.java');
+      fs.writeFileSync(fp, stripAnnotations(fl.code));
+      written.push(fp);
+    }
+    const f = written[0];
     // The original jar is on the classpath, so the class compiles against its own mod's other
     // classes exactly as it will be linked at runtime.
-    const jc = spawnSync('javac', ['-nowarn', '-proc:none', '-cp', COMPILE_CP, '-d', cDir, f], { encoding: 'utf8', maxBuffer: 32e6, timeout: 300000 });
+    const jc = spawnSync('javac', ['-nowarn', '-proc:none', '-cp', COMPILE_CP, '-d', cDir, ...written], { encoding: 'utf8', maxBuffer: 32e6, timeout: 300000 });
     if (jc.status === 0) {
       const built = path.join(cDir, cls + '.class');
-      if (fs.existsSync(built)) { ported = { source: out, bytes: fs.readFileSync(built), dir: cDir }; say(`     attempt ${attempt + 1}: compiles ✓`); break; }
+      if (fs.existsSync(built)) {
+        ported = { source: files.map((x) => x.code).join('\n'), bytes: fs.readFileSync(built), dir: cDir, files };
+        say(`     attempt ${attempt + 1}: compiles ✓${files.length > 1 ? ` (${files.length} files)` : ''}`);
+        break;
+      }
       say(`     attempt ${attempt + 1}: compiled but produced no ${simple}.class`);
     } else {
       // Keep javac's caret lines: they point at the offending expression, which the error text alone
@@ -571,6 +647,23 @@ ${source}
   }
   say(`     accepted: ${c.bad.length} → ${after.length} broken links${stubs ? `, with ${stubs} stub(s)` : ''}`);
   replacements.set(c.name, ported.bytes);
+  // A caller whose signature changed is only correct alongside the class it calls, so the whole
+  // group ships or none of it does.
+  for (const fl of (ported.files || []).slice(1)) {
+    const built = path.join(ported.dir, fl.cls + '.class');
+    if (!fs.existsSync(built)) continue;
+    const b2 = fs.readFileSync(built);
+    let ok = true;
+    for (const r of new ClassFile(b2).refs()) {
+      if (!r.owner.startsWith('net/minecraft/')) continue;
+      if (!declCache.has(r.owner)) preload([r.owner]);
+      if (loaderProvided.has(`${r.owner}\t${r.name}\t${r.desc}`)) continue;
+      if (!declCache.get(r.owner) || !resolves(r.owner, `${r.name} ${r.desc}`)) { ok = false; break; }
+    }
+    if (!ok) { say(`     ${fl.cls.split('/').pop()} still has unresolved links — group rejected`); replacements.delete(c.name); ok = false; break; }
+    replacements.set(fl.cls + '.class', b2);
+    say(`     also rewrote ${fl.cls.split('/').pop()}`);
+  }
   // Inner classes are compiled alongside and must travel with it.
   for (const f of fs.readdirSync(path.dirname(path.join(ported.dir, cls + '.class')))) {
     if (!f.startsWith(simple + '$') || !f.endsWith('.class')) continue;
