@@ -164,6 +164,18 @@ export function applyMemberRenames(cf, lookup) {
   };
 
   const applied = [], guessed = [];
+  // Rewriting a reference's OWNER, not just its name: a registry constant that moved class keeps its
+  // name and changes where it lives. That is a Class constant in the ref, so it needs its own
+  // allocator — the existing one only handles the NameAndType half.
+  const classIndex = new Map();
+  for (const e of cf.entries) if (e.tag === 7) { const n = utf8Of(b.readUInt16BE(e.start + 1)); if (n && !classIndex.has(n)) classIndex.set(n, e.index); }
+  const allocClass = (name) => {
+    if (classIndex.has(name)) return classIndex.get(name);
+    const ni = allocUtf8(name);
+    const e = Buffer.alloc(3); e[0] = 7; e.writeUInt16BE(ni, 1);
+    appended.push(e);
+    const i = nextIndex++; classIndex.set(name, i); return i;
+  };
   for (const e of cf.entries) {
     if (e.tag !== 9 && e.tag !== 10 && e.tag !== 11) continue;
     const owner = classNameOf(b.readUInt16BE(e.start + 1));
@@ -174,6 +186,12 @@ export function applyMemberRenames(cf, lookup) {
     if (!name || !desc) continue;
     const hit = lookup(owner, e.tag === 9 ? 'field' : 'method', name, desc);
     if (!hit) continue;
+    if (hit.owner && hit.owner !== owner) {
+      patches.push({ off: e.start + 1, val: allocClass(hit.owner) });
+      if (hit.desc && hit.desc !== desc) patches.push({ off: e.start + 3, val: allocNat(nameIdx, allocUtf8(hit.desc)) });
+      applied.push(`${owner}.${name} -> ${hit.owner}.${name}`);
+      continue;
+    }
     const to = typeof hit === 'string' ? hit : (hit.to || name);
     // A member can keep its name and change its TYPE: 26.2 declares Potions.WATER as Holder where
     // 26.1 had Holder$Reference. The JVM resolves a field by name AND descriptor, so the old

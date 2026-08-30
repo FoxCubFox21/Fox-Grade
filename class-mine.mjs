@@ -66,6 +66,76 @@ for (const [name, gs] of goneBy) {
   // an absolute floor as well as a proportion.
   if (ratio >= 0.5 && (shared >= 3 || am.size <= 3)) moves.push(rec); else weak.push(rec);
 }
+// Classes that were RENAMED, not just moved. The same-simple-name rule cannot see these by
+// construction, and 26.1 -> 26.2 fixed a typo — InstantenousMobEffect became InstantaneousMobEffect
+// — which broke every mod referencing it. Here the members carry the argument and the name only
+// corroborates: two classes in the same package with the same members are the same class.
+function commonRun(a, b) {
+  a = a.toLowerCase(); b = b.toLowerCase();
+  let best = 0, prev = new Array(b.length + 1).fill(0);
+  for (let i = 1; i <= a.length; i++) {
+    const cur = new Array(b.length + 1).fill(0);
+    for (let j = 1; j <= b.length; j++) if (a[i - 1] === b[j - 1]) { cur[j] = prev[j - 1] + 1; if (cur[j] > best) best = cur[j]; }
+    prev = cur;
+  }
+  return best;
+}
+// Edit distance, because longest-common-substring is the wrong tool for a typo. Fixing
+// InstantenousMobEffect to InstantaneousMobEffect inserts one character in the middle, which halves
+// the longest contiguous match (12 of 21) while changing the name by exactly one edit. Substring
+// length measures "shares a chunk"; edit distance measures "is nearly the same word", and a typo fix
+// is the second thing.
+function editDistance(a, b) {
+  a = a.toLowerCase(); b = b.toLowerCase();
+  let prev = Array.from({ length: b.length + 1 }, (_, i) => i);
+  for (let i = 1; i <= a.length; i++) {
+    const cur = [i];
+    for (let j = 1; j <= b.length; j++)
+      cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+    prev = cur;
+  }
+  return prev[b.length];
+}
+const pkg = (n) => n.slice(0, n.lastIndexOf('/'));
+const claimed = new Set(moves.map((m) => m.to.replace(/\./g, '/')));
+const renames = [];
+for (const g of gone) {
+  if (moves.some((m) => m.from.replace(/\./g, '/') === g)) continue;      // already explained as a move
+  const am = A.members.get(g) || new Set();
+  if (am.size < 2) continue;
+  const cands = [];
+  for (const a2 of arrived) {
+    if (claimed.has(a2) || pkg(a2) !== pkg(g)) continue;                 // a rename stays put; a move is the other case
+    const bm = B.members.get(a2) || new Set();
+    const shared = [...am].filter((m) => bm.has(m)).length;
+    const ratio = shared / am.size;
+    const run = commonRun(simple(g), simple(a2));
+    const dist = editDistance(simple(g), simple(a2));
+    const minLen = Math.min(simple(g).length, simple(a2).length);
+    const nameRatio = Math.max(run / minLen, 1 - dist / minLen);
+    // Two ways to qualify. A big class can rely on its members: four or more shared and 70% agreement
+    // is hard to reach by accident. A small one cannot — InstantenousMobEffect has three members and
+    // one of them was renamed too — so it leans on the name instead, where a near-identical spelling
+    // in the same package is itself strong evidence. A typo fix is exactly that case.
+    const byMembers = ratio >= 0.7 && shared >= 4;
+    const byName = nameRatio >= 0.6 && ratio >= 0.6 && shared >= 2;
+    if (byMembers || byName) cands.push({ to: a2, shared, ratio, run });
+  }
+  if (cands.length !== 1) continue;                 // several equally-plausible classes is not evidence
+  const c = cands[0];
+  // The name must still look related: unrelated classes in one package can share an interface and
+  // therefore most of their members.
+  const minLen = Math.min(simple(g).length, simple(c.to).length);
+  if (c.run < minLen * 0.6 && editDistance(simple(g), simple(c.to)) > minLen * 0.25) continue;
+  renames.push({ from: g.replace(/\//g, '.'), to: c.to.replace(/\//g, '.'), shared: c.shared, of: am.size, ratio: +c.ratio.toFixed(2) });
+  claimed.add(c.to);
+}
+for (const r of renames) moves.push(r);
+if (renames.length) {
+  console.log(`\n  CLASS RENAMES  : ${renames.length}   (same package, members agree, name still related)`);
+  for (const r of renames.slice(0, 10)) console.log(`    ✓ ${r.from.split('.').pop()} → ${r.to.split('.').pop()}   (${r.shared}/${r.of} members)`);
+}
+
 moves.sort((a, b) => b.shared - a.shared);
 
 console.log(`\n  classes gone   : ${gone.length}`);

@@ -467,6 +467,43 @@ different members — same name, different class.
 Alongside it: nested classes now follow their outer class. A rule for `EntityPredicate` did nothing
 for `EntityPredicate$Builder`, which is most of a builder-heavy API.
 
+### Registry constants: the name is the identity
+
+`Blocks`, `Items` and `BlockTags` are enormous lists of static constants, and matching them by
+descriptor is meaningless — 17,111 of them share a handful of types, which is how a search concluded
+`YELLOW_CONCRETE` became `SULFUR`. But `YELLOW_CONCRETE` is not an implementation detail that gets
+renamed for clarity; it is the name of a thing in the game. **The name is the identity.**
+
+```bash
+node registry-mine.mjs --old mc-26.1.jar --new mc-26.2.jar --from 26.1 --to 26.2
+```
+
+That turns a hopeless search into three exact answers per constant, across 17,111 of them:
+
+| | |
+|---|---|
+| unchanged — same name, same class | 15,682 |
+| **moved** — same name, different class | **468** |
+| retyped | 95 |
+| removed — gone entirely | 821 |
+
+Applying a move meant teaching the remapper to rewrite a reference's **owner class**, which it had
+never done — only names and descriptors. Measured across content mods: promenade 13 → 1 broken links,
+mutant-monsters 19 → 3, ecologics 9 → 5, farmers-delight 58 → 46.
+
+### Classes that were renamed, not moved
+
+`class-mine` matched only identical simple names, so it could not see a rename by construction — and
+26.1 → 26.2 fixed a typo in vanilla, `InstantenousMobEffect` becoming `InstantaneousMobEffect`, which
+breaks every mod referencing it.
+
+Catching it needed the right similarity measure. Longest-common-substring says these names share only
+12 of 21 characters, because one inserted character in the middle halves the longest contiguous run.
+**Edit distance says they differ by exactly one edit.** Substring length measures "shares a chunk";
+edit distance measures "is nearly the same word", and a typo fix is the second thing. 13 renames
+found, all correct — including `ContextualBarRenderer → ContextualBar`, which independently
+corroborates an injection point mined from mod ports.
+
 ### Members that kept their name and changed their type
 
 The JVM resolves a field by name **and** descriptor, so a member whose declared type changed breaks

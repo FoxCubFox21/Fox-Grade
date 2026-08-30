@@ -226,8 +226,26 @@ for (const f of fs.readdirSync(HERE).filter((x) => /^descriptors\.[\d.]+-[\d.]+\
   } catch { /* ignore */ }
 }
 
+// Registry constants that moved class. The name is the identity for these — YELLOW_CONCRETE is
+// YELLOW_CONCRETE — so a same-name match in a different class is the answer, not a guess.
+const movedConstants = new Map();   // owner \t name -> {owner, desc}
+let movedCount = 0;
+for (const f of fs.readdirSync(HERE).filter((x) => /^registry\.[\d.]+-[\d.]+\.json$/.test(x))) {
+  const m = f.match(/^registry\.([\d.]+)-([\d.]+)\.json$/);
+  const a2 = verOf(m[1]), b2 = verOf(m[2]);
+  if ((fv && cmp(a2, fv) < 0) || (tv && cmp(b2, tv) > 0)) continue;
+  try {
+    for (const r of JSON.parse(fs.readFileSync(path.join(HERE, f), 'utf8')).moved || []) {
+      movedConstants.set(`${r.owner}\t${r.name}`, { owner: r.toOwner, desc: r.toDesc });
+      movedCount++;
+    }
+  } catch { /* ignore */ }
+}
+
 const memberLookup = (owner, kind, name, desc) => {
   const k = `${owner}\t${kind}\t${name}\t${desc}`;
+  const movedTo = movedConstants.get(`${owner}\t${name}`);
+  if (movedTo) return { to: name, owner: movedTo.owner, desc: movedTo.desc, guess: null };
   const to = memberRenames.get(k);
   const newDesc = widened.get(`${owner}\t${kind}\t${name}\t${desc}`);
   if (!to && !newDesc) return null;
@@ -243,6 +261,7 @@ console.log(`    naming scheme      : ${scheme ? `${scheme.match(/^scheme:(\w+)@
 if (!TARGET) console.log(`    ⚠ no --classpath, so no rename could be confirmed against the real ${TO} jars`);
 console.log(`\n    remappable         : ${types.size}  ${pct(types.size, referenced.size)}`);
 if (memberRuleCount) console.log(`    member rules       : ${memberRuleCount} for this span`);
+if (movedCount) console.log(`    moved constants    : ${movedCount} registry constant(s) that changed class`);
 if (widenCount) console.log(`    type widenings     : ${widenCount} member(s) whose declared type became a supertype`);
 if (overrideCount) console.log(`    hand-verified      : ${overrideCount} substitution(s) the miner cannot derive`);
 if (guessRuleCount) console.log(`    best-guess rules   : ${guessRuleCount}  ⚠ plausible, not certain — see the report`);
