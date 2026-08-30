@@ -63,6 +63,15 @@ for (const [name, a] of A) {
 }
 for (const name of B.keys()) if (!A.has(name)) added.push(name);
 
+// A jar with no classes is a datapack. It carries structures, loot tables and JSON, none of which
+// is version-specific bytecode, so it runs anywhere untouched — reporting it as a clean port counts
+// a success the tool had no part in.
+if (!A.size) {
+  console.log(`  ${path.basename(PORTED)}`);
+  console.log('    no classes in this jar — it is a datapack, not code.');
+  console.log('    Nothing to port, and nothing that could have broken. Not evidence about porting.');
+  process.exit(0);
+}
 const pct = (n) => `${(100 * n / A.size).toFixed(1)}%`;
 console.log(`  ${path.basename(PORTED)}`);
 console.log(`    classes            : ${A.size}`);

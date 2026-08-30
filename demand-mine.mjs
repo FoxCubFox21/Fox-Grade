@@ -217,6 +217,30 @@ for (const p of pairs) {
 // A question is answered when a mod that USED the missing thing stopped using it, and started using
 // something on the same class with the same shape. Requiring the mod to have used it is what keeps
 // this from matching coincidences across unrelated code.
+// Longest common substring — the same guard member-mine needed, for the same reason. Without it a
+// class like Blocks, whose fields are all typed LBlock;, pairs any dropped field with any added one:
+// YELLOW_CONCRETE -> SULFUR, PINK_WOOL -> BONE_MEAL, SAPLINGS -> SLABS. Descriptor agreement is
+// evidence only when the descriptor distinguishes anything.
+function commonRun(a, b) {
+  a = a.toLowerCase(); b = b.toLowerCase();
+  let best = 0, prev = new Array(b.length + 1).fill(0);
+  for (let i = 1; i <= a.length; i++) {
+    const cur = new Array(b.length + 1).fill(0);
+    for (let j = 1; j <= b.length; j++) if (a[i - 1] === b[j - 1]) { cur[j] = prev[j - 1] + 1; if (cur[j] > best) best = cur[j]; }
+    prev = cur;
+  }
+  return best;
+}
+// How many members of this class carry that descriptor in the target. One means the descriptor
+// identifies the member; hundreds means it identifies nothing.
+function descriptorIsDistinctive(owner, desc) {
+  const d = targetIdx.get(owner);
+  if (!d) return false;
+  let n = 0;
+  for (const m of d.members) if (m.endsWith('\t' + desc)) n++;
+  return n <= 2;
+}
+
 function answerMember(owner, name, desc) {
   const votes = new Map();
   for (const c of corpus) {
@@ -229,6 +253,11 @@ function answerMember(owner, name, desc) {
       .map((r) => r.split('\t'))
       .filter(([o, n, d]) => o === owner && d === desc && n !== name && !synthetic(n) && !c.old.refs.has(`${o}\t${n}\t${d}`));
     for (const [, n] of candidates) {
+      // Accept only when the name corroborates, or the descriptor is distinctive enough to stand
+      // alone. Everything else is a coincidence of two members sharing a type.
+      const run = commonRun(name, n);
+      const ok = run >= 6 || (descriptorIsDistinctive(owner, desc) && run >= 3);
+      if (!ok) continue;
       if (!votes.has(n)) votes.set(n, new Set());
       votes.get(n).add(c.mod);
     }
@@ -280,6 +309,28 @@ console.log(`\n    NO EVIDENCE ANYWHERE   : ${unanswered.length}`);
 for (const u of unanswered.slice(0, 10)) console.log(`      ? ${short(u.owner)}.${u.from}${u.desc ? ' ' + u.desc : ''}   (used ${u.uses}×)`);
 if (classGaps.length) { console.log(`\n    classes absent entirely: ${classGaps.length}`); for (const c of classGaps.slice(0, 6)) console.log(`      ✗ ${c.replace(/\//g, '.')}`); }
 console.log(`\n  "No evidence" means no mod in this corpus solved it — add mod pairs, or it needs a person.`);
+
+// Emit the answers as a member table the remapper already knows how to load. Without this the
+// search finds facts and nothing consumes them — the loop stayed open, so a question answered by the
+// corpus still showed up as a broken link on the next run.
+if (args['emit-members']) {
+  const MIN = +(args.min || 2);
+  const renames = [], held = [];
+  for (const a of answered) {
+    if (a.kind !== 'member') continue;
+    // Several mods independently making the same substitution is a fact about the game; one mod
+    // doing it is that author's decision and needs asking for.
+    (a.mods.length >= MIN ? renames : held).push({
+      owner: a.owner, kind: 'method', from: a.from, to: a.to, desc: a.desc,
+      shared: a.mods.length, source: 'demand-groundtruth',
+      evidence: `${a.mods.length} mod(s) replaced it this way: ${a.mods.slice(0, 3).join(', ')}`,
+    });
+  }
+  const f = args['emit-members'];
+  fs.writeFileSync(f, JSON.stringify({ schema: 1, from: args.from || null, to: args.to || null,
+    source: 'demand-driven search of the corpus', renames, guesses: held }, null, 1) + '\n');
+  console.log(`  wrote ${path.basename(f)} — ${renames.length} corroborated, ${held.length} single-mod`);
+}
 
 const OUT = args.out || path.join(HERE, `demand.${path.basename(JAR, '.jar')}.json`);
 fs.writeFileSync(OUT, JSON.stringify({ schema: 1, jar: path.basename(JAR), corpus: corpus.length, answered, unanswered, classGaps }, null, 1) + '\n');

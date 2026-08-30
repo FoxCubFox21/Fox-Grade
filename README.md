@@ -554,6 +554,30 @@ other people's mods rather than something proved against the jars.
 This corrected numbers that had been wrong throughout: continuity 7 broken links → **1**, bobby
 4 → **2**. Both were counting Fabric API's own extensions as failures.
 
+### Why pooling works for hooks and not for content
+
+Injection points pool well because a small number of Minecraft methods are hooked by a great many
+mods — `LevelRenderer.renderLevel` had twelve independent witnesses. Content mods are the opposite:
+each references its own long tail of specific blocks, items and tags, so evidence never accumulates
+on the same fact.
+
+Tested against nine content mods, the corpus appeared to answer 40–55% of their questions. Every one
+of those answers was noise. `Blocks` declares hundreds of fields all typed `LBlock;`, so any mod that
+dropped one and added another produced a pairing:
+
+```
+Blocks.YELLOW_CONCRETE → SULFUR
+Items.PINK_WOOL        → BONE_MEAL
+BlockTags.SAPLINGS     → SLABS
+```
+
+With the same guard the member miner needed — the name must corroborate, unless the descriptor is
+distinctive enough to identify the member alone — the answer rate drops to **zero**. Which is the
+honest number: 317 mod pairs contain no evidence about which block replaced which.
+
+That is a real limit on the pooling idea rather than a bug in it. Shared hooks accumulate witnesses;
+a long tail of individually-referenced content never does.
+
 ## Pooling what only observation can teach
 
 Class renames were the least valuable thing to share: they derive from mappings Mojang publishes, so
