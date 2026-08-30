@@ -207,14 +207,25 @@ export function referencedTypes(cf) {
 // unique — the same reason the source porter can rewrite them without receiver-type analysis.
 export function makeReplacer(types, members, stats = {}) {
   stats.types = stats.types || 0; stats.members = stats.members || 0;
+  // A nested class moves with the class that encloses it: if EntityPredicate moved package, so did
+  // EntityPredicate$Builder. Matching whole names only meant a rule for the outer class silently did
+  // nothing for its nested ones, which is most of a builder-heavy API.
+  const outerMapped = (name) => {
+    const i = name.indexOf('$');
+    if (i <= 0) return null;
+    const to = types.get(name.slice(0, i));
+    return to ? to + name.slice(i) : null;
+  };
   return (s) => {
     const direct = types.get(s);
     if (direct) { stats.types++; return direct; }
+    const nested = outerMapped(s);
+    if (nested) { stats.types++; return nested; }
     if (members.has(s)) { stats.members++; return members.get(s); }
     if (s.includes('L') && (s.includes(';') || s.includes('<'))) {
       let hit = false;
       const next = s.replace(TYPE_IN_DESC, (whole, name, term) => {
-        const to = types.get(name);
+        const to = types.get(name) || outerMapped(name);
         if (!to) return whole;
         hit = true; return 'L' + to + term;
       });

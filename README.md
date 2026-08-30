@@ -403,6 +403,42 @@ has not been run yet, so treat this as one honest data point, not a verdict.
   there. It declines rather than guesses, so accuracy holds.
 - **Replace testing.** Compiling clean is necessary, not sufficient. Every port ships a report.
 
+## Content mods fail differently, and exposed a missing diff
+
+Everything above was tested on client mods — overlays, rendering, HUD. Content mods that add items,
+blocks and entities have a different profile: almost no mixins, and their breakage is **class package
+moves** rather than deleted hooks.
+
+That found a gap. `member-mine` diffs the members of classes present in both versions; `jar-mine` and
+`promote-ladder` read class renames out of mod ports. **Nothing diffed the class lists of the two game
+jars directly**, so a package move that no mod happened to demonstrate was never found at all.
+
+```bash
+node class-mine.mjs --old mc-26.1.jar --new mc-26.2.jar --from 26.1 --to 26.2
+```
+
+**139 package moves** between 26.1 and 26.2, none of which the tables had — the entire
+`advancements.criterion` package became `advancements.predicates` and `advancements.triggers`.
+
+It hid because a moved class shows up as a **descriptor mismatch, not a missing name**:
+
+```
+ShapedRecipeBuilder.unlockedBy
+  wanted  (String, advancements/Criterion)
+  actual  (String, advancements/triggers/Criterion)
+```
+
+The method is still there. Only a type inside its signature moved — which "is this member present"
+answers *no* to, for a reason that looks nothing like a package move. Across the mods tested, 91 of
+840 broken references were this shape.
+
+A move is only accepted when a simple name is unique on both sides **and** the members agree, since
+Minecraft has dozens of classes called `Builder`. 31 same-name pairs were rejected for having
+different members — same name, different class.
+
+Alongside it: nested classes now follow their outer class. A rule for `EntityPredicate` did nothing
+for `EntityPredicate$Builder`, which is most of a builder-heavy API.
+
 ## Asking the corpus for what a jar actually needs
 
 The other miners sweep a category and hope the output covers what is needed. `jar-verify` already
