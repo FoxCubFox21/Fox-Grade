@@ -360,11 +360,13 @@ Three gates came out of that one file:
 - **The `FOXGRADE:` marker counts anywhere.** It had matched only `//` comments, and the model wrote
   its warning inside a `/** javadoc */` block. It flagged its own uncertainty correctly and the
   detector was deaf to it.
-- **Removal claims are checked against the jars, before compiling.** "X was removed" names a class,
-  and either it is in the target or it is not. A false one is handed back:
-  *"VanillaRegistries DOES exist in 26.2 — redo the port without that assumption."* This runs on the
-  model's prose rather than its code, because a wrong belief appears in the explanation before it
-  appears in the output.
+- **Removal claims are checked against the jars, before compiling** — and passed back as
+  information, not as a verdict. The first version said *"VanillaRegistries DOES exist, redo the port
+  without that assumption"*, and that was wrong. `VanillaRegistries.createLookup()` builds a fresh
+  **vanilla-only** registry set; the mod registers its own biome, so that lookup would never contain
+  it and `isBiome` would silently never match. The model's wording was imprecise — the class does
+  exist — and its conclusion was correct. Existence is checkable; **suitability is not**, and a
+  checker that only knows a class is present must not overrule reasoning about whether it belongs.
 
 The general lesson is narrower than "verify the output". A model's search can reach a false
 conclusion and then build something internally consistent on top of it, so **verification has to be

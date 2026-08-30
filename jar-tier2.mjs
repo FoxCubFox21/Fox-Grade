@@ -479,13 +479,24 @@ ${source}
     if (!out) { say(`     attempt ${attempt + 1}: no code returned`); continue; }
     // Before spending a compile on it, test what it asserted. A wrong premise produces code built
     // around a class it believes is gone, and no amount of compiling catches that.
+    // Existence is checkable; SUITABILITY is not, and conflating them made this check harmful.
+    // Told "VanillaRegistries was removed" is false, the correction pushed toward using it — but
+    // VanillaRegistries.createLookup() builds a fresh VANILLA-ONLY registry set, and the mod
+    // registers its own biome, so that lookup would never contain it and isBiome would silently
+    // never match. The model's wording was imprecise and its conclusion was right.
+    //
+    // So this is now information rather than a verdict: the class exists, here it is, decide whether
+    // it fits. A checker that only knows a class is present must not overrule reasoning about
+    // whether it belongs.
     const wrong = falseClaims(out);
     if (wrong.length) {
-      say(`     claimed these are gone, but they exist: ${wrong.map((w) => w.name).join(', ')}`);
-      lastErr = `Your explanation asserted the following no longer exist. They DO exist in ${TO}:\n`
-        + wrong.map((w) => `  ${w.found}  — use LOOKUP on it if you need its members`).join('\n')
-        + `\nRedo the port without that assumption.`;
-      if (attempt < REPAIRS) continue;
+      say(`     note: ${wrong.map((w) => w.name).join(', ')} exists in ${TO} — passed on as context, not a correction`);
+      const note = `One correction of fact, which may or may not change your approach:\n`
+        + wrong.map((w) => `  ${w.found} DOES exist in ${TO}.`).join('\n')
+        + `\nThat says only that the class is present. If you judged it unsuitable — wrong registry,`
+        + `\ndatagen-only, would not contain modded entries — that judgement still stands, and saying`
+        + `\nso explicitly is a better answer than using it. LOOKUP it if that would settle the question.`;
+      lastErr = lastErr ? `${lastErr}\n\n${note}` : note;
     }
     const cDir = path.join(outDir, 'build' + attempt);
     fs.mkdirSync(cDir, { recursive: true });
