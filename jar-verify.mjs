@@ -11,6 +11,7 @@
 //
 //   node jar-verify.mjs ported.jar --classpath "<target jars>"
 import fs from 'node:fs';
+import zlib from 'node:zlib';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { readZip, inflateEntry } from './zipfile.mjs';
@@ -23,6 +24,20 @@ if (!JAR) { console.error('usage: node jar-verify.mjs <jar> --classpath "<target
 const cp = args.classpath || (fs.existsSync('/tmp/foxgrade_cp.txt') ? fs.readFileSync('/tmp/foxgrade_cp.txt', 'utf8').trim() : '');
 if (!cp) { console.error('need --classpath to check against'); process.exit(2); }
 const PREFIX = args.prefix || 'net/minecraft/';
+
+// Members that OTHER MODS still call in their builds FOR THIS VERSION. Fabric API adds methods to
+// vanilla classes by mixin, so they exist in no jar on the classpath and yet resolve at runtime:
+// EntitySelectorParser.getCustomFlag was reported broken while five shipping mods called it on 26.2.
+// Static absence is not runtime absence, and a corpus of working builds is the only evidence of the
+// difference available without launching the game.
+const modProvided = new Set();
+if (args.corpus && fs.existsSync(args.corpus)) {
+  for (const f of fs.readdirSync(args.corpus)) {
+    if (!f.endsWith('.json.gz')) continue;
+    let rec; try { rec = JSON.parse(zlib.gunzipSync(fs.readFileSync(path.join(args.corpus, f)))); } catch { continue; }
+    for (const r of rec.new.refs || []) modProvided.add(r);
+  }
+}
 
 // ── collect every link the jar makes into the target ─────────────────────────────────────────
 const wanted = new Map();   // owner -> Set("kind name desc")
@@ -133,14 +148,19 @@ for (let wave = 0; wave < 8; wave++) {
 }
 if (process.env.FOXGRADE_DEBUG) console.error(`  [resolved hierarchy: ${need.size} classes]`);
 
-const missingClasses = [], missingMembers = [];
+const missingClasses = [], missingMembers = [], loaderProvided = [];
 let checked = 0;
 for (const [owner, keys] of wanted) {
   if (!declared(owner)) { missingClasses.push([owner, keys.size]); continue; }
   for (const k of keys) {
     checked++;
     const [, name, desc] = k.split(' ');
-    if (!resolves(owner, `${name} ${desc}`)) missingMembers.push([owner, name, desc]);
+    if (resolves(owner, `${name} ${desc}`)) continue;
+    // Shipping builds for THIS version calling it is evidence something on the loader side provides
+    // it. Reported separately rather than hidden, because it is an inference from other people's
+    // working mods rather than something proved against the jars.
+    if (modProvided.has(`${owner}\t${name}\t${desc}`)) { loaderProvided.push([owner, name, desc]); continue; }
+    missingMembers.push([owner, name, desc]);
   }
 }
 
@@ -161,6 +181,10 @@ console.log(`    MISSING MEMBERS    : ${missingMembers.length}`);
 for (const [o, n, d] of missingMembers.slice(0, 12)) console.log(`      ✗ ${o.replace(/\//g, '.')}.${n} ${d}`);
 if (missingMembers.length > 12) console.log(`      … ${missingMembers.length - 12} more`);
 
+if (loaderProvided.length) {
+  console.log(`    loader-provided    : ${loaderProvided.length}   (absent from the jars, but shipping mods call them on this version)`);
+  for (const [o, n] of loaderProvided.slice(0, 5)) console.log(`      ~ ${o.replace(/\//g, '.')}.${n}`);
+}
 const bad = missingClasses.length + missingMembers.length;
 console.log(bad
   ? `\n  ${bad} link(s) will fail at runtime. Every one is a crash on the code path that reaches it.`

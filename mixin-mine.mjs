@@ -15,6 +15,7 @@
 //
 //   node mixin-mine.mjs --pairs pairs261.json --classpath "<26.2 jars>" --source-classpath mc-26.1.jar
 import fs from 'node:fs';
+import zlib from 'node:zlib';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
@@ -30,7 +31,9 @@ for (let i = 2; i < process.argv.length; i++) {
   const k = t.slice(2);
   args[k] = FLAGS.has(k) ? true : process.argv[++i];
 }
-const pairs = JSON.parse(fs.readFileSync(args.pairs || 'pairs261.json', 'utf8'));
+// --corpus reads pre-extracted indexes, so this scales to thousands of pairs without keeping jars.
+const corpusDir = args.corpus;
+const pairs = corpusDir ? [] : JSON.parse(fs.readFileSync(args.pairs || 'pairs261.json', 'utf8'));
 const MIN = +(args.min || 2);
 
 // Members of every class, at both versions — the test for whether a selector is a real hook.
@@ -97,6 +100,42 @@ catch { /* ignore */ }
 // "owner\told\tnew" -> Set(mods)
 const votes = new Map();
 let mixinsCompared = 0, modsUsed = 0;
+
+// A corpus record holds every (targetClass, selector) pair its mixins named, already extracted.
+// Alignment is per target class rather than per mixin class — the index does not keep which mixin a
+// selector came from — so the 1:1 rule below carries more of the weight than it does with jars.
+if (corpusDir) {
+  for (const f of fs.readdirSync(corpusDir)) {
+    if (!f.endsWith('.json.gz')) continue;
+    let rec; try { rec = JSON.parse(zlib.gunzipSync(fs.readFileSync(path.join(corpusDir, f)))); } catch { continue; }
+    const byTarget = (arr) => { const m = new Map(); for (const k of arr || []) { const [t, sel] = k.split('\t'); if (!m.has(t)) m.set(t, new Set()); m.get(t).add(sel); } return m; };
+    const A = byTarget(rec.old.sels), B = byTarget(rec.new.sels);
+    let used = false;
+    for (const [t, aSels] of A) {
+      const bSels = B.get(t); if (!bSels) continue;
+      const was = oldIdx.get(t), now = newIdx.get(t);
+      if (!was || !now) continue;
+      const wasN = new Set([...was].map((x) => x.split('\t')[0])), nowN = new Set([...now].map((x) => x.split('\t')[0]));
+      const gone = [...aSels].filter((s2) => wasN.has(s2) && !nowN.has(s2) && !bSels.has(s2));
+      const arrived = [...bSels].filter((s2) => nowN.has(s2) && !aSels.has(s2));
+      if (!gone.length || !arrived.length) continue;
+      mixinsCompared++;
+      const cands = [];
+      if (gone.length === 1 && arrived.length === 1) cands.push([gone[0], arrived[0]]);
+      else for (const g of gone) {
+        const ranked = arrived.map((x) => ({ x, run: commonRun(g, x) })).sort((u, v) => v.run - u.run);
+        if (ranked[0].run >= 6 && (ranked.length === 1 || ranked[0].run > ranked[1].run + 1)) cands.push([g, ranked[0].x]);
+      }
+      for (const [g, a2] of cands) {
+        const known = knownRenames.get(`${t}\t${g}`);
+        if (known && known !== a2) continue;
+        vote(t, g, a2, rec.slug); used = true;
+      }
+    }
+    if (used) modsUsed++;
+  }
+}
+
 for (const p of pairs) {
   if (!fs.existsSync(p.old) || !fs.existsSync(p.new)) continue;
   const A = mixinsOf(p.old), B = mixinsOf(p.new);

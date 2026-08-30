@@ -17,6 +17,7 @@
 //
 //   node demand-mine.mjs mod.jar --pairs pairs261.json --classpath "<target>" --source-classpath <src>
 import fs from 'node:fs';
+import zlib from 'node:zlib';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
@@ -92,9 +93,23 @@ function memberNames(idx, cls, seen = new Set()) {
   for (const s of d.supers) for (const m of memberNames(idx, s, seen)) out.add(m);
   return out;
 }
+const corpusDirEarly = args.corpus;
 const targetIdx = indexJars(cp);
 const sourceIdx = indexJars(args['source-classpath']);
 if (!targetIdx.size) { console.error('no classes on --classpath'); process.exit(2); }
+
+// Members other mods still call in their builds FOR THE TARGET VERSION. Fabric API adds methods to
+// vanilla classes by mixin, so they are in no jar and yet resolve at runtime. Without this the demand
+// list is padded with things that were never broken — BlockState.getAppearance and
+// BlockAndTintGetter.hasBiomes are Fabric API renderer extensions, not missing vanilla members.
+const loaderProvided = new Set();
+if (corpusDirEarly && fs.existsSync(corpusDirEarly)) {
+  for (const f of fs.readdirSync(corpusDirEarly)) {
+    if (!f.endsWith('.json.gz')) continue;
+    let rec; try { rec = JSON.parse(zlib.gunzipSync(fs.readFileSync(path.join(corpusDirEarly, f)))); } catch { continue; }
+    for (const r of rec.new.refs || []) loaderProvided.add(r);
+  }
+}
 
 // ── 1. THE DEMAND: what does this jar reach for that is not there? ───────────────────────────
 const demandClasses = new Set(), demandMembers = new Map();   // "owner\tname\tdesc" -> count
@@ -108,6 +123,7 @@ function collect(buf) {
       if (!targetIdx.has(r.owner)) { demandClasses.add(r.owner); continue; }
       if (hasMember(targetIdx, r.owner, `${r.name}\t${r.desc}`) === false) {
         const k = `${r.owner}\t${r.name}\t${r.desc}`;
+        if (loaderProvided.has(k)) continue;    // shipping mods call it on this version; not missing
         demandMembers.set(k, (demandMembers.get(k) || 0) + 1);
       }
     }
@@ -149,9 +165,26 @@ const demandHooks = new Map();   // "owner\tselector" -> count
 }
 
 // ── 2. THE SEARCH: what did other mods do about each of these? ───────────────────────────────
-const pairs = fs.existsSync(args.pairs || '') ? JSON.parse(fs.readFileSync(args.pairs, 'utf8')) : [];
+// A corpus directory holds pre-extracted indexes rather than jars — thousands of pairs without
+// keeping thousands of archives, and no re-parsing on every run. --pairs still works for a handful
+// of local jars; --corpus is what scales.
+const corpusDir = args.corpus;
+const pairs = !corpusDir && fs.existsSync(args.pairs || '') ? JSON.parse(fs.readFileSync(args.pairs, 'utf8')) : [];
 // For each corpus mod: everything its old build referenced, and everything its new build referenced.
 const corpus = [];
+if (corpusDir) {
+  for (const f of fs.readdirSync(corpusDir)) {
+    if (!f.endsWith('.json.gz')) continue;
+    let rec;
+    try { rec = JSON.parse(zlib.gunzipSync(fs.readFileSync(path.join(corpusDir, f)))); } catch { continue; }
+    const toSels = (arr) => { const m = new Map(); for (const k of arr || []) m.set(k, 1); return m; };
+    corpus.push({
+      mod: rec.slug,
+      old: { refs: new Set(rec.old.refs || []), sels: toSels(rec.old.sels) },
+      new: { refs: new Set(rec.new.refs || []), sels: toSels(rec.new.sels) },
+    });
+  }
+}
 for (const p of pairs) {
   if (!fs.existsSync(p.old) || !fs.existsSync(p.new)) continue;
   const read = (jar) => {

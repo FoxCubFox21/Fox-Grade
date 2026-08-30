@@ -421,6 +421,47 @@ indexed world" as absence swung it to reporting nothing at all, since every walk
 `java.lang.Object`. Now: present, provably absent, or **unknowable** — and unknowable is never
 reported as missing.
 
+## A corpus without keeping the mods
+
+```bash
+node corpus-build.mjs --from 26.1 --to 26.2 --limit 1000 --out corpus/
+```
+
+Mining needs two things from a jar: which Minecraft members it references, and which methods its
+mixins inject into. Both are names. The jar is megabytes and is never needed again, so each pair is
+downloaded, reduced to its index, and deleted — 317 pairs cost **8.8 MB** instead of several GB, and
+compress tenfold because the content is almost entirely repeated class names. Resumable per mod, so
+losing the network costs nothing.
+
+Scaling the corpus mostly converts guesses into facts rather than finding new substitutions, which is
+the better outcome — the single-mod pile was always full of probably-correct answers that could not
+be justified:
+
+| corpus | corroborated injection points |
+|---|---|
+| 18 mods | 7 |
+| 171 pairs | 13 |
+| 317 pairs | **18** |
+
+`GameRenderer.getMainCamera → mainCamera` went from one witness to nine. And
+`Minecraft.setScreen → setScreenAndShow` — the substitution that had to be hand-written as an
+override because the miner is structurally blind to it — turned up independently corroborated by four
+mods, which is the closest thing to a check on human judgement this project has.
+
+### Static absence is not runtime absence
+
+Fabric API adds methods to vanilla classes by mixin. They exist in no jar on the classpath and
+resolve perfectly at runtime, so link checking called them broken:
+`EntitySelectorParser.getCustomFlag` was reported missing while five shipping mods called it on 26.2.
+
+A corpus of working builds is the only evidence of that difference short of launching the game, so
+`--corpus` uses it: a member other mods still call in their target-version builds is reported as
+**loader-provided** rather than missing. It is flagged separately, because it is an inference from
+other people's mods rather than something proved against the jars.
+
+This corrected numbers that had been wrong throughout: continuity 7 broken links → **1**, bobby
+4 → **2**. Both were counting Fabric API's own extensions as failures.
+
 ## Pooling what only observation can teach
 
 Class renames were the least valuable thing to share: they derive from mappings Mojang publishes, so
