@@ -261,9 +261,18 @@ That last row is the one that matters. The port independently arrived at exactly
 maintainer used, verified against their real build — not by copying it, but from the relocation
 table and a compile loop.
 
-**It runs, and it behaves.** Launched on 26.2: the saturation overlay renders on the hunger bar,
-held food previews what it would restore, and the F3 additions are present. All three of the mod's
-features, not just the one that proved it loaded. That is one mod across one narrow hop, not a general claim, but it is the whole pipeline
+**Two mods run, and behave.** AppleSkin on 26.2: saturation overlay on the hunger bar, held food
+previewing what it restores, F3 additions present — all three features, not just the one that proved
+it loaded. Continuity: connected textures joining correctly.
+
+Continuity is the more interesting of the two, because its last blocker could not be settled by
+evidence. `LevelRenderer.allChanged()` is gone in 26.2, and 16 corpus mods that called it did not
+agree on a replacement — only one switched to anything comparable. The method bodies decided it:
+`resetLevelRenderData()` shares three of its four calls with the old `allChanged()`. Recorded as a
+hand-verified override with the caveat that `allChanged()` did strictly more — it also rebuilt
+`ViewArea` and `SectionRenderDispatcher` and re-read render-distance options. That caveat still
+stands; it simply does not matter for a texture mod forcing a re-render. Running it is what confirmed
+the judgement, which is why the override files carry their reasoning rather than just an answer. That is one mod across one narrow hop, not a general claim, but it is the whole pipeline
 working end to end on a compiled jar: intermediary→mojmap translation, class remapping, member
 remapping, a relocation found by diffing two game jars, one source-level fix compiled back in, and a
 mixin retargeted at the class its injection point moved to.

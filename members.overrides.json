@@ -1,18 +1,31 @@
 {
-  "schema": 1,
-  "_comment": "Hand-verified member substitutions the miner cannot derive, each with the javap evidence that justifies it. These exist because two mining assumptions are structurally blind: a rename is only proposed when a NEW member arrives with the same descriptor, and a candidate is refused outright when several members share that descriptor. Neither can express 'this member was removed in favour of one that already existed'. Provenance is 'hand-verified' precisely so these never masquerade as derived facts, and each carries its reasoning so it can be argued with.",
-  "renames": [
-    {
-      "from": "26.1",
-      "to": "26.2",
-      "owner": "net/minecraft/client/Minecraft",
-      "kind": "method",
-      "name": "setScreen",
-      "desc": "(Lnet/minecraft/client/gui/screens/Screen;)V",
-      "becomes": "setScreenAndShow",
-      "source": "hand-verified",
-      "evidence": "26.1 declared both setScreen and setScreenAndShow with this descriptor; 26.2 declares only setScreenAndShow. The other two (Screen)V methods in 26.2 are clearWorld, which tears a level down, and a private lambda — neither displays a screen. So the removed method's callers must move to the survivor.",
-      "confidence": "high, but it is a judgement rather than a proof: both methods coexisted in 26.1, so they were not identical, and setScreenAndShow may do more than setScreen did."
-    }
-  ]
+ "schema": 1,
+ "_comment": "Hand-verified member substitutions the miner cannot derive, each with the javap evidence that justifies it. These exist because two mining assumptions are structurally blind: a rename is only proposed when a NEW member arrives with the same descriptor, and a candidate is refused outright when several members share that descriptor. Neither can express 'this member was removed in favour of one that already existed'. Provenance is 'hand-verified' precisely so these never masquerade as derived facts, and each carries its reasoning so it can be argued with.",
+ "renames": [
+  {
+   "from": "26.1",
+   "to": "26.2",
+   "owner": "net/minecraft/client/Minecraft",
+   "kind": "method",
+   "name": "setScreen",
+   "desc": "(Lnet/minecraft/client/gui/screens/Screen;)V",
+   "becomes": "setScreenAndShow",
+   "source": "hand-verified",
+   "evidence": "26.1 declared both setScreen and setScreenAndShow with this descriptor; 26.2 declares only setScreenAndShow. The other two (Screen)V methods in 26.2 are clearWorld, which tears a level down, and a private lambda \u2014 neither displays a screen. So the removed method's callers must move to the survivor.",
+   "confidence": "high, but it is a judgement rather than a proof: both methods coexisted in 26.1, so they were not identical, and setScreenAndShow may do more than setScreen did."
+  },
+  {
+   "from": "26.1",
+   "to": "26.2",
+   "owner": "net/minecraft/client/renderer/LevelRenderer",
+   "kind": "method",
+   "name": "allChanged",
+   "desc": "()V",
+   "becomes": "resetLevelRenderData",
+   "source": "hand-verified",
+   "evidence": "26.1 allChanged() called clearVisibleSections, SectionOcclusionGraph.waitAndReset and ViewArea.releaseAllBuffers among others. 26.2 resetLevelRenderData() calls exactly those three plus SectionRenderDispatcher.dispose \u2014 three of its four calls are shared. The other ()V methods on the class are unrelated: clearVisibleSections is a component called by both, not a replacement.",
+   "confidence": "good, with a real caveat: allChanged() did MORE than reset. It also rebuilt ViewArea and SectionRenderDispatcher and re-read render-distance and ambient-occlusion options, which 26.2 does elsewhere. A caller expecting a full rebuild gets only the reset half. For a mod forcing a re-render after a config change that is the relevant part, but it is not an identity.",
+   "corpusEvidence": "16 corpus mods called allChanged() on 26.1; only 1 switched to any ()V on that class (clearVisibleSections), so the corpus does not settle this. The bytecode does."
+  }
+ ]
 }
