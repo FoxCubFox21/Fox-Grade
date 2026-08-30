@@ -261,9 +261,11 @@ That last row is the one that matters. The port independently arrived at exactly
 maintainer used, verified against their real build — not by copying it, but from the relocation
 table and a compile loop.
 
-**Two mods run, and behave.** AppleSkin on 26.2: saturation overlay on the hunger bar, held food
+**Three mods run, and behave.** AppleSkin on 26.2: saturation overlay on the hunger bar, held food
 previewing what it restores, F3 additions present — all three features, not just the one that proved
-it loaded. Continuity: connected textures joining correctly.
+it loaded. Continuity: connected textures joining correctly. Macaw's Furniture — a content mod with custom
+blocks, items and entities — placing and rendering, with its one modified class (the sink) confirmed
+working, which makes it completely verified rather than sampled.
 
 Continuity is the more interesting of the two, because its last blocker could not be settled by
 evidence. `LevelRenderer.allChanged()` is gone in 26.2, and 16 corpus mods that called it did not
@@ -402,6 +404,32 @@ has not been run yet, so treat this as one honest data point, not a verdict.
 - **Handle pre-1.14 confidently.** Mojang published no mappings before 1.14.4; coverage drops to ~65%
   there. It declines rather than guesses, so accuracy holds.
 - **Replace testing.** Compiling clean is necessary, not sufficient. Every port ships a report.
+
+## Knowing what to test
+
+"It works, but there is too much of it to check" is the honest reaction to porting a mod with
+hundreds of blocks. The answer is that most of a ported jar was never ported: entries the remapper
+did not need to touch are copied as their **original compressed bytes**, so they are byte-for-byte
+the code that already worked.
+
+```bash
+node port-report.mjs original.jar ported.jar
+```
+
+```
+macaws-furniture:  54 classes, 53 byte-identical (98.1%), 1 MODIFIED
+
+  net.kikoz.mcwfurnitures.objects.counters.SinkCounter
+      Potions.WATER   Holder$Reference → Holder
+```
+
+Testing a 500-block furniture mod becomes "check one sink". Every chair, table and drawer is running
+the original bytecode and carries exactly the risk it did before the port, which is none. Continuity
+is the same shape: 2 modified classes of 162, both in its config screen.
+
+Copying untouched entries verbatim was a defensive choice — so a bug in the zip writer could not
+corrupt a resource it was not asked to change. The unplanned payoff is that the diff is exact, so the
+test surface is exact, and a mod can be **completely** verified rather than sampled.
 
 ## Content mods fail differently, and exposed a missing diff
 
