@@ -173,10 +173,16 @@ export function applyMemberRenames(cf, lookup) {
     const name = utf8Of(nameIdx), desc = utf8Of(descIdx);
     if (!name || !desc) continue;
     const hit = lookup(owner, e.tag === 9 ? 'field' : 'method', name, desc);
-    const to = hit && (typeof hit === 'string' ? hit : hit.to);
-    if (!to || to === name) continue;
-    patches.push({ off: e.start + 3, val: allocNat(allocUtf8(to), descIdx) });
-    applied.push(`${owner}.${name} -> ${to}`);
+    if (!hit) continue;
+    const to = typeof hit === 'string' ? hit : (hit.to || name);
+    // A member can keep its name and change its TYPE: 26.2 declares Potions.WATER as Holder where
+    // 26.1 had Holder$Reference. The JVM resolves a field by name AND descriptor, so the old
+    // reference fails even though the field is right there. Rewriting the descriptor is the fix, and
+    // it is only offered when the new type is a supertype of the old — see descriptor-mine.mjs.
+    const newDesc = typeof hit === 'object' && hit.desc ? hit.desc : desc;
+    if (to === name && newDesc === desc) continue;
+    patches.push({ off: e.start + 3, val: allocNat(to === name ? nameIdx : allocUtf8(to), newDesc === desc ? descIdx : allocUtf8(newDesc)) });
+    applied.push(`${owner}.${name}${newDesc !== desc ? ` : ${desc} -> ${newDesc}` : ` -> ${to}`}`);
     if (hit && hit.guess) guessed.push(hit.guess);
   }
   if (!patches.length) return null;

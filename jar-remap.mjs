@@ -210,10 +210,28 @@ try {
   }
 } catch { /* no overrides file is fine */ }
 
+// Descriptor widenings: same member, new type that is a supertype of the old. Only widenings are
+// loaded — a narrowing would hand the caller something weaker than it expects.
+const widened = new Map();   // owner \t kind \t name \t oldDesc -> newDesc
+let widenCount = 0;
+for (const f of fs.readdirSync(HERE).filter((x) => /^descriptors\.[\d.]+-[\d.]+\.json$/.test(x))) {
+  const m = f.match(/^descriptors\.([\d.]+)-([\d.]+)\.json$/);
+  const a2 = verOf(m[1]), b2 = verOf(m[2]);
+  if ((fv && cmp(a2, fv) < 0) || (tv && cmp(b2, tv) > 0)) continue;
+  try {
+    for (const r of JSON.parse(fs.readFileSync(path.join(HERE, f), 'utf8')).widened || []) {
+      widened.set(`${r.owner}\t${r.kind}\t${r.name}\t${r.from}`, r.to);
+      widenCount++;
+    }
+  } catch { /* ignore */ }
+}
+
 const memberLookup = (owner, kind, name, desc) => {
   const k = `${owner}\t${kind}\t${name}\t${desc}`;
   const to = memberRenames.get(k);
-  return to ? { to, guess: guessRules.has(k) ? k : null } : null;
+  const newDesc = widened.get(`${owner}\t${kind}\t${name}\t${desc}`);
+  if (!to && !newDesc) return null;
+  return { to: to || name, desc: newDesc || desc, guess: guessRules.has(k) ? k : null };
 };
 
 // ── report ───────────────────────────────────────────────────────────────────────────────────
@@ -225,6 +243,7 @@ console.log(`    naming scheme      : ${scheme ? `${scheme.match(/^scheme:(\w+)@
 if (!TARGET) console.log(`    ⚠ no --classpath, so no rename could be confirmed against the real ${TO} jars`);
 console.log(`\n    remappable         : ${types.size}  ${pct(types.size, referenced.size)}`);
 if (memberRuleCount) console.log(`    member rules       : ${memberRuleCount} for this span`);
+if (widenCount) console.log(`    type widenings     : ${widenCount} member(s) whose declared type became a supertype`);
 if (overrideCount) console.log(`    hand-verified      : ${overrideCount} substitution(s) the miner cannot derive`);
 if (guessRuleCount) console.log(`    best-guess rules   : ${guessRuleCount}  ⚠ plausible, not certain — see the report`);
 console.log(`    already correct    : ${alreadyOk.length}`);

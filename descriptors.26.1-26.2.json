@@ -1,0 +1,3869 @@
+{
+ "schema": 1,
+ "from": "26.1",
+ "to": "26.2",
+ "source": "jar-diff: supertype widening",
+ "widened": [
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "WATER",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "MUNDANE",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "THICK",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "AWKWARD",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "NIGHT_VISION",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "LONG_NIGHT_VISION",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "INVISIBILITY",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "LONG_INVISIBILITY",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "LEAPING",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "LONG_LEAPING",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "STRONG_LEAPING",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "FIRE_RESISTANCE",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "LONG_FIRE_RESISTANCE",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "SWIFTNESS",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "LONG_SWIFTNESS",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "STRONG_SWIFTNESS",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "SLOWNESS",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "LONG_SLOWNESS",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "STRONG_SLOWNESS",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "TURTLE_MASTER",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "LONG_TURTLE_MASTER",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "STRONG_TURTLE_MASTER",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "WATER_BREATHING",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "LONG_WATER_BREATHING",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "HEALING",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "STRONG_HEALING",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "HARMING",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "STRONG_HARMING",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "POISON",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "LONG_POISON",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "STRONG_POISON",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "REGENERATION",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "LONG_REGENERATION",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "STRONG_REGENERATION",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "STRENGTH",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "LONG_STRENGTH",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "STRONG_STRENGTH",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "WEAKNESS",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "LONG_WEAKNESS",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "LUCK",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "SLOW_FALLING",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "LONG_SLOW_FALLING",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "WIND_CHARGED",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "WEAVING",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "OOZING",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/item/alchemy/Potions",
+   "kind": "field",
+   "name": "INFESTED",
+   "from": "Lnet/minecraft/core/Holder$Reference;",
+   "to": "Lnet/minecraft/core/Holder;"
+  },
+  {
+   "owner": "net/minecraft/world/level/levelgen/feature/configurations/MultifaceGrowthConfiguration",
+   "kind": "field",
+   "name": "placeBlock",
+   "from": "Lnet/minecraft/world/level/block/MultifaceSpreadeableBlock;",
+   "to": "Lnet/minecraft/world/level/block/Block;"
+  }
+ ],
+ "narrowed": [
+  {
+   "owner": "com/mojang/blaze3d/opengl/GlDevice",
+   "kind": "field",
+   "name": "encoder",
+   "from": "Lcom/mojang/blaze3d/systems/CommandEncoderBackend;",
+   "to": "Lcom/mojang/blaze3d/opengl/GlCommandEncoder;"
+  },
+  {
+   "owner": "com/mojang/realmsclient/gui/screens/configuration/RealmsConfigureWorldScreen",
+   "kind": "field",
+   "name": "tabNavigationBar",
+   "from": "Lnet/minecraft/client/gui/components/tabs/TabNavigationBar;",
+   "to": "Lnet/minecraft/client/gui/components/tabs/MenuTabBar;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/achievement/StatsScreen",
+   "kind": "field",
+   "name": "tabNavigationBar",
+   "from": "Lnet/minecraft/client/gui/components/tabs/TabNavigationBar;",
+   "to": "Lnet/minecraft/client/gui/components/tabs/MenuTabBar;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/worldselection/CreateWorldScreen",
+   "kind": "field",
+   "name": "tabNavigationBar",
+   "from": "Lnet/minecraft/client/gui/components/tabs/TabNavigationBar;",
+   "to": "Lnet/minecraft/client/gui/components/tabs/MenuTabBar;"
+  }
+ ],
+ "changed": [
+  {
+   "owner": "com/mojang/blaze3d/opengl/DirectStateAccess$Core",
+   "kind": "method",
+   "name": "bindFrameBufferTextures",
+   "from": "(IIIII)V",
+   "to": "(I[I[IIII)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/DirectStateAccess$Emulated",
+   "kind": "method",
+   "name": "bindFrameBufferTextures",
+   "from": "(IIIII)V",
+   "to": "(I[I[IIII)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/DirectStateAccess",
+   "kind": "method",
+   "name": "create",
+   "from": "(Lorg/lwjgl/opengl/GLCapabilities;Ljava/util/Set;Lcom/mojang/blaze3d/GraphicsWorkarounds;)Lcom/mojang/blaze3d/opengl/DirectStateAccess;",
+   "to": "(Lorg/lwjgl/opengl/GLCapabilities;Ljava/util/Set;Lcom/mojang/blaze3d/opengl/GlHeuristics;)Lcom/mojang/blaze3d/opengl/DirectStateAccess;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/GlBackend",
+   "kind": "method",
+   "name": "createDevice",
+   "from": "(JLcom/mojang/blaze3d/shaders/ShaderSource;Lcom/mojang/blaze3d/shaders/GpuDebugOptions;)Lcom/mojang/blaze3d/systems/GpuDevice;",
+   "to": "(JLcom/mojang/blaze3d/shaders/ShaderSource;Lcom/mojang/blaze3d/shaders/GpuDebugOptions;Ljava/lang/Runnable;)Lcom/mojang/blaze3d/systems/GpuDevice;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/GlBuffer",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Ljava/util/function/Supplier;Lcom/mojang/blaze3d/opengl/DirectStateAccess;IJILjava/nio/ByteBuffer;)V",
+   "to": "(IJIZ)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/GlCommandEncoder",
+   "kind": "method",
+   "name": "createRenderPass",
+   "from": "(Ljava/util/function/Supplier;Lcom/mojang/blaze3d/textures/GpuTextureView;Ljava/util/OptionalInt;)Lcom/mojang/blaze3d/systems/RenderPassBackend;",
+   "to": "(Lcom/mojang/blaze3d/systems/RenderPassDescriptor;)Lcom/mojang/blaze3d/systems/RenderPassBackend;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/GlCommandEncoder",
+   "kind": "method",
+   "name": "createRenderPass",
+   "from": "(Ljava/util/function/Supplier;Lcom/mojang/blaze3d/textures/GpuTextureView;Ljava/util/OptionalInt;Lcom/mojang/blaze3d/textures/GpuTextureView;Ljava/util/OptionalDouble;)Lcom/mojang/blaze3d/systems/RenderPassBackend;",
+   "to": "(Lcom/mojang/blaze3d/systems/RenderPassDescriptor;)Lcom/mojang/blaze3d/systems/RenderPassBackend;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/GlCommandEncoder",
+   "kind": "method",
+   "name": "clearColorTexture",
+   "from": "(Lcom/mojang/blaze3d/textures/GpuTexture;I)V",
+   "to": "(Lcom/mojang/blaze3d/textures/GpuTexture;Lorg/joml/Vector4fc;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/GlCommandEncoder",
+   "kind": "method",
+   "name": "writeToTexture",
+   "from": "(Lcom/mojang/blaze3d/textures/GpuTexture;Lcom/mojang/blaze3d/platform/NativeImage;IIIIIIII)V",
+   "to": "(Lcom/mojang/blaze3d/textures/GpuTexture;Ljava/nio/ByteBuffer;IIIIII)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/GlCommandEncoder",
+   "kind": "method",
+   "name": "writeToTexture",
+   "from": "(Lcom/mojang/blaze3d/textures/GpuTexture;Ljava/nio/ByteBuffer;Lcom/mojang/blaze3d/platform/NativeImage$Format;IIIIII)V",
+   "to": "(Lcom/mojang/blaze3d/textures/GpuTexture;Ljava/nio/ByteBuffer;IIIIII)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/GlCommandEncoder",
+   "kind": "method",
+   "name": "presentTexture",
+   "from": "(Lcom/mojang/blaze3d/textures/GpuTextureView;)V",
+   "to": "(Lcom/mojang/blaze3d/textures/GpuTextureView;II)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/GlCommandEncoder",
+   "kind": "method",
+   "name": "executeDrawMultiple",
+   "from": "(Lcom/mojang/blaze3d/opengl/GlRenderPass;Ljava/util/Collection;Lcom/mojang/blaze3d/buffers/GpuBuffer;Lcom/mojang/blaze3d/vertex/VertexFormat$IndexType;Ljava/util/Collection;Ljava/lang/Object;)V",
+   "to": "(Lcom/mojang/blaze3d/opengl/GlRenderPass;Ljava/util/Collection;Lcom/mojang/blaze3d/buffers/GpuBuffer;Lcom/mojang/blaze3d/IndexType;Ljava/util/Collection;Ljava/lang/Object;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/GlCommandEncoder",
+   "kind": "method",
+   "name": "executeDraw",
+   "from": "(Lcom/mojang/blaze3d/opengl/GlRenderPass;IIILcom/mojang/blaze3d/vertex/VertexFormat$IndexType;I)V",
+   "to": "(Lcom/mojang/blaze3d/opengl/GlRenderPass;IIILcom/mojang/blaze3d/IndexType;II)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/GlCommandEncoder",
+   "kind": "method",
+   "name": "drawFromBuffers",
+   "from": "(Lcom/mojang/blaze3d/opengl/GlRenderPass;IIILcom/mojang/blaze3d/vertex/VertexFormat$IndexType;Lcom/mojang/blaze3d/opengl/GlRenderPipeline;I)V",
+   "to": "(Lcom/mojang/blaze3d/opengl/GlRenderPass;IIILcom/mojang/blaze3d/IndexType;Lcom/mojang/blaze3d/opengl/GlRenderPipeline;II)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/GlConst",
+   "kind": "method",
+   "name": "toGlInternalId",
+   "from": "(Lcom/mojang/blaze3d/textures/TextureFormat;)I",
+   "to": "(Lcom/mojang/blaze3d/GpuFormat;)I"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/GlConst",
+   "kind": "method",
+   "name": "toGlExternalId",
+   "from": "(Lcom/mojang/blaze3d/textures/TextureFormat;)I",
+   "to": "(Lcom/mojang/blaze3d/GpuFormat;)I"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/GlConst",
+   "kind": "method",
+   "name": "toGlType",
+   "from": "(Lcom/mojang/blaze3d/textures/TextureFormat;)I",
+   "to": "(Lcom/mojang/blaze3d/GpuFormat;)I"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/GlFence",
+   "kind": "method",
+   "name": "<init>",
+   "from": "()V",
+   "to": "(Lcom/mojang/blaze3d/opengl/GlCommandEncoder;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/GlProgram",
+   "kind": "method",
+   "name": "link",
+   "from": "(Lcom/mojang/blaze3d/opengl/GlShaderModule;Lcom/mojang/blaze3d/opengl/GlShaderModule;Lcom/mojang/blaze3d/vertex/VertexFormat;Ljava/lang/String;)Lcom/mojang/blaze3d/opengl/GlProgram;",
+   "to": "(Lcom/mojang/blaze3d/opengl/GlShaderModule;Lcom/mojang/blaze3d/opengl/GlShaderModule;[Lcom/mojang/blaze3d/vertex/VertexFormat;Ljava/lang/String;)Lcom/mojang/blaze3d/opengl/GlProgram;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/GlRenderPass",
+   "kind": "field",
+   "name": "vertexBuffers",
+   "from": "[Lcom/mojang/blaze3d/buffers/GpuBuffer;",
+   "to": "[Lcom/mojang/blaze3d/buffers/GpuBufferSlice;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/GlRenderPass",
+   "kind": "field",
+   "name": "indexType",
+   "from": "Lcom/mojang/blaze3d/vertex/VertexFormat$IndexType;",
+   "to": "Lcom/mojang/blaze3d/IndexType;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/GlRenderPass",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lcom/mojang/blaze3d/opengl/GlCommandEncoder;Lcom/mojang/blaze3d/opengl/GlDevice;Z)V",
+   "to": "(Lcom/mojang/blaze3d/opengl/GlCommandEncoder;Lcom/mojang/blaze3d/opengl/GlDevice;ZILcom/mojang/blaze3d/systems/ScissorState;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/GlRenderPass",
+   "kind": "method",
+   "name": "setVertexBuffer",
+   "from": "(ILcom/mojang/blaze3d/buffers/GpuBuffer;)V",
+   "to": "(ILcom/mojang/blaze3d/buffers/GpuBufferSlice;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/GlRenderPass",
+   "kind": "method",
+   "name": "setIndexBuffer",
+   "from": "(Lcom/mojang/blaze3d/buffers/GpuBuffer;Lcom/mojang/blaze3d/vertex/VertexFormat$IndexType;)V",
+   "to": "(Lcom/mojang/blaze3d/buffers/GpuBuffer;Lcom/mojang/blaze3d/IndexType;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/GlRenderPass",
+   "kind": "method",
+   "name": "drawIndexed",
+   "from": "(IIII)V",
+   "to": "(IIIII)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/GlRenderPass",
+   "kind": "method",
+   "name": "drawMultipleIndexed",
+   "from": "(Ljava/util/Collection;Lcom/mojang/blaze3d/buffers/GpuBuffer;Lcom/mojang/blaze3d/vertex/VertexFormat$IndexType;Ljava/util/Collection;Ljava/lang/Object;)V",
+   "to": "(Ljava/util/Collection;Lcom/mojang/blaze3d/buffers/GpuBuffer;Lcom/mojang/blaze3d/IndexType;Ljava/util/Collection;Ljava/lang/Object;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/GlRenderPass",
+   "kind": "method",
+   "name": "draw",
+   "from": "(II)V",
+   "to": "(IIII)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/GlStateManager",
+   "kind": "field",
+   "name": "BLEND",
+   "from": "Lcom/mojang/blaze3d/opengl/GlStateManager$BlendState;",
+   "to": "[Lcom/mojang/blaze3d/opengl/GlStateManager$BlendState;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/GlStateManager",
+   "kind": "field",
+   "name": "COLOR_MASK",
+   "from": "I",
+   "to": "[I"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/GlStateManager",
+   "kind": "method",
+   "name": "_disableBlend",
+   "from": "()V",
+   "to": "(I)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/GlStateManager",
+   "kind": "method",
+   "name": "_enableBlend",
+   "from": "()V",
+   "to": "(I)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/GlTexture",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(ILjava/lang/String;Lcom/mojang/blaze3d/textures/TextureFormat;IIIII)V",
+   "to": "(ILjava/lang/String;Lcom/mojang/blaze3d/GpuFormat;IIIIILcom/mojang/blaze3d/opengl/FrameBufferCache;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/GlTextureView",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lcom/mojang/blaze3d/opengl/GlTexture;II)V",
+   "to": "(Lcom/mojang/blaze3d/opengl/GlTexture;IILcom/mojang/blaze3d/opengl/FrameBufferCache;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/Uniform$Utb",
+   "kind": "field",
+   "name": "format",
+   "from": "Lcom/mojang/blaze3d/textures/TextureFormat;",
+   "to": "Lcom/mojang/blaze3d/GpuFormat;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/Uniform$Utb",
+   "kind": "method",
+   "name": "format",
+   "from": "()Lcom/mojang/blaze3d/textures/TextureFormat;",
+   "to": "()Lcom/mojang/blaze3d/GpuFormat;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/VertexArrayCache$Emulated",
+   "kind": "method",
+   "name": "bindVertexArray",
+   "from": "(Lcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/opengl/GlBuffer;)V",
+   "to": "([Lcom/mojang/blaze3d/vertex/VertexFormat;[Lcom/mojang/blaze3d/buffers/GpuBufferSlice;Lcom/mojang/blaze3d/opengl/VertexArrayCache$VertexArray;)Lcom/mojang/blaze3d/opengl/VertexArrayCache$VertexArray;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/VertexArrayCache$Emulated",
+   "kind": "method",
+   "name": "setupCombinedAttributes",
+   "from": "(Lcom/mojang/blaze3d/vertex/VertexFormat;Z)V",
+   "to": "([Lcom/mojang/blaze3d/vertex/VertexFormat;Z[Lcom/mojang/blaze3d/buffers/GpuBufferSlice;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/VertexArrayCache$Separate",
+   "kind": "method",
+   "name": "bindVertexArray",
+   "from": "(Lcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/opengl/GlBuffer;)V",
+   "to": "([Lcom/mojang/blaze3d/vertex/VertexFormat;[Lcom/mojang/blaze3d/buffers/GpuBufferSlice;Lcom/mojang/blaze3d/opengl/VertexArrayCache$VertexArray;)Lcom/mojang/blaze3d/opengl/VertexArrayCache$VertexArray;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/VertexArrayCache$VertexArray",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(ILcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/opengl/GlBuffer;)V",
+   "to": "(I[Lcom/mojang/blaze3d/vertex/VertexFormat;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/opengl/VertexArrayCache",
+   "kind": "method",
+   "name": "bindVertexArray",
+   "from": "(Lcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/opengl/GlBuffer;)V",
+   "to": "([Lcom/mojang/blaze3d/vertex/VertexFormat;[Lcom/mojang/blaze3d/buffers/GpuBufferSlice;Lcom/mojang/blaze3d/opengl/VertexArrayCache$VertexArray;)Lcom/mojang/blaze3d/opengl/VertexArrayCache$VertexArray;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/pipeline/RenderPipeline$Snippet",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Ljava/util/Optional;Ljava/util/Optional;Ljava/util/Optional;Ljava/util/Optional;Ljava/util/Optional;Ljava/util/Optional;Ljava/util/Optional;Ljava/util/Optional;Ljava/util/Optional;Ljava/util/Optional;Ljava/util/Optional;)V",
+   "to": "(Ljava/util/Optional;Ljava/util/Optional;Ljava/util/Optional;Ljava/util/Optional;[Lcom/mojang/blaze3d/pipeline/ColorTargetState;ILjava/util/Optional;Ljava/util/Optional;Ljava/util/Optional;[Lcom/mojang/blaze3d/vertex/VertexFormat;Ljava/util/Optional;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/pipeline/RenderPipeline",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/resources/Identifier;Lnet/minecraft/resources/Identifier;Lnet/minecraft/resources/Identifier;Lnet/minecraft/client/renderer/ShaderDefines;Ljava/util/List;Ljava/util/List;Lcom/mojang/blaze3d/pipeline/ColorTargetState;Lcom/mojang/blaze3d/pipeline/DepthStencilState;Lcom/mojang/blaze3d/platform/PolygonMode;ZLcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;I)V",
+   "to": "(Lnet/minecraft/resources/Identifier;Lnet/minecraft/resources/Identifier;Lnet/minecraft/resources/Identifier;Lnet/minecraft/client/renderer/ShaderDefines;Ljava/util/List;[Lcom/mojang/blaze3d/pipeline/ColorTargetState;Lcom/mojang/blaze3d/pipeline/DepthStencilState;Lcom/mojang/blaze3d/platform/PolygonMode;Z[Lcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/PrimitiveTopology;I)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/pipeline/RenderTarget",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Ljava/lang/String;Z)V",
+   "to": "(Ljava/lang/String;ZLcom/mojang/blaze3d/GpuFormat;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/pipeline/RenderTarget",
+   "kind": "method",
+   "name": "blitAndBlendToTexture",
+   "from": "(Lcom/mojang/blaze3d/textures/GpuTextureView;)V",
+   "to": "(Lcom/mojang/blaze3d/textures/GpuTextureView;Lcom/mojang/blaze3d/textures/GpuTextureView;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/pipeline/TextureTarget",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Ljava/lang/String;IIZ)V",
+   "to": "(Ljava/lang/String;IIZLcom/mojang/blaze3d/GpuFormat;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/ClientShutdownWatchdog",
+   "kind": "method",
+   "name": "startShutdownWatchdog",
+   "from": "(Lnet/minecraft/client/Minecraft;Ljava/io/File;J)V",
+   "to": "(Ljava/lang/String;ZLnet/minecraft/client/Minecraft;Lnet/minecraft/client/main/GameConfig;J)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/ClientShutdownWatchdog",
+   "kind": "method",
+   "name": "lambda$startShutdownWatchdog$0",
+   "from": "(JLnet/minecraft/client/Minecraft;Ljava/io/File;)V",
+   "to": "(ILjava/lang/String;JLnet/minecraft/client/Minecraft;Lnet/minecraft/client/main/GameConfig;Z)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/GLX",
+   "kind": "method",
+   "name": "_initGlfw",
+   "from": "(Lcom/mojang/blaze3d/platform/BackendOptions;)Ljava/util/function/LongSupplier;",
+   "to": "()Ljava/util/function/LongSupplier;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/Lighting",
+   "kind": "field",
+   "name": "DIFFUSE_LIGHT_0",
+   "from": "Lorg/joml/Vector3f;",
+   "to": "Lorg/joml/Vector3fc;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/Lighting",
+   "kind": "field",
+   "name": "DIFFUSE_LIGHT_1",
+   "from": "Lorg/joml/Vector3f;",
+   "to": "Lorg/joml/Vector3fc;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/Lighting",
+   "kind": "field",
+   "name": "NETHER_DIFFUSE_LIGHT_0",
+   "from": "Lorg/joml/Vector3f;",
+   "to": "Lorg/joml/Vector3fc;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/Lighting",
+   "kind": "field",
+   "name": "NETHER_DIFFUSE_LIGHT_1",
+   "from": "Lorg/joml/Vector3f;",
+   "to": "Lorg/joml/Vector3fc;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/Lighting",
+   "kind": "field",
+   "name": "INVENTORY_DIFFUSE_LIGHT_0",
+   "from": "Lorg/joml/Vector3f;",
+   "to": "Lorg/joml/Vector3fc;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/Lighting",
+   "kind": "field",
+   "name": "INVENTORY_DIFFUSE_LIGHT_1",
+   "from": "Lorg/joml/Vector3f;",
+   "to": "Lorg/joml/Vector3fc;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/Lighting",
+   "kind": "method",
+   "name": "updateBuffer",
+   "from": "(Lcom/mojang/blaze3d/platform/Lighting$Entry;Lorg/joml/Vector3f;Lorg/joml/Vector3f;)V",
+   "to": "(Lcom/mojang/blaze3d/platform/Lighting$Entry;Lorg/joml/Vector3fc;Lorg/joml/Vector3fc;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/Monitor",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(J)V",
+   "to": "(Ljava/lang/String;JLjava/util/List;Lcom/mojang/blaze3d/platform/VideoMode;II)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/TextureUtil",
+   "kind": "method",
+   "name": "lambda$writeAsPNG$1",
+   "from": "(Lcom/mojang/blaze3d/systems/CommandEncoder;Lcom/mojang/blaze3d/buffers/GpuBuffer;Lcom/mojang/blaze3d/textures/GpuTexture;ILjava/util/function/IntUnaryOperator;Ljava/nio/file/Path;Ljava/lang/String;)V",
+   "to": "(Lcom/mojang/blaze3d/buffers/GpuBuffer;ILcom/mojang/blaze3d/textures/GpuTexture;Ljava/util/function/IntUnaryOperator;Ljava/nio/file/Path;Ljava/lang/String;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/TextureUtil",
+   "kind": "method",
+   "name": "lambda$writeAsPNG$2",
+   "from": "(Ljava/nio/ByteBuffer;I)I",
+   "to": "(Ljava/util/concurrent/atomic/AtomicInteger;ILjava/lang/Runnable;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/Window",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lcom/mojang/blaze3d/platform/WindowEventHandler;Lcom/mojang/blaze3d/platform/DisplayData;Ljava/lang/String;Ljava/lang/String;Lcom/mojang/blaze3d/systems/GpuBackend;)V",
+   "to": "(Lcom/mojang/blaze3d/platform/WindowEventHandler;Lcom/mojang/blaze3d/platform/DisplayData;Ljava/lang/String;ZLjava/lang/String;Lcom/mojang/blaze3d/platform/MonitorManager;Lcom/mojang/blaze3d/systems/GpuBackend;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/resource/RenderTargetDescriptor",
+   "kind": "field",
+   "name": "clearColor",
+   "from": "I",
+   "to": "Lorg/joml/Vector4fc;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/resource/RenderTargetDescriptor",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(IIZI)V",
+   "to": "(IIZLorg/joml/Vector4fc;Lcom/mojang/blaze3d/GpuFormat;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/resource/RenderTargetDescriptor",
+   "kind": "method",
+   "name": "clearColor",
+   "from": "()I",
+   "to": "()Lorg/joml/Vector4fc;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/shaders/GpuDebugOptions",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(IZZ)V",
+   "to": "(IZZZ)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/shaders/UniformType",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Ljava/lang/String;ILjava/lang/String;)V",
+   "to": "(Ljava/lang/String;I)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/CommandEncoder",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lcom/mojang/blaze3d/systems/GpuDeviceBackend;Lcom/mojang/blaze3d/systems/CommandEncoderBackend;)V",
+   "to": "(Lcom/mojang/blaze3d/systems/TracyGpuProfiler;Lcom/mojang/blaze3d/systems/GpuDeviceBackend;Lcom/mojang/blaze3d/systems/CommandEncoderBackend;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/CommandEncoder",
+   "kind": "method",
+   "name": "clearColorTexture",
+   "from": "(Lcom/mojang/blaze3d/textures/GpuTexture;I)V",
+   "to": "(Lcom/mojang/blaze3d/textures/GpuTexture;Lorg/joml/Vector4fc;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/CommandEncoderBackend",
+   "kind": "method",
+   "name": "createRenderPass",
+   "from": "(Ljava/util/function/Supplier;Lcom/mojang/blaze3d/textures/GpuTextureView;Ljava/util/OptionalInt;)Lcom/mojang/blaze3d/systems/RenderPassBackend;",
+   "to": "(Lcom/mojang/blaze3d/systems/RenderPassDescriptor;)Lcom/mojang/blaze3d/systems/RenderPassBackend;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/CommandEncoderBackend",
+   "kind": "method",
+   "name": "createRenderPass",
+   "from": "(Ljava/util/function/Supplier;Lcom/mojang/blaze3d/textures/GpuTextureView;Ljava/util/OptionalInt;Lcom/mojang/blaze3d/textures/GpuTextureView;Ljava/util/OptionalDouble;)Lcom/mojang/blaze3d/systems/RenderPassBackend;",
+   "to": "(Lcom/mojang/blaze3d/systems/RenderPassDescriptor;)Lcom/mojang/blaze3d/systems/RenderPassBackend;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/CommandEncoderBackend",
+   "kind": "method",
+   "name": "clearColorTexture",
+   "from": "(Lcom/mojang/blaze3d/textures/GpuTexture;I)V",
+   "to": "(Lcom/mojang/blaze3d/textures/GpuTexture;Lorg/joml/Vector4fc;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/CommandEncoderBackend",
+   "kind": "method",
+   "name": "writeToTexture",
+   "from": "(Lcom/mojang/blaze3d/textures/GpuTexture;Lcom/mojang/blaze3d/platform/NativeImage;IIIIIIII)V",
+   "to": "(Lcom/mojang/blaze3d/textures/GpuTexture;Ljava/nio/ByteBuffer;IIIIII)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/CommandEncoderBackend",
+   "kind": "method",
+   "name": "writeToTexture",
+   "from": "(Lcom/mojang/blaze3d/textures/GpuTexture;Ljava/nio/ByteBuffer;Lcom/mojang/blaze3d/platform/NativeImage$Format;IIIIII)V",
+   "to": "(Lcom/mojang/blaze3d/textures/GpuTexture;Ljava/nio/ByteBuffer;IIIIII)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/GpuBackend",
+   "kind": "method",
+   "name": "createDevice",
+   "from": "(JLcom/mojang/blaze3d/shaders/ShaderSource;Lcom/mojang/blaze3d/shaders/GpuDebugOptions;)Lcom/mojang/blaze3d/systems/GpuDevice;",
+   "to": "(JLcom/mojang/blaze3d/shaders/ShaderSource;Lcom/mojang/blaze3d/shaders/GpuDebugOptions;Ljava/lang/Runnable;)Lcom/mojang/blaze3d/systems/GpuDevice;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/GpuDevice",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lcom/mojang/blaze3d/systems/GpuDeviceBackend;)V",
+   "to": "(Lcom/mojang/blaze3d/systems/GpuDeviceBackend;Ljava/lang/Runnable;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderPass$Draw",
+   "kind": "field",
+   "name": "indexType",
+   "from": "Lcom/mojang/blaze3d/vertex/VertexFormat$IndexType;",
+   "to": "Lcom/mojang/blaze3d/IndexType;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderPass$Draw",
+   "kind": "method",
+   "name": "indexType",
+   "from": "()Lcom/mojang/blaze3d/vertex/VertexFormat$IndexType;",
+   "to": "()Lcom/mojang/blaze3d/IndexType;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderPass",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lcom/mojang/blaze3d/systems/RenderPassBackend;Lcom/mojang/blaze3d/systems/GpuDeviceBackend;)V",
+   "to": "(Lcom/mojang/blaze3d/systems/RenderPassBackend;Lcom/mojang/blaze3d/systems/GpuDeviceBackend;Ljava/util/List;Ljava/lang/Runnable;Lcom/mojang/blaze3d/systems/RenderPass$RenderArea;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderPass",
+   "kind": "method",
+   "name": "setVertexBuffer",
+   "from": "(ILcom/mojang/blaze3d/buffers/GpuBuffer;)V",
+   "to": "(ILcom/mojang/blaze3d/buffers/GpuBufferSlice;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderPass",
+   "kind": "method",
+   "name": "setIndexBuffer",
+   "from": "(Lcom/mojang/blaze3d/buffers/GpuBuffer;Lcom/mojang/blaze3d/vertex/VertexFormat$IndexType;)V",
+   "to": "(Lcom/mojang/blaze3d/buffers/GpuBuffer;Lcom/mojang/blaze3d/IndexType;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderPass",
+   "kind": "method",
+   "name": "drawIndexed",
+   "from": "(IIII)V",
+   "to": "(IIIII)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderPass",
+   "kind": "method",
+   "name": "drawMultipleIndexed",
+   "from": "(Ljava/util/Collection;Lcom/mojang/blaze3d/buffers/GpuBuffer;Lcom/mojang/blaze3d/vertex/VertexFormat$IndexType;Ljava/util/Collection;Ljava/lang/Object;)V",
+   "to": "(Ljava/util/Collection;Lcom/mojang/blaze3d/buffers/GpuBuffer;Lcom/mojang/blaze3d/IndexType;Ljava/util/Collection;Ljava/lang/Object;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderPass",
+   "kind": "method",
+   "name": "draw",
+   "from": "(II)V",
+   "to": "(IIII)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderPassBackend",
+   "kind": "method",
+   "name": "setVertexBuffer",
+   "from": "(ILcom/mojang/blaze3d/buffers/GpuBuffer;)V",
+   "to": "(ILcom/mojang/blaze3d/buffers/GpuBufferSlice;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderPassBackend",
+   "kind": "method",
+   "name": "setIndexBuffer",
+   "from": "(Lcom/mojang/blaze3d/buffers/GpuBuffer;Lcom/mojang/blaze3d/vertex/VertexFormat$IndexType;)V",
+   "to": "(Lcom/mojang/blaze3d/buffers/GpuBuffer;Lcom/mojang/blaze3d/IndexType;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderPassBackend",
+   "kind": "method",
+   "name": "drawIndexed",
+   "from": "(IIII)V",
+   "to": "(IIIII)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderPassBackend",
+   "kind": "method",
+   "name": "drawMultipleIndexed",
+   "from": "(Ljava/util/Collection;Lcom/mojang/blaze3d/buffers/GpuBuffer;Lcom/mojang/blaze3d/vertex/VertexFormat$IndexType;Ljava/util/Collection;Ljava/lang/Object;)V",
+   "to": "(Ljava/util/Collection;Lcom/mojang/blaze3d/buffers/GpuBuffer;Lcom/mojang/blaze3d/IndexType;Ljava/util/Collection;Ljava/lang/Object;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderPassBackend",
+   "kind": "method",
+   "name": "draw",
+   "from": "(II)V",
+   "to": "(IIII)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderSystem$AutoStorageIndexBuffer",
+   "kind": "field",
+   "name": "type",
+   "from": "Lcom/mojang/blaze3d/vertex/VertexFormat$IndexType;",
+   "to": "Lcom/mojang/blaze3d/IndexType;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderSystem$AutoStorageIndexBuffer",
+   "kind": "method",
+   "name": "type",
+   "from": "()Lcom/mojang/blaze3d/vertex/VertexFormat$IndexType;",
+   "to": "()Lcom/mojang/blaze3d/IndexType;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderSystem",
+   "kind": "method",
+   "name": "initBackendSystem",
+   "from": "(Lcom/mojang/blaze3d/platform/BackendOptions;)Lnet/minecraft/util/TimeSource$NanoTimeSource;",
+   "to": "()Lnet/minecraft/util/TimeSource$NanoTimeSource;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderSystem",
+   "kind": "method",
+   "name": "getSequentialBuffer",
+   "from": "(Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;)Lcom/mojang/blaze3d/systems/RenderSystem$AutoStorageIndexBuffer;",
+   "to": "(Lcom/mojang/blaze3d/PrimitiveTopology;)Lcom/mojang/blaze3d/systems/RenderSystem$AutoStorageIndexBuffer;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/TimerQuery",
+   "kind": "method",
+   "name": "endProfile",
+   "from": "()Lcom/mojang/blaze3d/systems/TimerQuery$FrameProfile;",
+   "to": "()V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/textures/GpuTexture",
+   "kind": "field",
+   "name": "format",
+   "from": "Lcom/mojang/blaze3d/textures/TextureFormat;",
+   "to": "Lcom/mojang/blaze3d/GpuFormat;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/textures/GpuTexture",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(ILjava/lang/String;Lcom/mojang/blaze3d/textures/TextureFormat;IIII)V",
+   "to": "(ILjava/lang/String;Lcom/mojang/blaze3d/GpuFormat;IIII)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/textures/GpuTexture",
+   "kind": "method",
+   "name": "getFormat",
+   "from": "()Lcom/mojang/blaze3d/textures/TextureFormat;",
+   "to": "()Lcom/mojang/blaze3d/GpuFormat;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/BufferBuilder",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lcom/mojang/blaze3d/vertex/ByteBufferBuilder;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;Lcom/mojang/blaze3d/vertex/VertexFormat;)V",
+   "to": "(Lcom/mojang/blaze3d/vertex/ByteBufferBuilder;Lcom/mojang/blaze3d/PrimitiveTopology;Lcom/mojang/blaze3d/vertex/VertexFormat;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/BufferBuilder",
+   "kind": "method",
+   "name": "beginElement",
+   "from": "(Lcom/mojang/blaze3d/vertex/VertexFormatElement;)J",
+   "to": "(I)J"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/BufferBuilder",
+   "kind": "method",
+   "name": "uvShort",
+   "from": "(SSLcom/mojang/blaze3d/vertex/VertexFormatElement;)Lcom/mojang/blaze3d/vertex/VertexConsumer;",
+   "to": "(SSI)Lcom/mojang/blaze3d/vertex/VertexConsumer;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/MeshData$DrawState",
+   "kind": "field",
+   "name": "indexType",
+   "from": "Lcom/mojang/blaze3d/vertex/VertexFormat$IndexType;",
+   "to": "Lcom/mojang/blaze3d/IndexType;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/MeshData$DrawState",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lcom/mojang/blaze3d/vertex/VertexFormat;IILcom/mojang/blaze3d/vertex/VertexFormat$Mode;Lcom/mojang/blaze3d/vertex/VertexFormat$IndexType;)V",
+   "to": "(Lcom/mojang/blaze3d/vertex/VertexFormat;IILcom/mojang/blaze3d/PrimitiveTopology;Lcom/mojang/blaze3d/IndexType;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/MeshData$DrawState",
+   "kind": "method",
+   "name": "indexType",
+   "from": "()Lcom/mojang/blaze3d/vertex/VertexFormat$IndexType;",
+   "to": "()Lcom/mojang/blaze3d/IndexType;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/MeshData$SortState",
+   "kind": "field",
+   "name": "indexType",
+   "from": "Lcom/mojang/blaze3d/vertex/VertexFormat$IndexType;",
+   "to": "Lcom/mojang/blaze3d/IndexType;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/MeshData$SortState",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lcom/mojang/blaze3d/vertex/CompactVectorArray;Lcom/mojang/blaze3d/vertex/VertexFormat$IndexType;)V",
+   "to": "(Lcom/mojang/blaze3d/vertex/CompactVectorArray;Lcom/mojang/blaze3d/IndexType;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/MeshData$SortState",
+   "kind": "method",
+   "name": "indexWriter",
+   "from": "(JLcom/mojang/blaze3d/vertex/VertexFormat$IndexType;)Lit/unimi/dsi/fastutil/ints/IntConsumer;",
+   "to": "(JLcom/mojang/blaze3d/IndexType;)Lit/unimi/dsi/fastutil/ints/IntConsumer;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/MeshData$SortState",
+   "kind": "method",
+   "name": "indexType",
+   "from": "()Lcom/mojang/blaze3d/vertex/VertexFormat$IndexType;",
+   "to": "()Lcom/mojang/blaze3d/IndexType;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/UberGpuBuffer$StagedAllocationEntry",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lcom/mojang/blaze3d/vertex/UberGpuBuffer$UploadCallback;JJ)V",
+   "to": "(Lcom/mojang/blaze3d/vertex/StagingBuffer$BufferHandle;Lcom/mojang/blaze3d/vertex/UberGpuBuffer$UploadCallback;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/UberGpuBuffer",
+   "kind": "field",
+   "name": "stagingBuffer",
+   "from": "Lcom/mojang/blaze3d/vertex/UberGpuBuffer$UberGpuBufferStagingBuffer;",
+   "to": "Lcom/mojang/blaze3d/vertex/StagingBuffer;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/UberGpuBuffer",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Ljava/lang/String;IIILcom/mojang/blaze3d/systems/GpuDevice;ILcom/mojang/blaze3d/GraphicsWorkarounds;)V",
+   "to": "(Ljava/lang/String;IIILcom/mojang/blaze3d/vertex/StagingBuffer;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/UberGpuBuffer",
+   "kind": "method",
+   "name": "uploadStagedAllocations",
+   "from": "(Lcom/mojang/blaze3d/systems/GpuDevice;Lcom/mojang/blaze3d/systems/CommandEncoder;)Z",
+   "to": "(Lcom/mojang/blaze3d/systems/GpuDevice;Lcom/mojang/blaze3d/vertex/StagingBuffer$Uploader;)Z"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/VertexFormat$Builder",
+   "kind": "field",
+   "name": "elements",
+   "from": "Lcom/google/common/collect/ImmutableMap$Builder;",
+   "to": "Ljava/util/List;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/VertexFormat$Builder",
+   "kind": "method",
+   "name": "<init>",
+   "from": "()V",
+   "to": "(I)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/VertexFormat",
+   "kind": "field",
+   "name": "elements",
+   "from": "Ljava/util/List;",
+   "to": "Ljava/util/Map;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/VertexFormat",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Ljava/util/List;Ljava/util/List;Lit/unimi/dsi/fastutil/ints/IntList;I)V",
+   "to": "(Ljava/util/List;II)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/VertexFormat",
+   "kind": "method",
+   "name": "builder",
+   "from": "()Lcom/mojang/blaze3d/vertex/VertexFormat$Builder;",
+   "to": "(I)Lcom/mojang/blaze3d/vertex/VertexFormat$Builder;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/VertexFormat",
+   "kind": "method",
+   "name": "contains",
+   "from": "(Lcom/mojang/blaze3d/vertex/VertexFormatElement;)Z",
+   "to": "(Ljava/lang/String;)Z"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/VertexFormatElement",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(IILcom/mojang/blaze3d/vertex/VertexFormatElement$Type;ZI)V",
+   "to": "(Ljava/lang/String;ILcom/mojang/blaze3d/GpuFormat;)V"
+  },
+  {
+   "owner": "com/mojang/realmsclient/RealmsMainScreen",
+   "kind": "method",
+   "name": "access$2400",
+   "from": "(Lcom/mojang/realmsclient/RealmsMainScreen;)Lnet/minecraft/client/gui/Font;",
+   "to": "(Lcom/mojang/realmsclient/RealmsMainScreen;)Lnet/minecraft/client/Minecraft;"
+  },
+  {
+   "owner": "com/mojang/realmsclient/RealmsMainScreen",
+   "kind": "method",
+   "name": "access$2600",
+   "from": "(Lcom/mojang/realmsclient/RealmsMainScreen;)Lnet/minecraft/client/Minecraft;",
+   "to": "(Lcom/mojang/realmsclient/RealmsMainScreen;)Lnet/minecraft/client/gui/Font;"
+  },
+  {
+   "owner": "com/mojang/realmsclient/RealmsMainScreen",
+   "kind": "method",
+   "name": "access$2700",
+   "from": "(Lcom/mojang/realmsclient/RealmsMainScreen;)Lnet/minecraft/client/gui/Font;",
+   "to": "(Lcom/mojang/realmsclient/RealmsMainScreen;)Lnet/minecraft/client/Minecraft;"
+  },
+  {
+   "owner": "com/mojang/realmsclient/RealmsMainScreen",
+   "kind": "method",
+   "name": "access$2800",
+   "from": "(Lcom/mojang/realmsclient/RealmsMainScreen;)Lnet/minecraft/client/Minecraft;",
+   "to": "(Lcom/mojang/realmsclient/RealmsMainScreen;)Lnet/minecraft/client/gui/Font;"
+  },
+  {
+   "owner": "com/mojang/realmsclient/gui/RealmsWorldSlotButton",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(IIIIILcom/mojang/realmsclient/dto/RealmsServer;Lnet/minecraft/client/gui/components/Button$OnPress;)V",
+   "to": "(Lcom/mojang/realmsclient/gui/screens/configuration/RealmsConfigureWorldScreen;IIIIILcom/mojang/realmsclient/dto/RealmsServer;Lnet/minecraft/client/gui/components/Button$OnPress;)V"
+  },
+  {
+   "owner": "com/mojang/realmsclient/gui/screens/configuration/RealmsSubscriptionTab",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lcom/mojang/realmsclient/gui/screens/configuration/RealmsConfigureWorldScreen;Lnet/minecraft/client/Minecraft;Lcom/mojang/realmsclient/dto/RealmsServer;)V",
+   "to": "(Lcom/mojang/realmsclient/gui/screens/configuration/RealmsConfigureWorldScreen;Lnet/minecraft/client/Minecraft;Lcom/mojang/realmsclient/dto/RealmsServer;Lcom/mojang/realmsclient/dto/Subscription;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Camera",
+   "kind": "field",
+   "name": "FORWARDS",
+   "from": "Lorg/joml/Vector3f;",
+   "to": "Lorg/joml/Vector3fc;"
+  },
+  {
+   "owner": "net/minecraft/client/Camera",
+   "kind": "field",
+   "name": "UP",
+   "from": "Lorg/joml/Vector3f;",
+   "to": "Lorg/joml/Vector3fc;"
+  },
+  {
+   "owner": "net/minecraft/client/Camera",
+   "kind": "field",
+   "name": "LEFT",
+   "from": "Lorg/joml/Vector3f;",
+   "to": "Lorg/joml/Vector3fc;"
+  },
+  {
+   "owner": "net/minecraft/client/KeyboardHandler",
+   "kind": "method",
+   "name": "debugFeedbackTranslated",
+   "from": "(Ljava/lang/String;[Ljava/lang/Object;)V",
+   "to": "(Ljava/lang/String;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "kind": "method",
+   "name": "onResourceLoadFinished",
+   "from": "(Lnet/minecraft/client/Minecraft$GameLoadCookie;)V",
+   "to": "(Lnet/minecraft/client/GameLoadCookie;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "kind": "method",
+   "name": "onGameLoadFinished",
+   "from": "(Lnet/minecraft/client/Minecraft$GameLoadCookie;)V",
+   "to": "(Lnet/minecraft/client/GameLoadCookie;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "kind": "method",
+   "name": "rollbackResourcePacks",
+   "from": "(Ljava/lang/Throwable;Lnet/minecraft/client/Minecraft$GameLoadCookie;)V",
+   "to": "(Ljava/lang/Throwable;Lnet/minecraft/client/GameLoadCookie;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "kind": "method",
+   "name": "clearResourcePacksOnError",
+   "from": "(Ljava/lang/Throwable;Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/Minecraft$GameLoadCookie;)V",
+   "to": "(Ljava/lang/Throwable;Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/GameLoadCookie;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "kind": "method",
+   "name": "crash",
+   "from": "(Lnet/minecraft/client/Minecraft;Ljava/io/File;Lnet/minecraft/CrashReport;)V",
+   "to": "(Lnet/minecraft/client/Minecraft;Ljava/io/File;Lnet/minecraft/CrashReport;I)V"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "kind": "method",
+   "name": "saveReportAndShutdownSoundManager",
+   "from": "(Lnet/minecraft/client/Minecraft;Ljava/io/File;Lnet/minecraft/CrashReport;)I",
+   "to": "(Lnet/minecraft/client/Minecraft;Ljava/io/File;Lnet/minecraft/CrashReport;I)I"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "kind": "method",
+   "name": "lambda$fillSystemReport$10",
+   "from": "()Ljava/lang/String;",
+   "to": "()Ljava/lang/Object;"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "kind": "method",
+   "name": "lambda$fillSystemReport$9",
+   "from": "()Ljava/lang/String;",
+   "to": "(Lnet/minecraft/client/resources/language/LanguageManager;)Ljava/lang/Object;"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "kind": "method",
+   "name": "lambda$fillSystemReport$8",
+   "from": "(Lnet/minecraft/client/resources/language/LanguageManager;)Ljava/lang/String;",
+   "to": "(Lnet/minecraft/client/Minecraft;)Ljava/lang/Object;"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "kind": "method",
+   "name": "lambda$fillSystemReport$7",
+   "from": "(Lnet/minecraft/client/Minecraft;)Ljava/lang/String;",
+   "to": "(Lnet/minecraft/client/Minecraft;)Ljava/lang/Object;"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "kind": "method",
+   "name": "lambda$fillSystemReport$6",
+   "from": "(Lnet/minecraft/client/Minecraft;)Ljava/lang/String;",
+   "to": "(Lnet/minecraft/client/Minecraft;)Ljava/lang/Object;"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "kind": "method",
+   "name": "lambda$fillSystemReport$5",
+   "from": "(Lnet/minecraft/client/Minecraft;)Ljava/lang/String;",
+   "to": "(Lnet/minecraft/client/Minecraft;)Ljava/lang/Object;"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "kind": "method",
+   "name": "lambda$fillSystemReport$4",
+   "from": "()Ljava/lang/String;",
+   "to": "()Ljava/lang/Object;"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "kind": "method",
+   "name": "lambda$fillSystemReport$3",
+   "from": "()Ljava/lang/String;",
+   "to": "(Lcom/mojang/blaze3d/systems/GpuDevice;)Ljava/lang/Object;"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "kind": "method",
+   "name": "lambda$fillSystemReport$2",
+   "from": "()Ljava/lang/String;",
+   "to": "(Lnet/minecraft/client/Minecraft;)Ljava/lang/Object;"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "kind": "method",
+   "name": "lambda$fillSystemReport$1",
+   "from": "(Lnet/minecraft/client/Minecraft;)Ljava/lang/String;",
+   "to": "(Lnet/minecraft/client/Minecraft;)Ljava/lang/Object;"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "kind": "method",
+   "name": "lambda$fillSystemReport$0",
+   "from": "(Ljava/lang/String;)Ljava/lang/String;",
+   "to": "(Ljava/lang/String;)Ljava/lang/Object;"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "kind": "method",
+   "name": "lambda$reloadResourcePacks$0",
+   "from": "(ZLnet/minecraft/client/Minecraft$GameLoadCookie;Ljava/util/concurrent/CompletableFuture;Ljava/util/Optional;)V",
+   "to": "(ZLnet/minecraft/client/GameLoadCookie;Ljava/util/concurrent/CompletableFuture;Ljava/util/Optional;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "kind": "method",
+   "name": "lambda$reloadResourcePacks$2",
+   "from": "(Ljava/util/concurrent/CompletableFuture;Lnet/minecraft/client/Minecraft$GameLoadCookie;)V",
+   "to": "(Ljava/util/concurrent/CompletableFuture;Lnet/minecraft/client/GameLoadCookie;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "kind": "method",
+   "name": "lambda$reloadResourcePacks$1",
+   "from": "(ZLnet/minecraft/client/Minecraft$GameLoadCookie;Ljava/lang/Throwable;)V",
+   "to": "(ZLnet/minecraft/client/GameLoadCookie;Ljava/lang/Throwable;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "kind": "method",
+   "name": "lambda$new$4",
+   "from": "(Lnet/minecraft/client/Minecraft$GameLoadCookie;Ljava/util/Optional;)V",
+   "to": "(Lnet/minecraft/client/GameLoadCookie;Ljava/util/Optional;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "kind": "method",
+   "name": "lambda$new$6",
+   "from": "(Lnet/minecraft/client/Minecraft$GameLoadCookie;)V",
+   "to": "(Lnet/minecraft/client/GameLoadCookie;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "kind": "method",
+   "name": "lambda$new$5",
+   "from": "(Lnet/minecraft/client/Minecraft$GameLoadCookie;Ljava/lang/Throwable;)V",
+   "to": "(Lnet/minecraft/client/GameLoadCookie;Ljava/lang/Throwable;)V"
+  },
+  {
+   "owner": "net/minecraft/client/OptionInstance$CycleableValueSet",
+   "kind": "method",
+   "name": "createButton",
+   "from": "(Lnet/minecraft/client/OptionInstance$TooltipSupplier;Lnet/minecraft/client/Options;IIILjava/util/function/Consumer;)Ljava/util/function/Function;",
+   "to": "(Lnet/minecraft/client/OptionInstance$TooltipSupplier;Lnet/minecraft/client/Options;IIILnet/minecraft/client/OptionInstance$ValueUpdateListener;)Ljava/util/function/Function;"
+  },
+  {
+   "owner": "net/minecraft/client/OptionInstance$CycleableValueSet",
+   "kind": "method",
+   "name": "lambda$createButton$0",
+   "from": "(Lnet/minecraft/client/OptionInstance$TooltipSupplier;IIILnet/minecraft/client/Options;Ljava/util/function/Consumer;Lnet/minecraft/client/OptionInstance;)Lnet/minecraft/client/gui/components/AbstractWidget;",
+   "to": "(Lnet/minecraft/client/OptionInstance$TooltipSupplier;IIILnet/minecraft/client/Options;Lnet/minecraft/client/OptionInstance$ValueUpdateListener;Lnet/minecraft/client/OptionInstance;)Lnet/minecraft/client/gui/components/AbstractWidget;"
+  },
+  {
+   "owner": "net/minecraft/client/OptionInstance$CycleableValueSet",
+   "kind": "method",
+   "name": "lambda$createButton$1",
+   "from": "(Lnet/minecraft/client/OptionInstance;Lnet/minecraft/client/Options;Ljava/util/function/Consumer;Lnet/minecraft/client/gui/components/CycleButton;Ljava/lang/Object;)V",
+   "to": "(Lnet/minecraft/client/OptionInstance;Lnet/minecraft/client/Options;Lnet/minecraft/client/OptionInstance$ValueUpdateListener;Lnet/minecraft/client/gui/components/CycleButton;Ljava/lang/Object;)V"
+  },
+  {
+   "owner": "net/minecraft/client/OptionInstance$OptionInstanceSliderButton",
+   "kind": "field",
+   "name": "onValueChanged",
+   "from": "Ljava/util/function/Consumer;",
+   "to": "Lnet/minecraft/client/OptionInstance$ValueUpdateListener;"
+  },
+  {
+   "owner": "net/minecraft/client/OptionInstance$OptionInstanceSliderButton",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/Options;IIIILnet/minecraft/client/OptionInstance;Lnet/minecraft/client/OptionInstance$SliderableValueSet;Lnet/minecraft/client/OptionInstance$TooltipSupplier;Ljava/util/function/Consumer;Z)V",
+   "to": "(Lnet/minecraft/client/Options;IIIILnet/minecraft/client/OptionInstance;Lnet/minecraft/client/OptionInstance$SliderableValueSet;Lnet/minecraft/client/OptionInstance$TooltipSupplier;Lnet/minecraft/client/OptionInstance$ValueUpdateListener;Z)V"
+  },
+  {
+   "owner": "net/minecraft/client/OptionInstance$SliderableOrCyclableValueSet",
+   "kind": "method",
+   "name": "createButton",
+   "from": "(Lnet/minecraft/client/OptionInstance$TooltipSupplier;Lnet/minecraft/client/Options;IIILjava/util/function/Consumer;)Ljava/util/function/Function;",
+   "to": "(Lnet/minecraft/client/OptionInstance$TooltipSupplier;Lnet/minecraft/client/Options;IIILnet/minecraft/client/OptionInstance$ValueUpdateListener;)Ljava/util/function/Function;"
+  },
+  {
+   "owner": "net/minecraft/client/OptionInstance$SliderableValueSet",
+   "kind": "method",
+   "name": "createButton",
+   "from": "(Lnet/minecraft/client/OptionInstance$TooltipSupplier;Lnet/minecraft/client/Options;IIILjava/util/function/Consumer;)Ljava/util/function/Function;",
+   "to": "(Lnet/minecraft/client/OptionInstance$TooltipSupplier;Lnet/minecraft/client/Options;IIILnet/minecraft/client/OptionInstance$ValueUpdateListener;)Ljava/util/function/Function;"
+  },
+  {
+   "owner": "net/minecraft/client/OptionInstance$SliderableValueSet",
+   "kind": "method",
+   "name": "lambda$createButton$0",
+   "from": "(Lnet/minecraft/client/Options;IIILnet/minecraft/client/OptionInstance$TooltipSupplier;Ljava/util/function/Consumer;Lnet/minecraft/client/OptionInstance;)Lnet/minecraft/client/gui/components/AbstractWidget;",
+   "to": "(Lnet/minecraft/client/Options;IIILnet/minecraft/client/OptionInstance$TooltipSupplier;Lnet/minecraft/client/OptionInstance$ValueUpdateListener;Lnet/minecraft/client/OptionInstance;)Lnet/minecraft/client/gui/components/AbstractWidget;"
+  },
+  {
+   "owner": "net/minecraft/client/OptionInstance$ValueSet",
+   "kind": "method",
+   "name": "createButton",
+   "from": "(Lnet/minecraft/client/OptionInstance$TooltipSupplier;Lnet/minecraft/client/Options;IIILjava/util/function/Consumer;)Ljava/util/function/Function;",
+   "to": "(Lnet/minecraft/client/OptionInstance$TooltipSupplier;Lnet/minecraft/client/Options;IIILnet/minecraft/client/OptionInstance$ValueUpdateListener;)Ljava/util/function/Function;"
+  },
+  {
+   "owner": "net/minecraft/client/OptionInstance",
+   "kind": "field",
+   "name": "onValueUpdate",
+   "from": "Ljava/util/function/Consumer;",
+   "to": "Lnet/minecraft/client/OptionInstance$ValueUpdateListener;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$108",
+   "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Double;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Ljava/lang/Integer;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$107",
+   "from": "(Ljava/lang/Double;)V",
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Integer;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$106",
+   "from": "(Ljava/lang/Double;)V",
+   "to": "(Ljava/lang/Integer;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$105",
+   "from": "(Ljava/lang/Double;)V",
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Integer;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$104",
+   "from": "(Ljava/lang/Double;)V",
+   "to": "(Lnet/minecraft/client/MusicToastDisplayState;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$103",
+   "from": "(Ljava/lang/Double;)V",
+   "to": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/MusicToastDisplayState;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$102",
+   "from": "(Ljava/lang/Double;)V",
+   "to": "(Lnet/minecraft/client/MusicToastDisplayState;)Lnet/minecraft/client/gui/components/Tooltip;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$101",
+   "from": "(Ljava/lang/Boolean;)V",
+   "to": "(Lnet/minecraft/client/sounds/MusicManager$MusicFrequency;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$100",
+   "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Boolean;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/sounds/MusicManager$MusicFrequency;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$99",
+   "from": "(Ljava/lang/Integer;)V",
+   "to": "(Ljava/lang/String;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$98",
+   "from": "(Ljava/lang/Integer;)Ljava/lang/Double;",
+   "to": "(Ljava/lang/String;)Ljava/util/Optional;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$97",
+   "from": "(Ljava/lang/Double;)Ljava/lang/Integer;",
+   "to": "()Ljava/util/List;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$96",
+   "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Integer;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/String;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$95",
+   "from": "(Ljava/lang/Integer;)V",
+   "to": "(Lnet/minecraft/client/NarratorStatus;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$94",
+   "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Integer;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/NarratorStatus;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$93",
+   "from": "(Ljava/lang/Boolean;)V",
+   "to": "(Lnet/minecraft/server/level/ParticleStatus;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$92",
+   "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Boolean;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/server/level/ParticleStatus;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$91",
+   "from": "(Ljava/lang/Boolean;)V",
+   "to": "(Ljava/lang/Integer;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$90",
+   "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Boolean;)Lnet/minecraft/network/chat/Component;",
+   "to": "()I"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$89",
+   "from": "(Ljava/lang/Boolean;)V",
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Integer;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$88",
+   "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Boolean;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Double;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$87",
+   "from": "(Ljava/lang/Boolean;)V",
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Boolean;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$86",
+   "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Boolean;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Ljava/lang/Integer;)Ljava/lang/Double;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$85",
+   "from": "(Ljava/lang/Boolean;)Lnet/minecraft/client/gui/components/Tooltip;",
+   "to": "(Ljava/lang/Double;)Ljava/lang/Integer;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$84",
+   "from": "(Ljava/lang/Boolean;)V",
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Integer;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$83",
+   "from": "(Ljava/lang/Boolean;)V",
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Integer;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$81",
+   "from": "(Ljava/lang/Boolean;)V",
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Boolean;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$80",
+   "from": "(Ljava/lang/Boolean;)Lnet/minecraft/client/gui/components/Tooltip;",
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Boolean;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$79",
+   "from": "(Lnet/minecraft/sounds/SoundSource;)Lnet/minecraft/client/OptionInstance;",
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Boolean;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$78",
+   "from": "(Ljava/lang/Boolean;)V",
+   "to": "(Ljava/lang/Boolean;)Lnet/minecraft/client/gui/components/Tooltip;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$76",
+   "from": "(Ljava/lang/Boolean;)V",
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Boolean;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$74",
+   "from": "(Ljava/lang/Boolean;)V",
+   "to": "(Ljava/lang/Boolean;)Lnet/minecraft/client/gui/components/Tooltip;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$73",
+   "from": "(Ljava/lang/Boolean;)V",
+   "to": "(Lnet/minecraft/sounds/SoundSource;)Lnet/minecraft/client/OptionInstance;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$72",
+   "from": "(Ljava/lang/Boolean;)V",
+   "to": "(Lnet/minecraft/client/PresenceSharing;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$71",
+   "from": "(Ljava/lang/Boolean;)V",
+   "to": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/PresenceSharing;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$70",
+   "from": "(Ljava/lang/Double;)V",
+   "to": "(Lnet/minecraft/client/PresenceSharing;)Lnet/minecraft/client/gui/components/Tooltip;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$69",
+   "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Double;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Ljava/lang/Boolean;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$68",
+   "from": "(Ljava/lang/Integer;)V",
+   "to": "(Ljava/lang/Boolean;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$67",
+   "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Integer;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Ljava/lang/Boolean;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$66",
+   "from": "(Lnet/minecraft/client/AttackIndicatorStatus;)V",
+   "to": "(Ljava/lang/Boolean;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$65",
+   "from": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/AttackIndicatorStatus;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Ljava/lang/Boolean;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$64",
+   "from": "(Lnet/minecraft/client/TextureFilteringMethod;)V",
+   "to": "(Ljava/lang/Boolean;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$63",
+   "from": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/TextureFilteringMethod;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Ljava/lang/Boolean;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$62",
+   "from": "(Lnet/minecraft/client/TextureFilteringMethod;)Lnet/minecraft/client/gui/components/Tooltip;",
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Double;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$59",
+   "from": "(Ljava/lang/Integer;)V",
+   "to": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/AttackIndicatorStatus;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$58",
+   "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Integer;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Lnet/minecraft/client/TextureFilteringMethod;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$57",
+   "from": "(Ljava/lang/Double;)V",
+   "to": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/TextureFilteringMethod;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$56",
+   "from": "(Ljava/lang/Double;)I",
+   "to": "(Lnet/minecraft/client/TextureFilteringMethod;)Lnet/minecraft/client/gui/components/Tooltip;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$55",
+   "from": "(I)Ljava/lang/Double;",
+   "to": "(Ljava/lang/Integer;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$54",
+   "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Double;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Integer;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$53",
+   "from": "(Ljava/lang/Double;)V",
+   "to": "(Ljava/lang/Integer;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$52",
+   "from": "(Ljava/lang/Double;)I",
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Integer;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$51",
+   "from": "(I)Ljava/lang/Double;",
+   "to": "(Ljava/lang/Double;)I"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$50",
+   "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Double;)Lnet/minecraft/network/chat/Component;",
+   "to": "(I)Ljava/lang/Double;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$49",
+   "from": "(Ljava/lang/Double;)V",
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Double;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$48",
+   "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Double;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Ljava/lang/Double;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$47",
+   "from": "(Ljava/lang/Double;)V",
+   "to": "(Ljava/lang/Double;)I"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$46",
+   "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Double;)Lnet/minecraft/network/chat/Component;",
+   "to": "(I)Ljava/lang/Double;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$45",
+   "from": "(Ljava/lang/Double;)V",
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Double;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$44",
+   "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Double;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Ljava/lang/Double;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$43",
+   "from": "(Ljava/lang/Double;)V",
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Double;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$42",
+   "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Double;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Ljava/lang/Double;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$41",
+   "from": "(Lnet/minecraft/world/entity/HumanoidArm;)V",
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Double;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$40",
+   "from": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/world/entity/HumanoidArm;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Ljava/lang/Double;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$39",
+   "from": "(Ljava/lang/Boolean;)V",
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Double;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$37",
+   "from": "(Ljava/lang/Double;)V",
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Double;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$36",
+   "from": "(Ljava/lang/Integer;)V",
+   "to": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/world/entity/HumanoidArm;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$35",
+   "from": "(Ljava/lang/Double;)V",
+   "to": "(Ljava/lang/Boolean;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$33",
+   "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Double;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Ljava/lang/Integer;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$32",
+   "from": "(Lnet/minecraft/world/entity/player/ChatVisiblity;)V",
+   "to": "(Ljava/lang/Double;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$31",
+   "from": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/world/entity/player/ChatVisiblity;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Double;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$30",
+   "from": "(Lnet/minecraft/client/PrioritizeChunkUpdates;)V",
+   "to": "(Lnet/minecraft/world/entity/player/ChatVisiblity;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$29",
+   "from": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/PrioritizeChunkUpdates;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/world/entity/player/ChatVisiblity;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$28",
+   "from": "(Lnet/minecraft/client/PrioritizeChunkUpdates;)Lnet/minecraft/client/gui/components/Tooltip;",
+   "to": "(Lnet/minecraft/client/PrioritizeChunkUpdates;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$27",
+   "from": "(Ljava/lang/Double;)V",
+   "to": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/PrioritizeChunkUpdates;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$26",
+   "from": "(Ljava/lang/Double;)I",
+   "to": "(Lnet/minecraft/client/PrioritizeChunkUpdates;)Lnet/minecraft/client/gui/components/Tooltip;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$25",
+   "from": "(I)Ljava/lang/Double;",
+   "to": "(Ljava/lang/Double;)I"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$24",
+   "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Double;)Lnet/minecraft/network/chat/Component;",
+   "to": "(I)Ljava/lang/Double;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$23",
+   "from": "(Ljava/lang/Boolean;)V",
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Double;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$20",
+   "from": "(Ljava/lang/Integer;)V",
+   "to": "(Ljava/lang/Boolean;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$19",
+   "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Integer;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Ljava/lang/Integer;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$18",
+   "from": "(Lnet/minecraft/client/renderer/LevelRenderer;)V",
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Integer;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$12",
+   "from": "(Lnet/minecraft/client/InactivityFpsLimit;)V",
+   "to": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/InactivityFpsLimit;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$11",
+   "from": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/InactivityFpsLimit;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Lnet/minecraft/client/InactivityFpsLimit;)Lnet/minecraft/client/gui/components/Tooltip;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$10",
+   "from": "(Lnet/minecraft/client/InactivityFpsLimit;)Lnet/minecraft/client/gui/components/Tooltip;",
+   "to": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/GraphicsPreset;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$9",
+   "from": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/GraphicsPreset;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/PreferredGraphicsApi;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$8",
+   "from": "(Ljava/lang/Integer;)V",
+   "to": "(Lnet/minecraft/client/PreferredGraphicsApi;)Lnet/minecraft/client/gui/components/Tooltip;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$7",
+   "from": "(Ljava/lang/Integer;)I",
+   "to": "(Ljava/lang/Integer;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$6",
+   "from": "(I)Ljava/lang/Integer;",
+   "to": "(Ljava/lang/Integer;)I"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$5",
+   "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Integer;)Lnet/minecraft/network/chat/Component;",
+   "to": "(I)Ljava/lang/Integer;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$4",
+   "from": "(Ljava/lang/Double;)V",
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Integer;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$3",
+   "from": "(Ljava/lang/Double;)I",
+   "to": "(Ljava/lang/Double;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$2",
+   "from": "(I)Ljava/lang/Double;",
+   "to": "(Ljava/lang/Double;)I"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$1",
+   "from": "(Ljava/lang/Double;)V",
+   "to": "(I)Ljava/lang/Double;"
+  },
+  {
+   "owner": "net/minecraft/client/Screenshot",
+   "kind": "method",
+   "name": "lambda$takeScreenshot$1",
+   "from": "(Lcom/mojang/blaze3d/systems/CommandEncoder;Lcom/mojang/blaze3d/buffers/GpuBuffer;IIILcom/mojang/blaze3d/textures/GpuTexture;Ljava/util/function/Consumer;)V",
+   "to": "(Lcom/mojang/blaze3d/buffers/GpuBuffer;IIILcom/mojang/blaze3d/textures/GpuTexture;Ljava/util/function/Consumer;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Screenshot",
+   "kind": "method",
+   "name": "lambda$grab$0",
+   "from": "(Ljava/io/File;Ljava/lang/String;Ljava/util/function/Consumer;Lcom/mojang/blaze3d/platform/NativeImage;)V",
+   "to": "(Lnet/minecraft/client/Minecraft;Lnet/minecraft/network/chat/Component;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Screenshot",
+   "kind": "method",
+   "name": "lambda$grab$1",
+   "from": "(Lcom/mojang/blaze3d/platform/NativeImage;Ljava/io/File;Ljava/util/function/Consumer;)V",
+   "to": "(Lnet/minecraft/client/Minecraft;Lnet/minecraft/network/chat/Component;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Screenshot",
+   "kind": "method",
+   "name": "lambda$grab$2",
+   "from": "(Ljava/io/File;Lnet/minecraft/network/chat/Style;)Lnet/minecraft/network/chat/Style;",
+   "to": "(Ljava/io/File;Ljava/lang/String;Ljava/util/function/Consumer;Lcom/mojang/blaze3d/platform/NativeImage;)V"
+  },
+  {
+   "owner": "net/minecraft/client/data/models/BlockModelGenerators",
+   "kind": "method",
+   "name": "createHangingSign",
+   "from": "(Lnet/minecraft/world/level/block/Block;Lnet/minecraft/world/level/block/Block;Lnet/minecraft/world/level/block/Block;)V",
+   "to": "(Lnet/minecraft/world/level/block/Block;Lnet/minecraft/client/data/models/MultiVariant;Lnet/minecraft/client/data/models/MultiVariant;Lnet/minecraft/client/data/models/MultiVariant;Lnet/minecraft/client/data/models/MultiVariant;Lnet/minecraft/client/data/models/MultiVariant;Lnet/minecraft/client/data/models/MultiVariant;Lnet/minecraft/client/data/models/MultiVariant;Lnet/minecraft/client/data/models/MultiVariant;)Lnet/minecraft/client/data/models/blockstates/BlockModelDefinitionGenerator;"
+  },
+  {
+   "owner": "net/minecraft/client/data/models/BlockModelGenerators",
+   "kind": "method",
+   "name": "createColoredBlockWithRandomRotations",
+   "from": "(Lnet/minecraft/client/data/models/model/TexturedModel$Provider;[Lnet/minecraft/world/level/block/Block;)V",
+   "to": "(Lnet/minecraft/client/data/models/model/TexturedModel$Provider;Ljava/util/List;)V"
+  },
+  {
+   "owner": "net/minecraft/client/data/models/BlockModelGenerators",
+   "kind": "method",
+   "name": "createColoredBlockWithStateRotations",
+   "from": "(Lnet/minecraft/client/data/models/model/TexturedModel$Provider;[Lnet/minecraft/world/level/block/Block;)V",
+   "to": "(Lnet/minecraft/client/data/models/model/TexturedModel$Provider;Ljava/util/List;)V"
+  },
+  {
+   "owner": "net/minecraft/client/data/models/BlockModelGenerators",
+   "kind": "method",
+   "name": "createBanner",
+   "from": "(Lnet/minecraft/world/level/block/Block;Lnet/minecraft/world/level/block/Block;Lnet/minecraft/world/item/DyeColor;)V",
+   "to": "(Lnet/minecraft/world/item/DyeColor;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/Minecraft;)V",
+   "to": "(Lnet/minecraft/client/Minecraft;Lnet/minecraft/client/gui/Hud;Lnet/minecraft/client/renderer/state/gui/GuiRenderState;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "kind": "method",
+   "name": "extractRenderState",
+   "from": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V",
+   "to": "(Lnet/minecraft/client/DeltaTracker;ZZ)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "kind": "method",
+   "name": "tick",
+   "from": "(Z)V",
+   "to": "()V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/GuiGraphicsExtractor$ScissorStack",
+   "kind": "method",
+   "name": "<init>",
+   "from": "()V",
+   "to": "(Lnet/minecraft/client/gui/navigation/ScreenRectangle;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/GuiGraphicsExtractor$ScissorStack",
+   "kind": "method",
+   "name": "push",
+   "from": "(Lnet/minecraft/client/gui/navigation/ScreenRectangle;)Lnet/minecraft/client/gui/navigation/ScreenRectangle;",
+   "to": "(Lnet/minecraft/client/gui/navigation/ScreenRectangle;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/GuiGraphicsExtractor$ScissorStack",
+   "kind": "method",
+   "name": "pop",
+   "from": "()Lnet/minecraft/client/gui/navigation/ScreenRectangle;",
+   "to": "()V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/GuiGraphicsExtractor",
+   "kind": "method",
+   "name": "entity",
+   "from": "(Lnet/minecraft/client/renderer/entity/state/EntityRenderState;FLorg/joml/Vector3f;Lorg/joml/Quaternionf;Lorg/joml/Quaternionf;IIII)V",
+   "to": "(Lnet/minecraft/client/renderer/entity/state/EntityRenderState;FLorg/joml/Vector3fc;Lorg/joml/Quaternionfc;Lorg/joml/Quaternionfc;IIII)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/GuiGraphicsExtractor",
+   "kind": "method",
+   "name": "skin",
+   "from": "(Lnet/minecraft/client/model/player/PlayerModel;Lnet/minecraft/resources/Identifier;FFFFIIII)V",
+   "to": "(Lnet/minecraft/client/model/Model$Simple;Lnet/minecraft/resources/Identifier;FFFFIIII)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/components/PlayerSkinWidget",
+   "kind": "field",
+   "name": "wideModel",
+   "from": "Lnet/minecraft/client/model/player/PlayerModel;",
+   "to": "Lnet/minecraft/client/model/Model$Simple;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/components/PlayerSkinWidget",
+   "kind": "field",
+   "name": "slimModel",
+   "from": "Lnet/minecraft/client/model/player/PlayerModel;",
+   "to": "Lnet/minecraft/client/model/Model$Simple;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/components/PlayerTabOverlay",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/Minecraft;Lnet/minecraft/client/gui/Gui;)V",
+   "to": "(Lnet/minecraft/client/Minecraft;Lnet/minecraft/client/gui/Hud;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/components/SpriteIconButton$CenteredIcon",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(IILnet/minecraft/network/chat/Component;IILnet/minecraft/client/gui/components/WidgetSprites;Lnet/minecraft/client/gui/components/Button$OnPress;Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/gui/components/Button$CreateNarration;)V",
+   "to": "(IILnet/minecraft/network/chat/Component;IIIILnet/minecraft/client/gui/components/WidgetSprites;Lnet/minecraft/client/gui/components/Button$OnPress;Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/gui/components/Button$CreateNarration;Z)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/components/SpriteIconButton$TextAndIcon",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(IILnet/minecraft/network/chat/Component;IILnet/minecraft/client/gui/components/WidgetSprites;Lnet/minecraft/client/gui/components/Button$OnPress;Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/gui/components/Button$CreateNarration;)V",
+   "to": "(IILnet/minecraft/network/chat/Component;IIIILnet/minecraft/client/gui/components/WidgetSprites;Lnet/minecraft/client/gui/components/Button$OnPress;Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/gui/components/Button$CreateNarration;Z)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/components/SpriteIconButton",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(IILnet/minecraft/network/chat/Component;IILnet/minecraft/client/gui/components/WidgetSprites;Lnet/minecraft/client/gui/components/Button$OnPress;Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/gui/components/Button$CreateNarration;)V",
+   "to": "(IILnet/minecraft/network/chat/Component;IIIILnet/minecraft/client/gui/components/WidgetSprites;Lnet/minecraft/client/gui/components/Button$OnPress;Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/gui/components/Button$CreateNarration;Z)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/components/tabs/TabNavigationBar$Builder",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/gui/components/tabs/TabManager;I)V",
+   "to": "(Lnet/minecraft/client/gui/components/tabs/TabManager;IIII)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/components/tabs/TabNavigationBar",
+   "kind": "field",
+   "name": "layout",
+   "from": "Lnet/minecraft/client/gui/layouts/LinearLayout;",
+   "to": "Lnet/minecraft/client/gui/layouts/FrameLayout;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/components/tabs/TabNavigationBar",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(ILnet/minecraft/client/gui/components/tabs/TabManager;Ljava/lang/Iterable;)V",
+   "to": "(IIIILnet/minecraft/client/gui/components/tabs/TabManager;Lcom/google/common/collect/ImmutableList;Lcom/google/common/collect/ImmutableList;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/components/tabs/TabNavigationBar",
+   "kind": "method",
+   "name": "builder",
+   "from": "(Lnet/minecraft/client/gui/components/tabs/TabManager;I)Lnet/minecraft/client/gui/components/tabs/TabNavigationBar$Builder;",
+   "to": "(Lnet/minecraft/client/gui/components/tabs/TabManager;IIII)Lnet/minecraft/client/gui/components/tabs/TabNavigationBar$Builder;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/components/tabs/TabNavigationBar",
+   "kind": "method",
+   "name": "arrangeElements",
+   "from": "()V",
+   "to": "(I)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/components/toasts/SystemToast",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/gui/components/toasts/SystemToast$SystemToastId;Lnet/minecraft/network/chat/Component;Ljava/util/List;I)V",
+   "to": "(Lnet/minecraft/client/gui/components/toasts/SystemToast$SystemToastId;Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/Component;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/components/toasts/SystemToast",
+   "kind": "method",
+   "name": "nullToEmpty",
+   "from": "(Lnet/minecraft/network/chat/Component;)Lcom/google/common/collect/ImmutableList;",
+   "to": "(Lnet/minecraft/network/chat/Component;)Ljava/util/List;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/font/providers/BitmapProvider$Glyph",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(FLcom/mojang/blaze3d/platform/NativeImage;IIIIII)V",
+   "to": "(FLnet/minecraft/client/gui/font/providers/BitmapProvider$ImageDataHolder;IIIIII)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/font/providers/BitmapProvider",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lcom/mojang/blaze3d/platform/NativeImage;Lnet/minecraft/client/gui/font/CodepointMap;)V",
+   "to": "(Lnet/minecraft/client/gui/font/providers/BitmapProvider$ImageDataHolder;Lnet/minecraft/client/gui/font/CodepointMap;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/GuiItemAtlas",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/feature/FeatureRenderDispatcher;Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;II)V",
+   "to": "(Lnet/minecraft/client/renderer/feature/FeatureRenderDispatcher;II)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/GuiRenderer$Draw",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lcom/mojang/blaze3d/buffers/GpuBuffer;ILcom/mojang/blaze3d/vertex/VertexFormat$Mode;ILcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/gui/render/TextureSetup;Lnet/minecraft/client/gui/navigation/ScreenRectangle;)V",
+   "to": "(Lnet/minecraft/client/renderer/StagedVertexBuffer$Draw;Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/gui/render/TextureSetup;Lnet/minecraft/client/gui/navigation/ScreenRectangle;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/GuiRenderer",
+   "kind": "field",
+   "name": "CLEAR_COLOR",
+   "from": "I",
+   "to": "Lorg/joml/Vector4fc;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/GuiRenderer",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/renderer/state/gui/GuiRenderState;Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/feature/FeatureRenderDispatcher;Ljava/util/List;)V",
+   "to": "(Lnet/minecraft/client/renderer/state/gui/GuiRenderState;Lnet/minecraft/client/renderer/feature/FeatureRenderDispatcher;Ljava/util/List;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/GuiRenderer",
+   "kind": "method",
+   "name": "render",
+   "from": "(Lcom/mojang/blaze3d/buffers/GpuBufferSlice;)V",
+   "to": "()V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/GuiRenderer",
+   "kind": "method",
+   "name": "draw",
+   "from": "(Lcom/mojang/blaze3d/buffers/GpuBufferSlice;)V",
+   "to": "()V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/GuiRenderer",
+   "kind": "method",
+   "name": "executeDrawRange",
+   "from": "(Ljava/util/function/Supplier;Lcom/mojang/blaze3d/pipeline/RenderTarget;Lcom/mojang/blaze3d/buffers/GpuBufferSlice;Lcom/mojang/blaze3d/buffers/GpuBufferSlice;Lcom/mojang/blaze3d/buffers/GpuBuffer;Lcom/mojang/blaze3d/vertex/VertexFormat$IndexType;II)V",
+   "to": "(Ljava/util/function/Supplier;Lcom/mojang/blaze3d/pipeline/RenderTarget;Lcom/mojang/blaze3d/buffers/GpuBufferSlice;II)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/GuiRenderer",
+   "kind": "method",
+   "name": "executeDraw",
+   "from": "(Lnet/minecraft/client/gui/render/GuiRenderer$Draw;Lcom/mojang/blaze3d/systems/RenderPass;Lcom/mojang/blaze3d/buffers/GpuBuffer;Lcom/mojang/blaze3d/vertex/VertexFormat$IndexType;)V",
+   "to": "(Lnet/minecraft/client/gui/render/GuiRenderer$Draw;Lcom/mojang/blaze3d/systems/RenderPass;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/pip/GuiBannerResultRenderer",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;Lnet/minecraft/client/resources/model/sprite/SpriteGetter;)V",
+   "to": "(Lnet/minecraft/client/resources/model/sprite/SpriteGetter;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/pip/GuiBookModelRenderer",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;)V",
+   "to": "()V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/pip/GuiEntityRenderer",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;Lnet/minecraft/client/renderer/entity/EntityRenderDispatcher;)V",
+   "to": "(Lnet/minecraft/client/renderer/entity/EntityRenderDispatcher;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/pip/GuiProfilerChartRenderer",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;)V",
+   "to": "()V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/pip/GuiSkinRenderer",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;)V",
+   "to": "()V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/pip/OversizedItemRenderer",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;)V",
+   "to": "()V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/pip/PictureInPictureRenderer",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;)V",
+   "to": "()V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/pip/PictureInPictureRenderer",
+   "kind": "method",
+   "name": "prepare",
+   "from": "(Lnet/minecraft/client/renderer/state/gui/pip/PictureInPictureRenderState;Lnet/minecraft/client/renderer/state/gui/GuiRenderState;I)V",
+   "to": "(Lnet/minecraft/client/renderer/state/gui/pip/PictureInPictureRenderState;Lnet/minecraft/client/renderer/state/gui/GuiRenderState;Lnet/minecraft/client/renderer/feature/FeatureRenderDispatcher;I)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/pip/PictureInPictureRenderer",
+   "kind": "method",
+   "name": "renderToTexture",
+   "from": "(Lnet/minecraft/client/renderer/state/gui/pip/PictureInPictureRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;)V",
+   "to": "(Lnet/minecraft/client/renderer/state/gui/pip/PictureInPictureRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/PauseScreen",
+   "kind": "method",
+   "name": "lambda$createPauseMenu$6",
+   "from": "(Lnet/minecraft/client/gui/components/Button;)V",
+   "to": "(Ljava/util/Map$Entry;)Z"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/PauseScreen",
+   "kind": "method",
+   "name": "lambda$createPauseMenu$7",
+   "from": "()V",
+   "to": "(Lnet/minecraft/client/gui/layouts/GridLayout$RowHelper;Lnet/minecraft/core/Holder;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/PauseScreen",
+   "kind": "method",
+   "name": "lambda$createPauseMenu$5",
+   "from": "()Lnet/minecraft/client/gui/screens/Screen;",
+   "to": "(Lnet/minecraft/client/gui/components/Button;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/PauseScreen",
+   "kind": "method",
+   "name": "lambda$createPauseMenu$4",
+   "from": "()Lnet/minecraft/client/gui/screens/Screen;",
+   "to": "()V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/PauseScreen",
+   "kind": "method",
+   "name": "lambda$createPauseMenu$3",
+   "from": "()Lnet/minecraft/client/gui/screens/Screen;",
+   "to": "(Lnet/minecraft/client/gui/components/Button;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/TitleScreen",
+   "kind": "method",
+   "name": "lambda$createNormalMenuOptions$2",
+   "from": "(Lnet/minecraft/client/gui/components/Button;)V",
+   "to": "()V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/TitleScreen",
+   "kind": "method",
+   "name": "lambda$init$1",
+   "from": "(Lnet/minecraft/client/gui/components/Button;)V",
+   "to": "()V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/advancements/AdvancementTab",
+   "kind": "method",
+   "name": "extractTooltips",
+   "from": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IIII)V",
+   "to": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/advancements/AdvancementsScreen",
+   "kind": "method",
+   "name": "extractInside",
+   "from": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V",
+   "to": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/advancements/AdvancementsScreen",
+   "kind": "method",
+   "name": "extractWindow",
+   "from": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IIII)V",
+   "to": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/advancements/AdvancementsScreen",
+   "kind": "method",
+   "name": "extractTooltips",
+   "from": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IIII)V",
+   "to": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/inventory/AbstractSignEditScreen",
+   "kind": "method",
+   "name": "getSignTextScale",
+   "from": "()Lorg/joml/Vector3f;",
+   "to": "()Lorg/joml/Vector3fc;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/inventory/HangingSignEditScreen",
+   "kind": "field",
+   "name": "TEXT_SCALE",
+   "from": "Lorg/joml/Vector3f;",
+   "to": "Lorg/joml/Vector3fc;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/inventory/HangingSignEditScreen",
+   "kind": "method",
+   "name": "getSignTextScale",
+   "from": "()Lorg/joml/Vector3f;",
+   "to": "()Lorg/joml/Vector3fc;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/inventory/SignEditScreen",
+   "kind": "field",
+   "name": "TEXT_SCALE",
+   "from": "Lorg/joml/Vector3f;",
+   "to": "Lorg/joml/Vector3fc;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/inventory/SignEditScreen",
+   "kind": "method",
+   "name": "getSignTextScale",
+   "from": "()Lorg/joml/Vector3f;",
+   "to": "()Lorg/joml/Vector3fc;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/inventory/SmithingScreen",
+   "kind": "field",
+   "name": "ARMOR_STAND_TRANSLATION",
+   "from": "Lorg/joml/Vector3f;",
+   "to": "Lorg/joml/Vector3fc;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/inventory/SmithingScreen",
+   "kind": "field",
+   "name": "ARMOR_STAND_ANGLE",
+   "from": "Lorg/joml/Quaternionf;",
+   "to": "Lorg/joml/Quaternionfc;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/options/OptionsScreen",
+   "kind": "method",
+   "name": "lambda$init$11",
+   "from": "(Lnet/minecraft/client/gui/screens/options/OptionsScreen;Lnet/minecraft/client/gui/components/AbstractWidget;)V",
+   "to": "(Lnet/minecraft/client/gui/components/Button;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/options/OptionsScreen",
+   "kind": "method",
+   "name": "lambda$init$10",
+   "from": "(Lnet/minecraft/client/gui/components/Button;)V",
+   "to": "()Lnet/minecraft/client/gui/screens/Screen;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/options/OptionsScreen",
+   "kind": "method",
+   "name": "lambda$init$0",
+   "from": "()Lnet/minecraft/client/gui/screens/Screen;",
+   "to": "(Lnet/minecraft/client/gui/components/Button;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/options/WorldOptionsScreen",
+   "kind": "method",
+   "name": "createGameRulesButton",
+   "from": "()Lnet/minecraft/client/gui/components/Button;",
+   "to": "(Lnet/minecraft/client/server/IntegratedServer;)Lnet/minecraft/client/gui/components/Button;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/packs/PackSelectionScreen",
+   "kind": "method",
+   "name": "filterEntries",
+   "from": "(Ljava/lang/String;Ljava/util/stream/Stream;Lnet/minecraft/client/gui/screens/packs/TransferableSelectionList;)V",
+   "to": "(Ljava/lang/String;Ljava/util/stream/Stream;Lnet/minecraft/client/gui/screens/packs/TransferableSelectionList;Lnet/minecraft/client/gui/screens/packs/PackSelectionModel$EntryBase;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/social/PlayerSocialManager",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/Minecraft;Lcom/mojang/authlib/minecraft/UserApiService;)V",
+   "to": "(Lnet/minecraft/client/Minecraft;Lcom/mojang/authlib/minecraft/UserApiService;Lcom/mojang/authlib/yggdrasil/FriendsService;Lnet/minecraft/client/gui/screens/social/RemoteFriendListUpdateHandler;)V"
+  },
+  {
+   "owner": "net/minecraft/client/main/GameConfig$GameData",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(ZLjava/lang/String;Ljava/lang/String;ZZZZZ)V",
+   "to": "(ZLjava/lang/String;Ljava/lang/String;ZZZZZLnet/minecraft/client/PreferredGraphicsApi;Z)V"
+  },
+  {
+   "owner": "net/minecraft/client/main/Main$1",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Ljava/lang/String;Ljava/lang/String;)V",
+   "to": "(Ljava/lang/Class;)V"
+  },
+  {
+   "owner": "net/minecraft/client/main/Main$2",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Ljava/lang/String;)V",
+   "to": "(Ljava/lang/String;Ljava/lang/String;)V"
+  },
+  {
+   "owner": "net/minecraft/client/model/Model",
+   "kind": "method",
+   "name": "renderToBuffer",
+   "from": "(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;II)V",
+   "to": "(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;III)V"
+  },
+  {
+   "owner": "net/minecraft/client/model/geom/LayerDefinitions",
+   "kind": "method",
+   "name": "lambda$createRoots$10",
+   "from": "(Lcom/google/common/collect/ImmutableMap$Builder;Lnet/minecraft/client/model/geom/builders/LayerDefinition;Lnet/minecraft/client/model/geom/builders/LayerDefinition;Lnet/minecraft/world/level/block/state/properties/WoodType;)V",
+   "to": "(Lcom/google/common/collect/ImmutableMap;Lnet/minecraft/client/model/geom/ModelLayerLocation;)Z"
+  },
+  {
+   "owner": "net/minecraft/client/multiplayer/ClientLevel",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/multiplayer/ClientPacketListener;Lnet/minecraft/client/multiplayer/ClientLevel$ClientLevelData;Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/core/Holder;IILnet/minecraft/client/renderer/LevelRenderer;ZJI)V",
+   "to": "(Lnet/minecraft/client/multiplayer/ClientPacketListener;Lnet/minecraft/client/multiplayer/ClientLevel$ClientLevelData;Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/core/Holder;IILnet/minecraft/client/renderer/extract/LevelExtractor;ZJI)V"
+  },
+  {
+   "owner": "net/minecraft/client/multiplayer/LevelLoadTracker$WaitingForPlayerChunk",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/player/LocalPlayer;Lnet/minecraft/client/multiplayer/ClientLevel;Lnet/minecraft/client/renderer/LevelRenderer;J)V",
+   "to": "(Lnet/minecraft/client/player/LocalPlayer;Lnet/minecraft/client/multiplayer/ClientLevel;Ljava/util/concurrent/atomic/AtomicBoolean;J)V"
+  },
+  {
+   "owner": "net/minecraft/client/multiplayer/LevelLoadTracker$WaitingForServer",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/player/LocalPlayer;Lnet/minecraft/client/multiplayer/ClientLevel;Lnet/minecraft/client/renderer/LevelRenderer;J)V",
+   "to": "(Lnet/minecraft/client/player/LocalPlayer;Lnet/minecraft/client/multiplayer/ClientLevel;J)V"
+  },
+  {
+   "owner": "net/minecraft/client/multiplayer/LevelLoadTracker",
+   "kind": "method",
+   "name": "startClientLoad",
+   "from": "(Lnet/minecraft/client/player/LocalPlayer;Lnet/minecraft/client/multiplayer/ClientLevel;Lnet/minecraft/client/renderer/LevelRenderer;)V",
+   "to": "(Lnet/minecraft/client/player/LocalPlayer;Lnet/minecraft/client/multiplayer/ClientLevel;)V"
+  },
+  {
+   "owner": "net/minecraft/client/particle/ParticleGroup",
+   "kind": "method",
+   "name": "add",
+   "from": "(Lnet/minecraft/client/particle/Particle;)V",
+   "to": "(Lnet/minecraft/client/particle/Particle;)Z"
+  },
+  {
+   "owner": "net/minecraft/client/particle/ParticleRenderType",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Ljava/lang/String;)V",
+   "to": "(Ljava/lang/String;Ljava/lang/String;)V"
+  },
+  {
+   "owner": "net/minecraft/client/profiling/ClientMetricsSamplersProvider",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Ljava/util/function/LongSupplier;Lnet/minecraft/client/renderer/LevelRenderer;)V",
+   "to": "(Ljava/util/function/LongSupplier;Lnet/minecraft/client/renderer/LevelRenderer;Lnet/minecraft/client/renderer/extract/LevelExtractor;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/GameRenderer",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/Minecraft;Lnet/minecraft/client/renderer/ItemInHandRenderer;Lnet/minecraft/client/renderer/RenderBuffers;Lnet/minecraft/client/resources/model/ModelManager;)V",
+   "to": "(Lnet/minecraft/client/Minecraft;Lnet/minecraft/client/renderer/ItemInHandRenderer;Lnet/minecraft/client/resources/model/ModelManager;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/GameRenderer",
+   "kind": "method",
+   "name": "update",
+   "from": "(Lnet/minecraft/client/DeltaTracker;Z)V",
+   "to": "(Lnet/minecraft/client/DeltaTracker;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/LevelRenderer",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/Minecraft;Lnet/minecraft/client/renderer/entity/EntityRenderDispatcher;Lnet/minecraft/client/renderer/blockentity/BlockEntityRenderDispatcher;Lnet/minecraft/client/renderer/RenderBuffers;Lnet/minecraft/client/renderer/state/GameRenderState;Lnet/minecraft/client/renderer/feature/FeatureRenderDispatcher;)V",
+   "to": "(Lnet/minecraft/client/renderer/entity/EntityRenderDispatcher;Lnet/minecraft/client/renderer/blockentity/BlockEntityRenderDispatcher;Lnet/minecraft/client/resources/model/ModelManager;Lnet/minecraft/client/renderer/texture/TextureManager;Lnet/minecraft/client/resources/model/sprite/AtlasManager;Lnet/minecraft/client/renderer/ShaderManager;Lnet/minecraft/client/renderer/GameRenderer;II)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/LevelRenderer",
+   "kind": "method",
+   "name": "addMainPass",
+   "from": "(Lcom/mojang/blaze3d/framegraph/FrameGraphBuilder;Lnet/minecraft/client/renderer/culling/Frustum;Lorg/joml/Matrix4fc;Lcom/mojang/blaze3d/buffers/GpuBufferSlice;ZLnet/minecraft/client/renderer/state/level/LevelRenderState;Lnet/minecraft/client/DeltaTracker;Lnet/minecraft/util/profiling/ProfilerFiller;Lnet/minecraft/client/renderer/chunk/ChunkSectionsToRender;)V",
+   "to": "(Lcom/mojang/blaze3d/framegraph/FrameGraphBuilder;Lnet/minecraft/client/renderer/feature/FeatureRenderDispatcher$PreparedFrame;Lcom/mojang/blaze3d/buffers/GpuBufferSlice;Lnet/minecraft/client/renderer/state/level/LevelRenderState;Lnet/minecraft/util/profiling/ProfilerFiller;Lnet/minecraft/client/renderer/chunk/ChunkSectionsToRender;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/LevelRenderer",
+   "kind": "method",
+   "name": "submitBlockEntities",
+   "from": "(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/state/level/LevelRenderState;Lnet/minecraft/client/renderer/SubmitNodeStorage;)V",
+   "to": "(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/state/level/LevelRenderState;Lnet/minecraft/client/renderer/SubmitNodeCollector;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/LevelRenderer",
+   "kind": "method",
+   "name": "compileSections",
+   "from": "(Lnet/minecraft/client/Camera;)V",
+   "to": "(Lnet/minecraft/client/renderer/state/level/CameraRenderState;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/LevelRenderer",
+   "kind": "method",
+   "name": "lambda$addSkyPass$0",
+   "from": "(Lcom/mojang/blaze3d/buffers/GpuBufferSlice;Lnet/minecraft/client/renderer/state/level/SkyRenderState;Lnet/minecraft/client/renderer/SkyRenderer;)V",
+   "to": "(Lcom/mojang/blaze3d/buffers/GpuBufferSlice;Lnet/minecraft/client/renderer/state/level/SkyRenderState;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/LevelRenderer",
+   "kind": "method",
+   "name": "lambda$addMainPass$0",
+   "from": "(Lcom/mojang/blaze3d/buffers/GpuBufferSlice;Lnet/minecraft/client/renderer/state/level/LevelRenderState;Lnet/minecraft/util/profiling/ProfilerFiller;Lnet/minecraft/client/renderer/chunk/ChunkSectionsToRender;Lcom/mojang/blaze3d/resource/ResourceHandle;Lcom/mojang/blaze3d/resource/ResourceHandle;Lcom/mojang/blaze3d/resource/ResourceHandle;Lcom/mojang/blaze3d/resource/ResourceHandle;Lcom/mojang/blaze3d/resource/ResourceHandle;ZLorg/joml/Matrix4fc;)V",
+   "to": "(Lcom/mojang/blaze3d/buffers/GpuBufferSlice;Lnet/minecraft/client/renderer/state/level/LevelRenderState;Lnet/minecraft/util/profiling/ProfilerFiller;Lnet/minecraft/client/renderer/chunk/ChunkSectionsToRender;Lcom/mojang/blaze3d/resource/ResourceHandle;Lnet/minecraft/client/renderer/feature/FeatureRenderDispatcher$PreparedFrame;Lcom/mojang/blaze3d/resource/ResourceHandle;Lcom/mojang/blaze3d/resource/ResourceHandle;Lcom/mojang/blaze3d/resource/ResourceHandle;Lcom/mojang/blaze3d/resource/ResourceHandle;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/OrderedSubmitNodeCollector",
+   "kind": "method",
+   "name": "submitNameTag",
+   "from": "(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/phys/Vec3;ILnet/minecraft/network/chat/Component;ZIDLnet/minecraft/client/renderer/state/level/CameraRenderState;)V",
+   "to": "(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/phys/Vec3;ILnet/minecraft/network/chat/Component;ZILnet/minecraft/client/renderer/state/level/CameraRenderState;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/OrderedSubmitNodeCollector",
+   "kind": "method",
+   "name": "submitMovingBlock",
+   "from": "(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/block/MovingBlockRenderState;)V",
+   "to": "(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/block/MovingBlockRenderState;I)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/OrderedSubmitNodeCollector",
+   "kind": "method",
+   "name": "submitBreakingBlockModel",
+   "from": "(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/block/dispatch/BlockStateModel;JI)V",
+   "to": "(Lcom/mojang/blaze3d/vertex/PoseStack;Ljava/util/List;I)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/Panorama",
+   "kind": "method",
+   "name": "extractRenderState",
+   "from": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IIZ)V",
+   "to": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderBuffers",
+   "kind": "method",
+   "name": "lambda$new$0",
+   "from": "(Lit/unimi/dsi/fastutil/objects/Object2ObjectLinkedOpenHashMap;)V",
+   "to": "()Ljava/lang/String;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/ScreenEffectRenderer",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/Minecraft;Lnet/minecraft/client/resources/model/sprite/SpriteGetter;Lnet/minecraft/client/renderer/MultiBufferSource;)V",
+   "to": "(Lnet/minecraft/client/Minecraft;Lnet/minecraft/client/resources/model/sprite/SpriteGetter;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/SectionOcclusionGraph",
+   "kind": "method",
+   "name": "update",
+   "from": "(ZLnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/culling/Frustum;Ljava/util/List;Lit/unimi/dsi/fastutil/longs/LongOpenHashSet;)V",
+   "to": "(Lnet/minecraft/client/renderer/state/level/CameraRenderState;ILnet/minecraft/client/renderer/state/level/ChunkLoadingRenderState;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/SectionOcclusionGraph",
+   "kind": "method",
+   "name": "scheduleFullUpdate",
+   "from": "(ZLnet/minecraft/client/Camera;Lnet/minecraft/world/phys/Vec3;Lit/unimi/dsi/fastutil/longs/LongOpenHashSet;)V",
+   "to": "(Lnet/minecraft/client/renderer/state/level/CameraRenderState;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/SectionOcclusionGraph",
+   "kind": "method",
+   "name": "runPartialUpdate",
+   "from": "(ZLnet/minecraft/client/renderer/culling/Frustum;Ljava/util/List;Lnet/minecraft/world/phys/Vec3;Lit/unimi/dsi/fastutil/longs/LongOpenHashSet;)V",
+   "to": "(Lnet/minecraft/client/renderer/state/level/CameraRenderState;Lit/unimi/dsi/fastutil/longs/LongSet;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/SectionOcclusionGraph",
+   "kind": "method",
+   "name": "initializeQueueForFullUpdate",
+   "from": "(Lnet/minecraft/client/Camera;Ljava/util/Queue;)V",
+   "to": "(Lnet/minecraft/core/BlockPos;Ljava/util/Queue;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/SectionOcclusionGraph",
+   "kind": "method",
+   "name": "runUpdates",
+   "from": "(Lnet/minecraft/client/renderer/SectionOcclusionGraph$GraphStorage;Lnet/minecraft/world/phys/Vec3;Ljava/util/Queue;ZLjava/util/function/Consumer;Lit/unimi/dsi/fastutil/longs/LongOpenHashSet;)V",
+   "to": "(Lnet/minecraft/client/renderer/SectionOcclusionGraph$GraphStorage;Lnet/minecraft/world/phys/Vec3;Ljava/util/Queue;ZLjava/util/function/Consumer;Lit/unimi/dsi/fastutil/longs/LongOpenHashSet;Lit/unimi/dsi/fastutil/longs/LongOpenHashSet;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/SectionOcclusionGraph",
+   "kind": "method",
+   "name": "lambda$runUpdates$0",
+   "from": "(J)Ljava/util/List;",
+   "to": "(J)Lit/unimi/dsi/fastutil/longs/LongList;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/SectionOcclusionGraph",
+   "kind": "method",
+   "name": "lambda$runPartialUpdate$0",
+   "from": "(Lnet/minecraft/client/renderer/culling/Frustum;Lnet/minecraft/client/renderer/chunk/SectionRenderDispatcher$RenderSection;)V",
+   "to": "(Lnet/minecraft/client/renderer/SectionOcclusionGraph$GraphState;J)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/SectionOcclusionGraph",
+   "kind": "method",
+   "name": "lambda$scheduleFullUpdate$0",
+   "from": "(Lnet/minecraft/client/Camera;Lnet/minecraft/world/phys/Vec3;ZLit/unimi/dsi/fastutil/longs/LongOpenHashSet;)V",
+   "to": "(Lnet/minecraft/client/renderer/state/level/CameraRenderState;Lit/unimi/dsi/fastutil/longs/LongOpenHashSet;Lit/unimi/dsi/fastutil/longs/LongOpenHashSet;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/Sheets",
+   "kind": "method",
+   "name": "lambda$static$0",
+   "from": "(Lnet/minecraft/core/Holder$Reference;)Lnet/minecraft/client/resources/model/sprite/SpriteId;",
+   "to": "(Lnet/minecraft/client/renderer/MultiblockChestResources;)Lnet/minecraft/client/renderer/MultiblockChestResources;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/SkyRenderer",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/renderer/texture/TextureManager;Lnet/minecraft/client/resources/model/sprite/AtlasManager;)V",
+   "to": "(Lnet/minecraft/client/renderer/texture/TextureManager;Lnet/minecraft/client/resources/model/sprite/AtlasManager;Lcom/mojang/blaze3d/pipeline/RenderTarget;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/SubmitNodeCollection",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/renderer/SubmitNodeStorage;)V",
+   "to": "()V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/SubmitNodeCollection",
+   "kind": "method",
+   "name": "submitNameTag",
+   "from": "(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/phys/Vec3;ILnet/minecraft/network/chat/Component;ZIDLnet/minecraft/client/renderer/state/level/CameraRenderState;)V",
+   "to": "(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/phys/Vec3;ILnet/minecraft/network/chat/Component;ZILnet/minecraft/client/renderer/state/level/CameraRenderState;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/SubmitNodeCollection",
+   "kind": "method",
+   "name": "submitMovingBlock",
+   "from": "(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/block/MovingBlockRenderState;)V",
+   "to": "(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/block/MovingBlockRenderState;I)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/SubmitNodeCollection",
+   "kind": "method",
+   "name": "submitBreakingBlockModel",
+   "from": "(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/block/dispatch/BlockStateModel;JI)V",
+   "to": "(Lcom/mojang/blaze3d/vertex/PoseStack;Ljava/util/List;I)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/SubmitNodeStorage",
+   "kind": "method",
+   "name": "submitNameTag",
+   "from": "(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/phys/Vec3;ILnet/minecraft/network/chat/Component;ZIDLnet/minecraft/client/renderer/state/level/CameraRenderState;)V",
+   "to": "(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/phys/Vec3;ILnet/minecraft/network/chat/Component;ZILnet/minecraft/client/renderer/state/level/CameraRenderState;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/SubmitNodeStorage",
+   "kind": "method",
+   "name": "submitMovingBlock",
+   "from": "(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/block/MovingBlockRenderState;)V",
+   "to": "(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/block/MovingBlockRenderState;I)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/SubmitNodeStorage",
+   "kind": "method",
+   "name": "submitBreakingBlockModel",
+   "from": "(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/block/dispatch/BlockStateModel;JI)V",
+   "to": "(Lcom/mojang/blaze3d/vertex/PoseStack;Ljava/util/List;I)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/ViewArea",
+   "kind": "field",
+   "name": "sections",
+   "from": "[Lnet/minecraft/client/renderer/chunk/SectionRenderDispatcher$RenderSection;",
+   "to": "Lnet/minecraft/client/RotatingSectionStorage;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/ViewArea",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/renderer/chunk/SectionRenderDispatcher;Lnet/minecraft/world/level/Level;ILnet/minecraft/client/renderer/LevelRenderer;)V",
+   "to": "(Lnet/minecraft/client/renderer/chunk/SectionRenderDispatcher;IIIIILnet/minecraft/client/renderer/SectionOcclusionGraph;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/ViewArea",
+   "kind": "method",
+   "name": "repositionCamera",
+   "from": "(Lnet/minecraft/core/SectionPos;)V",
+   "to": "(Lnet/minecraft/core/SectionPos;)Z"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/ViewArea",
+   "kind": "method",
+   "name": "getRenderSection",
+   "from": "(III)Lnet/minecraft/client/renderer/chunk/SectionRenderDispatcher$RenderSection;",
+   "to": "(J)Lnet/minecraft/client/renderer/chunk/SectionRenderDispatcher$RenderSection;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/WeatherEffectRenderer",
+   "kind": "method",
+   "name": "extractRenderState",
+   "from": "(Lnet/minecraft/world/level/Level;IFLnet/minecraft/world/phys/Vec3;Lnet/minecraft/client/renderer/state/level/WeatherRenderState;)V",
+   "to": "(Lnet/minecraft/client/multiplayer/ClientLevel;FLnet/minecraft/world/phys/Vec3;Lnet/minecraft/client/renderer/state/level/WeatherRenderState;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/WeatherEffectRenderer",
+   "kind": "method",
+   "name": "createRainColumnInstance",
+   "from": "(Lnet/minecraft/util/RandomSource;IIIIIIF)Lnet/minecraft/client/renderer/WeatherEffectRenderer$ColumnInstance;",
+   "to": "(Lnet/minecraft/util/RandomSource;JIIIIIF)Lnet/minecraft/client/renderer/WeatherEffectRenderer$ColumnInstance;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/WeatherEffectRenderer",
+   "kind": "method",
+   "name": "createSnowColumnInstance",
+   "from": "(Lnet/minecraft/util/RandomSource;IIIIIIF)Lnet/minecraft/client/renderer/WeatherEffectRenderer$ColumnInstance;",
+   "to": "(Lnet/minecraft/util/RandomSource;JIIIIIF)Lnet/minecraft/client/renderer/WeatherEffectRenderer$ColumnInstance;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/block/BlockModelLighter$Cache",
+   "kind": "field",
+   "name": "cachedBrightnessGetter",
+   "from": "Lnet/minecraft/client/renderer/LevelRenderer$BrightnessGetter;",
+   "to": "Lnet/minecraft/util/LightCoordsUtil$BrightnessGetter;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/blockentity/BannerRenderer",
+   "kind": "method",
+   "name": "submitPatternLayer",
+   "from": "(Lnet/minecraft/client/resources/model/sprite/SpriteGetter;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;IILnet/minecraft/client/model/Model;Ljava/lang/Object;Lnet/minecraft/client/resources/model/sprite/SpriteId;Lnet/minecraft/world/item/DyeColor;Lnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V",
+   "to": "(Lnet/minecraft/client/resources/model/sprite/SpriteGetter;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/OrderedSubmitNodeCollector;IILnet/minecraft/client/model/Model;Ljava/lang/Object;Lnet/minecraft/client/resources/model/sprite/SpriteId;Lnet/minecraft/world/item/DyeColor;Lnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/blockentity/BlockEntityRenderDispatcher",
+   "kind": "method",
+   "name": "tryExtractRenderState",
+   "from": "(Lnet/minecraft/world/level/block/entity/BlockEntity;FLnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)Lnet/minecraft/client/renderer/blockentity/state/BlockEntityRenderState;",
+   "to": "(Lnet/minecraft/world/level/block/entity/BlockEntity;FLnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;Z)Lnet/minecraft/client/renderer/blockentity/state/BlockEntityRenderState;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/blockentity/state/SignRenderState$SignTransformations",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lcom/mojang/math/Transformation;Lcom/mojang/math/Transformation;Lcom/mojang/math/Transformation;)V",
+   "to": "(Lcom/mojang/math/Transformation;Lcom/mojang/math/Transformation;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/chunk/SectionCompiler",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(ZZLnet/minecraft/client/renderer/block/BlockStateModelSet;Lnet/minecraft/client/renderer/block/FluidStateModelSet;Lnet/minecraft/client/color/block/BlockColors;Lnet/minecraft/client/renderer/blockentity/BlockEntityRenderDispatcher;)V",
+   "to": "(ZZLnet/minecraft/client/renderer/block/BlockStateModelSet;Lnet/minecraft/client/renderer/block/FluidStateModelSet;Lnet/minecraft/client/color/block/BlockColors;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/chunk/SectionMesh$SectionDraw",
+   "kind": "field",
+   "name": "indexType",
+   "from": "Lcom/mojang/blaze3d/vertex/VertexFormat$IndexType;",
+   "to": "Lcom/mojang/blaze3d/IndexType;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/chunk/SectionMesh$SectionDraw",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(ILcom/mojang/blaze3d/vertex/VertexFormat$IndexType;Z)V",
+   "to": "(ILcom/mojang/blaze3d/IndexType;Z)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/chunk/SectionMesh$SectionDraw",
+   "kind": "method",
+   "name": "indexType",
+   "from": "()Lcom/mojang/blaze3d/vertex/VertexFormat$IndexType;",
+   "to": "()Lcom/mojang/blaze3d/IndexType;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/chunk/SectionRenderDispatcher$RenderSection$CompileTask",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/renderer/chunk/SectionRenderDispatcher$RenderSection;Z)V",
+   "to": "(Lnet/minecraft/client/renderer/chunk/SectionRenderDispatcher$RenderSection;Lnet/minecraft/client/renderer/chunk/RenderSectionRegion;Z)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/chunk/SectionRenderDispatcher$RenderSection$CompileTask",
+   "kind": "method",
+   "name": "doTask",
+   "from": "(Lnet/minecraft/client/renderer/SectionBufferBuilderPack;)Lnet/minecraft/client/renderer/chunk/SectionRenderDispatcher$RenderSection$CompileTask$SectionTaskResult;",
+   "to": "(Lnet/minecraft/client/renderer/SectionBufferBuilderPack;)Lnet/minecraft/client/renderer/chunk/SectionRenderDispatcher$RenderSection$SectionTask$SectionTaskResult;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/chunk/SectionRenderDispatcher$RenderSection$ResortTransparencyTask",
+   "kind": "method",
+   "name": "doTask",
+   "from": "(Lnet/minecraft/client/renderer/SectionBufferBuilderPack;)Lnet/minecraft/client/renderer/chunk/SectionRenderDispatcher$RenderSection$CompileTask$SectionTaskResult;",
+   "to": "(Lnet/minecraft/client/renderer/SectionBufferBuilderPack;)Lnet/minecraft/client/renderer/chunk/SectionRenderDispatcher$RenderSection$SectionTask$SectionTaskResult;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/chunk/SectionRenderDispatcher$RenderSection",
+   "kind": "method",
+   "name": "resortTransparency",
+   "from": "(Lnet/minecraft/client/renderer/chunk/SectionRenderDispatcher;)V",
+   "to": "()V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/chunk/SectionRenderDispatcher$RenderSection",
+   "kind": "method",
+   "name": "createCompileTask",
+   "from": "(Lnet/minecraft/client/renderer/chunk/RenderRegionCache;)Lnet/minecraft/client/renderer/chunk/SectionRenderDispatcher$RenderSection$CompileTask;",
+   "to": "(Lnet/minecraft/client/renderer/chunk/RenderSectionRegion;)Lnet/minecraft/client/renderer/chunk/SectionRenderDispatcher$RenderSection$SectionTask;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/chunk/SectionRenderDispatcher$RenderSection",
+   "kind": "method",
+   "name": "compileSync",
+   "from": "(Lnet/minecraft/client/renderer/chunk/RenderRegionCache;)V",
+   "to": "(Lnet/minecraft/client/renderer/chunk/RenderSectionRegion;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/chunk/SectionRenderDispatcher$RenderSection",
+   "kind": "method",
+   "name": "vertexBufferUploadCallback",
+   "from": "(Lnet/minecraft/client/renderer/chunk/SectionMesh;Lnet/minecraft/client/renderer/chunk/ChunkSectionLayer;)V",
+   "to": "(Lnet/minecraft/client/renderer/chunk/CompiledSectionMesh;Lnet/minecraft/client/renderer/chunk/ChunkSectionLayer;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/chunk/SectionRenderDispatcher$RenderSection",
+   "kind": "method",
+   "name": "indexBufferUploadCallback",
+   "from": "(Lnet/minecraft/client/renderer/chunk/SectionMesh;Lnet/minecraft/client/renderer/chunk/ChunkSectionLayer;Z)V",
+   "to": "(Lnet/minecraft/client/renderer/chunk/CompiledSectionMesh;Lnet/minecraft/client/renderer/chunk/ChunkSectionLayer;Z)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/chunk/SectionRenderDispatcher$RenderSection",
+   "kind": "method",
+   "name": "lambda$addSectionBuffersToUberBuffer$1",
+   "from": "(Lnet/minecraft/client/renderer/chunk/ChunkSectionLayer;ZLnet/minecraft/client/renderer/chunk/SectionMesh;)V",
+   "to": "(Lnet/minecraft/client/renderer/chunk/ChunkSectionLayer;ZLnet/minecraft/client/renderer/chunk/CompiledSectionMesh;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/chunk/SectionRenderDispatcher$RenderSection",
+   "kind": "method",
+   "name": "lambda$addSectionBuffersToUberBuffer$0",
+   "from": "(Lnet/minecraft/client/renderer/chunk/ChunkSectionLayer;Lnet/minecraft/client/renderer/chunk/SectionMesh;)V",
+   "to": "(Lnet/minecraft/client/renderer/chunk/ChunkSectionLayer;Lnet/minecraft/client/renderer/chunk/CompiledSectionMesh;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/chunk/SectionRenderDispatcher",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/multiplayer/ClientLevel;Lnet/minecraft/client/renderer/LevelRenderer;Lnet/minecraft/TracingExecutor;Lnet/minecraft/client/renderer/RenderBuffers;Lnet/minecraft/client/renderer/chunk/SectionCompiler;)V",
+   "to": "(Lnet/minecraft/TracingExecutor;Lnet/minecraft/client/renderer/RenderBuffers;Lnet/minecraft/client/renderer/chunk/SectionCompiler;Ljava/util/function/Consumer;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/chunk/SectionRenderDispatcher",
+   "kind": "method",
+   "name": "schedule",
+   "from": "(Lnet/minecraft/client/renderer/chunk/SectionRenderDispatcher$RenderSection$CompileTask;)V",
+   "to": "(Lnet/minecraft/client/renderer/chunk/SectionRenderDispatcher$RenderSection$SectionTask;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/chunk/SectionRenderDispatcher",
+   "kind": "method",
+   "name": "lambda$new$0",
+   "from": "(Lcom/mojang/blaze3d/systems/GpuDevice;Lcom/mojang/blaze3d/GraphicsWorkarounds;Lnet/minecraft/client/renderer/chunk/ChunkSectionLayer;)Lnet/minecraft/client/renderer/chunk/SectionRenderDispatcher$SectionUberBuffers;",
+   "to": "(Lnet/minecraft/client/renderer/chunk/ChunkSectionLayer;)Lnet/minecraft/client/renderer/chunk/SectionRenderDispatcher$SectionUberBuffers;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/entity/DragonFireballRenderer",
+   "kind": "method",
+   "name": "vertex",
+   "from": "(Lcom/mojang/blaze3d/vertex/VertexConsumer;Lcom/mojang/blaze3d/vertex/PoseStack$Pose;IFIII)V",
+   "to": "(Lcom/mojang/blaze3d/vertex/VertexConsumer;Lcom/mojang/blaze3d/vertex/PoseStack$Pose;IFIIII)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/feature/FeatureRenderDispatcher",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/renderer/SubmitNodeStorage;Lnet/minecraft/client/resources/model/ModelManager;Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;Lnet/minecraft/client/resources/model/sprite/AtlasManager;Lnet/minecraft/client/renderer/OutlineBufferSource;Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;Lnet/minecraft/client/gui/Font;Lnet/minecraft/client/renderer/state/GameRenderState;)V",
+   "to": "(Lnet/minecraft/client/renderer/RenderBuffers;Lnet/minecraft/client/resources/model/ModelManager;Lnet/minecraft/client/resources/model/sprite/AtlasManager;Lnet/minecraft/client/gui/Font;Lnet/minecraft/client/renderer/state/GameRenderState;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/feature/FeatureRenderDispatcher",
+   "kind": "method",
+   "name": "renderAllFeatures",
+   "from": "()V",
+   "to": "(Lnet/minecraft/client/renderer/SubmitNodeStorage;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/feature/ItemFeatureRenderer",
+   "kind": "method",
+   "name": "getFoilBuffer",
+   "from": "(Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/renderer/rendertype/RenderType;Lcom/mojang/blaze3d/vertex/PoseStack$Pose;)Lcom/mojang/blaze3d/vertex/VertexConsumer;",
+   "to": "(Lnet/minecraft/client/renderer/rendertype/RenderType;Lcom/mojang/blaze3d/vertex/PoseStack$Pose;)Lcom/mojang/blaze3d/vertex/VertexConsumer;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/feature/ItemFeatureRenderer",
+   "kind": "method",
+   "name": "getFoilBuffer",
+   "from": "(Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/renderer/rendertype/RenderType;ZZ)Lcom/mojang/blaze3d/vertex/VertexConsumer;",
+   "to": "(Lnet/minecraft/client/renderer/rendertype/RenderType;Lcom/mojang/blaze3d/vertex/PoseStack$Pose;)Lcom/mojang/blaze3d/vertex/VertexConsumer;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/rendertype/LayeringTransform",
+   "kind": "method",
+   "name": "lambda$static$1",
+   "from": "(Lorg/joml/Matrix4fStack;)V",
+   "to": "(Lorg/joml/Matrix4f;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/rendertype/LayeringTransform",
+   "kind": "method",
+   "name": "lambda$static$0",
+   "from": "(Lorg/joml/Matrix4fStack;)V",
+   "to": "(Lorg/joml/Matrix4f;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/rendertype/RenderSetup",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Ljava/util/Map;ZZLnet/minecraft/client/renderer/rendertype/LayeringTransform;Lnet/minecraft/client/renderer/rendertype/OutputTarget;Lnet/minecraft/client/renderer/rendertype/TextureTransform;Lnet/minecraft/client/renderer/rendertype/RenderSetup$OutlineProperty;ZZI)V",
+   "to": "(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Ljava/util/Map;ZZLnet/minecraft/client/renderer/rendertype/LayeringTransform;Lnet/minecraft/client/renderer/rendertype/OutputTarget;Lnet/minecraft/client/renderer/rendertype/TextureTransform;Lnet/minecraft/client/renderer/rendertype/RenderSetup$OutlineProperty;ZZ)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/state/gui/BlitRenderState",
+   "kind": "field",
+   "name": "pose",
+   "from": "Lorg/joml/Matrix3x2f;",
+   "to": "Lorg/joml/Matrix3x2fc;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/state/gui/BlitRenderState",
+   "kind": "method",
+   "name": "pose",
+   "from": "()Lorg/joml/Matrix3x2f;",
+   "to": "()Lorg/joml/Matrix3x2fc;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/state/gui/GuiRenderState",
+   "kind": "field",
+   "name": "clearColorOverride",
+   "from": "I",
+   "to": "Lorg/joml/Vector4f;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/state/gui/pip/GuiEntityRenderState",
+   "kind": "field",
+   "name": "translation",
+   "from": "Lorg/joml/Vector3f;",
+   "to": "Lorg/joml/Vector3fc;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/state/gui/pip/GuiEntityRenderState",
+   "kind": "field",
+   "name": "rotation",
+   "from": "Lorg/joml/Quaternionf;",
+   "to": "Lorg/joml/Quaternionfc;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/state/gui/pip/GuiEntityRenderState",
+   "kind": "field",
+   "name": "overrideCameraAngle",
+   "from": "Lorg/joml/Quaternionf;",
+   "to": "Lorg/joml/Quaternionfc;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/state/gui/pip/GuiEntityRenderState",
+   "kind": "method",
+   "name": "translation",
+   "from": "()Lorg/joml/Vector3f;",
+   "to": "()Lorg/joml/Vector3fc;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/state/gui/pip/GuiEntityRenderState",
+   "kind": "method",
+   "name": "rotation",
+   "from": "()Lorg/joml/Quaternionf;",
+   "to": "()Lorg/joml/Quaternionfc;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/state/gui/pip/GuiEntityRenderState",
+   "kind": "method",
+   "name": "overrideCameraAngle",
+   "from": "()Lorg/joml/Quaternionf;",
+   "to": "()Lorg/joml/Quaternionfc;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/state/gui/pip/GuiSkinRenderState",
+   "kind": "field",
+   "name": "playerModel",
+   "from": "Lnet/minecraft/client/model/player/PlayerModel;",
+   "to": "Lnet/minecraft/client/model/Model$Simple;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/state/gui/pip/GuiSkinRenderState",
+   "kind": "method",
+   "name": "playerModel",
+   "from": "()Lnet/minecraft/client/model/player/PlayerModel;",
+   "to": "()Lnet/minecraft/client/model/Model$Simple;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/state/gui/pip/OversizedItemRenderState",
+   "kind": "method",
+   "name": "pose",
+   "from": "()Lorg/joml/Matrix3x2f;",
+   "to": "()Lorg/joml/Matrix3x2fc;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/state/gui/pip/PictureInPictureRenderState",
+   "kind": "field",
+   "name": "IDENTITY_POSE",
+   "from": "Lorg/joml/Matrix3x2f;",
+   "to": "Lorg/joml/Matrix3x2fc;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/state/gui/pip/PictureInPictureRenderState",
+   "kind": "method",
+   "name": "pose",
+   "from": "()Lorg/joml/Matrix3x2f;",
+   "to": "()Lorg/joml/Matrix3x2fc;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/state/level/ParticlesRenderState",
+   "kind": "method",
+   "name": "submit",
+   "from": "(Lnet/minecraft/client/renderer/SubmitNodeStorage;Lnet/minecraft/client/renderer/state/level/CameraRenderState;)V",
+   "to": "(Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/level/CameraRenderState;)V"
+  },
+  {
+   "owner": "net/minecraft/client/resources/model/ModelManager",
+   "kind": "method",
+   "name": "lambda$loadModels$1",
+   "from": "(Lnet/minecraft/client/resources/model/sprite/MaterialBaker;Lcom/google/common/collect/Multimap;Lcom/google/common/collect/Multimap;Lit/unimi/dsi/fastutil/objects/Object2IntMap;Lnet/minecraft/client/model/geom/EntityModelSet;Lnet/minecraft/client/resources/model/ModelBakery$BakingResult;Ljava/util/Map;)Lnet/minecraft/client/resources/model/ModelManager$ReloadState;",
+   "to": "(Lnet/minecraft/client/resources/model/sprite/MaterialBaker;Lnet/minecraft/client/resources/model/sprite/MaterialBaker;Lit/unimi/dsi/fastutil/objects/Object2IntMap;Lnet/minecraft/client/model/geom/EntityModelSet;Lnet/minecraft/client/resources/model/ModelBakery$BakingResult;Ljava/util/Map;)Lnet/minecraft/client/resources/model/ModelManager$ReloadState;"
+  },
+  {
+   "owner": "net/minecraft/client/resources/model/cuboid/ItemTransform$Deserializer",
+   "kind": "field",
+   "name": "DEFAULT_ROTATION",
+   "from": "Lorg/joml/Vector3f;",
+   "to": "Lorg/joml/Vector3fc;"
+  },
+  {
+   "owner": "net/minecraft/client/resources/model/cuboid/ItemTransform$Deserializer",
+   "kind": "field",
+   "name": "DEFAULT_TRANSLATION",
+   "from": "Lorg/joml/Vector3f;",
+   "to": "Lorg/joml/Vector3fc;"
+  },
+  {
+   "owner": "net/minecraft/client/resources/model/cuboid/ItemTransform$Deserializer",
+   "kind": "field",
+   "name": "DEFAULT_SCALE",
+   "from": "Lorg/joml/Vector3f;",
+   "to": "Lorg/joml/Vector3fc;"
+  },
+  {
+   "owner": "net/minecraft/client/resources/model/cuboid/ItemTransform$Deserializer",
+   "kind": "method",
+   "name": "getVector3f",
+   "from": "(Lcom/google/gson/JsonObject;Ljava/lang/String;Lorg/joml/Vector3f;)Lorg/joml/Vector3f;",
+   "to": "(Lcom/google/gson/JsonObject;Ljava/lang/String;Lorg/joml/Vector3fc;)Lorg/joml/Vector3f;"
+  },
+  {
+   "owner": "net/minecraft/client/server/IntegratedServer",
+   "kind": "method",
+   "name": "lambda$fillServerSystemReport$0",
+   "from": "()Ljava/lang/String;",
+   "to": "()Ljava/lang/Object;"
+  },
+  {
+   "owner": "net/minecraft/client/telemetry/ClientTelemetryManager",
+   "kind": "method",
+   "name": "createWorldSessionManager",
+   "from": "(ZLjava/time/Duration;Ljava/lang/String;)Lnet/minecraft/client/telemetry/WorldSessionTelemetryManager;",
+   "to": "(ZLjava/time/Duration;Ljava/lang/String;Ljava/util/UUID;)Lnet/minecraft/client/telemetry/WorldSessionTelemetryManager;"
+  },
+  {
+   "owner": "net/minecraft/client/telemetry/WorldSessionTelemetryManager",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/telemetry/TelemetryEventSender;ZLjava/time/Duration;Ljava/lang/String;)V",
+   "to": "(Lnet/minecraft/client/telemetry/TelemetryEventSender;ZLjava/time/Duration;Ljava/lang/String;Ljava/util/UUID;)V"
+  },
+  {
+   "owner": "net/minecraft/client/telemetry/WorldSessionTelemetryManager",
+   "kind": "method",
+   "name": "lambda$new$0",
+   "from": "(Lnet/minecraft/client/telemetry/TelemetryPropertyMap$Builder;)V",
+   "to": "(Ljava/util/UUID;Lnet/minecraft/client/telemetry/TelemetryPropertyMap$Builder;)V"
+  },
+  {
+   "owner": "net/minecraft/client/telemetry/events/WorldLoadEvent",
+   "kind": "method",
+   "name": "send",
+   "from": "(Lnet/minecraft/client/telemetry/TelemetryEventSender;)Z",
+   "to": "(Lnet/minecraft/client/telemetry/TelemetryEventSender;Z)Z"
+  },
+  {
+   "owner": "com/mojang/math/MatrixUtil",
+   "kind": "method",
+   "name": "eigenvalueJacobi",
+   "from": "(Lorg/joml/Matrix3f;I)Lorg/joml/Quaternionf;",
+   "to": "(Lorg/joml/Matrix3f;ILorg/joml/Quaternionf;)V"
+  },
+  {
+   "owner": "net/minecraft/ChatFormatting",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Ljava/lang/String;ILjava/lang/String;CILjava/lang/Integer;)V",
+   "to": "(Ljava/lang/String;IC)V"
+  },
+  {
+   "owner": "net/minecraft/ChatFormatting",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Ljava/lang/String;ILjava/lang/String;CZ)V",
+   "to": "(Ljava/lang/String;IC)V"
+  },
+  {
+   "owner": "net/minecraft/ChatFormatting",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Ljava/lang/String;ILjava/lang/String;CZILjava/lang/Integer;)V",
+   "to": "(Ljava/lang/String;IC)V"
+  },
+  {
+   "owner": "net/minecraft/SystemReport",
+   "kind": "field",
+   "name": "entries",
+   "from": "Ljava/util/Map;",
+   "to": "Ljava/util/List;"
+  },
+  {
+   "owner": "net/minecraft/SystemReport",
+   "kind": "method",
+   "name": "lambda$toLineSeparatedString$0",
+   "from": "(Ljava/util/Map$Entry;)Ljava/lang/String;",
+   "to": "(Lnet/minecraft/CrashReportCategory$Entry;)Ljava/lang/String;"
+  },
+  {
+   "owner": "net/minecraft/SystemReport",
+   "kind": "method",
+   "name": "lambda$appendToCrashReportString$0",
+   "from": "(Ljava/lang/StringBuilder;Ljava/lang/String;Ljava/lang/String;)V",
+   "to": "(Ljava/lang/StringBuilder;Lnet/minecraft/CrashReportCategory$Entry;)V"
+  },
+  {
+   "owner": "net/minecraft/SystemReport",
+   "kind": "method",
+   "name": "lambda$putProcessor$3",
+   "from": "(Loshi/hardware/CentralProcessor;)Ljava/lang/String;",
+   "to": "(Loshi/hardware/CentralProcessor;)Ljava/lang/Object;"
+  },
+  {
+   "owner": "net/minecraft/SystemReport",
+   "kind": "method",
+   "name": "lambda$putProcessor$2",
+   "from": "(Loshi/hardware/CentralProcessor;)Ljava/lang/String;",
+   "to": "(Loshi/hardware/CentralProcessor;)Ljava/lang/Object;"
+  },
+  {
+   "owner": "net/minecraft/SystemReport",
+   "kind": "method",
+   "name": "lambda$putProcessor$1",
+   "from": "(Loshi/hardware/CentralProcessor;)Ljava/lang/String;",
+   "to": "(Loshi/hardware/CentralProcessor;)Ljava/lang/Object;"
+  },
+  {
+   "owner": "net/minecraft/SystemReport",
+   "kind": "method",
+   "name": "lambda$putProcessor$0",
+   "from": "(Loshi/hardware/CentralProcessor$ProcessorIdentifier;)Ljava/lang/String;",
+   "to": "(Loshi/hardware/CentralProcessor$ProcessorIdentifier;)Ljava/lang/Object;"
+  },
+  {
+   "owner": "net/minecraft/SystemReport",
+   "kind": "method",
+   "name": "lambda$putGraphics$0",
+   "from": "(Loshi/hardware/GraphicsCard;)Ljava/lang/String;",
+   "to": "(Loshi/hardware/GraphicsCard;)Ljava/lang/Object;"
+  },
+  {
+   "owner": "net/minecraft/SystemReport",
+   "kind": "method",
+   "name": "lambda$putVirtualMemory$3",
+   "from": "(Loshi/hardware/VirtualMemory;)Ljava/lang/String;",
+   "to": "(Loshi/hardware/VirtualMemory;)Ljava/lang/Object;"
+  },
+  {
+   "owner": "net/minecraft/SystemReport",
+   "kind": "method",
+   "name": "lambda$putVirtualMemory$2",
+   "from": "(Loshi/hardware/VirtualMemory;)Ljava/lang/String;",
+   "to": "(Loshi/hardware/VirtualMemory;)Ljava/lang/Object;"
+  },
+  {
+   "owner": "net/minecraft/SystemReport",
+   "kind": "method",
+   "name": "lambda$putVirtualMemory$1",
+   "from": "(Loshi/hardware/VirtualMemory;)Ljava/lang/String;",
+   "to": "(Loshi/hardware/VirtualMemory;)Ljava/lang/Object;"
+  },
+  {
+   "owner": "net/minecraft/SystemReport",
+   "kind": "method",
+   "name": "lambda$putVirtualMemory$0",
+   "from": "(Loshi/hardware/VirtualMemory;)Ljava/lang/String;",
+   "to": "(Loshi/hardware/VirtualMemory;)Ljava/lang/Object;"
+  },
+  {
+   "owner": "net/minecraft/SystemReport",
+   "kind": "method",
+   "name": "lambda$putPhysicalMemory$1",
+   "from": "(Loshi/hardware/PhysicalMemory;)Ljava/lang/String;",
+   "to": "(Loshi/hardware/PhysicalMemory;)Ljava/lang/Object;"
+  },
+  {
+   "owner": "net/minecraft/SystemReport",
+   "kind": "method",
+   "name": "lambda$putPhysicalMemory$0",
+   "from": "(Loshi/hardware/PhysicalMemory;)Ljava/lang/String;",
+   "to": "(Loshi/hardware/PhysicalMemory;)Ljava/lang/Object;"
+  },
+  {
+   "owner": "net/minecraft/SystemReport",
+   "kind": "method",
+   "name": "lambda$new$7",
+   "from": "()Ljava/lang/String;",
+   "to": "()V"
+  },
+  {
+   "owner": "net/minecraft/SystemReport",
+   "kind": "method",
+   "name": "lambda$new$8",
+   "from": "(Ljava/lang/String;)Z",
+   "to": "()Ljava/lang/Object;"
+  },
+  {
+   "owner": "net/minecraft/SystemReport",
+   "kind": "method",
+   "name": "lambda$new$5",
+   "from": "()Ljava/lang/String;",
+   "to": "()Ljava/lang/Object;"
+  },
+  {
+   "owner": "net/minecraft/SystemReport",
+   "kind": "method",
+   "name": "lambda$new$6",
+   "from": "(Ljava/lang/String;)Z",
+   "to": "()V"
+  },
+  {
+   "owner": "net/minecraft/SystemReport",
+   "kind": "method",
+   "name": "lambda$new$4",
+   "from": "()V",
+   "to": "()Ljava/lang/Object;"
+  },
+  {
+   "owner": "net/minecraft/SystemReport",
+   "kind": "method",
+   "name": "lambda$new$3",
+   "from": "()Ljava/lang/String;",
+   "to": "()Ljava/lang/Object;"
+  },
+  {
+   "owner": "net/minecraft/SystemReport",
+   "kind": "method",
+   "name": "lambda$new$2",
+   "from": "()Ljava/lang/String;",
+   "to": "()Ljava/lang/Object;"
+  },
+  {
+   "owner": "net/minecraft/SystemReport",
+   "kind": "method",
+   "name": "lambda$new$1",
+   "from": "()Ljava/lang/String;",
+   "to": "()Ljava/lang/Object;"
+  },
+  {
+   "owner": "net/minecraft/SystemReport",
+   "kind": "method",
+   "name": "lambda$new$0",
+   "from": "()Ljava/lang/String;",
+   "to": "()Ljava/lang/Object;"
+  },
+  {
+   "owner": "net/minecraft/advancements/Advancement$Builder",
+   "kind": "method",
+   "name": "addCriterion",
+   "from": "(Ljava/lang/String;Lnet/minecraft/advancements/Criterion;)Lnet/minecraft/advancements/Advancement$Builder;",
+   "to": "(Ljava/lang/String;Lnet/minecraft/advancements/triggers/Criterion;)Lnet/minecraft/advancements/Advancement$Builder;"
+  },
+  {
+   "owner": "net/minecraft/advancements/Advancement",
+   "kind": "method",
+   "name": "lambda$validate$1",
+   "from": "(Lnet/minecraft/util/ProblemReporter;Lnet/minecraft/core/HolderGetter$Provider;Ljava/lang/String;Lnet/minecraft/advancements/Criterion;)V",
+   "to": "(Lnet/minecraft/util/ProblemReporter;Lnet/minecraft/core/HolderGetter$Provider;Ljava/lang/String;Lnet/minecraft/advancements/triggers/Criterion;)V"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/RangeArgument$Floats",
+   "kind": "method",
+   "name": "getRange",
+   "from": "(Lcom/mojang/brigadier/context/CommandContext;Ljava/lang/String;)Lnet/minecraft/advancements/criterion/MinMaxBounds$Doubles;",
+   "to": "(Lcom/mojang/brigadier/context/CommandContext;Ljava/lang/String;)Lnet/minecraft/advancements/predicates/MinMaxBounds$Doubles;"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/RangeArgument$Ints",
+   "kind": "method",
+   "name": "getRange",
+   "from": "(Lcom/mojang/brigadier/context/CommandContext;Ljava/lang/String;)Lnet/minecraft/advancements/criterion/MinMaxBounds$Ints;",
+   "to": "(Lcom/mojang/brigadier/context/CommandContext;Ljava/lang/String;)Lnet/minecraft/advancements/predicates/MinMaxBounds$Ints;"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/item/ItemPredicateArgument",
+   "kind": "method",
+   "name": "lambda$static$10",
+   "from": "(Lnet/minecraft/advancements/criterion/MinMaxBounds$Ints;)Ljava/util/function/Predicate;",
+   "to": "(Lnet/minecraft/advancements/predicates/MinMaxBounds$Ints;)Ljava/util/function/Predicate;"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/item/ItemPredicateArgument",
+   "kind": "method",
+   "name": "lambda$static$11",
+   "from": "(Lnet/minecraft/advancements/criterion/MinMaxBounds$Ints;Lnet/minecraft/world/item/ItemStack;)Z",
+   "to": "(Lnet/minecraft/advancements/predicates/MinMaxBounds$Ints;Lnet/minecraft/world/item/ItemStack;)Z"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/item/ItemPredicateArgument",
+   "kind": "method",
+   "name": "lambda$static$7",
+   "from": "(Lnet/minecraft/advancements/criterion/MinMaxBounds$Ints;)Ljava/util/function/Predicate;",
+   "to": "(Lnet/minecraft/advancements/predicates/MinMaxBounds$Ints;)Ljava/util/function/Predicate;"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/item/ItemPredicateArgument",
+   "kind": "method",
+   "name": "lambda$static$8",
+   "from": "(Lnet/minecraft/advancements/criterion/MinMaxBounds$Ints;Lnet/minecraft/world/item/ItemStack;)Z",
+   "to": "(Lnet/minecraft/advancements/predicates/MinMaxBounds$Ints;Lnet/minecraft/world/item/ItemStack;)Z"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/selector/EntitySelector",
+   "kind": "field",
+   "name": "range",
+   "from": "Lnet/minecraft/advancements/criterion/MinMaxBounds$Doubles;",
+   "to": "Lnet/minecraft/advancements/predicates/MinMaxBounds$Doubles;"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/selector/EntitySelector",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(IZZLjava/util/List;Lnet/minecraft/advancements/criterion/MinMaxBounds$Doubles;Ljava/util/function/Function;Lnet/minecraft/world/phys/AABB;Ljava/util/function/BiConsumer;ZLjava/lang/String;Ljava/util/UUID;Lnet/minecraft/world/entity/EntityType;Z)V",
+   "to": "(IZZLjava/util/List;Lnet/minecraft/advancements/predicates/MinMaxBounds$Doubles;Ljava/util/function/Function;Lnet/minecraft/world/phys/AABB;Ljava/util/function/BiConsumer;ZLjava/lang/String;Ljava/util/UUID;Lnet/minecraft/world/entity/EntityType;Z)V"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/selector/EntitySelectorParser",
+   "kind": "field",
+   "name": "distance",
+   "from": "Lnet/minecraft/advancements/criterion/MinMaxBounds$Doubles;",
+   "to": "Lnet/minecraft/advancements/predicates/MinMaxBounds$Doubles;"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/selector/EntitySelectorParser",
+   "kind": "field",
+   "name": "level",
+   "from": "Lnet/minecraft/advancements/criterion/MinMaxBounds$Ints;",
+   "to": "Lnet/minecraft/advancements/predicates/MinMaxBounds$Ints;"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/selector/EntitySelectorParser",
+   "kind": "field",
+   "name": "rotX",
+   "from": "Lnet/minecraft/advancements/criterion/MinMaxBounds$FloatDegrees;",
+   "to": "Lnet/minecraft/advancements/predicates/MinMaxBounds$FloatDegrees;"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/selector/EntitySelectorParser",
+   "kind": "field",
+   "name": "rotY",
+   "from": "Lnet/minecraft/advancements/criterion/MinMaxBounds$FloatDegrees;",
+   "to": "Lnet/minecraft/advancements/predicates/MinMaxBounds$FloatDegrees;"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/selector/EntitySelectorParser",
+   "kind": "method",
+   "name": "createRotationPredicate",
+   "from": "(Lnet/minecraft/advancements/criterion/MinMaxBounds$FloatDegrees;Lnet/minecraft/util/ToFloatFunction;)Ljava/util/function/Predicate;",
+   "to": "(Lnet/minecraft/advancements/predicates/MinMaxBounds$FloatDegrees;Lnet/minecraft/util/ToFloatFunction;)Ljava/util/function/Predicate;"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/selector/EntitySelectorParser",
+   "kind": "method",
+   "name": "getDistance",
+   "from": "()Lnet/minecraft/advancements/criterion/MinMaxBounds$Doubles;",
+   "to": "()Lnet/minecraft/advancements/predicates/MinMaxBounds$Doubles;"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/selector/EntitySelectorParser",
+   "kind": "method",
+   "name": "setDistance",
+   "from": "(Lnet/minecraft/advancements/criterion/MinMaxBounds$Doubles;)V",
+   "to": "(Lnet/minecraft/advancements/predicates/MinMaxBounds$Doubles;)V"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/selector/EntitySelectorParser",
+   "kind": "method",
+   "name": "getLevel",
+   "from": "()Lnet/minecraft/advancements/criterion/MinMaxBounds$Ints;",
+   "to": "()Lnet/minecraft/advancements/predicates/MinMaxBounds$Ints;"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/selector/EntitySelectorParser",
+   "kind": "method",
+   "name": "setLevel",
+   "from": "(Lnet/minecraft/advancements/criterion/MinMaxBounds$Ints;)V",
+   "to": "(Lnet/minecraft/advancements/predicates/MinMaxBounds$Ints;)V"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/selector/EntitySelectorParser",
+   "kind": "method",
+   "name": "getRotX",
+   "from": "()Lnet/minecraft/advancements/criterion/MinMaxBounds$FloatDegrees;",
+   "to": "()Lnet/minecraft/advancements/predicates/MinMaxBounds$FloatDegrees;"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/selector/EntitySelectorParser",
+   "kind": "method",
+   "name": "setRotX",
+   "from": "(Lnet/minecraft/advancements/criterion/MinMaxBounds$FloatDegrees;)V",
+   "to": "(Lnet/minecraft/advancements/predicates/MinMaxBounds$FloatDegrees;)V"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/selector/EntitySelectorParser",
+   "kind": "method",
+   "name": "getRotY",
+   "from": "()Lnet/minecraft/advancements/criterion/MinMaxBounds$FloatDegrees;",
+   "to": "()Lnet/minecraft/advancements/predicates/MinMaxBounds$FloatDegrees;"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/selector/EntitySelectorParser",
+   "kind": "method",
+   "name": "setRotY",
+   "from": "(Lnet/minecraft/advancements/criterion/MinMaxBounds$FloatDegrees;)V",
+   "to": "(Lnet/minecraft/advancements/predicates/MinMaxBounds$FloatDegrees;)V"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/selector/options/EntitySelectorOptions",
+   "kind": "method",
+   "name": "lambda$bootStrap$52",
+   "from": "(Lnet/minecraft/commands/arguments/selector/EntitySelectorParser;)V",
+   "to": "(ZLnet/minecraft/advancements/AdvancementProgress;)Z"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/selector/options/EntitySelectorOptions",
+   "kind": "method",
+   "name": "lambda$bootStrap$56",
+   "from": "(Ljava/util/Map;Lnet/minecraft/world/entity/Entity;)Z",
+   "to": "(Lnet/minecraft/resources/ResourceKey;ZLnet/minecraft/world/entity/Entity;)Z"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/selector/options/EntitySelectorOptions",
+   "kind": "method",
+   "name": "lambda$bootStrap$55",
+   "from": "(ZLnet/minecraft/advancements/AdvancementProgress;)Z",
+   "to": "(Lnet/minecraft/commands/arguments/selector/EntitySelectorParser;)V"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/selector/options/EntitySelectorOptions",
+   "kind": "method",
+   "name": "lambda$bootStrap$54",
+   "from": "(Ljava/util/Map;Lnet/minecraft/advancements/AdvancementProgress;)Z",
+   "to": "(Lnet/minecraft/commands/arguments/selector/EntitySelectorParser;)Z"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/selector/options/EntitySelectorOptions",
+   "kind": "method",
+   "name": "lambda$bootStrap$53",
+   "from": "(ZLnet/minecraft/advancements/CriterionProgress;)Z",
+   "to": "(Ljava/util/Map;Lnet/minecraft/world/entity/Entity;)Z"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/selector/options/EntitySelectorOptions",
+   "kind": "method",
+   "name": "lambda$bootStrap$51",
+   "from": "(Lnet/minecraft/commands/arguments/selector/EntitySelectorParser;)Z",
+   "to": "(Ljava/util/Map;Lnet/minecraft/advancements/AdvancementProgress;)Z"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/selector/options/EntitySelectorOptions",
+   "kind": "method",
+   "name": "lambda$bootStrap$50",
+   "from": "(Ljava/util/Map;Lnet/minecraft/world/entity/Entity;)Z",
+   "to": "(ZLnet/minecraft/advancements/CriterionProgress;)Z"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/selector/options/EntitySelectorOptions",
+   "kind": "method",
+   "name": "lambda$bootStrap$47",
+   "from": "(Lnet/minecraft/nbt/CompoundTag;ZLnet/minecraft/world/entity/Entity;)Z",
+   "to": "(Ljava/util/Map;Lnet/minecraft/world/entity/Entity;)Z"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/selector/options/EntitySelectorOptions",
+   "kind": "method",
+   "name": "lambda$bootStrap$45",
+   "from": "(Lnet/minecraft/commands/arguments/selector/EntitySelectorParser;)Z",
+   "to": "(Lnet/minecraft/nbt/CompoundTag;ZLnet/minecraft/world/entity/Entity;)Z"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/selector/options/EntitySelectorOptions",
+   "kind": "method",
+   "name": "lambda$bootStrap$43",
+   "from": "(Lnet/minecraft/commands/arguments/selector/EntitySelectorParser;)V",
+   "to": "(Ljava/lang/String;ZLnet/minecraft/world/entity/Entity;)Z"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/selector/options/EntitySelectorOptions",
+   "kind": "method",
+   "name": "lambda$bootStrap$44",
+   "from": "(Ljava/lang/String;ZLnet/minecraft/world/entity/Entity;)Z",
+   "to": "(Lnet/minecraft/commands/arguments/selector/EntitySelectorParser;)V"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/selector/options/EntitySelectorOptions",
+   "kind": "method",
+   "name": "lambda$bootStrap$42",
+   "from": "(Lnet/minecraft/commands/arguments/selector/EntitySelectorParser;)Z",
+   "to": "(Lnet/minecraft/commands/arguments/selector/EntitySelectorParser;)V"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/selector/options/EntitySelectorOptions",
+   "kind": "method",
+   "name": "lambda$bootStrap$41",
+   "from": "(Lnet/minecraft/world/entity/EntityType;ZLnet/minecraft/world/entity/Entity;)Z",
+   "to": "(Lnet/minecraft/commands/arguments/selector/EntitySelectorParser;)Z"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/selector/options/EntitySelectorOptions",
+   "kind": "method",
+   "name": "lambda$bootStrap$40",
+   "from": "(Lnet/minecraft/commands/arguments/selector/EntitySelectorParser;ILnet/minecraft/resources/Identifier;)Lcom/mojang/brigadier/exceptions/CommandSyntaxException;",
+   "to": "(Lnet/minecraft/world/entity/EntityType;ZLnet/minecraft/world/entity/Entity;)Z"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/selector/options/EntitySelectorOptions",
+   "kind": "method",
+   "name": "lambda$bootStrap$39",
+   "from": "(Lnet/minecraft/tags/TagKey;ZLnet/minecraft/world/entity/Entity;)Z",
+   "to": "(Lnet/minecraft/commands/arguments/selector/EntitySelectorParser;ILnet/minecraft/resources/Identifier;)Lcom/mojang/brigadier/exceptions/CommandSyntaxException;"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/selector/options/EntitySelectorOptions",
+   "kind": "method",
+   "name": "lambda$bootStrap$36",
+   "from": "(Lnet/minecraft/commands/arguments/selector/EntitySelectorParser;Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;Ljava/util/function/Consumer;)Ljava/util/concurrent/CompletableFuture;",
+   "to": "(Lnet/minecraft/commands/arguments/selector/options/InvertableSetOptionState;Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;Ljava/util/function/Consumer;)Ljava/util/concurrent/CompletableFuture;"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/selector/options/EntitySelectorOptions",
+   "kind": "method",
+   "name": "lambda$bootStrap$38",
+   "from": "(Lnet/minecraft/core/HolderSet$Named;)Lnet/minecraft/resources/Identifier;",
+   "to": "(Lnet/minecraft/tags/TagKey;ZLnet/minecraft/world/entity/Entity;)Z"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/selector/options/EntitySelectorOptions",
+   "kind": "method",
+   "name": "lambda$bootStrap$29",
+   "from": "(Lnet/minecraft/commands/arguments/selector/EntitySelectorParser;Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;Ljava/util/function/Consumer;)Ljava/util/concurrent/CompletableFuture;",
+   "to": "(Lnet/minecraft/commands/arguments/selector/options/InvertableSetOptionState;Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;Ljava/util/function/Consumer;)Ljava/util/concurrent/CompletableFuture;"
+  },
+  {
+   "owner": "net/minecraft/commands/arguments/selector/options/EntitySelectorOptions",
+   "kind": "method",
+   "name": "lambda$static$0",
+   "from": "(Ljava/lang/Object;)Lcom/mojang/brigadier/Message;",
+   "to": "(Lnet/minecraft/commands/arguments/selector/EntitySelectorParser;)Z"
+  },
+  {
+   "owner": "net/minecraft/core/BlockPos$5",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/core/Direction;Lnet/minecraft/core/Direction;Lnet/minecraft/core/BlockPos;I)V",
+   "to": "(II[Lnet/minecraft/core/Vec3i;IIII)V"
+  },
+  {
+   "owner": "net/minecraft/core/BlockPos$6",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/core/Direction;Lnet/minecraft/core/Direction;Lnet/minecraft/core/Direction;IIIIII)V",
+   "to": "(Lnet/minecraft/core/Direction;Lnet/minecraft/core/Direction;Lnet/minecraft/core/BlockPos;I)V"
+  },
+  {
+   "owner": "net/minecraft/core/cauldron/CauldronInteractions",
+   "kind": "method",
+   "name": "lambda$bootStrap$5",
+   "from": "(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/world/InteractionResult;",
+   "to": "(Lnet/minecraft/world/item/Item;)V"
+  }
+ ]
+}

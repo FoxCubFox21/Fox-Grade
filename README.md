@@ -439,6 +439,25 @@ different members — same name, different class.
 Alongside it: nested classes now follow their outer class. A rule for `EntityPredicate` did nothing
 for `EntityPredicate$Builder`, which is most of a builder-heavy API.
 
+### Members that kept their name and changed their type
+
+The JVM resolves a field by name **and** descriptor, so a member whose declared type changed breaks
+every reference while sitting in plain sight. 26.2 declares `Potions.WATER` as `Holder` where 26.1
+had `Holder$Reference` — the field is right there and the old reference still fails.
+
+```bash
+node descriptor-mine.mjs --old mc-26.1.jar --new mc-26.2.jar --from 26.1 --to 26.2
+```
+
+Only **widenings** are applied: the new type must be a supertype of the old, checked by walking the
+target's own hierarchy, so a value that used to be a `Holder$Reference` is still a valid `Holder` and
+rewriting the descriptor cannot change what the code receives. 47 of those between 26.1 and 26.2.
+Narrowings would hand a caller something weaker than it expects and are reported instead; the 1,231
+outright signature changes need code, not a descriptor.
+
+That took **macaws-furniture — custom blocks, items and entities — to zero broken links**, and
+illager-invasion from 15 to 11.
+
 ## Asking the corpus for what a jar actually needs
 
 The other miners sweep a category and hope the output covers what is needed. `jar-verify` already
