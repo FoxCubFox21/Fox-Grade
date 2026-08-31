@@ -148,6 +148,12 @@ for (const { cls } of mixinClasses) {
     if (!ClassFile.isPlain(value)) continue;
     for (const m of value.matchAll(/L(net\/minecraft\/[\w/$]+);/g)) allTargets.add(m[1]);
   }
+  // Reference OWNERS come from Class constants, which are stored as bare internal names and so are
+  // invisible to the descriptor scan above. They are needed now that a selector is only reported
+  // when it is not a resolved reference — and without adding them here every one is a cache miss
+  // and its own javap, which turns a couple of spawns into hundreds.
+  for (const r of new ClassFile(inflateEntry(e)).refs())
+    if (r.owner.startsWith('net/minecraft/')) allTargets.add(r.owner);
 }
 preloadMembers([...allTargets]);
 
@@ -166,11 +172,27 @@ for (const { cls, config } of mixinClasses) {
   }
   // A method= selector is a bare identifier that is not a member this mixin declares itself.
   const own = new Set(cf.declared().members.map((m) => m.name));
+  // ...and, crucially, not a member the mixin actually REFERENCES. An annotation selector and a
+  // field name are both plain UTF-8 constants with nothing to tell them apart by tag, so scanning
+  // the pool for identifier-shaped strings picks up both. Lithium's GolemRandomStrollInVillageGoal
+  // holds "VILLAGER" only as the name half of a NameAndType for a real Fieldref — the port had
+  // already correctly rewritten it to EntityTypes.VILLAGER — and it was reported as a fatal missing
+  // injection point because EntityType.VILLAGER no longer exists.
+  //
+  // Only names that RESOLVE are skipped. A reference that does not resolve is still a genuine
+  // failure; it is simply jar-verify's to report, with the owner and descriptor that make it
+  // actionable, rather than being guessed at here against every class the mixin happens to mention.
+  const resolvedRefs = new Set();
+  for (const r of cf.refs()) {
+    if (!r.owner.startsWith('net/minecraft/')) continue;
+    const dm = declaredMembers(r.owner);
+    if (dm && dm.has(r.name)) resolvedRefs.add(r.name);
+  }
   for (const t of targets) {
     const members = declaredMembers(t);
     if (!members) { problems.push({ cls, kind: 'target-class', detail: `target ${t.replace(/\//g, '.')} does not exist in the target version` }); continue; }
     for (const s of strings) {
-      if (own.has(s) || members.has(s) || s.length < 4) continue;
+      if (own.has(s) || members.has(s) || s.length < 4 || resolvedRefs.has(s)) continue;
       const rel = relocs.get(`${t}\t${s}`);
       if (rel) { problems.push({ cls, kind: 'moved', from: t, host: rel.host, detail: `@Inject target "${s}" is no longer on ${t.split('/').pop()} — it moved to ${rel.host.replace(/\//g, '.')}`, fix: `retarget this mixin at ${rel.host.replace(/\//g, '.')}` }); continue; }
       // Not explainable, but still broken: it named a member of this class in the source version and
@@ -228,11 +250,21 @@ if (args.out && problems.length) {
   for (const [cls, ps] of renamedByCls) {
     const e = byName.get(cls + '.class');
     if (!e) continue;
-    const map = new Map(ps.map((p) => [p.from, p.to]));
-    const out = new ClassFile(inflateEntry(e)).rewrite((v) => map.get(v) || null);
+    // The pool stores one UTF-8 entry per distinct string, so an annotation selector "foo" and a
+    // NameAndType name "foo" on some unrelated class are THE SAME ENTRY. Rewriting it to fix the
+    // selector would silently repoint that reference too — the class would still verify and would
+    // call the wrong method. Only rewrite a selector no surviving reference is using.
+    const cfm = new ClassFile(inflateEntry(e));
+    const refNames = new Set([...cfm.refs()].map((r) => r.name));
+    const safe = ps.filter((p) => !refNames.has(p.from));
+    for (const p of ps.filter((p) => refNames.has(p.from)))
+      console.log(`  ! ${cls.split('/').pop()}: selector ${p.from} is also a live member reference — not rewritten, needs hand work`);
+    if (!safe.length) continue;
+    const map = new Map(safe.map((p) => [p.from, p.to]));
+    const out = cfm.rewrite((v) => map.get(v) || null);
     if (!out) continue;
-    repl.set(e.name, out); selectors += ps.length;
-    for (const p of ps) console.log(`  ✓ ${cls.split('/').pop()}: injection point ${p.from} → ${p.to}`);
+    repl.set(e.name, out); selectors += safe.length;
+    for (const p of safe) console.log(`  ✓ ${cls.split('/').pop()}: injection point ${p.from} → ${p.to}`);
   }
   for (const [cls, moves] of byMixin) {
     const hosts = new Set([...moves].map((m) => m.split('\t')[1]));
