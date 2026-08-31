@@ -67,21 +67,43 @@ const carry = (key) => {
 // every reference appleskin makes, and all twelve mods scored a flawless zero. A member counts as
 // loader-provided only when at least two DIFFERENT mods, neither of them this one, are seen calling
 // it — the same standard the rest of the project applies to a mined rule.
+// Which loader is this jar for? Evidence from one loader cannot excuse a link in another's mod.
+// NeoForge adds its own methods to vanilla interfaces, so a NeoForge corpus asked about a Fabric mod
+// would forgive members Fabric does not provide — turning a broken port into a clean report, which
+// is the one outcome this tool exists to prevent. Fox-Grade is a Fabric tool; this keeps a corpus
+// gathered for anything else from quietly answering on Fabric's behalf.
+function loaderOf(jar) {
+  try {
+    for (const e of readZip(fs.readFileSync(jar))) {
+      if (e.name === 'fabric.mod.json') return 'fabric';
+      if (e.name === 'META-INF/neoforge.mods.toml') return 'neoforge';
+      if (e.name === 'META-INF/mods.toml') return 'forge';
+    }
+  } catch { /* unreadable jar: fall through to unknown */ }
+  return null;
+}
+const jarLoader = args.loader || loaderOf(JAR);
+
 const CORROBORATE = +(args['corpus-min'] || 2);
 const selfSlug = path.basename(JAR).replace(/\.jar$/, '').replace(/[^\w.-]+/g, '_');
 const seenIn = new Map();
+let skippedLoader = 0;
 for (const dir of String(args.corpus || '').split(',').map((s) => s.trim()).filter(Boolean)) {
   if (!fs.existsSync(dir)) { console.error(`  ! no such corpus: ${dir}`); continue; }
   for (const f of fs.readdirSync(dir)) {
     if (!f.endsWith('.json.gz')) continue;
     if (f.replace(/\.json\.gz$/, '') === selfSlug) continue;          // a mod cannot vouch for itself
     let rec; try { rec = JSON.parse(zlib.gunzipSync(fs.readFileSync(path.join(dir, f)))); } catch { continue; }
+    // Records predating the loader field are Fabric, which is all this project ever targeted.
+    const recLoader = rec.loader || 'fabric';
+    if (jarLoader && recLoader !== jarLoader) { skippedLoader++; continue; }
     // Both name forms, because this tool cannot tell whether the jar in front of it has been ported.
     const keys = new Set();
     for (const r of rec.new?.refs || []) { keys.add(r); keys.add(carry(r)); }
     for (const k of keys) seenIn.set(k, (seenIn.get(k) || 0) + 1);
   }
 }
+if (skippedLoader) console.log(`  ${skippedLoader} corpus record(s) ignored — built for a different loader than this ${jarLoader} jar`);
 const modProvided = new Set();
 for (const [k, n] of seenIn) if (n >= CORROBORATE) modProvided.add(k);
 
