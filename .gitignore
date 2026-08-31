@@ -1,13 +1,8 @@
 set-api-key.sh
 *.key
-*.log
-node_modules/
-.cache/
-sample/
-accepted-contrib.json
-my-rules.json
-rules.json.bak
-rules.json.tmp
-.cache/
-intermediary.*.json
-ladder.*.json
+# Mojang's published mappings may be used but NOT redistributed complete and unmodified
+# (their own licence header says so). Only tables DERIVED from them ship in this repo.
+mappings-*.txt
+*-mappings.txt
+client.txt
+server.txt

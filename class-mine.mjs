@@ -20,11 +20,15 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readZip, inflateEntry } from './zipfile.mjs';
 import { ClassFile } from './classfile.mjs';
+import { indexFromProguard } from './proguard.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const args = {};
 for (let i = 2; i < process.argv.length; i++) { const t = process.argv[i]; if (t.startsWith('--')) args[t.slice(2)] = process.argv[++i]; }
-if (!args.old || !args.new) { console.error('usage: node class-mine.mjs --old <jar> --new <jar> --from 26.1 --to 26.2'); process.exit(2); }
+if ((!args.old && !args['old-mappings']) || (!args.new && !args['new-mappings'])) {
+  console.error('usage: node class-mine.mjs --old <jar|--old-mappings f.txt> --new <jar|--new-mappings f.txt> --from 1.21.1 --to 26.2');
+  process.exit(2);
+}
 
 function classesOf(jar) {
   const names = new Set(), members = new Map();
@@ -36,9 +40,22 @@ function classesOf(jar) {
   }
   return { names, members };
 }
-const A = classesOf(args.old), B = classesOf(args.new);
-console.log(`  ${path.basename(args.old)}: ${A.names.size.toLocaleString()} classes`);
-console.log(`  ${path.basename(args.new)}: ${B.names.size.toLocaleString()} classes`);
+// An obfuscated version has no readable class names in its jar, so the package moves this whole
+// tool exists to find are invisible there. Mojang's published mappings carry the same information
+// in readable form, and the diff below cannot tell the difference.
+function classesFromMappings(file) {
+  const idx = indexFromProguard(file);
+  const names = new Set(idx.keys()), members = new Map();
+  for (const [n, ms] of idx) members.set(n, new Set(ms.map((m) => `${m.name}\t${m.desc}`)));
+  return { names, members };
+}
+const side = (jar, maps) => {
+  const r = maps ? classesFromMappings(maps) : classesOf(jar);
+  console.log(`  ${path.basename(maps || jar)}: ${r.names.size.toLocaleString()} classes${maps ? '  (from published mappings)' : ''}`);
+  return r;
+};
+const A = side(args.old, args['old-mappings']);
+const B = side(args.new, args['new-mappings']);
 
 const gone = [...A.names].filter((n) => !B.names.has(n));
 const arrived = [...B.names].filter((n) => !A.names.has(n));

@@ -20,11 +20,15 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readZip, inflateEntry } from './zipfile.mjs';
 import { ClassFile } from './classfile.mjs';
+import { indexFromProguard } from './proguard.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const args = {};
 for (let i = 2; i < process.argv.length; i++) { const t = process.argv[i]; if (t.startsWith('--')) args[t.slice(2)] = process.argv[++i]; }
-if (!args.old || !args.new) { console.error('usage: node registry-mine.mjs --old <jar> --new <jar> --from .. --to ..'); process.exit(2); }
+if ((!args.old && !args['old-mappings']) || (!args.new && !args['new-mappings'])) {
+  console.error('usage: node registry-mine.mjs --old <jar|--old-mappings f.txt> --new <jar|--new-mappings f.txt> --from .. --to ..');
+  process.exit(2);
+}
 
 // A registry holder is a class whose static fields are overwhelmingly SHOUTING_CASE constants.
 // Detecting them by shape rather than by a hard-coded list means this keeps working when Mojang adds
@@ -42,7 +46,21 @@ function registries(jar) {
   }
   return out;
 }
-const A = registries(args.old), B = registries(args.new);
+// Same shape, built from Mojang's published mappings, so an obfuscated version can be diffed too.
+// A registry holder is still recognised by shape rather than by name: the constants are readable in
+// the mappings even when the jar calls the class `dqh`.
+function registriesFromMappings(file) {
+  const out = new Map();
+  for (const [cls, ms] of indexFromProguard(file)) {
+    const consts = ms.filter((m) => m.kind === 'field' && CONST.test(m.name));
+    if (consts.length < 8) continue;
+    out.set(cls, new Map(consts.map((m) => [m.name, m.desc])));
+  }
+  return out;
+}
+const side = (jar, maps) => (maps ? registriesFromMappings(maps) : registries(jar));
+const A = side(args.old, args['old-mappings']);
+const B = side(args.new, args['new-mappings']);
 
 // Where does each constant name live in the new version? A name can legitimately appear on several
 // classes (BlockTags.SAND and ItemTags.SAND), so the class is kept alongside it.

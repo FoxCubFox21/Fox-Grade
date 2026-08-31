@@ -1,0 +1,4350 @@
+{
+ "schema": 1,
+ "from": "1.21.1",
+ "to": "26.2",
+ "source": "jar-diff: unique simple name with agreeing members",
+ "moves": [
+  {
+   "from": "net.minecraft.world.entity.animal.horse.AbstractHorse",
+   "to": "net.minecraft.world.entity.animal.equine.AbstractHorse",
+   "shared": 123,
+   "of": 156,
+   "ratio": 0.79
+  },
+  {
+   "from": "com.mojang.blaze3d.platform.GlConst",
+   "to": "com.mojang.blaze3d.opengl.GlConst",
+   "shared": 98,
+   "of": 100,
+   "ratio": 0.98
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Bee",
+   "to": "net.minecraft.world.entity.animal.bee.Bee",
+   "shared": 94,
+   "of": 141,
+   "ratio": 0.67
+  },
+  {
+   "from": "net.minecraft.Util",
+   "to": "net.minecraft.util.Util",
+   "shared": 87,
+   "of": 127,
+   "ratio": 0.69
+  },
+  {
+   "from": "net.minecraft.world.entity.npc.Villager",
+   "to": "net.minecraft.world.entity.npc.villager.Villager",
+   "shared": 84,
+   "of": 125,
+   "ratio": 0.67
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Panda",
+   "to": "net.minecraft.world.entity.animal.panda.Panda",
+   "shared": 80,
+   "of": 109,
+   "ratio": 0.73
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Fox",
+   "to": "net.minecraft.world.entity.animal.fox.Fox",
+   "shared": 78,
+   "of": 105,
+   "ratio": 0.74
+  },
+  {
+   "from": "com.mojang.blaze3d.platform.GlStateManager",
+   "to": "com.mojang.blaze3d.opengl.GlStateManager",
+   "shared": 67,
+   "of": 130,
+   "ratio": 0.52
+  },
+  {
+   "from": "net.minecraft.world.entity.projectile.AbstractArrow",
+   "to": "net.minecraft.world.entity.projectile.arrow.AbstractArrow",
+   "shared": 61,
+   "of": 71,
+   "ratio": 0.86
+  },
+  {
+   "from": "net.minecraft.world.entity.decoration.PaintingVariants",
+   "to": "net.minecraft.world.entity.decoration.painting.PaintingVariants",
+   "shared": 55,
+   "of": 55,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Wolf",
+   "to": "net.minecraft.world.entity.animal.wolf.Wolf",
+   "shared": 51,
+   "of": 77,
+   "ratio": 0.66
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Cat",
+   "to": "net.minecraft.world.entity.animal.feline.Cat",
+   "shared": 50,
+   "of": 61,
+   "ratio": 0.82
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Rabbit",
+   "to": "net.minecraft.world.entity.animal.rabbit.Rabbit",
+   "shared": 45,
+   "of": 60,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.world.level.dimension.end.EndDragonFight",
+   "to": "net.minecraft.world.level.dimension.end.EnderDragonFight",
+   "shared": 45,
+   "of": 59,
+   "ratio": 0.76
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Parrot",
+   "to": "net.minecraft.world.entity.animal.parrot.Parrot",
+   "shared": 44,
+   "of": 54,
+   "ratio": 0.81
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.Zombie",
+   "to": "net.minecraft.world.entity.monster.zombie.Zombie",
+   "shared": 44,
+   "of": 64,
+   "ratio": 0.69
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.horse.Llama",
+   "to": "net.minecraft.world.entity.animal.equine.Llama",
+   "shared": 42,
+   "of": 61,
+   "ratio": 0.69
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Turtle",
+   "to": "net.minecraft.world.entity.animal.turtle.Turtle",
+   "shared": 36,
+   "of": 56,
+   "ratio": 0.64
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Dolphin",
+   "to": "net.minecraft.world.entity.animal.dolphin.Dolphin",
+   "shared": 34,
+   "of": 47,
+   "ratio": 0.72
+  },
+  {
+   "from": "net.minecraft.world.entity.vehicle.AbstractMinecart",
+   "to": "net.minecraft.world.entity.vehicle.minecart.AbstractMinecart",
+   "shared": 34,
+   "of": 67,
+   "ratio": 0.51
+  },
+  {
+   "from": "net.minecraft.world.level.block.entity.trialspawner.TrialSpawnerData",
+   "to": "net.minecraft.world.level.block.entity.trialspawner.TrialSpawnerStateData",
+   "shared": 34,
+   "of": 53,
+   "ratio": 0.64
+  },
+  {
+   "from": "net.minecraft.world.entity.npc.AbstractVillager",
+   "to": "net.minecraft.world.entity.npc.villager.AbstractVillager",
+   "shared": 32,
+   "of": 41,
+   "ratio": 0.78
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.IronGolem",
+   "to": "net.minecraft.world.entity.animal.golem.IronGolem",
+   "shared": 30,
+   "of": 42,
+   "ratio": 0.71
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.ZombieVillager",
+   "to": "net.minecraft.world.entity.monster.zombie.ZombieVillager",
+   "shared": 30,
+   "of": 43,
+   "ratio": 0.7
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Squid",
+   "to": "net.minecraft.world.entity.animal.squid.Squid",
+   "shared": 29,
+   "of": 35,
+   "ratio": 0.83
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Chicken",
+   "to": "net.minecraft.world.entity.animal.chicken.Chicken",
+   "shared": 28,
+   "of": 32,
+   "ratio": 0.88
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.LocationPredicate",
+   "to": "net.minecraft.advancements.predicates.LocationPredicate",
+   "shared": 26,
+   "of": 26,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Ocelot",
+   "to": "net.minecraft.world.entity.animal.feline.Ocelot",
+   "shared": 26,
+   "of": 34,
+   "ratio": 0.76
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.PolarBear",
+   "to": "net.minecraft.world.entity.animal.polarbear.PolarBear",
+   "shared": 26,
+   "of": 36,
+   "ratio": 0.72
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Sheep",
+   "to": "net.minecraft.world.entity.animal.sheep.Sheep",
+   "shared": 26,
+   "of": 45,
+   "ratio": 0.58
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.ZombifiedPiglin",
+   "to": "net.minecraft.world.entity.monster.zombie.ZombifiedPiglin",
+   "shared": 26,
+   "of": 44,
+   "ratio": 0.59
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.Pillager",
+   "to": "net.minecraft.world.entity.monster.illager.Pillager",
+   "shared": 25,
+   "of": 31,
+   "ratio": 0.81
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Bee$BeePollinateGoal",
+   "to": "net.minecraft.world.entity.animal.bee.Bee$BeePollinateGoal",
+   "shared": 24,
+   "of": 31,
+   "ratio": 0.77
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Pig",
+   "to": "net.minecraft.world.entity.animal.pig.Pig",
+   "shared": 24,
+   "of": 33,
+   "ratio": 0.73
+  },
+  {
+   "from": "net.minecraft.world.entity.projectile.ThrownTrident",
+   "to": "net.minecraft.world.entity.projectile.arrow.ThrownTrident",
+   "shared": 24,
+   "of": 27,
+   "ratio": 0.89
+  },
+  {
+   "from": "net.minecraft.client.model.GuardianModel",
+   "to": "net.minecraft.client.model.monster.guardian.GuardianModel",
+   "shared": 23,
+   "of": 27,
+   "ratio": 0.85
+  },
+  {
+   "from": "com.mojang.realmsclient.gui.screens.RealmsBackupScreen",
+   "to": "com.mojang.realmsclient.gui.screens.configuration.RealmsBackupScreen",
+   "shared": 22,
+   "of": 37,
+   "ratio": 0.59
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.EntityEquipmentPredicate",
+   "to": "net.minecraft.advancements.predicates.entity.EntityEquipmentPredicate",
+   "shared": 22,
+   "of": 23,
+   "ratio": 0.96
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Pufferfish",
+   "to": "net.minecraft.world.entity.animal.fish.Pufferfish",
+   "shared": 22,
+   "of": 30,
+   "ratio": 0.73
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.horse.SkeletonHorse",
+   "to": "net.minecraft.world.entity.animal.equine.SkeletonHorse",
+   "shared": 22,
+   "of": 26,
+   "ratio": 0.85
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.Drowned",
+   "to": "net.minecraft.world.entity.monster.zombie.Drowned",
+   "shared": 22,
+   "of": 31,
+   "ratio": 0.71
+  },
+  {
+   "from": "net.minecraft.world.item.armortrim.TrimPatterns",
+   "to": "net.minecraft.world.item.equipment.trim.TrimPatterns",
+   "shared": 22,
+   "of": 25,
+   "ratio": 0.88
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.EntityFlagsPredicate",
+   "to": "net.minecraft.advancements.predicates.entity.EntityFlagsPredicate",
+   "shared": 21,
+   "of": 22,
+   "ratio": 0.95
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.AbstractFish",
+   "to": "net.minecraft.world.entity.animal.fish.AbstractFish",
+   "shared": 21,
+   "of": 24,
+   "ratio": 0.88
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Bee$BeeGoToHiveGoal",
+   "to": "net.minecraft.world.entity.animal.bee.Bee$BeeGoToHiveGoal",
+   "shared": 20,
+   "of": 23,
+   "ratio": 0.87
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.TropicalFish",
+   "to": "net.minecraft.world.entity.animal.fish.TropicalFish",
+   "shared": 20,
+   "of": 33,
+   "ratio": 0.61
+  },
+  {
+   "from": "net.minecraft.world.entity.decoration.Painting",
+   "to": "net.minecraft.world.entity.decoration.painting.Painting",
+   "shared": 20,
+   "of": 31,
+   "ratio": 0.65
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.Spider",
+   "to": "net.minecraft.world.entity.monster.spider.Spider",
+   "shared": 20,
+   "of": 21,
+   "ratio": 0.95
+  },
+  {
+   "from": "net.minecraft.world.entity.npc.WanderingTrader",
+   "to": "net.minecraft.world.entity.npc.wanderingtrader.WanderingTrader",
+   "shared": 20,
+   "of": 33,
+   "ratio": 0.61
+  },
+  {
+   "from": "net.minecraft.world.entity.projectile.Arrow",
+   "to": "net.minecraft.world.entity.projectile.arrow.Arrow",
+   "shared": 20,
+   "of": 21,
+   "ratio": 0.95
+  },
+  {
+   "from": "net.minecraft.FileUtil",
+   "to": "net.minecraft.util.FileUtil",
+   "shared": 19,
+   "of": 22,
+   "ratio": 0.86
+  },
+  {
+   "from": "net.minecraft.client.model.WardenModel",
+   "to": "net.minecraft.client.model.monster.warden.WardenModel",
+   "shared": 19,
+   "of": 32,
+   "ratio": 0.59
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.horse.Horse",
+   "to": "net.minecraft.world.entity.animal.equine.Horse",
+   "shared": 19,
+   "of": 30,
+   "ratio": 0.63
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.Skeleton",
+   "to": "net.minecraft.world.entity.monster.skeleton.Skeleton",
+   "shared": 19,
+   "of": 22,
+   "ratio": 0.86
+  },
+  {
+   "from": "net.minecraft.world.entity.projectile.windcharge.AbstractWindCharge",
+   "to": "net.minecraft.world.entity.projectile.hurtingprojectile.windcharge.AbstractWindCharge",
+   "shared": 19,
+   "of": 21,
+   "ratio": 0.9
+  },
+  {
+   "from": "net.minecraft.client.gui.screens.EditServerScreen",
+   "to": "net.minecraft.client.gui.screens.ManageServerScreen",
+   "shared": 19,
+   "of": 22,
+   "ratio": 0.86
+  },
+  {
+   "from": "com.mojang.realmsclient.gui.screens.RealmsInviteScreen",
+   "to": "com.mojang.realmsclient.gui.screens.configuration.RealmsInviteScreen",
+   "shared": 18,
+   "of": 26,
+   "ratio": 0.69
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.SnowGolem",
+   "to": "net.minecraft.world.entity.animal.golem.SnowGolem",
+   "shared": 18,
+   "of": 22,
+   "ratio": 0.82
+  },
+  {
+   "from": "net.minecraft.world.entity.projectile.AbstractHurtingProjectile",
+   "to": "net.minecraft.world.entity.projectile.hurtingprojectile.AbstractHurtingProjectile",
+   "shared": 18,
+   "of": 24,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.world.entity.vehicle.AbstractMinecartContainer",
+   "to": "net.minecraft.world.entity.vehicle.minecart.AbstractMinecartContainer",
+   "shared": 18,
+   "of": 28,
+   "ratio": 0.64
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.BlockPredicate",
+   "to": "net.minecraft.advancements.predicates.BlockPredicate",
+   "shared": 17,
+   "of": 19,
+   "ratio": 0.89
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.BredAnimalsTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.BredAnimalsTrigger$TriggerInstance",
+   "shared": 17,
+   "of": 21,
+   "ratio": 0.81
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.DamageSourcePredicate",
+   "to": "net.minecraft.advancements.predicates.DamageSourcePredicate",
+   "shared": 17,
+   "of": 17,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.client.GuiMessageTag",
+   "to": "net.minecraft.client.multiplayer.chat.GuiMessageTag",
+   "shared": 17,
+   "of": 29,
+   "ratio": 0.59
+  },
+  {
+   "from": "net.minecraft.client.model.SpiderModel",
+   "to": "net.minecraft.client.model.monster.spider.SpiderModel",
+   "shared": 17,
+   "of": 20,
+   "ratio": 0.85
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.Illusioner",
+   "to": "net.minecraft.world.entity.monster.illager.Illusioner",
+   "shared": 17,
+   "of": 20,
+   "ratio": 0.85
+  },
+  {
+   "from": "com.mojang.realmsclient.gui.screens.RealmsBackupInfoScreen$BackupInfoListEntry",
+   "to": "com.mojang.realmsclient.gui.screens.configuration.RealmsBackupInfoScreen$BackupInfoListEntry",
+   "shared": 16,
+   "of": 20,
+   "ratio": 0.8
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.FallAfterExplosionTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.FallAfterExplosionTrigger$TriggerInstance",
+   "shared": 16,
+   "of": 18,
+   "ratio": 0.89
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.FishingRodHookedTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.FishingRodHookedTrigger$TriggerInstance",
+   "shared": 16,
+   "of": 18,
+   "ratio": 0.89
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.AbstractSchoolingFish",
+   "to": "net.minecraft.world.entity.animal.fish.AbstractSchoolingFish",
+   "shared": 16,
+   "of": 21,
+   "ratio": 0.76
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.WolfVariants",
+   "to": "net.minecraft.world.entity.animal.wolf.WolfVariants",
+   "shared": 16,
+   "of": 20,
+   "ratio": 0.8
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.AbstractSkeleton",
+   "to": "net.minecraft.world.entity.monster.skeleton.AbstractSkeleton",
+   "shared": 16,
+   "of": 22,
+   "ratio": 0.73
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.Bogged",
+   "to": "net.minecraft.world.entity.monster.skeleton.Bogged",
+   "shared": 16,
+   "of": 23,
+   "ratio": 0.7
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.MagmaCube",
+   "to": "net.minecraft.world.entity.monster.cubemob.MagmaCube",
+   "shared": 16,
+   "of": 17,
+   "ratio": 0.94
+  },
+  {
+   "from": "net.minecraft.world.level.levelgen.feature.SpikeFeature$EndSpike",
+   "to": "net.minecraft.world.level.levelgen.feature.EndSpikeFeature$EndSpike",
+   "shared": 16,
+   "of": 22,
+   "ratio": 0.73
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.PlayerPredicate",
+   "to": "net.minecraft.advancements.predicates.entity.PlayerPredicate",
+   "shared": 15,
+   "of": 23,
+   "ratio": 0.65
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.StatePropertiesPredicate",
+   "to": "net.minecraft.advancements.predicates.StatePropertiesPredicate",
+   "shared": 15,
+   "of": 17,
+   "ratio": 0.88
+  },
+  {
+   "from": "net.minecraft.client.model.BreezeModel",
+   "to": "net.minecraft.client.model.monster.breeze.BreezeModel",
+   "shared": 15,
+   "of": 20,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.horse.AbstractChestedHorse",
+   "to": "net.minecraft.world.entity.animal.equine.AbstractChestedHorse",
+   "shared": 15,
+   "of": 18,
+   "ratio": 0.83
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.Vindicator",
+   "to": "net.minecraft.world.entity.monster.illager.Vindicator",
+   "shared": 15,
+   "of": 21,
+   "ratio": 0.71
+  },
+  {
+   "from": "net.minecraft.world.entity.vehicle.MinecartHopper",
+   "to": "net.minecraft.world.entity.vehicle.minecart.MinecartHopper",
+   "shared": 15,
+   "of": 20,
+   "ratio": 0.75
+  },
+  {
+   "from": "com.mojang.realmsclient.gui.screens.RealmsBackupInfoScreen",
+   "to": "com.mojang.realmsclient.gui.screens.configuration.RealmsBackupInfoScreen",
+   "shared": 14,
+   "of": 18,
+   "ratio": 0.78
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.ChangeDimensionTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.ChangeDimensionTrigger$TriggerInstance",
+   "shared": 14,
+   "of": 18,
+   "ratio": 0.78
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.CollectionPredicate",
+   "to": "net.minecraft.advancements.predicates.CollectionPredicate",
+   "shared": 14,
+   "of": 14,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.CuredZombieVillagerTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.CuredZombieVillagerTrigger$TriggerInstance",
+   "shared": 14,
+   "of": 16,
+   "ratio": 0.88
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.DistanceTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.DistanceTrigger$TriggerInstance",
+   "shared": 14,
+   "of": 17,
+   "ratio": 0.82
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.EffectsChangedTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.EffectsChangedTrigger$TriggerInstance",
+   "shared": 14,
+   "of": 17,
+   "ratio": 0.82
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.EnterBlockTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.EnterBlockTrigger$TriggerInstance",
+   "shared": 14,
+   "of": 21,
+   "ratio": 0.67
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.LightningStrikeTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.LightningStrikeTrigger$TriggerInstance",
+   "shared": 14,
+   "of": 16,
+   "ratio": 0.88
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.PickedUpItemTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.PickedUpItemTrigger$TriggerInstance",
+   "shared": 14,
+   "of": 17,
+   "ratio": 0.82
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.PlayerHurtEntityTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.PlayerHurtEntityTrigger$TriggerInstance",
+   "shared": 14,
+   "of": 21,
+   "ratio": 0.67
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.PlayerInteractTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.PlayerInteractTrigger$TriggerInstance",
+   "shared": 14,
+   "of": 17,
+   "ratio": 0.82
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.SlideDownBlockTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.SlideDownBlockTrigger$TriggerInstance",
+   "shared": 14,
+   "of": 21,
+   "ratio": 0.67
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.TradeTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.TradeTrigger$TriggerInstance",
+   "shared": 14,
+   "of": 17,
+   "ratio": 0.82
+  },
+  {
+   "from": "net.minecraft.client.model.FrogModel",
+   "to": "net.minecraft.client.model.animal.frog.FrogModel",
+   "shared": 14,
+   "of": 18,
+   "ratio": 0.78
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.MushroomCow",
+   "to": "net.minecraft.world.entity.animal.cow.MushroomCow",
+   "shared": 14,
+   "of": 27,
+   "ratio": 0.52
+  },
+  {
+   "from": "net.minecraft.world.entity.decoration.PaintingVariant",
+   "to": "net.minecraft.world.entity.decoration.painting.PaintingVariant",
+   "shared": 14,
+   "of": 17,
+   "ratio": 0.82
+  },
+  {
+   "from": "net.minecraft.world.entity.npc.WanderingTraderSpawner",
+   "to": "net.minecraft.world.entity.npc.wanderingtrader.WanderingTraderSpawner",
+   "shared": 14,
+   "of": 20,
+   "ratio": 0.7
+  },
+  {
+   "from": "net.minecraft.world.item.armortrim.TrimMaterials",
+   "to": "net.minecraft.world.item.equipment.trim.TrimMaterials",
+   "shared": 14,
+   "of": 18,
+   "ratio": 0.78
+  },
+  {
+   "from": "net.minecraft.world.item.armortrim.TrimPattern",
+   "to": "net.minecraft.world.item.equipment.trim.TrimPattern",
+   "shared": 14,
+   "of": 19,
+   "ratio": 0.74
+  },
+  {
+   "from": "net.minecraft.network.protocol.game.ClientboundHorseScreenOpenPacket",
+   "to": "net.minecraft.network.protocol.game.ClientboundMountScreenOpenPacket",
+   "shared": 14,
+   "of": 14,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.platform.GlDebug",
+   "to": "com.mojang.blaze3d.opengl.GlDebug",
+   "shared": 13,
+   "of": 17,
+   "ratio": 0.76
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.BeeNestDestroyedTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.BeeNestDestroyedTrigger$TriggerInstance",
+   "shared": 13,
+   "of": 17,
+   "ratio": 0.76
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.PlayerPredicate$StatMatcher",
+   "to": "net.minecraft.advancements.predicates.entity.PlayerPredicate$StatMatcher",
+   "shared": 13,
+   "of": 20,
+   "ratio": 0.65
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.StatePropertiesPredicate$RangedMatcher",
+   "to": "net.minecraft.advancements.predicates.StatePropertiesPredicate$RangedMatcher",
+   "shared": 13,
+   "of": 13,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.client.model.ArmadilloModel",
+   "to": "net.minecraft.client.model.animal.armadillo.ArmadilloModel",
+   "shared": 13,
+   "of": 20,
+   "ratio": 0.65
+  },
+  {
+   "from": "net.minecraft.client.model.BeeModel",
+   "to": "net.minecraft.client.model.animal.bee.BeeModel",
+   "shared": 13,
+   "of": 26,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.client.model.WitherBossModel",
+   "to": "net.minecraft.client.model.monster.wither.WitherBossModel",
+   "shared": 13,
+   "of": 20,
+   "ratio": 0.65
+  },
+  {
+   "from": "net.minecraft.world.entity.projectile.WitherSkull",
+   "to": "net.minecraft.world.entity.projectile.hurtingprojectile.WitherSkull",
+   "shared": 13,
+   "of": 16,
+   "ratio": 0.81
+  },
+  {
+   "from": "net.minecraft.world.entity.vehicle.MinecartTNT",
+   "to": "net.minecraft.world.entity.vehicle.minecart.MinecartTNT",
+   "shared": 13,
+   "of": 24,
+   "ratio": 0.54
+  },
+  {
+   "from": "net.minecraft.world.item.ArmorMaterial",
+   "to": "net.minecraft.world.item.equipment.ArmorMaterial",
+   "shared": 13,
+   "of": 21,
+   "ratio": 0.62
+  },
+  {
+   "from": "net.minecraft.world.level.block.FungusBlock",
+   "to": "net.minecraft.world.level.block.NetherFungusBlock",
+   "shared": 13,
+   "of": 18,
+   "ratio": 0.72
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.AnyBlockInteractionTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.AnyBlockInteractionTrigger$TriggerInstance",
+   "shared": 12,
+   "of": 14,
+   "ratio": 0.86
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.BrewedPotionTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.BrewedPotionTrigger$TriggerInstance",
+   "shared": 12,
+   "of": 13,
+   "ratio": 0.92
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.ChanneledLightningTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.ChanneledLightningTrigger$TriggerInstance",
+   "shared": 12,
+   "of": 14,
+   "ratio": 0.86
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.ConsumeItemTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.ConsumeItemTrigger$TriggerInstance",
+   "shared": 12,
+   "of": 15,
+   "ratio": 0.8
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.DefaultBlockInteractionTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.DefaultBlockInteractionTrigger$TriggerInstance",
+   "shared": 12,
+   "of": 14,
+   "ratio": 0.86
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.EntityHurtPlayerTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.EntityHurtPlayerTrigger$TriggerInstance",
+   "shared": 12,
+   "of": 15,
+   "ratio": 0.8
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.FilledBucketTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.FilledBucketTrigger$TriggerInstance",
+   "shared": 12,
+   "of": 13,
+   "ratio": 0.92
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.FluidPredicate",
+   "to": "net.minecraft.advancements.predicates.FluidPredicate",
+   "shared": 12,
+   "of": 12,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.ItemUsedOnLocationTrigger$TriggerInstance",
+   "shared": 12,
+   "of": 20,
+   "ratio": 0.6
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.LootTableTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.LootTableTrigger$TriggerInstance",
+   "shared": 12,
+   "of": 13,
+   "ratio": 0.92
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.MobEffectsPredicate$MobEffectInstancePredicate",
+   "to": "net.minecraft.advancements.predicates.MobEffectsPredicate$MobEffectInstancePredicate",
+   "shared": 12,
+   "of": 17,
+   "ratio": 0.71
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.NbtPredicate",
+   "to": "net.minecraft.advancements.predicates.NbtPredicate",
+   "shared": 12,
+   "of": 13,
+   "ratio": 0.92
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.ShotCrossbowTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.ShotCrossbowTrigger$TriggerInstance",
+   "shared": 12,
+   "of": 14,
+   "ratio": 0.86
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.SummonedEntityTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.SummonedEntityTrigger$TriggerInstance",
+   "shared": 12,
+   "of": 14,
+   "ratio": 0.86
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.TameAnimalTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.TameAnimalTrigger$TriggerInstance",
+   "shared": 12,
+   "of": 15,
+   "ratio": 0.8
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.UsedTotemTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.UsedTotemTrigger$TriggerInstance",
+   "shared": 12,
+   "of": 14,
+   "ratio": 0.86
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.UsingItemTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.UsingItemTrigger$TriggerInstance",
+   "shared": 12,
+   "of": 13,
+   "ratio": 0.92
+  },
+  {
+   "from": "net.minecraft.client.model.BookModel",
+   "to": "net.minecraft.client.model.object.book.BookModel",
+   "shared": 12,
+   "of": 16,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.client.model.IllagerModel",
+   "to": "net.minecraft.client.model.monster.illager.IllagerModel",
+   "shared": 12,
+   "of": 17,
+   "ratio": 0.71
+  },
+  {
+   "from": "net.minecraft.client.model.SilverfishModel",
+   "to": "net.minecraft.client.model.monster.silverfish.SilverfishModel",
+   "shared": 12,
+   "of": 15,
+   "ratio": 0.8
+  },
+  {
+   "from": "net.minecraft.world.entity.GlowSquid",
+   "to": "net.minecraft.world.entity.animal.squid.GlowSquid",
+   "shared": 12,
+   "of": 16,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Cat$CatRelaxOnOwnerGoal",
+   "to": "net.minecraft.world.entity.animal.feline.Cat$CatRelaxOnOwnerGoal",
+   "shared": 12,
+   "of": 14,
+   "ratio": 0.86
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.horse.ZombieHorse",
+   "to": "net.minecraft.world.entity.animal.equine.ZombieHorse",
+   "shared": 12,
+   "of": 13,
+   "ratio": 0.92
+  },
+  {
+   "from": "net.minecraft.world.entity.vehicle.MinecartCommandBlock",
+   "to": "net.minecraft.world.entity.vehicle.minecart.MinecartCommandBlock",
+   "shared": 12,
+   "of": 19,
+   "ratio": 0.63
+  },
+  {
+   "from": "net.minecraft.util.FastColor$ARGB32",
+   "to": "net.minecraft.util.ARGB",
+   "shared": 12,
+   "of": 13,
+   "ratio": 0.92
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.EnchantedItemTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.EnchantedItemTrigger$TriggerInstance",
+   "shared": 11,
+   "of": 15,
+   "ratio": 0.73
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.InventoryChangeTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.InventoryChangeTrigger$TriggerInstance",
+   "shared": 11,
+   "of": 19,
+   "ratio": 0.58
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.ItemDurabilityTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.ItemDurabilityTrigger$TriggerInstance",
+   "shared": 11,
+   "of": 18,
+   "ratio": 0.61
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.LevitationTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.LevitationTrigger$TriggerInstance",
+   "shared": 11,
+   "of": 15,
+   "ratio": 0.73
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.MobEffectsPredicate",
+   "to": "net.minecraft.advancements.predicates.MobEffectsPredicate",
+   "shared": 11,
+   "of": 11,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.RaiderPredicate",
+   "to": "net.minecraft.advancements.predicates.entity.RaiderPredicate",
+   "shared": 11,
+   "of": 14,
+   "ratio": 0.79
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.TagPredicate",
+   "to": "net.minecraft.advancements.predicates.TagPredicate",
+   "shared": 11,
+   "of": 13,
+   "ratio": 0.85
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.TargetBlockTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.TargetBlockTrigger$TriggerInstance",
+   "shared": 11,
+   "of": 16,
+   "ratio": 0.69
+  },
+  {
+   "from": "net.minecraft.client.model.AllayModel",
+   "to": "net.minecraft.client.model.animal.allay.AllayModel",
+   "shared": 11,
+   "of": 16,
+   "ratio": 0.69
+  },
+  {
+   "from": "net.minecraft.client.model.HoglinModel",
+   "to": "net.minecraft.client.model.monster.hoglin.HoglinModel",
+   "shared": 11,
+   "of": 17,
+   "ratio": 0.65
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Fox$FoxEatBerriesGoal",
+   "to": "net.minecraft.world.entity.animal.fox.Fox$FoxEatBerriesGoal",
+   "shared": 11,
+   "of": 13,
+   "ratio": 0.85
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.TropicalFish$Variant",
+   "to": "net.minecraft.world.entity.animal.fish.TropicalFish$Variant",
+   "shared": 11,
+   "of": 14,
+   "ratio": 0.79
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.horse.TraderLlama",
+   "to": "net.minecraft.world.entity.animal.equine.TraderLlama",
+   "shared": 11,
+   "of": 15,
+   "ratio": 0.73
+  },
+  {
+   "from": "net.minecraft.world.entity.boss.EnderDragonPart",
+   "to": "net.minecraft.world.entity.boss.enderdragon.EnderDragonPart",
+   "shared": 11,
+   "of": 14,
+   "ratio": 0.79
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.Drowned$DrownedGoToWaterGoal",
+   "to": "net.minecraft.world.entity.monster.zombie.Drowned$DrownedGoToWaterGoal",
+   "shared": 11,
+   "of": 11,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.Evoker$EvokerWololoSpellGoal",
+   "to": "net.minecraft.world.entity.monster.illager.Evoker$EvokerWololoSpellGoal",
+   "shared": 11,
+   "of": 15,
+   "ratio": 0.73
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.SpellcasterIllager$SpellcasterUseSpellGoal",
+   "to": "net.minecraft.world.entity.monster.illager.SpellcasterIllager$SpellcasterUseSpellGoal",
+   "shared": 11,
+   "of": 14,
+   "ratio": 0.79
+  },
+  {
+   "from": "net.minecraft.world.item.armortrim.TrimMaterial",
+   "to": "net.minecraft.world.item.equipment.trim.TrimMaterial",
+   "shared": 11,
+   "of": 21,
+   "ratio": 0.52
+  },
+  {
+   "from": "net.minecraft.util.datafix.fixes.AttributesRename",
+   "to": "net.minecraft.util.datafix.fixes.AttributesRenameLegacy",
+   "shared": 11,
+   "of": 16,
+   "ratio": 0.69
+  },
+  {
+   "from": "net.minecraft.world.level.levelgen.feature.stateproviders.RuleBasedBlockStateProvider$Rule",
+   "to": "net.minecraft.world.level.levelgen.feature.stateproviders.RuleBasedStateProvider$Rule",
+   "shared": 11,
+   "of": 11,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.realmsclient.gui.screens.RealmsBackupScreen$Entry",
+   "to": "com.mojang.realmsclient.gui.screens.configuration.RealmsBackupScreen$Entry",
+   "shared": 10,
+   "of": 20,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.CollectionContentsPredicate$Multiple",
+   "to": "net.minecraft.advancements.predicates.CollectionContentsPredicate$Multiple",
+   "shared": 10,
+   "of": 10,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.EnchantmentPredicate",
+   "to": "net.minecraft.advancements.predicates.EnchantmentPredicate",
+   "shared": 10,
+   "of": 15,
+   "ratio": 0.67
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.PlayerPredicate$AdvancementCriterionsPredicate",
+   "to": "net.minecraft.advancements.predicates.entity.PlayerPredicate$AdvancementCriterionsPredicate",
+   "shared": 10,
+   "of": 10,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.PlayerPredicate$AdvancementDonePredicate",
+   "to": "net.minecraft.advancements.predicates.entity.PlayerPredicate$AdvancementDonePredicate",
+   "shared": 10,
+   "of": 10,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.RecipeCraftedTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.RecipeCraftedTrigger$TriggerInstance",
+   "shared": 10,
+   "of": 17,
+   "ratio": 0.59
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.StatePropertiesPredicate$ExactMatcher",
+   "to": "net.minecraft.advancements.predicates.StatePropertiesPredicate$ExactMatcher",
+   "shared": 10,
+   "of": 10,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.client.model.ArmorStandModel",
+   "to": "net.minecraft.client.model.object.armorstand.ArmorStandModel",
+   "shared": 10,
+   "of": 18,
+   "ratio": 0.56
+  },
+  {
+   "from": "net.minecraft.client.model.BatModel",
+   "to": "net.minecraft.client.model.ambient.BatModel",
+   "shared": 10,
+   "of": 14,
+   "ratio": 0.71
+  },
+  {
+   "from": "net.minecraft.client.model.PhantomModel",
+   "to": "net.minecraft.client.model.monster.phantom.PhantomModel",
+   "shared": 10,
+   "of": 14,
+   "ratio": 0.71
+  },
+  {
+   "from": "net.minecraft.client.model.ShieldModel",
+   "to": "net.minecraft.client.model.object.equipment.ShieldModel",
+   "shared": 10,
+   "of": 12,
+   "ratio": 0.83
+  },
+  {
+   "from": "net.minecraft.server.packs.linkfs.DummyFileAttributes",
+   "to": "net.minecraft.util.DummyFileAttributes",
+   "shared": 10,
+   "of": 10,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Bee$BeeGoToKnownFlowerGoal",
+   "to": "net.minecraft.world.entity.animal.bee.Bee$BeeGoToKnownFlowerGoal",
+   "shared": 10,
+   "of": 12,
+   "ratio": 0.83
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Bucketable",
+   "to": "net.minecraft.world.entity.Bucketable",
+   "shared": 10,
+   "of": 10,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Fox$PerchAndSearchGoal",
+   "to": "net.minecraft.world.entity.animal.fox.Fox$PerchAndSearchGoal",
+   "shared": 10,
+   "of": 12,
+   "ratio": 0.83
+  },
+  {
+   "from": "net.minecraft.world.entity.projectile.Fireball",
+   "to": "net.minecraft.world.entity.projectile.hurtingprojectile.Fireball",
+   "shared": 10,
+   "of": 13,
+   "ratio": 0.77
+  },
+  {
+   "from": "net.minecraft.world.entity.vehicle.MinecartSpawner",
+   "to": "net.minecraft.world.entity.vehicle.minecart.MinecartSpawner",
+   "shared": 10,
+   "of": 16,
+   "ratio": 0.63
+  },
+  {
+   "from": "net.minecraft.client.gui.Gui$1DisplayEntry",
+   "to": "net.minecraft.client.gui.Hud$1DisplayEntry",
+   "shared": 10,
+   "of": 10,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.util.CubicSpline$1Point",
+   "to": "net.minecraft.util.CubicSpline$Multipoint$Point",
+   "shared": 10,
+   "of": 10,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.platform.GlDebug$LogEntry",
+   "to": "com.mojang.blaze3d.opengl.GlDebug$LogEntry",
+   "shared": 9,
+   "of": 9,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.CollectionContentsPredicate$Single",
+   "to": "net.minecraft.advancements.predicates.CollectionContentsPredicate$Single",
+   "shared": 9,
+   "of": 9,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.CollectionCountsPredicate$Multiple",
+   "to": "net.minecraft.advancements.predicates.CollectionCountsPredicate$Multiple",
+   "shared": 9,
+   "of": 9,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.ConstructBeaconTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.ConstructBeaconTrigger$TriggerInstance",
+   "shared": 9,
+   "of": 14,
+   "ratio": 0.64
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.FishingHookPredicate",
+   "to": "net.minecraft.advancements.predicates.entity.FishingHookPredicate",
+   "shared": 9,
+   "of": 13,
+   "ratio": 0.69
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.GameTypePredicate",
+   "to": "net.minecraft.advancements.predicates.GameTypePredicate",
+   "shared": 9,
+   "of": 12,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.ItemPredicate",
+   "to": "net.minecraft.advancements.predicates.ItemPredicate",
+   "shared": 9,
+   "of": 17,
+   "ratio": 0.53
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.PlayerTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.PlayerTrigger$TriggerInstance",
+   "shared": 9,
+   "of": 17,
+   "ratio": 0.53
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.RecipeUnlockedTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.RecipeUnlockedTrigger$TriggerInstance",
+   "shared": 9,
+   "of": 12,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.StartRidingTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.StartRidingTrigger$TriggerInstance",
+   "shared": 9,
+   "of": 10,
+   "ratio": 0.9
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.StatePropertiesPredicate$PropertyMatcher",
+   "to": "net.minecraft.advancements.predicates.StatePropertiesPredicate$PropertyMatcher",
+   "shared": 9,
+   "of": 12,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.UsedEnderEyeTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.UsedEnderEyeTrigger$TriggerInstance",
+   "shared": 9,
+   "of": 12,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.client.GuiMessage",
+   "to": "net.minecraft.client.multiplayer.chat.GuiMessage",
+   "shared": 9,
+   "of": 13,
+   "ratio": 0.69
+  },
+  {
+   "from": "net.minecraft.client.model.LlamaModel",
+   "to": "net.minecraft.client.model.animal.llama.LlamaModel",
+   "shared": 9,
+   "of": 15,
+   "ratio": 0.6
+  },
+  {
+   "from": "net.minecraft.client.model.RavagerModel",
+   "to": "net.minecraft.client.model.monster.ravager.RavagerModel",
+   "shared": 9,
+   "of": 15,
+   "ratio": 0.6
+  },
+  {
+   "from": "net.minecraft.client.model.VexModel",
+   "to": "net.minecraft.client.model.monster.vex.VexModel",
+   "shared": 9,
+   "of": 15,
+   "ratio": 0.6
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Turtle$TurtleGoHomeGoal",
+   "to": "net.minecraft.world.entity.animal.turtle.Turtle$TurtleGoHomeGoal",
+   "shared": 9,
+   "of": 11,
+   "ratio": 0.82
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.horse.Donkey",
+   "to": "net.minecraft.world.entity.animal.equine.Donkey",
+   "shared": 9,
+   "of": 9,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.horse.Mule",
+   "to": "net.minecraft.world.entity.animal.equine.Mule",
+   "shared": 9,
+   "of": 9,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.SpellcasterIllager",
+   "to": "net.minecraft.world.entity.monster.illager.SpellcasterIllager",
+   "shared": 9,
+   "of": 17,
+   "ratio": 0.53
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.WitherSkeleton",
+   "to": "net.minecraft.world.entity.monster.skeleton.WitherSkeleton",
+   "shared": 9,
+   "of": 13,
+   "ratio": 0.69
+  },
+  {
+   "from": "net.minecraft.world.entity.projectile.windcharge.WindCharge",
+   "to": "net.minecraft.world.entity.projectile.hurtingprojectile.windcharge.WindCharge",
+   "shared": 9,
+   "of": 10,
+   "ratio": 0.9
+  },
+  {
+   "from": "net.minecraft.server.commands.TeleportCommand$LookAtEntity",
+   "to": "net.minecraft.server.commands.LookAt$LookAtEntity",
+   "shared": 9,
+   "of": 9,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.world.level.levelgen.structure.pools.alias.RandomGroup",
+   "to": "net.minecraft.world.level.levelgen.structure.pools.alias.RandomGroupPoolAlias",
+   "shared": 9,
+   "of": 15,
+   "ratio": 0.6
+  },
+  {
+   "from": "net.minecraft.advancements.Criterion",
+   "to": "net.minecraft.advancements.triggers.Criterion",
+   "shared": 8,
+   "of": 13,
+   "ratio": 0.62
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.CollectionCountsPredicate$Entry",
+   "to": "net.minecraft.advancements.predicates.CollectionCountsPredicate$Entry",
+   "shared": 8,
+   "of": 11,
+   "ratio": 0.73
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.EntityTypePredicate",
+   "to": "net.minecraft.advancements.predicates.entity.EntityTypePredicate",
+   "shared": 8,
+   "of": 11,
+   "ratio": 0.73
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.LightningBoltPredicate",
+   "to": "net.minecraft.advancements.predicates.entity.LightningBoltPredicate",
+   "shared": 8,
+   "of": 15,
+   "ratio": 0.53
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.SlotsPredicate",
+   "to": "net.minecraft.advancements.predicates.SlotsPredicate",
+   "shared": 8,
+   "of": 10,
+   "ratio": 0.8
+  },
+  {
+   "from": "net.minecraft.client.GuiMessage$Line",
+   "to": "net.minecraft.client.multiplayer.chat.GuiMessage$Line",
+   "shared": 8,
+   "of": 12,
+   "ratio": 0.67
+  },
+  {
+   "from": "net.minecraft.client.model.CreeperModel",
+   "to": "net.minecraft.client.model.monster.creeper.CreeperModel",
+   "shared": 8,
+   "of": 11,
+   "ratio": 0.73
+  },
+  {
+   "from": "net.minecraft.client.model.EndermiteModel",
+   "to": "net.minecraft.client.model.monster.endermite.EndermiteModel",
+   "shared": 8,
+   "of": 11,
+   "ratio": 0.73
+  },
+  {
+   "from": "net.minecraft.client.model.EvokerFangsModel",
+   "to": "net.minecraft.client.model.effects.EvokerFangsModel",
+   "shared": 8,
+   "of": 11,
+   "ratio": 0.73
+  },
+  {
+   "from": "net.minecraft.client.model.IronGolemModel",
+   "to": "net.minecraft.client.model.animal.golem.IronGolemModel",
+   "shared": 8,
+   "of": 14,
+   "ratio": 0.57
+  },
+  {
+   "from": "net.minecraft.client.model.SnowGolemModel",
+   "to": "net.minecraft.client.model.animal.golem.SnowGolemModel",
+   "shared": 8,
+   "of": 11,
+   "ratio": 0.73
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Fox$SleepGoal",
+   "to": "net.minecraft.world.entity.animal.fox.Fox$SleepGoal",
+   "shared": 8,
+   "of": 10,
+   "ratio": 0.8
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Squid$SquidFleeGoal",
+   "to": "net.minecraft.world.entity.animal.squid.Squid$SquidFleeGoal",
+   "shared": 8,
+   "of": 10,
+   "ratio": 0.8
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.Drowned$DrownedSwimUpGoal",
+   "to": "net.minecraft.world.entity.monster.zombie.Drowned$DrownedSwimUpGoal",
+   "shared": 8,
+   "of": 10,
+   "ratio": 0.8
+  },
+  {
+   "from": "net.minecraft.world.entity.projectile.ThrowableItemProjectile",
+   "to": "net.minecraft.world.entity.projectile.throwableitemprojectile.ThrowableItemProjectile",
+   "shared": 8,
+   "of": 12,
+   "ratio": 0.67
+  },
+  {
+   "from": "net.minecraft.world.entity.projectile.ThrownEnderpearl",
+   "to": "net.minecraft.world.entity.projectile.throwableitemprojectile.ThrownEnderpearl",
+   "shared": 8,
+   "of": 10,
+   "ratio": 0.8
+  },
+  {
+   "from": "net.minecraft.client.Minecraft$GameLoadCookie",
+   "to": "net.minecraft.client.GameLoadCookie",
+   "shared": 8,
+   "of": 8,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.client.gui.screens.worldselection.CreateWorldScreen$DataPackReloadCookie",
+   "to": "net.minecraft.client.gui.screens.worldselection.DataPackReloadCookie",
+   "shared": 8,
+   "of": 8,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.tags.TagManager$LoadResult",
+   "to": "net.minecraft.tags.TagLoader$LoadResult",
+   "shared": 8,
+   "of": 8,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.util.datafix.ComponentDataFixUtils",
+   "to": "net.minecraft.util.datafix.LegacyComponentDataFixUtils",
+   "shared": 8,
+   "of": 11,
+   "ratio": 0.73
+  },
+  {
+   "from": "net.minecraft.util.random.WeightedRandomList",
+   "to": "net.minecraft.util.random.WeightedList",
+   "shared": 8,
+   "of": 12,
+   "ratio": 0.67
+  },
+  {
+   "from": "net.minecraft.util.worldupdate.WorldUpgrader$FileToUpgrade",
+   "to": "net.minecraft.util.worldupdate.FileToUpgrade",
+   "shared": 8,
+   "of": 8,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.world.level.chunk.PalettedContainer$Configuration",
+   "to": "net.minecraft.world.level.chunk.Configuration$Simple",
+   "shared": 8,
+   "of": 9,
+   "ratio": 0.89
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.ContextAwarePredicate",
+   "to": "net.minecraft.advancements.predicates.ContextAwarePredicate",
+   "shared": 7,
+   "of": 9,
+   "ratio": 0.78
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.LightPredicate",
+   "to": "net.minecraft.advancements.predicates.LightPredicate",
+   "shared": 7,
+   "of": 10,
+   "ratio": 0.7
+  },
+  {
+   "from": "net.minecraft.util.datafix.FixWolfHealth",
+   "to": "net.minecraft.util.datafix.fixes.FixWolfHealth",
+   "shared": 7,
+   "of": 9,
+   "ratio": 0.78
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Dolphin$DolphinSwimToTreasureGoal",
+   "to": "net.minecraft.world.entity.animal.dolphin.Dolphin$DolphinSwimToTreasureGoal",
+   "shared": 7,
+   "of": 9,
+   "ratio": 0.78
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Dolphin$DolphinSwimWithPlayerGoal",
+   "to": "net.minecraft.world.entity.animal.dolphin.Dolphin$DolphinSwimWithPlayerGoal",
+   "shared": 7,
+   "of": 9,
+   "ratio": 0.78
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Salmon",
+   "to": "net.minecraft.world.entity.animal.fish.Salmon",
+   "shared": 7,
+   "of": 7,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Turtle$TurtleTravelGoal",
+   "to": "net.minecraft.world.entity.animal.turtle.Turtle$TurtleTravelGoal",
+   "shared": 7,
+   "of": 9,
+   "ratio": 0.78
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.Husk",
+   "to": "net.minecraft.world.entity.monster.zombie.Husk",
+   "shared": 7,
+   "of": 11,
+   "ratio": 0.64
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.Illusioner$IllusionerBlindnessSpellGoal",
+   "to": "net.minecraft.world.entity.monster.illager.Illusioner$IllusionerBlindnessSpellGoal",
+   "shared": 7,
+   "of": 10,
+   "ratio": 0.7
+  },
+  {
+   "from": "net.minecraft.world.entity.projectile.SpectralArrow",
+   "to": "net.minecraft.world.entity.projectile.arrow.SpectralArrow",
+   "shared": 7,
+   "of": 9,
+   "ratio": 0.78
+  },
+  {
+   "from": "net.minecraft.world.entity.projectile.ThrownEgg",
+   "to": "net.minecraft.world.entity.projectile.throwableitemprojectile.ThrownEgg",
+   "shared": 7,
+   "of": 9,
+   "ratio": 0.78
+  },
+  {
+   "from": "net.minecraft.server.commands.TeleportCommand$LookAtPosition",
+   "to": "net.minecraft.server.commands.LookAt$LookAtPosition",
+   "shared": 7,
+   "of": 7,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.util.datafix.fixes.ItemStackComponentRemainderFix",
+   "to": "net.minecraft.util.datafix.fixes.DataComponentRemainderFix",
+   "shared": 7,
+   "of": 10,
+   "ratio": 0.7
+  },
+  {
+   "from": "com.mojang.blaze3d.platform.GlStateManager$BooleanState",
+   "to": "com.mojang.blaze3d.opengl.GlStateManager$BooleanState",
+   "shared": 6,
+   "of": 6,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.Util$11",
+   "to": "net.minecraft.util.Util$11",
+   "shared": 6,
+   "of": 6,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.CollectionCountsPredicate$Single",
+   "to": "net.minecraft.advancements.predicates.CollectionCountsPredicate$Single",
+   "shared": 6,
+   "of": 9,
+   "ratio": 0.67
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.ImpossibleTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.ImpossibleTrigger$TriggerInstance",
+   "shared": 6,
+   "of": 7,
+   "ratio": 0.86
+  },
+  {
+   "from": "net.minecraft.client.model.BlazeModel",
+   "to": "net.minecraft.client.model.monster.blaze.BlazeModel",
+   "shared": 6,
+   "of": 9,
+   "ratio": 0.67
+  },
+  {
+   "from": "net.minecraft.client.model.ShulkerModel",
+   "to": "net.minecraft.client.model.monster.shulker.ShulkerModel",
+   "shared": 6,
+   "of": 12,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.client.model.WindChargeModel",
+   "to": "net.minecraft.client.model.object.projectile.WindChargeModel",
+   "shared": 6,
+   "of": 9,
+   "ratio": 0.67
+  },
+  {
+   "from": "net.minecraft.data.models.BlockModelGenerators$1",
+   "to": "net.minecraft.client.data.models.BlockModelGenerators$1",
+   "shared": 6,
+   "of": 6,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.network.chat.contents.StorageDataSource",
+   "to": "net.minecraft.network.chat.contents.data.StorageDataSource",
+   "shared": 6,
+   "of": 12,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.AbstractGolem",
+   "to": "net.minecraft.world.entity.animal.golem.AbstractGolem",
+   "shared": 6,
+   "of": 6,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Bee$BeeLocateHiveGoal",
+   "to": "net.minecraft.world.entity.animal.bee.Bee$BeeLocateHiveGoal",
+   "shared": 6,
+   "of": 8,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Cod",
+   "to": "net.minecraft.world.entity.animal.fish.Cod",
+   "shared": 6,
+   "of": 6,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Dolphin$PlayWithItemsGoal",
+   "to": "net.minecraft.world.entity.animal.dolphin.Dolphin$PlayWithItemsGoal",
+   "shared": 6,
+   "of": 8,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Fox$FaceplantGoal",
+   "to": "net.minecraft.world.entity.animal.fox.Fox$FaceplantGoal",
+   "shared": 6,
+   "of": 8,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Fox$FoxPounceGoal",
+   "to": "net.minecraft.world.entity.animal.fox.Fox$FoxPounceGoal",
+   "shared": 6,
+   "of": 8,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Panda$PandaSitGoal",
+   "to": "net.minecraft.world.entity.animal.panda.Panda$PandaSitGoal",
+   "shared": 6,
+   "of": 8,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Rabbit$RaidGardenGoal",
+   "to": "net.minecraft.world.entity.animal.rabbit.Rabbit$RaidGardenGoal",
+   "shared": 6,
+   "of": 8,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.ShoulderRidingEntity",
+   "to": "net.minecraft.world.entity.animal.parrot.ShoulderRidingEntity",
+   "shared": 6,
+   "of": 6,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.WaterAnimal",
+   "to": "net.minecraft.world.entity.animal.fish.WaterAnimal",
+   "shared": 6,
+   "of": 9,
+   "ratio": 0.67
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.Evoker$EvokerSummonSpellGoal",
+   "to": "net.minecraft.world.entity.monster.illager.Evoker$EvokerSummonSpellGoal",
+   "shared": 6,
+   "of": 9,
+   "ratio": 0.67
+  },
+  {
+   "from": "net.minecraft.world.entity.npc.WanderingTrader$WanderToPositionGoal",
+   "to": "net.minecraft.world.entity.npc.wanderingtrader.WanderingTrader$WanderToPositionGoal",
+   "shared": 6,
+   "of": 9,
+   "ratio": 0.67
+  },
+  {
+   "from": "net.minecraft.world.entity.projectile.DragonFireball",
+   "to": "net.minecraft.world.entity.projectile.hurtingprojectile.DragonFireball",
+   "shared": 6,
+   "of": 7,
+   "ratio": 0.86
+  },
+  {
+   "from": "net.minecraft.world.entity.projectile.SmallFireball",
+   "to": "net.minecraft.world.entity.projectile.hurtingprojectile.SmallFireball",
+   "shared": 6,
+   "of": 7,
+   "ratio": 0.86
+  },
+  {
+   "from": "net.minecraft.world.entity.projectile.Snowball",
+   "to": "net.minecraft.world.entity.projectile.throwableitemprojectile.Snowball",
+   "shared": 6,
+   "of": 8,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.world.entity.vehicle.MinecartChest",
+   "to": "net.minecraft.world.entity.vehicle.minecart.MinecartChest",
+   "shared": 6,
+   "of": 10,
+   "ratio": 0.6
+  },
+  {
+   "from": "com.mojang.blaze3d.platform.GlStateManager$BlendState",
+   "to": "com.mojang.blaze3d.opengl.GlStateManager$BlendState",
+   "shared": 5,
+   "of": 6,
+   "ratio": 0.83
+  },
+  {
+   "from": "net.minecraft.Util$10",
+   "to": "net.minecraft.util.Util$10",
+   "shared": 5,
+   "of": 5,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.client.model.DolphinModel",
+   "to": "net.minecraft.client.model.animal.dolphin.DolphinModel",
+   "shared": 5,
+   "of": 8,
+   "ratio": 0.63
+  },
+  {
+   "from": "net.minecraft.client.model.PiglinHeadModel",
+   "to": "net.minecraft.client.model.object.skull.PiglinHeadModel",
+   "shared": 5,
+   "of": 7,
+   "ratio": 0.71
+  },
+  {
+   "from": "net.minecraft.client.model.SalmonModel",
+   "to": "net.minecraft.client.model.animal.fish.SalmonModel",
+   "shared": 5,
+   "of": 8,
+   "ratio": 0.63
+  },
+  {
+   "from": "net.minecraft.client.model.SkullModel",
+   "to": "net.minecraft.client.model.object.skull.SkullModel",
+   "shared": 5,
+   "of": 8,
+   "ratio": 0.63
+  },
+  {
+   "from": "net.minecraft.client.model.SnifferModel",
+   "to": "net.minecraft.client.model.animal.sniffer.SnifferModel",
+   "shared": 5,
+   "of": 9,
+   "ratio": 0.56
+  },
+  {
+   "from": "net.minecraft.client.model.SquidModel",
+   "to": "net.minecraft.client.model.animal.squid.SquidModel",
+   "shared": 5,
+   "of": 8,
+   "ratio": 0.63
+  },
+  {
+   "from": "net.minecraft.client.renderer.block.model.ItemTransform$Deserializer",
+   "to": "net.minecraft.client.resources.model.cuboid.ItemTransform$Deserializer",
+   "shared": 5,
+   "of": 10,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.data.models.BlockModelGenerators$BookSlotModelCacheKey",
+   "to": "net.minecraft.client.data.models.BlockModelGenerators$BookSlotModelCacheKey",
+   "shared": 5,
+   "of": 8,
+   "ratio": 0.63
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Fox$DefendTrustedTargetGoal",
+   "to": "net.minecraft.world.entity.animal.fox.Fox$DefendTrustedTargetGoal",
+   "shared": 5,
+   "of": 7,
+   "ratio": 0.71
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Panda$PandaLieOnBackGoal",
+   "to": "net.minecraft.world.entity.animal.panda.Panda$PandaLieOnBackGoal",
+   "shared": 5,
+   "of": 7,
+   "ratio": 0.71
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Panda$PandaLookAtPlayerGoal",
+   "to": "net.minecraft.world.entity.animal.panda.Panda$PandaLookAtPlayerGoal",
+   "shared": 5,
+   "of": 7,
+   "ratio": 0.71
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Rabbit$RabbitJumpControl",
+   "to": "net.minecraft.world.entity.animal.rabbit.Rabbit$RabbitJumpControl",
+   "shared": 5,
+   "of": 7,
+   "ratio": 0.71
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Turtle$TurtleGoToWaterGoal",
+   "to": "net.minecraft.world.entity.animal.turtle.Turtle$TurtleGoToWaterGoal",
+   "shared": 5,
+   "of": 7,
+   "ratio": 0.71
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.Drowned$DrownedGoToBeachGoal",
+   "to": "net.minecraft.world.entity.monster.zombie.Drowned$DrownedGoToBeachGoal",
+   "shared": 5,
+   "of": 7,
+   "ratio": 0.71
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.Evoker$EvokerAttackSpellGoal",
+   "to": "net.minecraft.world.entity.monster.illager.Evoker$EvokerAttackSpellGoal",
+   "shared": 5,
+   "of": 8,
+   "ratio": 0.63
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.Illusioner$IllusionerMirrorSpellGoal",
+   "to": "net.minecraft.world.entity.monster.illager.Illusioner$IllusionerMirrorSpellGoal",
+   "shared": 5,
+   "of": 8,
+   "ratio": 0.63
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.Stray",
+   "to": "net.minecraft.world.entity.monster.skeleton.Stray",
+   "shared": 5,
+   "of": 7,
+   "ratio": 0.71
+  },
+  {
+   "from": "net.minecraft.world.entity.projectile.LargeFireball",
+   "to": "net.minecraft.world.entity.projectile.hurtingprojectile.LargeFireball",
+   "shared": 5,
+   "of": 7,
+   "ratio": 0.71
+  },
+  {
+   "from": "net.minecraft.world.level.biome.AmbientAdditionsSettings",
+   "to": "net.minecraft.world.attribute.AmbientAdditionsSettings",
+   "shared": 5,
+   "of": 10,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.client.particle.ParticleEngine$1ParticleDefinition",
+   "to": "net.minecraft.client.particle.ParticleResources$1ParticleDefinition",
+   "shared": 5,
+   "of": 8,
+   "ratio": 0.63
+  },
+  {
+   "from": "net.minecraft.client.particle.ParticleEngine$MutableSpriteSet",
+   "to": "net.minecraft.client.particle.ParticleResources$MutableSpriteSet",
+   "shared": 5,
+   "of": 5,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.commands.Commands$1$1",
+   "to": "net.minecraft.commands.Commands$2$1",
+   "shared": 5,
+   "of": 6,
+   "ratio": 0.83
+  },
+  {
+   "from": "net.minecraft.data.recipes.RecipeProvider$1",
+   "to": "net.minecraft.data.recipes.RecipeProvider$Runner$1",
+   "shared": 5,
+   "of": 8,
+   "ratio": 0.63
+  },
+  {
+   "from": "com.mojang.realmsclient.gui.screens.RealmsSlotOptionsScreen$SettingsSlider",
+   "to": "com.mojang.realmsclient.gui.screens.configuration.RealmsSlotOptionsScreen$SettingsSlider",
+   "shared": 4,
+   "of": 6,
+   "ratio": 0.67
+  },
+  {
+   "from": "net.minecraft.BlockUtil",
+   "to": "net.minecraft.util.BlockUtil",
+   "shared": 4,
+   "of": 5,
+   "ratio": 0.8
+  },
+  {
+   "from": "net.minecraft.BlockUtil$FoundRectangle",
+   "to": "net.minecraft.util.BlockUtil$FoundRectangle",
+   "shared": 4,
+   "of": 4,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.BlockUtil$IntBounds",
+   "to": "net.minecraft.util.BlockUtil$IntBounds",
+   "shared": 4,
+   "of": 4,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.Util$5",
+   "to": "net.minecraft.util.Util$5",
+   "shared": 4,
+   "of": 5,
+   "ratio": 0.8
+  },
+  {
+   "from": "net.minecraft.Util$6",
+   "to": "net.minecraft.util.Util$6",
+   "shared": 4,
+   "of": 4,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.Util$7",
+   "to": "net.minecraft.util.Util$7",
+   "shared": 4,
+   "of": 4,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.Util$8",
+   "to": "net.minecraft.util.Util$8",
+   "shared": 4,
+   "of": 4,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.ChanneledLightningTrigger",
+   "to": "net.minecraft.advancements.triggers.ChanneledLightningTrigger",
+   "shared": 4,
+   "of": 5,
+   "ratio": 0.8
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.CollectionContentsPredicate$Zero",
+   "to": "net.minecraft.advancements.predicates.CollectionContentsPredicate$Zero",
+   "shared": 4,
+   "of": 4,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.CollectionCountsPredicate$Zero",
+   "to": "net.minecraft.advancements.predicates.CollectionCountsPredicate$Zero",
+   "shared": 4,
+   "of": 4,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.InventoryChangeTrigger",
+   "to": "net.minecraft.advancements.triggers.InventoryChangeTrigger",
+   "shared": 4,
+   "of": 5,
+   "ratio": 0.8
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.LightningStrikeTrigger",
+   "to": "net.minecraft.advancements.triggers.LightningStrikeTrigger",
+   "shared": 4,
+   "of": 5,
+   "ratio": 0.8
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.StatePropertiesPredicate$ValueMatcher",
+   "to": "net.minecraft.advancements.predicates.StatePropertiesPredicate$ValueMatcher",
+   "shared": 4,
+   "of": 6,
+   "ratio": 0.67
+  },
+  {
+   "from": "net.minecraft.client.model.ElytraModel",
+   "to": "net.minecraft.client.model.object.equipment.ElytraModel",
+   "shared": 4,
+   "of": 8,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.client.model.LeashKnotModel",
+   "to": "net.minecraft.client.model.object.leash.LeashKnotModel",
+   "shared": 4,
+   "of": 7,
+   "ratio": 0.57
+  },
+  {
+   "from": "net.minecraft.client.model.PufferfishBigModel",
+   "to": "net.minecraft.client.model.animal.fish.PufferfishBigModel",
+   "shared": 4,
+   "of": 7,
+   "ratio": 0.57
+  },
+  {
+   "from": "net.minecraft.client.model.PufferfishMidModel",
+   "to": "net.minecraft.client.model.animal.fish.PufferfishMidModel",
+   "shared": 4,
+   "of": 7,
+   "ratio": 0.57
+  },
+  {
+   "from": "net.minecraft.client.model.PufferfishSmallModel",
+   "to": "net.minecraft.client.model.animal.fish.PufferfishSmallModel",
+   "shared": 4,
+   "of": 7,
+   "ratio": 0.57
+  },
+  {
+   "from": "net.minecraft.client.model.ShulkerBulletModel",
+   "to": "net.minecraft.client.model.object.projectile.ShulkerBulletModel",
+   "shared": 4,
+   "of": 7,
+   "ratio": 0.57
+  },
+  {
+   "from": "net.minecraft.client.model.dragon.DragonHeadModel",
+   "to": "net.minecraft.client.model.object.skull.DragonHeadModel",
+   "shared": 4,
+   "of": 6,
+   "ratio": 0.67
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Bee$BaseBeeGoal",
+   "to": "net.minecraft.world.entity.animal.bee.Bee$BaseBeeGoal",
+   "shared": 4,
+   "of": 6,
+   "ratio": 0.67
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Bee$BeeGrowCropGoal",
+   "to": "net.minecraft.world.entity.animal.bee.Bee$BeeGrowCropGoal",
+   "shared": 4,
+   "of": 6,
+   "ratio": 0.67
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Bee$BeeWanderGoal",
+   "to": "net.minecraft.world.entity.animal.bee.Bee$BeeWanderGoal",
+   "shared": 4,
+   "of": 7,
+   "ratio": 0.57
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Cat$CatTemptGoal",
+   "to": "net.minecraft.world.entity.animal.feline.Cat$CatTemptGoal",
+   "shared": 4,
+   "of": 6,
+   "ratio": 0.67
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Fox$FoxStrollThroughVillageGoal",
+   "to": "net.minecraft.world.entity.animal.fox.Fox$FoxStrollThroughVillageGoal",
+   "shared": 4,
+   "of": 6,
+   "ratio": 0.67
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Fox$StalkPreyGoal",
+   "to": "net.minecraft.world.entity.animal.fox.Fox$StalkPreyGoal",
+   "shared": 4,
+   "of": 6,
+   "ratio": 0.67
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Panda$PandaRollGoal",
+   "to": "net.minecraft.world.entity.animal.panda.Panda$PandaRollGoal",
+   "shared": 4,
+   "of": 6,
+   "ratio": 0.67
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Pufferfish$PufferfishPuffGoal",
+   "to": "net.minecraft.world.entity.animal.fish.Pufferfish$PufferfishPuffGoal",
+   "shared": 4,
+   "of": 6,
+   "ratio": 0.67
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Turtle$TurtleLayEggGoal",
+   "to": "net.minecraft.world.entity.animal.turtle.Turtle$TurtleLayEggGoal",
+   "shared": 4,
+   "of": 6,
+   "ratio": 0.67
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.horse.TraderLlama$TraderLlamaDefendWanderingTraderGoal",
+   "to": "net.minecraft.world.entity.animal.equine.TraderLlama$TraderLlamaDefendWanderingTraderGoal",
+   "shared": 4,
+   "of": 6,
+   "ratio": 0.67
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.Drowned$DrownedTridentAttackGoal",
+   "to": "net.minecraft.world.entity.monster.zombie.Drowned$DrownedTridentAttackGoal",
+   "shared": 4,
+   "of": 5,
+   "ratio": 0.8
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.SpellcasterIllager$SpellcasterCastingSpellGoal",
+   "to": "net.minecraft.world.entity.monster.illager.SpellcasterIllager$SpellcasterCastingSpellGoal",
+   "shared": 4,
+   "of": 6,
+   "ratio": 0.67
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.Vindicator$VindicatorBreakDoorGoal",
+   "to": "net.minecraft.world.entity.monster.illager.Vindicator$VindicatorBreakDoorGoal",
+   "shared": 4,
+   "of": 4,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.world.entity.projectile.ThrownExperienceBottle",
+   "to": "net.minecraft.world.entity.projectile.throwableitemprojectile.ThrownExperienceBottle",
+   "shared": 4,
+   "of": 6,
+   "ratio": 0.67
+  },
+  {
+   "from": "net.minecraft.world.entity.projectile.windcharge.BreezeWindCharge",
+   "to": "net.minecraft.world.entity.projectile.hurtingprojectile.windcharge.BreezeWindCharge",
+   "shared": 4,
+   "of": 4,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.util.ToFloatFunction$1",
+   "to": "net.minecraft.util.BoundedFloatFunction$2",
+   "shared": 4,
+   "of": 6,
+   "ratio": 0.67
+  },
+  {
+   "from": "net.minecraft.util.ToFloatFunction$2",
+   "to": "net.minecraft.util.BoundedFloatFunction$3",
+   "shared": 4,
+   "of": 6,
+   "ratio": 0.67
+  },
+  {
+   "from": "net.minecraft.world.level.BlockAndTintGetter",
+   "to": "net.minecraft.world.level.BlockAndLightGetter",
+   "shared": 4,
+   "of": 6,
+   "ratio": 0.67
+  },
+  {
+   "from": "net.minecraft.world.level.storage.loot.providers.number.LootNumberProviderType",
+   "to": "net.minecraft.world.level.storage.loot.providers.number.Sum",
+   "shared": 4,
+   "of": 6,
+   "ratio": 0.67
+  },
+  {
+   "from": "com.mojang.blaze3d.platform.GlStateManager$DepthState",
+   "to": "com.mojang.blaze3d.opengl.GlStateManager$DepthState",
+   "shared": 3,
+   "of": 4,
+   "ratio": 0.75
+  },
+  {
+   "from": "com.mojang.blaze3d.platform.GlStateManager$PolygonOffsetState",
+   "to": "com.mojang.blaze3d.opengl.GlStateManager$PolygonOffsetState",
+   "shared": 3,
+   "of": 5,
+   "ratio": 0.6
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.BeeNestDestroyedTrigger",
+   "to": "net.minecraft.advancements.triggers.BeeNestDestroyedTrigger",
+   "shared": 3,
+   "of": 4,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.BredAnimalsTrigger",
+   "to": "net.minecraft.advancements.triggers.BredAnimalsTrigger",
+   "shared": 3,
+   "of": 4,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.BrewedPotionTrigger",
+   "to": "net.minecraft.advancements.triggers.BrewedPotionTrigger",
+   "shared": 3,
+   "of": 4,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.ChangeDimensionTrigger",
+   "to": "net.minecraft.advancements.triggers.ChangeDimensionTrigger",
+   "shared": 3,
+   "of": 4,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.ConstructBeaconTrigger",
+   "to": "net.minecraft.advancements.triggers.ConstructBeaconTrigger",
+   "shared": 3,
+   "of": 4,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.ConsumeItemTrigger",
+   "to": "net.minecraft.advancements.triggers.ConsumeItemTrigger",
+   "shared": 3,
+   "of": 4,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.DefaultBlockInteractionTrigger",
+   "to": "net.minecraft.advancements.triggers.DefaultBlockInteractionTrigger",
+   "shared": 3,
+   "of": 4,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.DistanceTrigger",
+   "to": "net.minecraft.advancements.triggers.DistanceTrigger",
+   "shared": 3,
+   "of": 4,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.EffectsChangedTrigger",
+   "to": "net.minecraft.advancements.triggers.EffectsChangedTrigger",
+   "shared": 3,
+   "of": 4,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.EnchantedItemTrigger",
+   "to": "net.minecraft.advancements.triggers.EnchantedItemTrigger",
+   "shared": 3,
+   "of": 4,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.EnterBlockTrigger",
+   "to": "net.minecraft.advancements.triggers.EnterBlockTrigger",
+   "shared": 3,
+   "of": 4,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.EntityHurtPlayerTrigger",
+   "to": "net.minecraft.advancements.triggers.EntityHurtPlayerTrigger",
+   "shared": 3,
+   "of": 4,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.FallAfterExplosionTrigger",
+   "to": "net.minecraft.advancements.triggers.FallAfterExplosionTrigger",
+   "shared": 3,
+   "of": 4,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.FilledBucketTrigger",
+   "to": "net.minecraft.advancements.triggers.FilledBucketTrigger",
+   "shared": 3,
+   "of": 4,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.FishingRodHookedTrigger",
+   "to": "net.minecraft.advancements.triggers.FishingRodHookedTrigger",
+   "shared": 3,
+   "of": 4,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.ItemDurabilityTrigger",
+   "to": "net.minecraft.advancements.triggers.ItemDurabilityTrigger",
+   "shared": 3,
+   "of": 4,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.KilledTrigger",
+   "to": "net.minecraft.advancements.triggers.KilledTrigger",
+   "shared": 3,
+   "of": 4,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.LevitationTrigger",
+   "to": "net.minecraft.advancements.triggers.LevitationTrigger",
+   "shared": 3,
+   "of": 4,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.LootTableTrigger",
+   "to": "net.minecraft.advancements.triggers.LootTableTrigger",
+   "shared": 3,
+   "of": 4,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.PickedUpItemTrigger",
+   "to": "net.minecraft.advancements.triggers.PickedUpItemTrigger",
+   "shared": 3,
+   "of": 4,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.PlayerHurtEntityTrigger",
+   "to": "net.minecraft.advancements.triggers.PlayerHurtEntityTrigger",
+   "shared": 3,
+   "of": 4,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.PlayerInteractTrigger",
+   "to": "net.minecraft.advancements.triggers.PlayerInteractTrigger",
+   "shared": 3,
+   "of": 4,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.PlayerTrigger",
+   "to": "net.minecraft.advancements.triggers.PlayerTrigger",
+   "shared": 3,
+   "of": 4,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.RecipeUnlockedTrigger",
+   "to": "net.minecraft.advancements.triggers.RecipeUnlockedTrigger",
+   "shared": 3,
+   "of": 5,
+   "ratio": 0.6
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.ShotCrossbowTrigger",
+   "to": "net.minecraft.advancements.triggers.ShotCrossbowTrigger",
+   "shared": 3,
+   "of": 4,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.SlideDownBlockTrigger",
+   "to": "net.minecraft.advancements.triggers.SlideDownBlockTrigger",
+   "shared": 3,
+   "of": 4,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.StartRidingTrigger",
+   "to": "net.minecraft.advancements.triggers.StartRidingTrigger",
+   "shared": 3,
+   "of": 4,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.SummonedEntityTrigger",
+   "to": "net.minecraft.advancements.triggers.SummonedEntityTrigger",
+   "shared": 3,
+   "of": 4,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.TameAnimalTrigger",
+   "to": "net.minecraft.advancements.triggers.TameAnimalTrigger",
+   "shared": 3,
+   "of": 4,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.TargetBlockTrigger",
+   "to": "net.minecraft.advancements.triggers.TargetBlockTrigger",
+   "shared": 3,
+   "of": 4,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.UsedEnderEyeTrigger",
+   "to": "net.minecraft.advancements.triggers.UsedEnderEyeTrigger",
+   "shared": 3,
+   "of": 4,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.UsedTotemTrigger",
+   "to": "net.minecraft.advancements.triggers.UsedTotemTrigger",
+   "shared": 3,
+   "of": 4,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.UsingItemTrigger",
+   "to": "net.minecraft.advancements.triggers.UsingItemTrigger",
+   "shared": 3,
+   "of": 4,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.client.model.CodModel",
+   "to": "net.minecraft.client.model.animal.fish.CodModel",
+   "shared": 3,
+   "of": 6,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.client.model.CowModel",
+   "to": "net.minecraft.client.model.animal.cow.CowModel",
+   "shared": 3,
+   "of": 3,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.client.model.LlamaSpitModel",
+   "to": "net.minecraft.client.model.animal.llama.LlamaSpitModel",
+   "shared": 3,
+   "of": 6,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.client.model.SlimeModel",
+   "to": "net.minecraft.client.model.monster.slime.SlimeModel",
+   "shared": 3,
+   "of": 6,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.client.model.TridentModel",
+   "to": "net.minecraft.client.model.object.projectile.TridentModel",
+   "shared": 3,
+   "of": 6,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.client.model.WitchModel",
+   "to": "net.minecraft.client.model.monster.witch.WitchModel",
+   "shared": 3,
+   "of": 6,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Bee$BeeBecomeAngryTargetGoal",
+   "to": "net.minecraft.world.entity.animal.bee.Bee$BeeBecomeAngryTargetGoal",
+   "shared": 3,
+   "of": 4,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Bee$BeeEnterHiveGoal",
+   "to": "net.minecraft.world.entity.animal.bee.Bee$BeeEnterHiveGoal",
+   "shared": 3,
+   "of": 5,
+   "ratio": 0.6
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Fox$FoxBehaviorGoal",
+   "to": "net.minecraft.world.entity.animal.fox.Fox$FoxBehaviorGoal",
+   "shared": 3,
+   "of": 5,
+   "ratio": 0.6
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Fox$FoxFollowParentGoal",
+   "to": "net.minecraft.world.entity.animal.fox.Fox$FoxFollowParentGoal",
+   "shared": 3,
+   "of": 5,
+   "ratio": 0.6
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Fox$FoxMeleeAttackGoal",
+   "to": "net.minecraft.world.entity.animal.fox.Fox$FoxMeleeAttackGoal",
+   "shared": 3,
+   "of": 5,
+   "ratio": 0.6
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Fox$FoxSearchForItemsGoal",
+   "to": "net.minecraft.world.entity.animal.fox.Fox$FoxSearchForItemsGoal",
+   "shared": 3,
+   "of": 5,
+   "ratio": 0.6
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Fox$SeekShelterGoal",
+   "to": "net.minecraft.world.entity.animal.fox.Fox$SeekShelterGoal",
+   "shared": 3,
+   "of": 5,
+   "ratio": 0.6
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Panda$PandaBreedGoal",
+   "to": "net.minecraft.world.entity.animal.panda.Panda$PandaBreedGoal",
+   "shared": 3,
+   "of": 5,
+   "ratio": 0.6
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Panda$PandaSneezeGoal",
+   "to": "net.minecraft.world.entity.animal.panda.Panda$PandaSneezeGoal",
+   "shared": 3,
+   "of": 5,
+   "ratio": 0.6
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Parrot$1",
+   "to": "net.minecraft.world.entity.animal.parrot.Parrot$1",
+   "shared": 3,
+   "of": 3,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Parrot$ParrotWanderGoal",
+   "to": "net.minecraft.world.entity.animal.parrot.Parrot$ParrotWanderGoal",
+   "shared": 3,
+   "of": 3,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Rabbit$RabbitMoveControl",
+   "to": "net.minecraft.world.entity.animal.rabbit.Rabbit$RabbitMoveControl",
+   "shared": 3,
+   "of": 5,
+   "ratio": 0.6
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.AbstractIllager",
+   "to": "net.minecraft.world.entity.monster.illager.AbstractIllager",
+   "shared": 3,
+   "of": 5,
+   "ratio": 0.6
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.CaveSpider",
+   "to": "net.minecraft.world.entity.monster.spider.CaveSpider",
+   "shared": 3,
+   "of": 5,
+   "ratio": 0.6
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.Spider$SpiderEffectsGroupData",
+   "to": "net.minecraft.world.entity.monster.spider.Spider$SpiderEffectsGroupData",
+   "shared": 3,
+   "of": 3,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.Zombie$ZombieAttackTurtleEggGoal",
+   "to": "net.minecraft.world.entity.monster.zombie.Zombie$ZombieAttackTurtleEggGoal",
+   "shared": 3,
+   "of": 5,
+   "ratio": 0.6
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.Zombie$ZombieGroupData",
+   "to": "net.minecraft.world.entity.monster.zombie.Zombie$ZombieGroupData",
+   "shared": 3,
+   "of": 3,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.realmsclient.gui.screens.RealmsLongRunningMcoTickTaskScreen",
+   "to": "com.mojang.realmsclient.gui.screens.RealmsLongRunningMcoConnectTaskScreen",
+   "shared": 3,
+   "of": 4,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.core.particles.ParticleGroup",
+   "to": "net.minecraft.core.particles.ParticleLimit",
+   "shared": 3,
+   "of": 5,
+   "ratio": 0.6
+  },
+  {
+   "from": "net.minecraft.nbt.NbtOps$InitialListCollector",
+   "to": "net.minecraft.nbt.NbtOps$GenericListCollector",
+   "shared": 3,
+   "of": 5,
+   "ratio": 0.6
+  },
+  {
+   "from": "net.minecraft.network.MonitorFrameDecoder",
+   "to": "net.minecraft.network.MonitoredLocalFrameDecoder",
+   "shared": 3,
+   "of": 3,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.world.entity.ai.behavior.TryLaySpawnOnWaterNearLand",
+   "to": "net.minecraft.world.entity.ai.behavior.TryLaySpawnOnFluidNearLand",
+   "shared": 3,
+   "of": 5,
+   "ratio": 0.6
+  },
+  {
+   "from": "net.minecraft.world.level.block.RailBlock$1",
+   "to": "net.minecraft.world.level.block.MossyCarpetBlock$1",
+   "shared": 3,
+   "of": 4,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.world.level.block.SpreadingSnowyDirtBlock",
+   "to": "net.minecraft.world.level.block.SpreadingSnowyBlock",
+   "shared": 3,
+   "of": 5,
+   "ratio": 0.6
+  },
+  {
+   "from": "net.minecraft.world.level.levelgen.feature.SpikeFeature$SpikeCacheLoader",
+   "to": "net.minecraft.world.level.levelgen.feature.EndSpikeFeature$SpikeCacheLoader",
+   "shared": 3,
+   "of": 3,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.platform.GlStateManager$ColorLogicState",
+   "to": "com.mojang.blaze3d.opengl.GlStateManager$ColorLogicState",
+   "shared": 2,
+   "of": 3,
+   "ratio": 0.67
+  },
+  {
+   "from": "com.mojang.blaze3d.platform.GlStateManager$TextureState",
+   "to": "com.mojang.blaze3d.opengl.GlStateManager$TextureState",
+   "shared": 2,
+   "of": 2,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.Util$1",
+   "to": "net.minecraft.util.Util$1",
+   "shared": 2,
+   "of": 2,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.Util$9",
+   "to": "net.minecraft.util.Util$9",
+   "shared": 2,
+   "of": 2,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.Util$OS$1",
+   "to": "net.minecraft.util.Util$OS$1",
+   "shared": 2,
+   "of": 2,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.Util$OS$2",
+   "to": "net.minecraft.util.Util$OS$2",
+   "shared": 2,
+   "of": 2,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.PlayerPredicate$AdvancementPredicate",
+   "to": "net.minecraft.advancements.predicates.entity.PlayerPredicate$AdvancementPredicate",
+   "shared": 2,
+   "of": 3,
+   "ratio": 0.67
+  },
+  {
+   "from": "net.minecraft.client.model.PigModel",
+   "to": "net.minecraft.client.model.animal.pig.PigModel",
+   "shared": 2,
+   "of": 2,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.client.renderer.block.model.ItemTransforms$1",
+   "to": "net.minecraft.client.resources.model.cuboid.ItemTransforms$1",
+   "shared": 2,
+   "of": 2,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Fox$FoxBreedGoal",
+   "to": "net.minecraft.world.entity.animal.fox.Fox$FoxBreedGoal",
+   "shared": 2,
+   "of": 3,
+   "ratio": 0.67
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Wolf$WolfPackData",
+   "to": "net.minecraft.world.entity.animal.wolf.Wolf$WolfPackData",
+   "shared": 2,
+   "of": 2,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.Spider$SpiderAttackGoal",
+   "to": "net.minecraft.world.entity.monster.spider.Spider$SpiderAttackGoal",
+   "shared": 2,
+   "of": 3,
+   "ratio": 0.67
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.Vindicator$VindicatorJohnnyAttackGoal",
+   "to": "net.minecraft.world.entity.monster.illager.Vindicator$VindicatorJohnnyAttackGoal",
+   "shared": 2,
+   "of": 3,
+   "ratio": 0.67
+  },
+  {
+   "from": "net.minecraft.client.gui.screens.worldselection.EditGameRulesScreen$RuleEntry",
+   "to": "net.minecraft.client.gui.screens.worldselection.AbstractGameRulesScreen$RuleEntry",
+   "shared": 2,
+   "of": 2,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.client.renderer.block.LiquidBlockRenderer$1",
+   "to": "net.minecraft.client.renderer.block.FluidRenderer$1",
+   "shared": 2,
+   "of": 2,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.util.datafix.fixes.EntityPaintingFieldsRenameFix",
+   "to": "net.minecraft.util.datafix.fixes.EntityFieldsRenameFix",
+   "shared": 2,
+   "of": 3,
+   "ratio": 0.67
+  },
+  {
+   "from": "net.minecraft.world.effect.InstantenousMobEffect",
+   "to": "net.minecraft.world.effect.InstantaneousMobEffect",
+   "shared": 2,
+   "of": 3,
+   "ratio": 0.67
+  },
+  {
+   "from": "com.mojang.blaze3d.platform.GlStateManager$ScissorState",
+   "to": "com.mojang.blaze3d.opengl.GlStateManager$ScissorState",
+   "shared": 1,
+   "of": 2,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.Util$2",
+   "to": "net.minecraft.util.Util$2",
+   "shared": 1,
+   "of": 2,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.SimpleCriterionTrigger$SimpleInstance",
+   "to": "net.minecraft.advancements.triggers.SimpleCriterionTrigger$SimpleInstance",
+   "shared": 1,
+   "of": 2,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.client.renderer.block.model.FaceBakery$1",
+   "to": "net.minecraft.client.resources.model.cuboid.FaceBakery$1",
+   "shared": 1,
+   "of": 2,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Turtle$TurtlePanicGoal",
+   "to": "net.minecraft.world.entity.animal.turtle.Turtle$TurtlePanicGoal",
+   "shared": 1,
+   "of": 2,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Turtle$TurtlePathNavigation",
+   "to": "net.minecraft.world.entity.animal.turtle.Turtle$TurtlePathNavigation",
+   "shared": 1,
+   "of": 2,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.horse.Llama$LlamaHurtByTargetGoal",
+   "to": "net.minecraft.world.entity.animal.equine.Llama$LlamaHurtByTargetGoal",
+   "shared": 1,
+   "of": 2,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.Spider$SpiderTargetGoal",
+   "to": "net.minecraft.world.entity.monster.spider.Spider$SpiderTargetGoal",
+   "shared": 1,
+   "of": 2,
+   "ratio": 0.5
+  }
+ ],
+ "weak": [
+  {
+   "from": "com.mojang.blaze3d.platform.GlStateManager$CullState",
+   "to": "com.mojang.blaze3d.opengl.GlStateManager$CullState",
+   "shared": 1,
+   "of": 3,
+   "ratio": 0.33
+  },
+  {
+   "from": "com.mojang.blaze3d.platform.GlUtil",
+   "to": "com.mojang.blaze3d.opengl.GlUtil",
+   "shared": 1,
+   "of": 7,
+   "ratio": 0.14
+  },
+  {
+   "from": "com.mojang.blaze3d.shaders.Uniform",
+   "to": "com.mojang.blaze3d.opengl.Uniform",
+   "shared": 1,
+   "of": 66,
+   "ratio": 0.02
+  },
+  {
+   "from": "com.mojang.realmsclient.gui.screens.RealmsBackupInfoScreen$BackupInfoList",
+   "to": "com.mojang.realmsclient.gui.screens.configuration.RealmsBackupInfoScreen$BackupInfoList",
+   "shared": 0,
+   "of": 3,
+   "ratio": 0
+  },
+  {
+   "from": "com.mojang.realmsclient.gui.screens.RealmsBackupScreen$1",
+   "to": "com.mojang.realmsclient.gui.screens.configuration.RealmsBackupScreen$1",
+   "shared": 2,
+   "of": 4,
+   "ratio": 0.5
+  },
+  {
+   "from": "com.mojang.realmsclient.gui.screens.RealmsBackupScreen$BackupObjectSelectionList",
+   "to": "com.mojang.realmsclient.gui.screens.configuration.RealmsBackupScreen$BackupObjectSelectionList",
+   "shared": 2,
+   "of": 6,
+   "ratio": 0.33
+  },
+  {
+   "from": "com.mojang.realmsclient.gui.screens.RealmsConfigureWorldScreen",
+   "to": "com.mojang.realmsclient.gui.screens.configuration.RealmsConfigureWorldScreen",
+   "shared": 15,
+   "of": 82,
+   "ratio": 0.18
+  },
+  {
+   "from": "com.mojang.realmsclient.gui.screens.RealmsSlotOptionsScreen",
+   "to": "com.mojang.realmsclient.gui.screens.configuration.RealmsSlotOptionsScreen",
+   "shared": 21,
+   "of": 47,
+   "ratio": 0.45
+  },
+  {
+   "from": "net.minecraft.Util$OS",
+   "to": "net.minecraft.util.Util$OS",
+   "shared": 9,
+   "of": 19,
+   "ratio": 0.47
+  },
+  {
+   "from": "net.minecraft.advancements.CriteriaTriggers",
+   "to": "net.minecraft.advancements.triggers.CriteriaTriggers",
+   "shared": 3,
+   "of": 61,
+   "ratio": 0.05
+  },
+  {
+   "from": "net.minecraft.advancements.CriterionTrigger",
+   "to": "net.minecraft.advancements.triggers.CriterionTrigger",
+   "shared": 1,
+   "of": 5,
+   "ratio": 0.2
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.AnyBlockInteractionTrigger",
+   "to": "net.minecraft.advancements.triggers.AnyBlockInteractionTrigger",
+   "shared": 2,
+   "of": 4,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.BlockPredicate$Builder",
+   "to": "net.minecraft.advancements.predicates.BlockPredicate$Builder",
+   "shared": 4,
+   "of": 11,
+   "ratio": 0.36
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.CollectionContentsPredicate",
+   "to": "net.minecraft.advancements.predicates.CollectionContentsPredicate",
+   "shared": 2,
+   "of": 4,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.CollectionCountsPredicate",
+   "to": "net.minecraft.advancements.predicates.CollectionCountsPredicate",
+   "shared": 2,
+   "of": 4,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.CuredZombieVillagerTrigger",
+   "to": "net.minecraft.advancements.triggers.CuredZombieVillagerTrigger",
+   "shared": 2,
+   "of": 4,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.DamagePredicate$Builder",
+   "to": "net.minecraft.advancements.predicates.DamagePredicate$Builder",
+   "shared": 4,
+   "of": 14,
+   "ratio": 0.29
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.DamageSourcePredicate$Builder",
+   "to": "net.minecraft.advancements.predicates.DamageSourcePredicate$Builder",
+   "shared": 5,
+   "of": 11,
+   "ratio": 0.45
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.DistancePredicate",
+   "to": "net.minecraft.advancements.predicates.DistancePredicate",
+   "shared": 7,
+   "of": 21,
+   "ratio": 0.33
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.EntityEquipmentPredicate$Builder",
+   "to": "net.minecraft.advancements.predicates.entity.EntityEquipmentPredicate$Builder",
+   "shared": 8,
+   "of": 17,
+   "ratio": 0.47
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.EntityFlagsPredicate$Builder",
+   "to": "net.minecraft.advancements.predicates.entity.EntityFlagsPredicate$Builder",
+   "shared": 8,
+   "of": 17,
+   "ratio": 0.47
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.EntityPredicate",
+   "to": "net.minecraft.advancements.predicates.entity.EntityPredicate",
+   "shared": 10,
+   "of": 47,
+   "ratio": 0.21
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.EntityPredicate$Builder",
+   "to": "net.minecraft.advancements.predicates.entity.EntityPredicate$Builder",
+   "shared": 1,
+   "of": 42,
+   "ratio": 0.02
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.EntitySubPredicate",
+   "to": "net.minecraft.advancements.predicates.entity.EntitySubPredicate",
+   "shared": 2,
+   "of": 4,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.EntitySubPredicates",
+   "to": "net.minecraft.advancements.predicates.entity.EntitySubPredicates",
+   "shared": 1,
+   "of": 42,
+   "ratio": 0.02
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.FluidPredicate$Builder",
+   "to": "net.minecraft.advancements.predicates.FluidPredicate$Builder",
+   "shared": 3,
+   "of": 8,
+   "ratio": 0.38
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.ImpossibleTrigger",
+   "to": "net.minecraft.advancements.triggers.ImpossibleTrigger",
+   "shared": 2,
+   "of": 5,
+   "ratio": 0.4
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.InventoryChangeTrigger$TriggerInstance$Slots",
+   "to": "net.minecraft.advancements.triggers.InventoryChangeTrigger$TriggerInstance$Slots",
+   "shared": 7,
+   "of": 15,
+   "ratio": 0.47
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.ItemPredicate$Builder",
+   "to": "net.minecraft.advancements.predicates.ItemPredicate$Builder",
+   "shared": 3,
+   "of": 13,
+   "ratio": 0.23
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger",
+   "to": "net.minecraft.advancements.triggers.ItemUsedOnLocationTrigger",
+   "shared": 2,
+   "of": 4,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.KilledTrigger$TriggerInstance",
+   "to": "net.minecraft.advancements.triggers.KilledTrigger$TriggerInstance",
+   "shared": 12,
+   "of": 30,
+   "ratio": 0.4
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.LightPredicate$Builder",
+   "to": "net.minecraft.advancements.predicates.LightPredicate$Builder",
+   "shared": 1,
+   "of": 5,
+   "ratio": 0.2
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.LocationPredicate$Builder",
+   "to": "net.minecraft.advancements.predicates.LocationPredicate$Builder",
+   "shared": 9,
+   "of": 29,
+   "ratio": 0.31
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.LocationPredicate$PositionPredicate",
+   "to": "net.minecraft.advancements.predicates.LocationPredicate$PositionPredicate",
+   "shared": 7,
+   "of": 15,
+   "ratio": 0.47
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.MinMaxBounds",
+   "to": "net.minecraft.advancements.predicates.MinMaxBounds",
+   "shared": 6,
+   "of": 16,
+   "ratio": 0.38
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.MinMaxBounds$Doubles",
+   "to": "net.minecraft.advancements.predicates.MinMaxBounds$Doubles",
+   "shared": 7,
+   "of": 28,
+   "ratio": 0.25
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.MinMaxBounds$Ints",
+   "to": "net.minecraft.advancements.predicates.MinMaxBounds$Ints",
+   "shared": 7,
+   "of": 29,
+   "ratio": 0.24
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.MobEffectsPredicate$Builder",
+   "to": "net.minecraft.advancements.predicates.MobEffectsPredicate$Builder",
+   "shared": 2,
+   "of": 6,
+   "ratio": 0.33
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.MovementPredicate",
+   "to": "net.minecraft.advancements.predicates.entity.MovementPredicate",
+   "shared": 7,
+   "of": 26,
+   "ratio": 0.27
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.PlayerPredicate$Builder",
+   "to": "net.minecraft.advancements.predicates.entity.PlayerPredicate$Builder",
+   "shared": 5,
+   "of": 16,
+   "ratio": 0.31
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.RecipeCraftedTrigger",
+   "to": "net.minecraft.advancements.triggers.RecipeCraftedTrigger",
+   "shared": 2,
+   "of": 4,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.SimpleCriterionTrigger",
+   "to": "net.minecraft.advancements.triggers.SimpleCriterionTrigger",
+   "shared": 2,
+   "of": 7,
+   "ratio": 0.29
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.SingleComponentItemPredicate",
+   "to": "net.minecraft.advancements.predicates.SingleComponentItemPredicate",
+   "shared": 1,
+   "of": 3,
+   "ratio": 0.33
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.StatePropertiesPredicate$Builder",
+   "to": "net.minecraft.advancements.predicates.StatePropertiesPredicate$Builder",
+   "shared": 3,
+   "of": 8,
+   "ratio": 0.38
+  },
+  {
+   "from": "net.minecraft.advancements.critereon.TradeTrigger",
+   "to": "net.minecraft.advancements.triggers.TradeTrigger",
+   "shared": 2,
+   "of": 4,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.client.GuiMessageTag$Icon",
+   "to": "net.minecraft.client.multiplayer.chat.GuiMessageTag$Icon",
+   "shared": 3,
+   "of": 11,
+   "ratio": 0.27
+  },
+  {
+   "from": "net.minecraft.client.ParticleStatus",
+   "to": "net.minecraft.server.level.ParticleStatus",
+   "shared": 4,
+   "of": 15,
+   "ratio": 0.27
+  },
+  {
+   "from": "net.minecraft.client.RecipeBookCategories",
+   "to": "net.minecraft.world.item.crafting.RecipeBookCategories",
+   "shared": 1,
+   "of": 32,
+   "ratio": 0.03
+  },
+  {
+   "from": "net.minecraft.client.gui.MapRenderer",
+   "to": "net.minecraft.client.renderer.MapRenderer",
+   "shared": 2,
+   "of": 12,
+   "ratio": 0.17
+  },
+  {
+   "from": "net.minecraft.client.model.AbstractZombieModel",
+   "to": "net.minecraft.client.model.monster.zombie.AbstractZombieModel",
+   "shared": 1,
+   "of": 5,
+   "ratio": 0.2
+  },
+  {
+   "from": "net.minecraft.client.model.ArmorStandArmorModel",
+   "to": "net.minecraft.client.model.object.armorstand.ArmorStandArmorModel",
+   "shared": 1,
+   "of": 5,
+   "ratio": 0.2
+  },
+  {
+   "from": "net.minecraft.client.model.BoatModel",
+   "to": "net.minecraft.client.model.object.boat.BoatModel",
+   "shared": 6,
+   "of": 22,
+   "ratio": 0.27
+  },
+  {
+   "from": "net.minecraft.client.model.BoggedModel",
+   "to": "net.minecraft.client.model.monster.skeleton.BoggedModel",
+   "shared": 3,
+   "of": 7,
+   "ratio": 0.43
+  },
+  {
+   "from": "net.minecraft.client.model.CamelModel",
+   "to": "net.minecraft.client.model.animal.camel.CamelModel",
+   "shared": 3,
+   "of": 19,
+   "ratio": 0.16
+  },
+  {
+   "from": "net.minecraft.client.model.ChickenModel",
+   "to": "net.minecraft.client.model.animal.chicken.ChickenModel",
+   "shared": 5,
+   "of": 14,
+   "ratio": 0.36
+  },
+  {
+   "from": "net.minecraft.client.model.DrownedModel",
+   "to": "net.minecraft.client.model.monster.zombie.DrownedModel",
+   "shared": 2,
+   "of": 9,
+   "ratio": 0.22
+  },
+  {
+   "from": "net.minecraft.client.model.EndermanModel",
+   "to": "net.minecraft.client.model.monster.enderman.EndermanModel",
+   "shared": 2,
+   "of": 6,
+   "ratio": 0.33
+  },
+  {
+   "from": "net.minecraft.client.model.FoxModel",
+   "to": "net.minecraft.client.model.animal.fox.FoxModel",
+   "shared": 9,
+   "of": 19,
+   "ratio": 0.47
+  },
+  {
+   "from": "net.minecraft.client.model.GhastModel",
+   "to": "net.minecraft.client.model.monster.ghast.GhastModel",
+   "shared": 3,
+   "of": 7,
+   "ratio": 0.43
+  },
+  {
+   "from": "net.minecraft.client.model.GiantZombieModel",
+   "to": "net.minecraft.client.model.monster.zombie.GiantZombieModel",
+   "shared": 1,
+   "of": 3,
+   "ratio": 0.33
+  },
+  {
+   "from": "net.minecraft.client.model.GoatModel",
+   "to": "net.minecraft.client.model.animal.goat.GoatModel",
+   "shared": 2,
+   "of": 4,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.client.model.HorseModel",
+   "to": "net.minecraft.client.model.animal.equine.HorseModel",
+   "shared": 1,
+   "of": 38,
+   "ratio": 0.03
+  },
+  {
+   "from": "net.minecraft.client.model.MinecartModel",
+   "to": "net.minecraft.client.model.object.cart.MinecartModel",
+   "shared": 2,
+   "of": 5,
+   "ratio": 0.4
+  },
+  {
+   "from": "net.minecraft.client.model.PandaModel",
+   "to": "net.minecraft.client.model.animal.panda.PandaModel",
+   "shared": 2,
+   "of": 9,
+   "ratio": 0.22
+  },
+  {
+   "from": "net.minecraft.client.model.ParrotModel",
+   "to": "net.minecraft.client.model.animal.parrot.ParrotModel",
+   "shared": 10,
+   "of": 21,
+   "ratio": 0.48
+  },
+  {
+   "from": "net.minecraft.client.model.PiglinModel",
+   "to": "net.minecraft.client.model.monster.piglin.PiglinModel",
+   "shared": 1,
+   "of": 15,
+   "ratio": 0.07
+  },
+  {
+   "from": "net.minecraft.client.model.PlayerModel",
+   "to": "net.minecraft.client.model.player.PlayerModel",
+   "shared": 12,
+   "of": 26,
+   "ratio": 0.46
+  },
+  {
+   "from": "net.minecraft.client.model.PolarBearModel",
+   "to": "net.minecraft.client.model.animal.polarbear.PolarBearModel",
+   "shared": 2,
+   "of": 4,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.client.model.RabbitModel",
+   "to": "net.minecraft.client.model.animal.rabbit.RabbitModel",
+   "shared": 3,
+   "of": 28,
+   "ratio": 0.11
+  },
+  {
+   "from": "net.minecraft.client.model.RaftModel",
+   "to": "net.minecraft.client.model.object.boat.RaftModel",
+   "shared": 1,
+   "of": 15,
+   "ratio": 0.07
+  },
+  {
+   "from": "net.minecraft.client.model.SheepFurModel",
+   "to": "net.minecraft.client.model.animal.sheep.SheepFurModel",
+   "shared": 2,
+   "of": 7,
+   "ratio": 0.29
+  },
+  {
+   "from": "net.minecraft.client.model.SheepModel",
+   "to": "net.minecraft.client.model.animal.sheep.SheepModel",
+   "shared": 2,
+   "of": 7,
+   "ratio": 0.29
+  },
+  {
+   "from": "net.minecraft.client.model.SkeletonModel",
+   "to": "net.minecraft.client.model.monster.skeleton.SkeletonModel",
+   "shared": 3,
+   "of": 10,
+   "ratio": 0.3
+  },
+  {
+   "from": "net.minecraft.client.model.SkullModelBase",
+   "to": "net.minecraft.client.model.object.skull.SkullModelBase",
+   "shared": 0,
+   "of": 2,
+   "ratio": 0
+  },
+  {
+   "from": "net.minecraft.client.model.StriderModel",
+   "to": "net.minecraft.client.model.monster.strider.StriderModel",
+   "shared": 4,
+   "of": 21,
+   "ratio": 0.19
+  },
+  {
+   "from": "net.minecraft.client.model.TadpoleModel",
+   "to": "net.minecraft.client.model.animal.frog.TadpoleModel",
+   "shared": 3,
+   "of": 8,
+   "ratio": 0.38
+  },
+  {
+   "from": "net.minecraft.client.model.TurtleModel",
+   "to": "net.minecraft.client.model.animal.turtle.TurtleModel",
+   "shared": 0,
+   "of": 8,
+   "ratio": 0
+  },
+  {
+   "from": "net.minecraft.client.model.VillagerModel",
+   "to": "net.minecraft.client.model.npc.VillagerModel",
+   "shared": 6,
+   "of": 13,
+   "ratio": 0.46
+  },
+  {
+   "from": "net.minecraft.client.model.WolfModel",
+   "to": "net.minecraft.client.model.animal.wolf.WolfModel",
+   "shared": 8,
+   "of": 22,
+   "ratio": 0.36
+  },
+  {
+   "from": "net.minecraft.client.model.ZombieModel",
+   "to": "net.minecraft.client.model.monster.zombie.ZombieModel",
+   "shared": 1,
+   "of": 3,
+   "ratio": 0.33
+  },
+  {
+   "from": "net.minecraft.client.model.ZombieVillagerModel",
+   "to": "net.minecraft.client.model.monster.zombie.ZombieVillagerModel",
+   "shared": 2,
+   "of": 8,
+   "ratio": 0.25
+  },
+  {
+   "from": "net.minecraft.client.renderer.FogRenderer",
+   "to": "net.minecraft.client.renderer.fog.FogRenderer",
+   "shared": 2,
+   "of": 18,
+   "ratio": 0.11
+  },
+  {
+   "from": "net.minecraft.client.renderer.FogRenderer$FogMode",
+   "to": "net.minecraft.client.renderer.fog.FogRenderer$FogMode",
+   "shared": 2,
+   "of": 8,
+   "ratio": 0.25
+  },
+  {
+   "from": "net.minecraft.client.renderer.RenderType",
+   "to": "net.minecraft.client.renderer.rendertype.RenderType",
+   "shared": 11,
+   "of": 175,
+   "ratio": 0.06
+  },
+  {
+   "from": "net.minecraft.client.renderer.block.model.BakedQuad",
+   "to": "net.minecraft.client.resources.model.geometry.BakedQuad",
+   "shared": 1,
+   "of": 12,
+   "ratio": 0.08
+  },
+  {
+   "from": "net.minecraft.client.renderer.block.model.FaceBakery",
+   "to": "net.minecraft.client.resources.model.cuboid.FaceBakery",
+   "shared": 2,
+   "of": 19,
+   "ratio": 0.11
+  },
+  {
+   "from": "net.minecraft.client.renderer.block.model.ItemModelGenerator",
+   "to": "net.minecraft.client.resources.model.cuboid.ItemModelGenerator",
+   "shared": 6,
+   "of": 13,
+   "ratio": 0.46
+  },
+  {
+   "from": "net.minecraft.client.renderer.block.model.ItemTransform",
+   "to": "net.minecraft.client.resources.model.cuboid.ItemTransform",
+   "shared": 3,
+   "of": 9,
+   "ratio": 0.33
+  },
+  {
+   "from": "net.minecraft.client.renderer.block.model.ItemTransforms",
+   "to": "net.minecraft.client.resources.model.cuboid.ItemTransforms",
+   "shared": 1,
+   "of": 15,
+   "ratio": 0.07
+  },
+  {
+   "from": "net.minecraft.client.renderer.block.model.ItemTransforms$Deserializer",
+   "to": "net.minecraft.client.resources.model.cuboid.ItemTransforms$Deserializer",
+   "shared": 2,
+   "of": 4,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.client.renderer.block.model.MultiVariant",
+   "to": "net.minecraft.client.data.models.MultiVariant",
+   "shared": 2,
+   "of": 9,
+   "ratio": 0.22
+  },
+  {
+   "from": "net.minecraft.client.renderer.block.model.multipart.KeyValueCondition",
+   "to": "net.minecraft.client.renderer.block.dispatch.multipart.KeyValueCondition",
+   "shared": 2,
+   "of": 12,
+   "ratio": 0.17
+  },
+  {
+   "from": "net.minecraft.client.resources.PlayerSkin",
+   "to": "net.minecraft.world.entity.player.PlayerSkin",
+   "shared": 5,
+   "of": 16,
+   "ratio": 0.31
+  },
+  {
+   "from": "net.minecraft.client.resources.model.BlockModelRotation",
+   "to": "net.minecraft.client.renderer.block.dispatch.BlockModelRotation",
+   "shared": 2,
+   "of": 33,
+   "ratio": 0.06
+  },
+  {
+   "from": "net.minecraft.client.resources.model.Material",
+   "to": "net.minecraft.client.resources.model.sprite.Material",
+   "shared": 4,
+   "of": 15,
+   "ratio": 0.27
+  },
+  {
+   "from": "net.minecraft.client.resources.model.ModelState",
+   "to": "net.minecraft.client.renderer.block.dispatch.ModelState",
+   "shared": 0,
+   "of": 2,
+   "ratio": 0
+  },
+  {
+   "from": "net.minecraft.core.component.DataComponentPredicate",
+   "to": "net.minecraft.core.component.predicates.DataComponentPredicate",
+   "shared": 3,
+   "of": 20,
+   "ratio": 0.15
+  },
+  {
+   "from": "net.minecraft.core.particles.ParticleGroup",
+   "to": "net.minecraft.client.particle.ParticleGroup",
+   "shared": 0,
+   "of": 5,
+   "ratio": 0
+  },
+  {
+   "from": "net.minecraft.data.models.BlockModelGenerators",
+   "to": "net.minecraft.client.data.models.BlockModelGenerators",
+   "shared": 122,
+   "of": 272,
+   "ratio": 0.45
+  },
+  {
+   "from": "net.minecraft.data.models.BlockModelGenerators$BlockFamilyProvider",
+   "to": "net.minecraft.client.data.models.BlockModelGenerators$BlockFamilyProvider",
+   "shared": 4,
+   "of": 26,
+   "ratio": 0.15
+  },
+  {
+   "from": "net.minecraft.data.models.BlockModelGenerators$BlockStateGeneratorSupplier",
+   "to": "net.minecraft.client.data.models.BlockModelGenerators$BlockStateGeneratorSupplier",
+   "shared": 0,
+   "of": 1,
+   "ratio": 0
+  },
+  {
+   "from": "net.minecraft.data.models.BlockModelGenerators$WoodProvider",
+   "to": "net.minecraft.client.data.models.BlockModelGenerators$WoodProvider",
+   "shared": 0,
+   "of": 7,
+   "ratio": 0
+  },
+  {
+   "from": "net.minecraft.data.models.ItemModelGenerators",
+   "to": "net.minecraft.client.data.models.ItemModelGenerators",
+   "shared": 3,
+   "of": 19,
+   "ratio": 0.16
+  },
+  {
+   "from": "net.minecraft.data.models.ModelProvider",
+   "to": "net.minecraft.client.data.models.ModelProvider",
+   "shared": 5,
+   "of": 14,
+   "ratio": 0.36
+  },
+  {
+   "from": "net.minecraft.data.models.blockstates.MultiPartGenerator",
+   "to": "net.minecraft.client.data.models.blockstates.MultiPartGenerator",
+   "shared": 3,
+   "of": 13,
+   "ratio": 0.23
+  },
+  {
+   "from": "net.minecraft.data.models.blockstates.MultiPartGenerator$Entry",
+   "to": "net.minecraft.client.data.models.blockstates.MultiPartGenerator$Entry",
+   "shared": 0,
+   "of": 6,
+   "ratio": 0
+  },
+  {
+   "from": "net.minecraft.data.models.blockstates.MultiVariantGenerator",
+   "to": "net.minecraft.client.data.models.blockstates.MultiVariantGenerator",
+   "shared": 2,
+   "of": 20,
+   "ratio": 0.1
+  },
+  {
+   "from": "net.minecraft.data.models.blockstates.PropertyDispatch",
+   "to": "net.minecraft.client.data.models.blockstates.PropertyDispatch",
+   "shared": 5,
+   "of": 13,
+   "ratio": 0.38
+  },
+  {
+   "from": "net.minecraft.data.models.blockstates.PropertyDispatch$C1",
+   "to": "net.minecraft.client.data.models.blockstates.PropertyDispatch$C1",
+   "shared": 4,
+   "of": 9,
+   "ratio": 0.44
+  },
+  {
+   "from": "net.minecraft.data.models.blockstates.PropertyDispatch$C2",
+   "to": "net.minecraft.client.data.models.blockstates.PropertyDispatch$C2",
+   "shared": 4,
+   "of": 12,
+   "ratio": 0.33
+  },
+  {
+   "from": "net.minecraft.data.models.blockstates.PropertyDispatch$C3",
+   "to": "net.minecraft.client.data.models.blockstates.PropertyDispatch$C3",
+   "shared": 5,
+   "of": 15,
+   "ratio": 0.33
+  },
+  {
+   "from": "net.minecraft.data.models.blockstates.PropertyDispatch$C4",
+   "to": "net.minecraft.client.data.models.blockstates.PropertyDispatch$C4",
+   "shared": 6,
+   "of": 18,
+   "ratio": 0.33
+  },
+  {
+   "from": "net.minecraft.data.models.blockstates.PropertyDispatch$C5",
+   "to": "net.minecraft.client.data.models.blockstates.PropertyDispatch$C5",
+   "shared": 7,
+   "of": 21,
+   "ratio": 0.33
+  },
+  {
+   "from": "net.minecraft.data.models.model.DelegatedModel",
+   "to": "net.minecraft.client.data.models.model.DelegatedModel",
+   "shared": 2,
+   "of": 4,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.data.models.model.ModelLocationUtils",
+   "to": "net.minecraft.client.data.models.model.ModelLocationUtils",
+   "shared": 3,
+   "of": 9,
+   "ratio": 0.33
+  },
+  {
+   "from": "net.minecraft.data.models.model.ModelTemplate",
+   "to": "net.minecraft.client.data.models.model.ModelTemplate",
+   "shared": 3,
+   "of": 15,
+   "ratio": 0.2
+  },
+  {
+   "from": "net.minecraft.data.models.model.ModelTemplates",
+   "to": "net.minecraft.client.data.models.model.ModelTemplates",
+   "shared": 2,
+   "of": 153,
+   "ratio": 0.01
+  },
+  {
+   "from": "net.minecraft.data.models.model.TextureMapping",
+   "to": "net.minecraft.client.data.models.model.TextureMapping",
+   "shared": 5,
+   "of": 75,
+   "ratio": 0.07
+  },
+  {
+   "from": "net.minecraft.data.models.model.TextureSlot",
+   "to": "net.minecraft.client.data.models.model.TextureSlot",
+   "shared": 4,
+   "of": 51,
+   "ratio": 0.08
+  },
+  {
+   "from": "net.minecraft.data.models.model.TexturedModel",
+   "to": "net.minecraft.client.data.models.model.TexturedModel",
+   "shared": 1,
+   "of": 38,
+   "ratio": 0.03
+  },
+  {
+   "from": "net.minecraft.data.models.model.TexturedModel$Provider",
+   "to": "net.minecraft.client.data.models.model.TexturedModel$Provider",
+   "shared": 0,
+   "of": 5,
+   "ratio": 0
+  },
+  {
+   "from": "net.minecraft.network.chat.contents.BlockDataSource",
+   "to": "net.minecraft.network.chat.contents.data.BlockDataSource",
+   "shared": 6,
+   "of": 16,
+   "ratio": 0.38
+  },
+  {
+   "from": "net.minecraft.network.chat.contents.DataSource",
+   "to": "net.minecraft.network.chat.contents.data.DataSource",
+   "shared": 1,
+   "of": 4,
+   "ratio": 0.25
+  },
+  {
+   "from": "net.minecraft.network.chat.contents.EntityDataSource",
+   "to": "net.minecraft.network.chat.contents.data.EntityDataSource",
+   "shared": 6,
+   "of": 16,
+   "ratio": 0.38
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.AbstractFish$FishMoveControl",
+   "to": "net.minecraft.world.entity.animal.fish.AbstractFish$FishMoveControl",
+   "shared": 1,
+   "of": 3,
+   "ratio": 0.33
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.AbstractFish$FishSwimGoal",
+   "to": "net.minecraft.world.entity.animal.fish.AbstractFish$FishSwimGoal",
+   "shared": 1,
+   "of": 3,
+   "ratio": 0.33
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.AbstractSchoolingFish$SchoolSpawnGroupData",
+   "to": "net.minecraft.world.entity.animal.fish.AbstractSchoolingFish$SchoolSpawnGroupData",
+   "shared": 0,
+   "of": 2,
+   "ratio": 0
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Bee$1",
+   "to": "net.minecraft.world.entity.animal.bee.Bee$1",
+   "shared": 2,
+   "of": 4,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Bee$BeeAttackGoal",
+   "to": "net.minecraft.world.entity.animal.bee.Bee$BeeAttackGoal",
+   "shared": 2,
+   "of": 4,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Bee$BeeHurtByOtherGoal",
+   "to": "net.minecraft.world.entity.animal.bee.Bee$BeeHurtByOtherGoal",
+   "shared": 2,
+   "of": 4,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Bee$BeeLookControl",
+   "to": "net.minecraft.world.entity.animal.bee.Bee$BeeLookControl",
+   "shared": 2,
+   "of": 4,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Cat$CatAvoidEntityGoal",
+   "to": "net.minecraft.world.entity.animal.feline.Cat$CatAvoidEntityGoal",
+   "shared": 2,
+   "of": 4,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.CatVariant",
+   "to": "net.minecraft.world.entity.animal.feline.CatVariant",
+   "shared": 5,
+   "of": 22,
+   "ratio": 0.23
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Cow",
+   "to": "net.minecraft.world.entity.animal.cow.Cow",
+   "shared": 5,
+   "of": 16,
+   "ratio": 0.31
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Fox$FoxAlertableEntitiesSelector",
+   "to": "net.minecraft.world.entity.animal.fox.Fox$FoxAlertableEntitiesSelector",
+   "shared": 0,
+   "of": 4,
+   "ratio": 0
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Fox$FoxFloatGoal",
+   "to": "net.minecraft.world.entity.animal.fox.Fox$FoxFloatGoal",
+   "shared": 2,
+   "of": 4,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Fox$FoxGroupData",
+   "to": "net.minecraft.world.entity.animal.fox.Fox$FoxGroupData",
+   "shared": 0,
+   "of": 2,
+   "ratio": 0
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Fox$FoxLookAtPlayerGoal",
+   "to": "net.minecraft.world.entity.animal.fox.Fox$FoxLookAtPlayerGoal",
+   "shared": 2,
+   "of": 4,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Fox$FoxLookControl",
+   "to": "net.minecraft.world.entity.animal.fox.Fox$FoxLookControl",
+   "shared": 2,
+   "of": 4,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Fox$FoxMoveControl",
+   "to": "net.minecraft.world.entity.animal.fox.Fox$FoxMoveControl",
+   "shared": 1,
+   "of": 3,
+   "ratio": 0.33
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Fox$FoxPanicGoal",
+   "to": "net.minecraft.world.entity.animal.fox.Fox$FoxPanicGoal",
+   "shared": 1,
+   "of": 3,
+   "ratio": 0.33
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.FrogVariant",
+   "to": "net.minecraft.world.entity.animal.frog.FrogVariant",
+   "shared": 5,
+   "of": 14,
+   "ratio": 0.36
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Ocelot$OcelotAvoidEntityGoal",
+   "to": "net.minecraft.world.entity.animal.feline.Ocelot$OcelotAvoidEntityGoal",
+   "shared": 2,
+   "of": 4,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Ocelot$OcelotTemptGoal",
+   "to": "net.minecraft.world.entity.animal.feline.Ocelot$OcelotTemptGoal",
+   "shared": 1,
+   "of": 3,
+   "ratio": 0.33
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Panda$Gene",
+   "to": "net.minecraft.world.entity.animal.panda.Panda$Gene",
+   "shared": 10,
+   "of": 26,
+   "ratio": 0.38
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Panda$PandaAttackGoal",
+   "to": "net.minecraft.world.entity.animal.panda.Panda$PandaAttackGoal",
+   "shared": 1,
+   "of": 3,
+   "ratio": 0.33
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Panda$PandaAvoidGoal",
+   "to": "net.minecraft.world.entity.animal.panda.Panda$PandaAvoidGoal",
+   "shared": 1,
+   "of": 3,
+   "ratio": 0.33
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Panda$PandaHurtByTargetGoal",
+   "to": "net.minecraft.world.entity.animal.panda.Panda$PandaHurtByTargetGoal",
+   "shared": 2,
+   "of": 4,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Panda$PandaMoveControl",
+   "to": "net.minecraft.world.entity.animal.panda.Panda$PandaMoveControl",
+   "shared": 1,
+   "of": 3,
+   "ratio": 0.33
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Panda$PandaPanicGoal",
+   "to": "net.minecraft.world.entity.animal.panda.Panda$PandaPanicGoal",
+   "shared": 1,
+   "of": 3,
+   "ratio": 0.33
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Parrot$Variant",
+   "to": "net.minecraft.world.entity.animal.parrot.Parrot$Variant",
+   "shared": 8,
+   "of": 18,
+   "ratio": 0.44
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.PolarBear$PolarBearAttackPlayersGoal",
+   "to": "net.minecraft.world.entity.animal.polarbear.PolarBear$PolarBearAttackPlayersGoal",
+   "shared": 2,
+   "of": 4,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.PolarBear$PolarBearHurtByTargetGoal",
+   "to": "net.minecraft.world.entity.animal.polarbear.PolarBear$PolarBearHurtByTargetGoal",
+   "shared": 2,
+   "of": 4,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.PolarBear$PolarBearMeleeAttackGoal",
+   "to": "net.minecraft.world.entity.animal.polarbear.PolarBear$PolarBearMeleeAttackGoal",
+   "shared": 2,
+   "of": 4,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Rabbit$RabbitAvoidEntityGoal",
+   "to": "net.minecraft.world.entity.animal.rabbit.Rabbit$RabbitAvoidEntityGoal",
+   "shared": 1,
+   "of": 3,
+   "ratio": 0.33
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Rabbit$RabbitGroupData",
+   "to": "net.minecraft.world.entity.animal.rabbit.Rabbit$RabbitGroupData",
+   "shared": 0,
+   "of": 2,
+   "ratio": 0
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Rabbit$RabbitPanicGoal",
+   "to": "net.minecraft.world.entity.animal.rabbit.Rabbit$RabbitPanicGoal",
+   "shared": 1,
+   "of": 3,
+   "ratio": 0.33
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Rabbit$Variant",
+   "to": "net.minecraft.world.entity.animal.rabbit.Rabbit$Variant",
+   "shared": 8,
+   "of": 20,
+   "ratio": 0.4
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Squid$SquidRandomMovementGoal",
+   "to": "net.minecraft.world.entity.animal.squid.Squid$SquidRandomMovementGoal",
+   "shared": 2,
+   "of": 4,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.TropicalFish$Base",
+   "to": "net.minecraft.world.entity.animal.fish.TropicalFish$Base",
+   "shared": 3,
+   "of": 9,
+   "ratio": 0.33
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.TropicalFish$Pattern",
+   "to": "net.minecraft.world.entity.animal.fish.TropicalFish$Pattern",
+   "shared": 9,
+   "of": 29,
+   "ratio": 0.31
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.TropicalFish$TropicalFishGroupData",
+   "to": "net.minecraft.world.entity.animal.fish.TropicalFish$TropicalFishGroupData",
+   "shared": 0,
+   "of": 2,
+   "ratio": 0
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Turtle$TurtleBreedGoal",
+   "to": "net.minecraft.world.entity.animal.turtle.Turtle$TurtleBreedGoal",
+   "shared": 2,
+   "of": 4,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Turtle$TurtleMoveControl",
+   "to": "net.minecraft.world.entity.animal.turtle.Turtle$TurtleMoveControl",
+   "shared": 2,
+   "of": 4,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Turtle$TurtleRandomStrollGoal",
+   "to": "net.minecraft.world.entity.animal.turtle.Turtle$TurtleRandomStrollGoal",
+   "shared": 1,
+   "of": 3,
+   "ratio": 0.33
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.Wolf$WolfAvoidEntityGoal",
+   "to": "net.minecraft.world.entity.animal.wolf.Wolf$WolfAvoidEntityGoal",
+   "shared": 3,
+   "of": 7,
+   "ratio": 0.43
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.WolfVariant",
+   "to": "net.minecraft.world.entity.animal.wolf.WolfVariant",
+   "shared": 6,
+   "of": 25,
+   "ratio": 0.24
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.horse.AbstractChestedHorse$1",
+   "to": "net.minecraft.world.entity.animal.equine.AbstractChestedHorse$1",
+   "shared": 2,
+   "of": 4,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.horse.Horse$HorseGroupData",
+   "to": "net.minecraft.world.entity.animal.equine.Horse$HorseGroupData",
+   "shared": 0,
+   "of": 2,
+   "ratio": 0
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.horse.Llama$LlamaAttackWolfGoal",
+   "to": "net.minecraft.world.entity.animal.equine.Llama$LlamaAttackWolfGoal",
+   "shared": 1,
+   "of": 3,
+   "ratio": 0.33
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.horse.Llama$LlamaGroupData",
+   "to": "net.minecraft.world.entity.animal.equine.Llama$LlamaGroupData",
+   "shared": 0,
+   "of": 2,
+   "ratio": 0
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.horse.Llama$Variant",
+   "to": "net.minecraft.world.entity.animal.equine.Llama$Variant",
+   "shared": 8,
+   "of": 17,
+   "ratio": 0.47
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.horse.Markings",
+   "to": "net.minecraft.world.entity.animal.equine.Markings",
+   "shared": 5,
+   "of": 15,
+   "ratio": 0.33
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.horse.SkeletonTrapGoal",
+   "to": "net.minecraft.world.entity.animal.equine.SkeletonTrapGoal",
+   "shared": 2,
+   "of": 7,
+   "ratio": 0.29
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.AbstractIllager$IllagerArmPose",
+   "to": "net.minecraft.world.entity.monster.illager.AbstractIllager$IllagerArmPose",
+   "shared": 2,
+   "of": 14,
+   "ratio": 0.14
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.AbstractIllager$RaiderOpenDoorGoal",
+   "to": "net.minecraft.world.entity.monster.illager.AbstractIllager$RaiderOpenDoorGoal",
+   "shared": 1,
+   "of": 3,
+   "ratio": 0.33
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.AbstractSkeleton$1",
+   "to": "net.minecraft.world.entity.monster.skeleton.AbstractSkeleton$1",
+   "shared": 2,
+   "of": 4,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.Drowned$DrownedAttackGoal",
+   "to": "net.minecraft.world.entity.monster.zombie.Drowned$DrownedAttackGoal",
+   "shared": 2,
+   "of": 4,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.Drowned$DrownedMoveControl",
+   "to": "net.minecraft.world.entity.monster.zombie.Drowned$DrownedMoveControl",
+   "shared": 1,
+   "of": 3,
+   "ratio": 0.33
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.Evoker",
+   "to": "net.minecraft.world.entity.monster.illager.Evoker",
+   "shared": 9,
+   "of": 22,
+   "ratio": 0.41
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.Evoker$EvokerCastingSpellGoal",
+   "to": "net.minecraft.world.entity.monster.illager.Evoker$EvokerCastingSpellGoal",
+   "shared": 1,
+   "of": 3,
+   "ratio": 0.33
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.Slime",
+   "to": "net.minecraft.world.entity.monster.cubemob.Slime",
+   "shared": 7,
+   "of": 46,
+   "ratio": 0.15
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.SpellcasterIllager$IllagerSpell",
+   "to": "net.minecraft.world.entity.monster.illager.SpellcasterIllager$IllagerSpell",
+   "shared": 5,
+   "of": 17,
+   "ratio": 0.29
+  },
+  {
+   "from": "net.minecraft.world.entity.npc.VillagerData",
+   "to": "net.minecraft.world.entity.npc.villager.VillagerData",
+   "shared": 10,
+   "of": 28,
+   "ratio": 0.36
+  },
+  {
+   "from": "net.minecraft.world.entity.npc.VillagerDataHolder",
+   "to": "net.minecraft.world.entity.npc.villager.VillagerDataHolder",
+   "shared": 0,
+   "of": 6,
+   "ratio": 0
+  },
+  {
+   "from": "net.minecraft.world.entity.npc.VillagerProfession",
+   "to": "net.minecraft.world.entity.npc.villager.VillagerProfession",
+   "shared": 19,
+   "of": 42,
+   "ratio": 0.45
+  },
+  {
+   "from": "net.minecraft.world.entity.npc.VillagerTrades",
+   "to": "net.minecraft.world.item.trading.VillagerTrades",
+   "shared": 2,
+   "of": 34,
+   "ratio": 0.06
+  },
+  {
+   "from": "net.minecraft.world.entity.npc.VillagerType",
+   "to": "net.minecraft.world.entity.npc.villager.VillagerType",
+   "shared": 3,
+   "of": 15,
+   "ratio": 0.2
+  },
+  {
+   "from": "net.minecraft.world.entity.projectile.AbstractArrow$Pickup",
+   "to": "net.minecraft.world.entity.projectile.arrow.AbstractArrow$Pickup",
+   "shared": 2,
+   "of": 10,
+   "ratio": 0.2
+  },
+  {
+   "from": "net.minecraft.world.entity.schedule.Keyframe",
+   "to": "net.minecraft.util.Keyframe",
+   "shared": 0,
+   "of": 5,
+   "ratio": 0
+  },
+  {
+   "from": "net.minecraft.world.entity.schedule.Timeline",
+   "to": "net.minecraft.world.timeline.Timeline",
+   "shared": 0,
+   "of": 9,
+   "ratio": 0
+  },
+  {
+   "from": "net.minecraft.world.entity.vehicle.Boat",
+   "to": "net.minecraft.world.entity.vehicle.boat.Boat",
+   "shared": 0,
+   "of": 103,
+   "ratio": 0
+  },
+  {
+   "from": "net.minecraft.world.entity.vehicle.ChestBoat",
+   "to": "net.minecraft.world.entity.vehicle.boat.ChestBoat",
+   "shared": 0,
+   "of": 33,
+   "ratio": 0
+  },
+  {
+   "from": "net.minecraft.world.entity.vehicle.Minecart",
+   "to": "net.minecraft.world.entity.vehicle.minecart.Minecart",
+   "shared": 2,
+   "of": 6,
+   "ratio": 0.33
+  },
+  {
+   "from": "net.minecraft.world.entity.vehicle.MinecartCommandBlock$MinecartCommandBase",
+   "to": "net.minecraft.world.entity.vehicle.minecart.MinecartCommandBlock$MinecartCommandBase",
+   "shared": 1,
+   "of": 8,
+   "ratio": 0.13
+  },
+  {
+   "from": "net.minecraft.world.entity.vehicle.MinecartFurnace",
+   "to": "net.minecraft.world.entity.vehicle.minecart.MinecartFurnace",
+   "shared": 10,
+   "of": 21,
+   "ratio": 0.48
+  },
+  {
+   "from": "net.minecraft.world.entity.vehicle.MinecartSpawner$1",
+   "to": "net.minecraft.world.entity.vehicle.minecart.MinecartSpawner$1",
+   "shared": 1,
+   "of": 3,
+   "ratio": 0.33
+  },
+  {
+   "from": "net.minecraft.world.item.ArmorMaterials",
+   "to": "net.minecraft.world.item.equipment.ArmorMaterials",
+   "shared": 1,
+   "of": 29,
+   "ratio": 0.03
+  },
+  {
+   "from": "net.minecraft.world.item.armortrim.ArmorTrim",
+   "to": "net.minecraft.world.item.equipment.trim.ArmorTrim",
+   "shared": 11,
+   "of": 29,
+   "ratio": 0.38
+  },
+  {
+   "from": "net.minecraft.world.level.BlockAndTintGetter",
+   "to": "net.minecraft.client.renderer.block.BlockAndTintGetter",
+   "shared": 1,
+   "of": 6,
+   "ratio": 0.17
+  },
+  {
+   "from": "net.minecraft.world.level.GameRules",
+   "to": "net.minecraft.world.level.gamerules.GameRules",
+   "shared": 2,
+   "of": 81,
+   "ratio": 0.02
+  },
+  {
+   "from": "net.minecraft.world.level.GameRules$VisitorCaller",
+   "to": "net.minecraft.world.level.gamerules.GameRules$VisitorCaller",
+   "shared": 0,
+   "of": 1,
+   "ratio": 0
+  },
+  {
+   "from": "net.minecraft.world.level.biome.AmbientMoodSettings",
+   "to": "net.minecraft.world.attribute.AmbientMoodSettings",
+   "shared": 7,
+   "of": 17,
+   "ratio": 0.41
+  }
+ ]
+}

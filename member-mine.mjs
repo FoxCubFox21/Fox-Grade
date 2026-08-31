@@ -22,11 +22,15 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { readZip, inflateEntry } from './zipfile.mjs';
 import { ClassFile } from './classfile.mjs';
+import { indexFromProguard } from './proguard.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const args = {};
 for (let i = 2; i < process.argv.length; i++) { const t = process.argv[i]; if (t.startsWith('--')) args[t.slice(2)] = process.argv[++i]; }
-if (!args.old || !args.new) { console.error('usage: node member-mine.mjs --old <jar> --new <jar> [--out file.json]'); process.exit(2); }
+if ((!args.old && !args['old-mappings']) || (!args.new && !args['new-mappings'])) {
+  console.error('usage: node member-mine.mjs --old <jar|--old-mappings f.txt> --new <jar|--new-mappings f.txt> [--out file.json]');
+  process.exit(2);
+}
 
 // Longest common substring, the cheapest signal that separates a real rename from a coincidence.
 // Every correct pair found by descriptor matching keeps a recognisable chunk of its name —
@@ -59,9 +63,17 @@ function index(jarPath) {
   }
   return out;
 }
-const oldIdx = index(args.old), newIdx = index(args.new);
-console.log(`  ${path.basename(args.old)}: ${oldIdx.size.toLocaleString()} classes`);
-console.log(`  ${path.basename(args.new)}: ${newIdx.size.toLocaleString()} classes`);
+// A version that ships obfuscated cannot be diffed from its jar — 1.21.1 is `dqh` and `eza` all the
+// way down, and diffing that against an unobfuscated 26.2 finds nothing but noise. Mojang's own
+// published mappings already list every class and member WITH its signature in readable names, so
+// the same index can be built from them and the diff below neither knows nor cares which it got.
+const side = (jar, maps, label) => {
+  const idx = maps ? indexFromProguard(maps) : index(jar);
+  console.log(`  ${path.basename(maps || jar)}: ${idx.size.toLocaleString()} classes${maps ? '  (from published mappings)' : ''}`);
+  return idx;
+};
+const oldIdx = side(args.old, args['old-mappings']);
+const newIdx = side(args.new, args['new-mappings']);
 
 const renames = [];       // confident: exactly one candidate could fit
 const guesses = [];       // plausible but not certain — opt-in via --best-guess, never silent

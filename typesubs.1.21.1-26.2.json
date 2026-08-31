@@ -1,0 +1,331 @@
+{
+ "schema": 1,
+ "from": "1.21.1",
+ "to": "26.2",
+ "source": "jar-diff: class renames inferred from consistent single-type substitutions in surviving signatures",
+ "renames": [
+  {
+   "from": "net.minecraft.resources.ResourceLocation",
+   "to": "net.minecraft.resources.Identifier",
+   "sightings": 983,
+   "classes": 410,
+   "share": 0.98
+  },
+  {
+   "from": "net.minecraft.world.level.block.state.properties.DirectionProperty",
+   "to": "net.minecraft.world.level.block.state.properties.EnumProperty",
+   "sightings": 39,
+   "classes": 36,
+   "share": 0.97
+  },
+  {
+   "from": "net.minecraft.world.entity.MobSpawnType",
+   "to": "net.minecraft.world.entity.EntitySpawnReason",
+   "sightings": 37,
+   "classes": 27,
+   "share": 1
+  },
+  {
+   "from": "net.minecraft.world.level.storage.loot.parameters.LootContextParamSet",
+   "to": "net.minecraft.util.context.ContextKeySet",
+   "sightings": 34,
+   "classes": 5,
+   "share": 1
+  },
+  {
+   "from": "net.minecraft.world.InteractionResultHolder",
+   "to": "net.minecraft.world.InteractionResult",
+   "sightings": 30,
+   "classes": 30,
+   "share": 1
+  },
+  {
+   "from": "net.minecraft.client.renderer.RenderType",
+   "to": "net.minecraft.client.renderer.rendertype.RenderType",
+   "sightings": 28,
+   "classes": 14,
+   "share": 0.93
+  },
+  {
+   "from": "net.minecraft.world.ItemInteractionResult",
+   "to": "net.minecraft.world.InteractionResult",
+   "sightings": 26,
+   "classes": 26,
+   "share": 1
+  },
+  {
+   "from": "net.minecraft.world.entity.npc.Villager",
+   "to": "net.minecraft.world.entity.npc.villager.Villager",
+   "sightings": 26,
+   "classes": 11,
+   "share": 1
+  },
+  {
+   "from": "net.minecraft.world.level.storage.loot.parameters.LootContextParam",
+   "to": "net.minecraft.util.context.ContextKey",
+   "sightings": 18,
+   "classes": 3,
+   "share": 1
+  },
+  {
+   "from": "net.minecraft.client.resources.model.Material",
+   "to": "net.minecraft.client.resources.model.sprite.SpriteId",
+   "sightings": 14,
+   "classes": 3,
+   "share": 1
+  },
+  {
+   "from": "net.minecraft.world.level.block.entity.BlockEntity$DataComponentInput",
+   "to": "net.minecraft.core.component.DataComponentGetter",
+   "sightings": 12,
+   "classes": 12,
+   "share": 1
+  },
+  {
+   "from": "net.minecraft.world.entity.animal.horse.AbstractHorse",
+   "to": "net.minecraft.world.entity.animal.equine.AbstractHorse",
+   "sightings": 11,
+   "classes": 8,
+   "share": 1
+  },
+  {
+   "from": "net.minecraft.util.random.SimpleWeightedRandomList",
+   "to": "net.minecraft.util.random.WeightedList",
+   "sightings": 10,
+   "classes": 5,
+   "share": 1
+  },
+  {
+   "from": "net.minecraft.world.item.UseAnim",
+   "to": "net.minecraft.world.item.ItemUseAnimation",
+   "sightings": 8,
+   "classes": 8,
+   "share": 1
+  },
+  {
+   "from": "net.minecraft.util.random.WeightedRandomList",
+   "to": "net.minecraft.util.random.WeightedList",
+   "sightings": 8,
+   "classes": 5,
+   "share": 1
+  }
+ ],
+ "rejected": [
+  {
+   "from": "net.minecraft.nbt.CompoundTag",
+   "to": "net.minecraft.world.level.storage.ValueOutput",
+   "sightings": 88,
+   "classes": 77,
+   "share": 0.53,
+   "why": "old type still exists"
+  },
+  {
+   "from": "net.minecraft.nbt.CompoundTag",
+   "to": "net.minecraft.world.level.storage.ValueInput",
+   "sightings": 69,
+   "classes": 66,
+   "share": 0.42,
+   "why": "old type still exists"
+  },
+  {
+   "from": "net.minecraft.world.level.Level",
+   "to": "net.minecraft.server.level.ServerLevel",
+   "sightings": 51,
+   "classes": 38,
+   "share": 0.98,
+   "why": "old type still exists"
+  },
+  {
+   "from": "net.minecraft.world.level.LevelSimulatedReader",
+   "to": "net.minecraft.world.level.WorldGenLevel",
+   "sightings": 42,
+   "classes": 26,
+   "share": 1,
+   "why": "old type still exists"
+  },
+  {
+   "from": "net.minecraft.util.KeyDispatchDataCodec",
+   "to": "com.mojang.serialization.MapCodec",
+   "sightings": 33,
+   "classes": 18,
+   "share": 1,
+   "why": "old type still exists"
+  },
+  {
+   "from": "net.minecraft.core.BlockPos",
+   "to": "net.minecraft.world.level.redstone.Orientation",
+   "sightings": 29,
+   "classes": 29,
+   "share": 0.94,
+   "why": "old type still exists"
+  },
+  {
+   "from": "org.joml.Vector3f",
+   "to": "org.joml.Vector3fc",
+   "sightings": 25,
+   "classes": 11,
+   "share": 0.86,
+   "why": "new type not found"
+  },
+  {
+   "from": "net.minecraft.world.entity.player.Player",
+   "to": "net.minecraft.world.entity.LivingEntity",
+   "sightings": 25,
+   "classes": 18,
+   "share": 0.45,
+   "why": "old type still exists"
+  },
+  {
+   "from": "net.minecraft.client.gui.components.events.GuiEventListener",
+   "to": "net.minecraft.client.gui.components.AbstractWidget",
+   "sightings": 17,
+   "classes": 17,
+   "share": 1,
+   "why": "old type still exists"
+  },
+  {
+   "from": "com.mojang.authlib.GameProfile",
+   "to": "net.minecraft.server.players.NameAndId",
+   "sightings": 16,
+   "classes": 10,
+   "share": 0.89,
+   "why": "only 89% of this type's changes"
+  },
+  {
+   "from": "net.minecraft.resources.ResourceLocation",
+   "to": "net.minecraft.resources.ResourceKey",
+   "sightings": 15,
+   "classes": 10,
+   "share": 0.01,
+   "why": "only 1% of this type's changes"
+  },
+  {
+   "from": "com.mojang.serialization.Dynamic",
+   "to": "net.minecraft.world.entity.ai.Brain$Packed",
+   "sightings": 15,
+   "classes": 15,
+   "share": 0.75,
+   "why": "only 75% of this type's changes"
+  },
+  {
+   "from": "net.minecraft.world.item.ItemStack",
+   "to": "net.minecraft.world.item.ItemStackTemplate",
+   "sightings": 14,
+   "classes": 7,
+   "share": 0.54,
+   "why": "old type still exists"
+  },
+  {
+   "from": "net.minecraft.world.entity.player.Player",
+   "to": "net.minecraft.world.entity.ContainerUser",
+   "sightings": 14,
+   "classes": 7,
+   "share": 0.25,
+   "why": "old type still exists"
+  },
+  {
+   "from": "net.minecraft.tags.TagKey",
+   "to": "net.minecraft.core.HolderSet",
+   "sightings": 13,
+   "classes": 7,
+   "share": 1,
+   "why": "old type still exists"
+  },
+  {
+   "from": "java.lang.String",
+   "to": "com.mojang.serialization.DataResult",
+   "sightings": 11,
+   "classes": 11,
+   "share": 0.21,
+   "why": "new type not found"
+  },
+  {
+   "from": "net.minecraft.world.entity.player.StackedContents",
+   "to": "net.minecraft.world.entity.player.StackedItemContents",
+   "sightings": 11,
+   "classes": 10,
+   "share": 1,
+   "why": "old type still exists"
+  },
+  {
+   "from": "net.minecraft.network.ProtocolInfo$Unbound",
+   "to": "net.minecraft.network.protocol.SimpleUnboundProtocol",
+   "sightings": 11,
+   "classes": 6,
+   "share": 0.85,
+   "why": "only 85% of this type's changes"
+  },
+  {
+   "from": "net.minecraft.world.entity.player.Player",
+   "to": "net.minecraft.world.entity.Entity",
+   "sightings": 10,
+   "classes": 5,
+   "share": 0.18,
+   "why": "old type still exists"
+  },
+  {
+   "from": "net.minecraft.util.parsing.packrat.Atom",
+   "to": "net.minecraft.util.parsing.packrat.NamedRule",
+   "sightings": 10,
+   "classes": 7,
+   "share": 1,
+   "why": "old type still exists"
+  },
+  {
+   "from": "net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate$StructureBlockInfo",
+   "to": "net.minecraft.core.BlockPos",
+   "sightings": 10,
+   "classes": 10,
+   "share": 1,
+   "why": "old type still exists"
+  },
+  {
+   "from": "com.mojang.serialization.DataResult",
+   "to": "java.lang.String",
+   "sightings": 9,
+   "classes": 9,
+   "share": 0.82,
+   "why": "new type not found"
+  },
+  {
+   "from": "net.minecraft.core.NonNullList",
+   "to": "java.util.List",
+   "sightings": 9,
+   "classes": 7,
+   "share": 1,
+   "why": "old type still exists"
+  },
+  {
+   "from": "java.util.function.Consumer",
+   "to": "net.minecraft.client.OptionInstance$ValueUpdateListener",
+   "sightings": 8,
+   "classes": 6,
+   "share": 0.89,
+   "why": "only 89% of this type's changes"
+  },
+  {
+   "from": "net.minecraft.world.item.crafting.RecipeHolder",
+   "to": "net.minecraft.world.item.crafting.display.RecipeDisplayId",
+   "sightings": 8,
+   "classes": 6,
+   "share": 1,
+   "why": "old type still exists"
+  },
+  {
+   "from": "net.minecraft.world.item.Item",
+   "to": "net.minecraft.world.item.ItemStackTemplate",
+   "sightings": 8,
+   "classes": 7,
+   "share": 0.3,
+   "why": "old type still exists"
+  },
+  {
+   "from": "java.util.function.Predicate",
+   "to": "net.minecraft.world.entity.ai.targeting.TargetingConditions$Selector",
+   "sightings": 8,
+   "classes": 6,
+   "share": 0.8,
+   "why": "only 80% of this type's changes"
+  }
+ ]
+}
