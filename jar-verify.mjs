@@ -31,14 +31,59 @@ const PREFIX = args.prefix || 'net/minecraft/';
 // EntitySelectorParser.getCustomFlag was reported broken while five shipping mods called it on 26.2.
 // Static absence is not runtime absence, and a corpus of working builds is the only evidence of the
 // difference available without launching the game.
-const modProvided = new Set();
-if (args.corpus && fs.existsSync(args.corpus)) {
-  for (const f of fs.readdirSync(args.corpus)) {
-    if (!f.endsWith('.json.gz')) continue;
-    let rec; try { rec = JSON.parse(zlib.gunzipSync(fs.readFileSync(path.join(args.corpus, f)))); } catch { continue; }
-    for (const r of rec.new.refs || []) modProvided.add(r);
+// Several corpora, comma-separated, because one loader's evidence cannot speak for another's.
+// NeoForge adds getModelData and getAuxLightManager to vanilla interfaces; they are in no Minecraft
+// jar and in no Fabric mod, so against a Fabric-only corpus every one reads as a broken link.
+// A corpus records names as they were in ITS version, so it can only excuse a reference that has not
+// been ported yet. Verifying a ported jar against a 1.21.1 corpus therefore penalises exactly the
+// references the port got right: BlockAndTintGetter.getModelData is excused before porting and
+// counted as broken after, purely because its descriptor now says Identifier where the corpus says
+// ResourceLocation. Measured that way a correct port always looks worse than doing nothing.
+//
+// So corpus keys are carried across the same hop the jar was, using the same mined tables. Only the
+// class names move; the member name and shape are untouched.
+const classRenames = new Map();
+if (args.from && args.to) {
+  const HERE2 = path.dirname(fileURLToPath(import.meta.url));
+  for (const f of fs.readdirSync(HERE2).filter((x) => /^(classmoves|typesubs)\.[\d.]+-[\d.]+\.json$/.test(x))) {
+    if (!f.includes(`.${args.from}-${args.to}.`)) continue;
+    try {
+      const tbl = JSON.parse(fs.readFileSync(path.join(HERE2, f), 'utf8'));
+      for (const r of [...(tbl.moves || []), ...(tbl.renames || [])])
+        if (r.from && r.to) classRenames.set(r.from.replace(/\./g, '/'), r.to.replace(/\./g, '/'));
+    } catch { /* a table we cannot read simply does not contribute */ }
   }
 }
+const carry = (key) => {
+  if (!classRenames.size) return key;
+  const [owner, name, desc] = key.split('\t');
+  const o2 = classRenames.get(owner) || owner;
+  const d2 = (desc || '').replace(/L([\w/$]+);/g, (m0, c) => `L${classRenames.get(c) || c};`);
+  return `${o2}\t${name}\t${d2}`;
+};
+
+// Corroboration has to come from OTHER mods, and from more than one of them. The corpus is built
+// out of jars, and the jar being checked may well be one of them: appleskin's own record excused
+// every reference appleskin makes, and all twelve mods scored a flawless zero. A member counts as
+// loader-provided only when at least two DIFFERENT mods, neither of them this one, are seen calling
+// it — the same standard the rest of the project applies to a mined rule.
+const CORROBORATE = +(args['corpus-min'] || 2);
+const selfSlug = path.basename(JAR).replace(/\.jar$/, '').replace(/[^\w.-]+/g, '_');
+const seenIn = new Map();
+for (const dir of String(args.corpus || '').split(',').map((s) => s.trim()).filter(Boolean)) {
+  if (!fs.existsSync(dir)) { console.error(`  ! no such corpus: ${dir}`); continue; }
+  for (const f of fs.readdirSync(dir)) {
+    if (!f.endsWith('.json.gz')) continue;
+    if (f.replace(/\.json\.gz$/, '') === selfSlug) continue;          // a mod cannot vouch for itself
+    let rec; try { rec = JSON.parse(zlib.gunzipSync(fs.readFileSync(path.join(dir, f)))); } catch { continue; }
+    // Both name forms, because this tool cannot tell whether the jar in front of it has been ported.
+    const keys = new Set();
+    for (const r of rec.new?.refs || []) { keys.add(r); keys.add(carry(r)); }
+    for (const k of keys) seenIn.set(k, (seenIn.get(k) || 0) + 1);
+  }
+}
+const modProvided = new Set();
+for (const [k, n] of seenIn) if (n >= CORROBORATE) modProvided.add(k);
 
 // A broken link is far more useful when it says WHERE the member went. member-mine already mines
 // relocations — Gui.getGuiTicks did not vanish, it moved to Hud and is reached through Gui's `hud`
