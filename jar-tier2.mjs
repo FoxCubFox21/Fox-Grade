@@ -24,7 +24,7 @@ import { readZip, inflateEntry, writeZip } from './zipfile.mjs';
 import { ClassFile } from './classfile.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
-const FLAGS = new Set(['dry', 'foxai', 'ollama', 'keep', 'allow-stubs']);
+const FLAGS = new Set(['dry', 'foxai', 'ollama', 'keep', 'allow-stubs', 'last-resort', 'no-lookup', 'no-group']);
 const args = {}, pos = [];
 for (let i = 2; i < process.argv.length; i++) {
   const t = process.argv[i];
@@ -402,6 +402,7 @@ const extractJava = (s) => {
 // ── 4. decompile → port → compile → keep only what verifies ──────────────────────────────────
 const replacements = new Map();
 const results = [];
+const removedLog = [];
 for (const c of candidates) {
   const cls = c.name.replace(/\.class$/, '');
   const simple = cls.split('/').pop();
@@ -524,8 +525,9 @@ ${groupSrc.map((g) => `===== FILE ${g.cls} =====\n\`\`\`java\n${g.src}\n\`\`\``)
 
   const looked = args['no-lookup'] ? '' : gatherContext(base);
   const baseWithLookups = base.replace('SOURCE:', `${looked}\nSOURCE:`);
-  let ported = null, lastErr = '';
+  let ported = null, fallback = null, lastErr = '', attemptsMade = 0;
   for (let attempt = 0; attempt <= REPAIRS; attempt++) {
+    attemptsMade = attempt + 1;
     const prompt = attempt === 0 ? baseWithLookups
       : `${baseWithLookups}\n\nYour previous attempt did not compile. Fix exactly these errors:\n${lastErr.slice(0, 4000)}`;
     const raw = callAI(prompt);
@@ -540,7 +542,14 @@ ${groupSrc.map((g) => `===== FILE ${g.cls} =====\n\`\`\`java\n${g.src}\n\`\`\``)
       }
     }
     if (!files.length) { const one = extractJava(raw); if (one) files.push({ cls, code: one }); }
-    if (!files.length) { say(`     attempt ${attempt + 1}: no code returned`); continue; }
+    if (!files.length) {
+      // A multi-file reply that arrives without its markers is unusable, and asking again for the
+      // same thing tends to fail the same way. Drop to the single-file form for the remaining
+      // attempts rather than burning them on a format the model is not producing.
+      if (groupSrc.length) { say(`     attempt ${attempt + 1}: no usable code — retrying single-file`); groupSrc.length = 0; }
+      else say(`     attempt ${attempt + 1}: no code returned`);
+      continue;
+    }
     const out = files[0].code;
     // Before spending a compile on it, test what it asserted. A wrong premise produces code built
     // around a class it believes is gone, and no amount of compiling catches that.
@@ -580,7 +589,25 @@ ${groupSrc.map((g) => `===== FILE ${g.cls} =====\n\`\`\`java\n${g.src}\n\`\`\``)
     if (jc.status === 0) {
       const built = path.join(cDir, cls + '.class');
       if (fs.existsSync(built)) {
-        ported = { source: files.map((x) => x.code).join('\n'), bytes: fs.readFileSync(built), dir: cDir, files };
+        const cand = { source: files.map((x) => x.code).join('\n'), bytes: fs.readFileSync(built), dir: cDir, files };
+        // A result that compiles by deleting the feature is a fallback, not an answer. Holding it and
+        // carrying on is what makes --last-resort reachable at all: the first such result used to end
+        // the class outright, so "every attempt has been spent" could never become true and the
+        // escalation this was built for could never fire. Promenade proved it — attempt 2 compiled by
+        // removing the surface rules, the gate correctly said "not yet a last resort", and then there
+        // was no attempt 3 to earn it.
+        const removes = (cand.source.match(/FOXGRADE:/g) || []).length;
+        if (removes && !args['allow-stubs'] && attempt < REPAIRS) {
+          if (!fallback) fallback = cand;
+          say(`     attempt ${attempt + 1}: compiles, but removes ${removes} behaviour(s) — held as a fallback, trying again`);
+          lastErr = 'Your previous attempt compiled, but it removed behaviour instead of porting it:\n'
+            + (cand.source.match(/FOXGRADE:[^\n]*/g) || []).slice(0, 3).map((l) => `  ${l.replace(/FOXGRADE:\s*/, '').trim()}`).join('\n')
+            + '\n\nDeleting the feature is the last thing to try, not the first. Port it if there is any way'
+            + '\nto. LOOKUP the classes involved before concluding it cannot be done — and if it genuinely'
+            + '\ncannot, say which fact makes it impossible rather than removing it silently.';
+          continue;
+        }
+        ported = cand;
         say(`     attempt ${attempt + 1}: compiles ✓${files.length > 1 ? ` (${files.length} files)` : ''}`);
         break;
       }
@@ -595,6 +622,13 @@ ${groupSrc.map((g) => `===== FILE ${g.cls} =====\n\`\`\`java\n${g.src}\n\`\`\``)
       lastErr = keep.join('\n');
       say(`     attempt ${attempt + 1}: ${(lastErr.match(/error:/g) || []).length} compile error(s)`);
     }
+  }
+  // Nothing ported it cleanly, so the held fallback is now the only thing that compiles. It still has
+  // to clear the link check, the unassigned-field check and the stub gate below — this only makes it
+  // the candidate, it does not make it acceptable.
+  if (!ported && fallback) {
+    ported = fallback;
+    say(`     no attempt ported it without removing behaviour — the best compiling result is the only option left`);
   }
   if (!ported) { results.push([cls, 'never compiled']); continue; }
 
@@ -638,12 +672,27 @@ ${groupSrc.map((g) => `===== FILE ${g.cls} =====\n\`\`\`java\n${g.src}\n\`\`\``)
     const what = (ported.source.match(/FOXGRADE:[^\n]*/g) || []).slice(0, 3).map((l) => l.replace(/FOXGRADE:\s*/, '').trim());
     say(`     compiles and resolves, but REMOVES ${stubs} piece(s) of behaviour rather than porting them:`);
     for (const w of what) say(`       · ${w.slice(0, 96)}`);
-    if (!args['allow-stubs']) {
-      say('     refused — a crash you can trace beats silently wrong behaviour. --allow-stubs to keep it.');
+    // Removing a feature is sometimes the correct port. Promenade's own maintainer, with full
+    // knowledge of the code and no constraints, deleted exactly this call rather than adapt it —
+    // SurfaceRules moved biome resolution to construction time and the mod builds its rules before
+    // any registry exists. The stub was the human answer.
+    //
+    // So it is allowed, but only as an ESCALATION: the port must first have been attempted properly,
+    // with lookups, the call graph, and every mined fact available, and every compiling result must
+    // have needed the stub. --last-resort permits that; --allow-stubs takes it on the first pass for
+    // anyone who has already decided. Either way it is recorded, in the jar and in the report, because
+    // a removed feature the user does not know about is the failure this whole design exists to avoid.
+    const exhausted = attemptsMade > REPAIRS;
+    const permitted = args['allow-stubs'] || (args['last-resort'] && exhausted && !args['no-lookup'] && !args['no-group']);
+    if (!permitted) {
+      say(args['last-resort']
+        ? `     refused for now — ${REPAIRS + 1} attempts have not all been spent, so this is not yet a last resort.`
+        : '     refused — a crash you can trace beats silently wrong behaviour. --last-resort lets it through only after a real attempt.');
       results.push([cls, `refused: would remove ${stubs} behaviour(s)`]);
       continue;
     }
-    say('     kept anyway (--allow-stubs)');
+    say(`     kept as a LAST RESORT — ${stubs} behaviour(s) removed, recorded in REMOVED.md`);
+    removedLog.push({ cls, stubs, what });
   }
   say(`     accepted: ${c.bad.length} → ${after.length} broken links${stubs ? `, with ${stubs} stub(s)` : ''}`);
   replacements.set(c.name, ported.bytes);
@@ -676,7 +725,28 @@ console.log(`\n  ── results ──`);
 for (const [cls, r] of results) console.log(`    ${r.startsWith('fixed') ? '✓' : '·'} ${cls.split('/').pop().padEnd(28)} ${r}`);
 if (!replacements.size) { console.log('\n  nothing was accepted; the jar is unchanged'); process.exit(1); }
 if (!args.out) { console.log(`\n  ${replacements.size} class(es) would be replaced — pass --out to write`); process.exit(0); }
+// A removed feature has to travel with the jar. Someone opening this file in six months should not
+// have to reconstruct why part of the mod stopped working.
+if (removedLog.length) {
+  const lines = ['# Features removed to make this jar load', '',
+    `Ported to ${TO}. The following could not be ported and were removed instead. Each was attempted`,
+    `properly first — with class lookups, the calling classes, and every derived mapping available —`,
+    `and every version that compiled required the removal.`, '',
+    'This is the same choice a maintainer sometimes makes. It is recorded because a feature that',
+    'disappears without anyone knowing is worse than a crash.', ''];
+  for (const r of removedLog) {
+    lines.push(`## ${r.cls.replace(/\//g, '.')}`);
+    for (const w of r.what) lines.push(`- ${w}`);
+    lines.push('');
+  }
+  replacements.set('REMOVED.md', Buffer.from(lines.join('\n'), 'utf8'));
+  if (!entries.some((e) => e.name === 'REMOVED.md')) entries.push({ name: 'REMOVED.md', method: 8, flags: 0, time: 0, date: 0, crc: 0, compSize: 0, size: 0, extAttrs: 0, raw: Buffer.alloc(0) });
+}
 fs.writeFileSync(args.out, writeZip(entries, replacements));
 console.log(`\n  wrote ${args.out} — ${replacements.size} class(es) replaced`);
+if (removedLog.length) {
+  console.log(`  ⚠ ${removedLog.reduce((n, r) => n + r.stubs, 0)} behaviour(s) REMOVED across ${removedLog.length} class(es) — listed in REMOVED.md inside the jar:`);
+  for (const r of removedLog) for (const w of r.what) console.log(`      · ${w.slice(0, 96)}`);
+}
 console.log(`  re-run jar-verify.mjs on it, then launch the game. Compiling clean is not the same as working.`);
 if (!args.keep) fs.rmSync(WORK, { recursive: true, force: true });
