@@ -14,6 +14,7 @@ import fs from 'node:fs';
 import zlib from 'node:zlib';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
 import { readZip, inflateEntry } from './zipfile.mjs';
 import { ClassFile } from './classfile.mjs';
 
@@ -36,6 +37,24 @@ if (args.corpus && fs.existsSync(args.corpus)) {
     if (!f.endsWith('.json.gz')) continue;
     let rec; try { rec = JSON.parse(zlib.gunzipSync(fs.readFileSync(path.join(args.corpus, f)))); } catch { continue; }
     for (const r of rec.new.refs || []) modProvided.add(r);
+  }
+}
+
+// A broken link is far more useful when it says WHERE the member went. member-mine already mines
+// relocations — Gui.getGuiTicks did not vanish, it moved to Hud and is reached through Gui's `hud`
+// field — and that was being thrown away, so the report showed a bare ✗ for something whose answer
+// was already sitting in the tables. Knowing it moved turns "this mod is broken" into a one-line fix,
+// and it is exactly the context Tier 2 needs to make that fix itself.
+const relocated = new Map();      // "owner\tname\tdesc" -> {via, host}
+{
+  const f = args.members || (args.from && args.to
+    ? path.join(path.dirname(fileURLToPath(import.meta.url)), `members.${args.from}-${args.to}.json`)
+    : null);
+  if (f && fs.existsSync(f)) {
+    try {
+      for (const r of JSON.parse(fs.readFileSync(f, 'utf8')).relocations || [])
+        relocated.set(`${r.owner}\t${r.name}\t${r.desc}`, r);
+    } catch { /* a malformed table must not stop the check it is only annotating */ }
   }
 }
 
@@ -177,8 +196,13 @@ if (untranslated.length) console.log(`      ${untranslated.length} never transla
 for (const [c, n] of untranslated.slice(0, 8)) console.log(`      ✗ ${c.replace(/\//g, '.')}   (${n} link${n > 1 ? 's' : ''})`);
 if (mistranslated.length) console.log(`      ${mistranslated.length} translated to a class that is not there:`);
 for (const [c, n] of mistranslated.slice(0, 8)) console.log(`      ✗ ${c.replace(/\//g, '.')}   (${n} link${n > 1 ? 's' : ''})`);
-console.log(`    MISSING MEMBERS    : ${missingMembers.length}`);
-for (const [o, n, d] of missingMembers.slice(0, 12)) console.log(`      ✗ ${o.replace(/\//g, '.')}.${n} ${d}`);
+const explained = missingMembers.filter(([o, n, d]) => relocated.has(`${o}\t${n}\t${d}`));
+console.log(`    MISSING MEMBERS    : ${missingMembers.length}${explained.length ? `   (${explained.length} of them relocated, and we know where)` : ''}`);
+for (const [o, n, d] of missingMembers.slice(0, 12)) {
+  const r = relocated.get(`${o}\t${n}\t${d}`);
+  console.log(`      ✗ ${o.replace(/\//g, '.')}.${n} ${d}`);
+  if (r) console.log(`          moved to ${r.host.replace(/\//g, '.')} — reach it through .${r.via}`);
+}
 if (missingMembers.length > 12) console.log(`      … ${missingMembers.length - 12} more`);
 
 if (loaderProvided.length) {

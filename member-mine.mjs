@@ -196,7 +196,50 @@ for (const r of removed) {
     for (const f of ownerFields) if (f.desc === `L${h};`) routes.push({ via: f.name, host: h });
   }
   // Exactly one way through, or it is a guess about which delegate the caller meant.
-  if (routes.length === 1) relocations.push({ owner: r.owner, name: r.name, desc: r.desc, via: routes[0].via, host: routes[0].host });
+  if (routes.length === 1) relocations.push({ owner: r.owner, name: r.name, desc: r.desc, via: routes[0].via, host: routes[0].host, shape: 'same-signature' });
+}
+
+// The same move, but where the ACCESSOR SHAPE changed on the way. Matching on an identical
+// descriptor only catches a delegate that kept its signature, and 26.1 -> 26.2 did not: it moved a
+// cluster of Minecraft's responsibilities onto Gui and dropped the get prefix while doing it, then
+// moved Gui's own display duties onto Hud. So
+//
+//   Minecraft.screen          (a FIELD)   -> Gui.screen()          field became an accessor
+//   Minecraft.getToastManager()           -> Gui.toastManager()    get prefix dropped
+//
+// were both written off as removed-with-no-replacement, and Minecraft.screen alone accounts for a
+// broken link in 10 of the 18 corpus mods. The type still has to match exactly and the host still
+// has to be reachable through exactly one field, so this widens the SHAPE being looked for without
+// weakening the evidence required.
+const zeroArg = new Map();                 // return descriptor -> [{cls, name}]
+for (const [cls, ms] of newIdx) for (const m of ms) {
+  if (m.kind !== 'method' || !m.desc.startsWith('()')) continue;
+  const ret = m.desc.slice(2);
+  if (!zeroArg.has(ret)) zeroArg.set(ret, []);
+  zeroArg.get(ret).push({ cls, name: m.name });
+}
+const already = new Set(relocations.map((r) => `${r.owner}\t${r.name}\t${r.desc}`));
+const unget = (n) => (/^get[A-Z]/.test(n) ? n[3].toLowerCase() + n.slice(4) : null);
+for (const r of removed) {
+  if (already.has(`${r.owner}\t${r.name}\t${r.desc}`)) continue;
+  if (!/nothing arrived/.test(r.why) || r.name.startsWith('<') || r.name.startsWith('lambda$')) continue;
+  let ret = null, want = null;
+  if (r.kind === 'field') { ret = r.desc; want = r.name; }
+  else if (r.desc.startsWith('()')) { ret = r.desc.slice(2); want = unget(r.name); }
+  // Only a reference type carries enough identity. A zero-arg getter returning int matches dozens of
+  // unrelated accessors, and pairing on that is how a table fills up with plausible nonsense.
+  if (!want || !ret || !ret.startsWith('L')) continue;
+  const hosts = (zeroArg.get(ret) || []).filter((c) => c.name === want && c.cls !== r.owner);
+  if (!hosts.length) continue;
+  // Filter by REACHABILITY before counting, not after. Requiring a globally unique declaration threw
+  // away Minecraft.screen, because a MouseHandler$LastClick record also happens to have a screen()
+  // accessor — and no caller could ever have meant that one, since Minecraft holds no field of that
+  // type. What has to be unique is the route from the owner, which is the thing the caller follows.
+  const fields = (newIdx.get(r.owner) || []).filter((m) => m.kind === 'field');
+  const routes = [];
+  for (const h of hosts) for (const f of fields) if (f.desc === `L${h.cls};`) routes.push({ via: f.name, host: h.cls });
+  if (routes.length !== 1) continue;
+  relocations.push({ owner: r.owner, name: r.name, desc: r.desc, becomes: `${want}()`, via: routes[0].via, host: routes[0].host, shape: r.kind === 'field' ? 'field-to-accessor' : 'get-prefix-dropped' });
 }
 console.log(`  RELOCATIONS            : ${relocations.length}   (member moved to a delegate field)`);
 for (const r of relocations.slice(0, 8)) console.log(`    ${r.owner.split('/').pop()}.${r.name}()  →  .${r.via}.${r.name}()   on ${r.host.split('/').pop()}`);
