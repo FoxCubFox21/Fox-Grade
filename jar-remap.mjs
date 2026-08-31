@@ -119,6 +119,29 @@ const steps = ladder.map((x) => new Map((x.v.renames || []).filter((r) => r.veri
 const targetBlock = new Map(((data[TO] || {}).renames || []).filter((r) => r.verified !== false).map((r) => [r.fromFqcn, r.toFqcn]));
 const deleted = new Map(((data[TO] || {}).deleted || []).map((d) => [d.fqcn, d.replacement]));
 
+// Mined class moves and renames, folded in as a final hop alongside the hand-curated block. These
+// are generated per install from the two versions' own bytecode (or from Mojang's published
+// mappings, for a version that ships obfuscated), and without loading them the whole 1.21.1 -> 26.2
+// table was inert: ~2,400 rules mined and none reachable. typesubs matters most here — it carries
+// ResourceLocation -> Identifier, which class-mine cannot see and which nearly every mod needs.
+// walk() still ends on valid(), so a pair pointing at a class that is not in the target is dropped
+// rather than written.
+let minedClassRules = 0;
+for (const f of fs.readdirSync(HERE).filter((x) => /^(classmoves|typesubs)\.[\d.]+-[\d.]+\.json$/.test(x))) {
+  const m = f.match(/^\w+\.([\d.]+)-([\d.]+)\.json$/);
+  const a2 = verOf(m[1]), b2 = verOf(m[2]);
+  if ((fv && cmp(a2, fv) < 0) || (tv && cmp(b2, tv) > 0)) continue;
+  try {
+    const tbl = JSON.parse(fs.readFileSync(path.join(HERE, f), 'utf8'));
+    for (const r of [...(tbl.moves || []), ...(tbl.renames || [])]) {
+      if (!r.from || !r.to || targetBlock.has(r.from)) continue;
+      targetBlock.set(r.from, r.to);
+      minedClassRules++;
+    }
+  } catch { console.error(`  ! ignoring unreadable ${f}`); }
+}
+if (minedClassRules) console.log(`    mined class rules  : ${minedClassRules}`);
+
 // Stop as soon as the name exists in the target: walking on can overshoot a correct answer into a
 // later redesign (the MatrixStack -> PoseStack -> GuiGraphics trap).
 const valid = (x) => TARGET && TARGET.has(slash(x));
