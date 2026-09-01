@@ -110,9 +110,14 @@ export function retargetCallSites(ClassFile, buf, decide) {
     if (!name || !desc) continue;
     const to = decide({ kind: e.tag === 9 ? 'field' : 'method', owner, name, desc });
     if (!to) continue;
-    // Plain {owner,name,desc} answers every access the entry serves; {get,put,call} answers each
-    // kind on its own, because one Fieldref is shared by reads and writes and hideGui gets both.
-    wanted.set(e.index, to.owner ? { get: to, put: to, call: to } : to);
+    // Plain {owner,name,desc} answers READS and CALLS only — never writes. The compatibility shim
+    // used to fill all three slots, and advancement-plaques found out why that is wrong in the one
+    // place a static check never ran: the mod WRITES the toast manager back (mc.toastManager =
+    // wrapper, its whole injection technique), the write site got redirected into the read bridge,
+    // and the JVM refused the class at runtime — Type 'ToastManagerWrapper' not assignable to
+    // 'Minecraft'. A write is only redirected when something explicitly supplies a write body; a
+    // relocation to an accessor has none, so the write stays broken and VISIBLE.
+    wanted.set(e.index, to.owner ? { get: to, call: to } : to);
   }
   if (!wanted.size) return null;
 

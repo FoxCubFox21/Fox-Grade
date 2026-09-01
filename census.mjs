@@ -28,9 +28,13 @@ for (const f of jars) {
   // One driver, one artifact. The suffix-chained stages this replaces produced two wrong
   // measurements in one afternoon, both from reading a stale stage file.
   const finalJar = path.join(OUT, `${name}.final.jar`);
-  run(['port-pipeline.mjs', path.join(DIR, f), '--from', FROM, '--to', TO, '--classpath', args.classpath,
+  const pipeOut = run(['port-pipeline.mjs', path.join(DIR, f), '--from', FROM, '--to', TO, '--classpath', args.classpath,
        ...(args.source ? ['--source', args.source] : []), '--out', finalJar, '--work', OUT]);
   if (!fs.existsSync(finalJar)) { perMod.push({ name, state: 'pipeline failed' }); bump('pipeline failed'); continue; }
+  // The pipeline's verifier gate prints its verdict and the census used to ignore it — which is how
+  // a jar the JVM rejects at runtime was counted CLEAN and reached a play session before anything
+  // objected. A verify regression outranks every other measurement.
+  if (/REGRESSION:/.test(pipeOut)) { perMod.push({ name, state: 'VERIFY REGRESSED' }); bump('~VERIFY REGRESSED — port broke bytecode'); continue; }
 
   const v = run(['jar-verify.mjs', finalJar, '--classpath', args.classpath, ...(args.corpus ? ['--corpus', args.corpus] : []), '--from', FROM, '--to', TO]);
   const m = run(['mixin-check.mjs', finalJar, '--classpath', args.classpath, ...(args.source ? ['--source-classpath', args.source] : [])]);
