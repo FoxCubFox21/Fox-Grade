@@ -61,7 +61,20 @@ function inNewChain(cls, key) {
   return d.supers.some((s) => s.startsWith('net/minecraft/') && inNewChain(s, key));
 }
 
-let dead = 0, checked = 0;
+// The super's KIND can change too, and that fails before any method is ever called: 26.2 turned
+// StructureProcessor from an abstract class into an interface, and a class that `extends` an
+// interface throws IncompatibleClassChangeError at LOAD time. jar-verify sees the name resolve and
+// says nothing. javap prints the kind, so it is checkable for exactly one extra line of parsing.
+const kindCache = new Map();
+function targetKind(cls) {
+  if (!kindCache.has(cls)) {
+    const r = spawnSync('javap', ['-cp', cp, cls.replace(/\//g, '.')], { encoding: 'utf8', maxBuffer: 16e6 });
+    kindCache.set(cls, r.status !== 0 ? null : /\binterface\s/.test(r.stdout) ? 'interface' : 'class');
+  }
+  return kindCache.get(cls);
+}
+
+let dead = 0, checked = 0, kindClashes = 0;
 const scan = (buf) => {
   for (const e of readZip(buf)) {
     if (/^META-INF\/jars\/.+\.jar$/.test(e.name)) { try { scan(inflateEntry(e)); } catch { /* skip */ } continue; }
@@ -69,6 +82,15 @@ const scan = (buf) => {
     let d; try { d = new ClassFile(inflateEntry(e)).declared(); } catch { continue; }
     const supers = [d.super, ...d.interfaces].filter((s) => s && s.startsWith('net/minecraft/'));
     if (!supers.length) continue;
+    if (d.super && d.super.startsWith('net/minecraft/') && targetKind(d.super) === 'interface') {
+      kindClashes++;
+      console.log(`  ✗ ${d.name.replace(/\//g, '.')} extends ${d.super.split('/').pop()}, which is now an INTERFACE`);
+      console.log('      IncompatibleClassChangeError the moment this class loads');
+    }
+    for (const i of d.interfaces) if (i.startsWith('net/minecraft/') && targetKind(i) === 'class') {
+      kindClashes++;
+      console.log(`  ✗ ${d.name.replace(/\//g, '.')} implements ${i.split('/').pop()}, which is now a CLASS`);
+    }
     for (const m of d.members) {
       if (m.kind !== 'method' || m.name.startsWith('<') || m.name.startsWith('lambda$')) continue;
       const key = `${m.name} ${m.desc}`;
@@ -88,4 +110,5 @@ const scan = (buf) => {
 scan(fs.readFileSync(JAR));
 console.log(`\n  overrides checked : ${checked}`);
 console.log(`  DEAD              : ${dead}`);
-process.exit(dead ? 1 : 0);
+if (kindClashes) console.log(`  KIND CLASHES      : ${kindClashes}   (class/interface flipped — load-time crash)`);
+process.exit(dead + kindClashes ? 1 : 0);
