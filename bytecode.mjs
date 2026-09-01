@@ -99,7 +99,7 @@ export function retargetCallSites(ClassFile, buf, decide) {
   const clsOf = (i) => { const e = byIndex.get(i); return e && e.tag === 7 ? utf8(cf.buf.readUInt16BE(e.start + 1)) : null; };
 
   // Which pool refs are ones we want to redirect, and to what.
-  const wanted = new Map();          // old pool index -> target {owner,name,desc}
+  const wanted = new Map();          // old pool index -> {get?, put?, call?} of static methods
   for (const e of cf.entries) {
     if (e.tag !== 9 && e.tag !== 10 && e.tag !== 11) continue;
     const owner = clsOf(cf.buf.readUInt16BE(e.start + 1));
@@ -109,7 +109,10 @@ export function retargetCallSites(ClassFile, buf, decide) {
     const desc = utf8(cf.buf.readUInt16BE(nat.start + 3));
     if (!name || !desc) continue;
     const to = decide({ kind: e.tag === 9 ? 'field' : 'method', owner, name, desc });
-    if (to) wanted.set(e.index, to);
+    if (!to) continue;
+    // Plain {owner,name,desc} answers every access the entry serves; {get,put,call} answers each
+    // kind on its own, because one Fieldref is shared by reads and writes and hideGui gets both.
+    wanted.set(e.index, to.owner ? { get: to, put: to, call: to } : to);
   }
   if (!wanted.size) return null;
 
@@ -140,8 +143,12 @@ export function retargetCallSites(ClassFile, buf, decide) {
     const ref = Buffer.alloc(5); ref[0] = 10; ref.writeUInt16BE(c, 1); ref.writeUInt16BE(natIdx, 3);
     pool.push(ref); const idx = next++; intern.set(k, idx); return idx;
   };
-  const redirect = new Map();        // old index -> new Methodref index
-  for (const [oldIdx, to] of wanted) redirect.set(oldIdx, addRef(to));
+  const redirect = new Map();        // old index -> {get?, put?, call?} of new Methodref indexes
+  for (const [oldIdx, to] of wanted) redirect.set(oldIdx, {
+    get: to.get ? addRef(to.get) : undefined,
+    put: to.put ? addRef(to.put) : undefined,
+    call: to.call ? addRef(to.call) : undefined,
+  });
   for (const p of pool) added.push(p);
 
   const head = Buffer.from(cf.buf.subarray(0, cf.poolEnd));
@@ -158,9 +165,16 @@ export function retargetCallSites(ClassFile, buf, decide) {
       const op = out[pc];
       const len = safeLength(out, pc, end, start);
       if (len < 0) break;
-      if (op === 0xb2 || op === 0xb4 || op === 0xb6 || op === 0xb8 || op === 0xb9) {
+      if (op === 0xb2 || op === 0xb3 || op === 0xb4 || op === 0xb5 || op === 0xb6 || op === 0xb8 || op === 0xb9) {
         const idx = out.readUInt16BE(pc + 1);
-        const to = redirect.get(idx);
+        const slot = redirect.get(idx);
+        // PUTFIELD pops value-then-objectref exactly as a static (owner, value) call pops its two
+        // arguments, and both instructions are three bytes — the same size-and-stack identity the
+        // reads rely on. A kind with no answer leaves its instruction untouched.
+        const to = slot === undefined ? undefined
+          : (op === 0xb3 || op === 0xb5) ? slot.put
+          : (op === 0xb2 || op === 0xb4) ? slot.get
+          : slot.call;
         if (to !== undefined) {
           out[pc] = 0xb8;                                         // invokestatic
           out.writeUInt16BE(to, pc + 1);

@@ -102,6 +102,7 @@ const classByName = new Map((compat.classes || []).map((c) => [c.replaces, c]));
 const needed = new Map();
 const colourNeeded = new Map();
 const recipeNeeded = new Map();
+const fieldRecipes = [];
 const classNeeded = new Set();
 const colourSeen = new Set();
 const scan = (buf) => {
@@ -164,6 +165,29 @@ for (const [key, c] of colourNeeded) {
 }
 
 for (const [key, r] of recipeNeeded) {
+  if (!r.desc.startsWith('(')) {
+    // A field recipe: `read` replaces GETFIELD/GETSTATIC, `write` replaces PUTFIELD/PUTSTATIC. Both
+    // are optional, but a field a mod writes and a recipe that only reads would silently drop the
+    // write, so an access with no matching body is left broken and visible rather than half-fixed.
+    const owner = r.static ? '' : `L${r.owner};`;
+    const selfArg = r.static ? [] : [`${javaType('L' + r.owner + ';')} self`];
+    const slot = { key, kinds: {} };
+    if (r.read) {
+      const name = `b${n++}`;
+      sigs.push({ key: key + '#get', name, desc: `(${owner})${r.desc}`,
+        src: `  public static ${javaType(r.desc)} ${name}(${selfArg.join(', ')}) { ${r.read} }` });
+      slot.kinds.get = { name, desc: `(${owner})${r.desc}` };
+    }
+    if (r.write) {
+      const name = `b${n++}`;
+      const argDecl = [...selfArg, `${javaType(r.desc)} a0`].join(', ');
+      sigs.push({ key: key + '#put', name, desc: `(${owner}${r.desc})V`,
+        src: `  public static void ${name}(${argDecl}) { ${r.write} }` });
+      slot.kinds.put = { name, desc: `(${owner}${r.desc})V` };
+    }
+    fieldRecipes.push(slot);
+    continue;
+  }
   const name = `b${n++}`;
   const ps = paramsOf(r.desc), ret = returnOf(r.desc);
   // An instance recipe takes the old receiver as its first argument, exactly like a relocation
@@ -199,7 +223,14 @@ if (!keep.length) write(keep), spawnSync('javac', ['-nowarn', '-proc:none', '-cp
 
 const compiled = path.join(dir, 'foxgrade', 'Compat.class');
 if (!fs.existsSync(compiled)) { console.log('    compat class did not build — jar unchanged.'); process.exit(1); }
-const fix = new Map(keep.map((s) => [s.key, { owner: 'foxgrade/Compat', name: s.name, desc: s.desc }]));
+const kept = new Set(keep.map((s) => s.key));
+const fix = new Map(keep.filter((s) => !s.key.includes('#')).map((s) => [s.key, { owner: 'foxgrade/Compat', name: s.name, desc: s.desc }]));
+for (const fr of fieldRecipes) {
+  const slot = {};
+  if (fr.kinds.get && kept.has(fr.key + '#get')) slot.get = { owner: 'foxgrade/Compat', ...fr.kinds.get };
+  if (fr.kinds.put && kept.has(fr.key + '#put')) slot.put = { owner: 'foxgrade/Compat', ...fr.kinds.put };
+  if (slot.get || slot.put) fix.set(fr.key, slot);
+}
 
 // Rewrite the call sites.
 // Fabric mods routinely ship their libraries nested in META-INF/jars, and for 3dskinlayers every

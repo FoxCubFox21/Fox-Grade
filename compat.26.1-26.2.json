@@ -3,21 +3,60 @@
  "_comment": "Hand-verified compat implementations, same standard as members.overrides.json: each entry exists because the old member is GONE from 26.2, a faithful reimplementation was found by reading the 26.2 jar with javap, and the evidence is written down so it can be argued with. jar-bridge compiles these against the real target jars, so a recipe that stops being true stops compiling rather than silently shipping.",
  "recipes": [
   {
-   "owner": "net/minecraft/ChatFormatting", "name": "getColor", "desc": "()Ljava/lang/Integer;", "static": false,
+   "owner": "net/minecraft/ChatFormatting",
+   "name": "getColor",
+   "desc": "()Ljava/lang/Integer;",
+   "static": false,
    "body": "net.minecraft.network.chat.TextColor c = net.minecraft.network.chat.TextColor.fromLegacyFormat(self); return c == null ? null : java.lang.Integer.valueOf(c.getValue());",
    "evidence": "26.2 removed ChatFormatting.getColor(). TextColor.fromLegacyFormat(ChatFormatting) exists in 26.2 and returns null for non-colour formats, which matches getColor()'s old contract of null for BOLD/ITALIC/etc; getValue() is the int. Verified by javap against the 26.2 jar."
   },
   {
-   "owner": "net/minecraft/client/resources/language/I18n", "name": "exists", "desc": "(Ljava/lang/String;)Z", "static": true,
+   "owner": "net/minecraft/client/resources/language/I18n",
+   "name": "exists",
+   "desc": "(Ljava/lang/String;)Z",
+   "static": true,
    "body": "return net.minecraft.locale.Language.getInstance().has(a0);",
    "evidence": "26.2 reduced I18n to get() only. I18n.exists always delegated to the language map; Language.getInstance().has(String) is declared in the 26.2 jar and answers the same question. Verified by javap."
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "name": "hideGui",
+   "desc": "Z",
+   "static": false,
+   "read": "return net.minecraft.client.Minecraft.getInstance().gui.hud.isHidden();",
+   "write": "net.minecraft.client.gui.Hud h = net.minecraft.client.Minecraft.getInstance().gui.hud; if (h.isHidden() != a0) h.toggle();",
+   "evidence": "26.2 removed Options.hideGui; the state lives on Hud as a private isHidden with public isHidden()/toggle(). Gui.hud is a public final field and Minecraft.getInstance().gui reaches it. The receiver (self) is ignored because there is only one Options and one Hud per client. Writes are expressed as conditional toggle, which is exact for a boolean."
+  },
+  {
+   "owner": "net/minecraft/client/renderer/LevelRenderer",
+   "name": "getLightCoords",
+   "desc": "(Lnet/minecraft/world/level/BlockAndLightGetter;Lnet/minecraft/core/BlockPos;)I",
+   "static": true,
+   "body": "return net.minecraft.util.LightCoordsUtil.getLightCoords(a0, a1);",
+   "evidence": "26.2 moved the static getLightCoords wholesale to net.minecraft.util.LightCoordsUtil with an identical descriptor \u2014 found by searching the 26.2 jar for the exact descriptor. A pure redirect, no semantics involved."
+  },
+  {
+   "owner": "net/minecraft/data/tags/TagAppender",
+   "name": "add",
+   "desc": "(Ljava/lang/Object;)Lnet/minecraft/data/tags/TagAppender;",
+   "static": false,
+   "body": "return self.add((net.minecraft.resources.ResourceKey) a0);",
+   "evidence": "26.1 TagAppender<E,T>.add(E) erased to add(Object); 26.2 is TagAppender<T>.add(ResourceKey<T>). For the key-based appenders every 26.1 call already passed a ResourceKey and the cast is exact. CAVEAT: 26.1 also had intrinsic appenders where E was the object itself; those get a ClassCastException at the call site \u2014 loud, at the exact line, instead of a NoSuchMethodError. Datagen-only API either way."
+  },
+  {
+   "owner": "net/minecraft/data/tags/TagAppender",
+   "name": "addOptional",
+   "desc": "(Ljava/lang/Object;)Lnet/minecraft/data/tags/TagAppender;",
+   "static": false,
+   "body": "return self.addOptional((net.minecraft.resources.ResourceKey) a0);",
+   "evidence": "Same shape and same caveat as add(Object) above; 26.2 addOptional takes ResourceKey<T>."
   }
  ],
  "classes": [
   {
    "replaces": "net/minecraft/util/Tuple",
    "name": "foxgrade/Tuple",
-   "evidence": "26.2 deleted net.minecraft.util.Tuple outright — no same-name class anywhere in the jar, no unique same-member replacement. Its whole API is five trivial members (javap of the 26.1 jar), so the honest fix is to ship the class: it is our build of the mod, and a pair type carries no game behaviour.",
+   "evidence": "26.2 deleted net.minecraft.util.Tuple outright \u2014 no same-name class anywhere in the jar, no unique same-member replacement. Its whole API is five trivial members (javap of the 26.1 jar), so the honest fix is to ship the class: it is our build of the mod, and a pair type carries no game behaviour.",
    "source": [
     "package foxgrade;",
     "public class Tuple<A, B> {",
