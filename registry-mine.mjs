@@ -78,10 +78,27 @@ for (const [cls, consts] of A) {
     if (here !== undefined) { retyped.push({ owner: cls, name, from: desc, to: here }); continue; }
     const homes = (newHomes.get(name) || []);
     if (!homes.length) { removed.push({ owner: cls, name, desc }); continue; }
-    // Prefer a home that kept the type; otherwise a single candidate is still unambiguous.
+    // The home must have kept the TYPE. "Same name, same thing" is sound inside one registry — a
+    // block stays a block — but a bare name is shared across unrelated holders, and the
+    // single-candidate-any-type fallback this used to have manufactured exactly that confusion:
+    // ModelLayers.BED_HEAD (a render-layer id, removed in 26.2) was matched to ModelTemplates.
+    // BED_HEAD (a datagen template) because it was the only BED_HEAD left anywhere. The remap then
+    // rewrote a working field access into one that returns a ModelTemplate where the method's
+    // signature says ModelLayerLocation — bytecode the JVM verifier rejects, manufactured out of a
+    // clean mod by this table. A move that changes the constant's type is not a move; without a
+    // same-type home the constant is REMOVED, which is the honest answer.
+    // Only a reference type can carry a move. A primitive constant's identity is its name and an
+    // int, and an int is an int everywhere: the very first run after the type gate still paired
+    // VertexFormatElement.MAX_COUNT with an unrelated MAX_COUNT on CreakingHeartBlockEntity. A
+    // Block, an Item, a TagKey names its meaning in its descriptor; an I does not.
+    if (!desc.startsWith('L')) { removed.push({ owner: cls, name, desc }); continue; }
     const sameType = homes.filter((h) => h.desc === desc);
-    const pick = sameType.length === 1 ? sameType[0] : (homes.length === 1 ? homes[0] : null);
-    if (!pick) { ambiguous.push({ owner: cls, name, homes: homes.map((h) => h.cls) }); continue; }
+    const pick = sameType.length === 1 ? sameType[0] : null;
+    if (!pick) {
+      if (homes.length) ambiguous.push({ owner: cls, name, homes: homes.map((h) => h.cls) });
+      else removed.push({ owner: cls, name, desc });
+      continue;
+    }
     moved.push({ owner: cls, name, desc, toOwner: pick.cls, toDesc: pick.desc });
   }
 }

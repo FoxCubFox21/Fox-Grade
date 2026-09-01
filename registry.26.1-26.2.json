@@ -5,244 +5,6 @@
  "source": "jar-diff: registry constants matched by name",
  "moved": [
   {
-   "owner": "com/mojang/blaze3d/platform/DestFactor",
-   "name": "CONSTANT_ALPHA",
-   "desc": "Lcom/mojang/blaze3d/platform/DestFactor;",
-   "toOwner": "com/mojang/blaze3d/platform/BlendFactor",
-   "toDesc": "Lcom/mojang/blaze3d/platform/BlendFactor;"
-  },
-  {
-   "owner": "com/mojang/blaze3d/platform/DestFactor",
-   "name": "CONSTANT_COLOR",
-   "desc": "Lcom/mojang/blaze3d/platform/DestFactor;",
-   "toOwner": "com/mojang/blaze3d/platform/BlendFactor",
-   "toDesc": "Lcom/mojang/blaze3d/platform/BlendFactor;"
-  },
-  {
-   "owner": "com/mojang/blaze3d/platform/DestFactor",
-   "name": "DST_ALPHA",
-   "desc": "Lcom/mojang/blaze3d/platform/DestFactor;",
-   "toOwner": "com/mojang/blaze3d/platform/BlendFactor",
-   "toDesc": "Lcom/mojang/blaze3d/platform/BlendFactor;"
-  },
-  {
-   "owner": "com/mojang/blaze3d/platform/DestFactor",
-   "name": "DST_COLOR",
-   "desc": "Lcom/mojang/blaze3d/platform/DestFactor;",
-   "toOwner": "com/mojang/blaze3d/platform/BlendFactor",
-   "toDesc": "Lcom/mojang/blaze3d/platform/BlendFactor;"
-  },
-  {
-   "owner": "com/mojang/blaze3d/platform/DestFactor",
-   "name": "ONE_MINUS_CONSTANT_ALPHA",
-   "desc": "Lcom/mojang/blaze3d/platform/DestFactor;",
-   "toOwner": "com/mojang/blaze3d/platform/BlendFactor",
-   "toDesc": "Lcom/mojang/blaze3d/platform/BlendFactor;"
-  },
-  {
-   "owner": "com/mojang/blaze3d/platform/DestFactor",
-   "name": "ONE_MINUS_CONSTANT_COLOR",
-   "desc": "Lcom/mojang/blaze3d/platform/DestFactor;",
-   "toOwner": "com/mojang/blaze3d/platform/BlendFactor",
-   "toDesc": "Lcom/mojang/blaze3d/platform/BlendFactor;"
-  },
-  {
-   "owner": "com/mojang/blaze3d/platform/DestFactor",
-   "name": "ONE_MINUS_DST_ALPHA",
-   "desc": "Lcom/mojang/blaze3d/platform/DestFactor;",
-   "toOwner": "com/mojang/blaze3d/platform/BlendFactor",
-   "toDesc": "Lcom/mojang/blaze3d/platform/BlendFactor;"
-  },
-  {
-   "owner": "com/mojang/blaze3d/platform/DestFactor",
-   "name": "ONE_MINUS_DST_COLOR",
-   "desc": "Lcom/mojang/blaze3d/platform/DestFactor;",
-   "toOwner": "com/mojang/blaze3d/platform/BlendFactor",
-   "toDesc": "Lcom/mojang/blaze3d/platform/BlendFactor;"
-  },
-  {
-   "owner": "com/mojang/blaze3d/platform/DestFactor",
-   "name": "ONE_MINUS_SRC_ALPHA",
-   "desc": "Lcom/mojang/blaze3d/platform/DestFactor;",
-   "toOwner": "com/mojang/blaze3d/platform/BlendFactor",
-   "toDesc": "Lcom/mojang/blaze3d/platform/BlendFactor;"
-  },
-  {
-   "owner": "com/mojang/blaze3d/platform/DestFactor",
-   "name": "ONE_MINUS_SRC_COLOR",
-   "desc": "Lcom/mojang/blaze3d/platform/DestFactor;",
-   "toOwner": "com/mojang/blaze3d/platform/BlendFactor",
-   "toDesc": "Lcom/mojang/blaze3d/platform/BlendFactor;"
-  },
-  {
-   "owner": "com/mojang/blaze3d/platform/DestFactor",
-   "name": "SRC_ALPHA",
-   "desc": "Lcom/mojang/blaze3d/platform/DestFactor;",
-   "toOwner": "com/mojang/blaze3d/platform/BlendFactor",
-   "toDesc": "Lcom/mojang/blaze3d/platform/BlendFactor;"
-  },
-  {
-   "owner": "com/mojang/blaze3d/platform/DestFactor",
-   "name": "SRC_COLOR",
-   "desc": "Lcom/mojang/blaze3d/platform/DestFactor;",
-   "toOwner": "com/mojang/blaze3d/platform/BlendFactor",
-   "toDesc": "Lcom/mojang/blaze3d/platform/BlendFactor;"
-  },
-  {
-   "owner": "com/mojang/blaze3d/platform/SourceFactor",
-   "name": "CONSTANT_ALPHA",
-   "desc": "Lcom/mojang/blaze3d/platform/SourceFactor;",
-   "toOwner": "com/mojang/blaze3d/platform/BlendFactor",
-   "toDesc": "Lcom/mojang/blaze3d/platform/BlendFactor;"
-  },
-  {
-   "owner": "com/mojang/blaze3d/platform/SourceFactor",
-   "name": "CONSTANT_COLOR",
-   "desc": "Lcom/mojang/blaze3d/platform/SourceFactor;",
-   "toOwner": "com/mojang/blaze3d/platform/BlendFactor",
-   "toDesc": "Lcom/mojang/blaze3d/platform/BlendFactor;"
-  },
-  {
-   "owner": "com/mojang/blaze3d/platform/SourceFactor",
-   "name": "DST_ALPHA",
-   "desc": "Lcom/mojang/blaze3d/platform/SourceFactor;",
-   "toOwner": "com/mojang/blaze3d/platform/BlendFactor",
-   "toDesc": "Lcom/mojang/blaze3d/platform/BlendFactor;"
-  },
-  {
-   "owner": "com/mojang/blaze3d/platform/SourceFactor",
-   "name": "DST_COLOR",
-   "desc": "Lcom/mojang/blaze3d/platform/SourceFactor;",
-   "toOwner": "com/mojang/blaze3d/platform/BlendFactor",
-   "toDesc": "Lcom/mojang/blaze3d/platform/BlendFactor;"
-  },
-  {
-   "owner": "com/mojang/blaze3d/platform/SourceFactor",
-   "name": "ONE_MINUS_CONSTANT_ALPHA",
-   "desc": "Lcom/mojang/blaze3d/platform/SourceFactor;",
-   "toOwner": "com/mojang/blaze3d/platform/BlendFactor",
-   "toDesc": "Lcom/mojang/blaze3d/platform/BlendFactor;"
-  },
-  {
-   "owner": "com/mojang/blaze3d/platform/SourceFactor",
-   "name": "ONE_MINUS_CONSTANT_COLOR",
-   "desc": "Lcom/mojang/blaze3d/platform/SourceFactor;",
-   "toOwner": "com/mojang/blaze3d/platform/BlendFactor",
-   "toDesc": "Lcom/mojang/blaze3d/platform/BlendFactor;"
-  },
-  {
-   "owner": "com/mojang/blaze3d/platform/SourceFactor",
-   "name": "ONE_MINUS_DST_ALPHA",
-   "desc": "Lcom/mojang/blaze3d/platform/SourceFactor;",
-   "toOwner": "com/mojang/blaze3d/platform/BlendFactor",
-   "toDesc": "Lcom/mojang/blaze3d/platform/BlendFactor;"
-  },
-  {
-   "owner": "com/mojang/blaze3d/platform/SourceFactor",
-   "name": "ONE_MINUS_DST_COLOR",
-   "desc": "Lcom/mojang/blaze3d/platform/SourceFactor;",
-   "toOwner": "com/mojang/blaze3d/platform/BlendFactor",
-   "toDesc": "Lcom/mojang/blaze3d/platform/BlendFactor;"
-  },
-  {
-   "owner": "com/mojang/blaze3d/platform/SourceFactor",
-   "name": "ONE_MINUS_SRC_ALPHA",
-   "desc": "Lcom/mojang/blaze3d/platform/SourceFactor;",
-   "toOwner": "com/mojang/blaze3d/platform/BlendFactor",
-   "toDesc": "Lcom/mojang/blaze3d/platform/BlendFactor;"
-  },
-  {
-   "owner": "com/mojang/blaze3d/platform/SourceFactor",
-   "name": "ONE_MINUS_SRC_COLOR",
-   "desc": "Lcom/mojang/blaze3d/platform/SourceFactor;",
-   "toOwner": "com/mojang/blaze3d/platform/BlendFactor",
-   "toDesc": "Lcom/mojang/blaze3d/platform/BlendFactor;"
-  },
-  {
-   "owner": "com/mojang/blaze3d/platform/SourceFactor",
-   "name": "SRC_ALPHA",
-   "desc": "Lcom/mojang/blaze3d/platform/SourceFactor;",
-   "toOwner": "com/mojang/blaze3d/platform/BlendFactor",
-   "toDesc": "Lcom/mojang/blaze3d/platform/BlendFactor;"
-  },
-  {
-   "owner": "com/mojang/blaze3d/platform/SourceFactor",
-   "name": "SRC_ALPHA_SATURATE",
-   "desc": "Lcom/mojang/blaze3d/platform/SourceFactor;",
-   "toOwner": "com/mojang/blaze3d/platform/BlendFactor",
-   "toDesc": "Lcom/mojang/blaze3d/platform/BlendFactor;"
-  },
-  {
-   "owner": "com/mojang/blaze3d/platform/SourceFactor",
-   "name": "SRC_COLOR",
-   "desc": "Lcom/mojang/blaze3d/platform/SourceFactor;",
-   "toOwner": "com/mojang/blaze3d/platform/BlendFactor",
-   "toDesc": "Lcom/mojang/blaze3d/platform/BlendFactor;"
-  },
-  {
-   "owner": "com/mojang/blaze3d/vertex/VertexFormat$Mode",
-   "name": "DEBUG_LINES",
-   "desc": "Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;",
-   "toOwner": "com/mojang/blaze3d/PrimitiveTopology",
-   "toDesc": "Lcom/mojang/blaze3d/PrimitiveTopology;"
-  },
-  {
-   "owner": "com/mojang/blaze3d/vertex/VertexFormat$Mode",
-   "name": "DEBUG_LINE_STRIP",
-   "desc": "Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;",
-   "toOwner": "com/mojang/blaze3d/PrimitiveTopology",
-   "toDesc": "Lcom/mojang/blaze3d/PrimitiveTopology;"
-  },
-  {
-   "owner": "com/mojang/blaze3d/vertex/VertexFormat$Mode",
-   "name": "POINTS",
-   "desc": "Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;",
-   "toOwner": "com/mojang/blaze3d/PrimitiveTopology",
-   "toDesc": "Lcom/mojang/blaze3d/PrimitiveTopology;"
-  },
-  {
-   "owner": "com/mojang/blaze3d/vertex/VertexFormat$Mode",
-   "name": "TRIANGLES",
-   "desc": "Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;",
-   "toOwner": "com/mojang/blaze3d/PrimitiveTopology",
-   "toDesc": "Lcom/mojang/blaze3d/PrimitiveTopology;"
-  },
-  {
-   "owner": "com/mojang/blaze3d/vertex/VertexFormat$Mode",
-   "name": "TRIANGLE_STRIP",
-   "desc": "Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;",
-   "toOwner": "com/mojang/blaze3d/PrimitiveTopology",
-   "toDesc": "Lcom/mojang/blaze3d/PrimitiveTopology;"
-  },
-  {
-   "owner": "com/mojang/blaze3d/vertex/VertexFormat$Mode",
-   "name": "TRIANGLE_FAN",
-   "desc": "Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;",
-   "toOwner": "com/mojang/blaze3d/PrimitiveTopology",
-   "toDesc": "Lcom/mojang/blaze3d/PrimitiveTopology;"
-  },
-  {
-   "owner": "com/mojang/blaze3d/vertex/VertexFormat$Mode",
-   "name": "QUADS",
-   "desc": "Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;",
-   "toOwner": "com/mojang/blaze3d/PrimitiveTopology",
-   "toDesc": "Lcom/mojang/blaze3d/PrimitiveTopology;"
-  },
-  {
-   "owner": "com/mojang/blaze3d/vertex/VertexFormatElement",
-   "name": "MAX_COUNT",
-   "desc": "I",
-   "toOwner": "net/minecraft/world/level/block/entity/CreakingHeartBlockEntity",
-   "toDesc": "I"
-  },
-  {
-   "owner": "com/mojang/blaze3d/vertex/VertexFormatElement",
-   "name": "POSITION",
-   "desc": "Lcom/mojang/blaze3d/vertex/VertexFormatElement;",
-   "toOwner": "com/mojang/blaze3d/vertex/DefaultVertexFormat",
-   "toDesc": "Lcom/mojang/blaze3d/vertex/VertexFormat;"
-  },
-  {
    "owner": "net/minecraft/client/gui/Gui",
    "name": "CROSSHAIR_SPRITE",
    "desc": "Lnet/minecraft/resources/Identifier;",
@@ -475,150 +237,10 @@
   },
   {
    "owner": "net/minecraft/client/gui/Gui",
-   "name": "MIN_CROSSHAIR_ATTACK_SPEED",
-   "desc": "F",
-   "toOwner": "net/minecraft/client/gui/Hud",
-   "toDesc": "F"
-  },
-  {
-   "owner": "net/minecraft/client/gui/Gui",
-   "name": "EXPERIENCE_BAR_DISPLAY_TICKS",
-   "desc": "I",
-   "toOwner": "net/minecraft/client/gui/Hud",
-   "toDesc": "I"
-  },
-  {
-   "owner": "net/minecraft/client/gui/Gui",
-   "name": "NUM_HEARTS_PER_ROW",
-   "desc": "I",
-   "toOwner": "net/minecraft/client/gui/Hud",
-   "toDesc": "I"
-  },
-  {
-   "owner": "net/minecraft/client/gui/Gui",
    "name": "SPACER",
    "desc": "Ljava/lang/String;",
    "toOwner": "net/minecraft/client/gui/Hud",
    "toDesc": "Ljava/lang/String;"
-  },
-  {
-   "owner": "net/minecraft/client/gui/Gui",
-   "name": "PORTAL_OVERLAY_ALPHA_MIN",
-   "desc": "F",
-   "toOwner": "net/minecraft/client/gui/Hud",
-   "toDesc": "F"
-  },
-  {
-   "owner": "net/minecraft/client/gui/Gui",
-   "name": "HEART_SIZE",
-   "desc": "I",
-   "toOwner": "net/minecraft/client/gui/Hud",
-   "toDesc": "I"
-  },
-  {
-   "owner": "net/minecraft/client/gui/Gui",
-   "name": "HEART_SEPARATION",
-   "desc": "I",
-   "toOwner": "net/minecraft/client/gui/Hud",
-   "toDesc": "I"
-  },
-  {
-   "owner": "net/minecraft/client/gui/Gui",
-   "name": "NUM_AIR_BUBBLES",
-   "desc": "I",
-   "toOwner": "net/minecraft/client/gui/Hud",
-   "toDesc": "I"
-  },
-  {
-   "owner": "net/minecraft/client/gui/Gui",
-   "name": "AIR_BUBBLE_SIZE",
-   "desc": "I",
-   "toOwner": "net/minecraft/client/gui/Hud",
-   "toDesc": "I"
-  },
-  {
-   "owner": "net/minecraft/client/gui/Gui",
-   "name": "AIR_BUBBLE_SEPERATION",
-   "desc": "I",
-   "toOwner": "net/minecraft/client/gui/Hud",
-   "toDesc": "I"
-  },
-  {
-   "owner": "net/minecraft/client/gui/Gui",
-   "name": "AIR_BUBBLE_POPPING_DURATION",
-   "desc": "I",
-   "toOwner": "net/minecraft/client/gui/Hud",
-   "toDesc": "I"
-  },
-  {
-   "owner": "net/minecraft/client/gui/Gui",
-   "name": "EMPTY_AIR_BUBBLE_DELAY_DURATION",
-   "desc": "I",
-   "toOwner": "net/minecraft/client/gui/Hud",
-   "toDesc": "I"
-  },
-  {
-   "owner": "net/minecraft/client/gui/Gui",
-   "name": "AIR_BUBBLE_POP_SOUND_VOLUME_BASE",
-   "desc": "F",
-   "toOwner": "net/minecraft/client/gui/Hud",
-   "toDesc": "F"
-  },
-  {
-   "owner": "net/minecraft/client/gui/Gui",
-   "name": "AIR_BUBBLE_POP_SOUND_VOLUME_INCREMENT",
-   "desc": "F",
-   "toOwner": "net/minecraft/client/gui/Hud",
-   "toDesc": "F"
-  },
-  {
-   "owner": "net/minecraft/client/gui/Gui",
-   "name": "AIR_BUBBLE_POP_SOUND_PITCH_BASE",
-   "desc": "F",
-   "toOwner": "net/minecraft/client/gui/Hud",
-   "toDesc": "F"
-  },
-  {
-   "owner": "net/minecraft/client/gui/Gui",
-   "name": "AIR_BUBBLE_POP_SOUND_PITCH_INCREMENT",
-   "desc": "F",
-   "toOwner": "net/minecraft/client/gui/Hud",
-   "toDesc": "F"
-  },
-  {
-   "owner": "net/minecraft/client/gui/Gui",
-   "name": "NUM_AIR_BUBBLE_POPPED_BEFORE_SOUND_VOLUME_INCREASE",
-   "desc": "I",
-   "toOwner": "net/minecraft/client/gui/Hud",
-   "toDesc": "I"
-  },
-  {
-   "owner": "net/minecraft/client/gui/Gui",
-   "name": "NUM_AIR_BUBBLE_POPPED_BEFORE_SOUND_PITCH_INCREASE",
-   "desc": "I",
-   "toOwner": "net/minecraft/client/gui/Hud",
-   "toDesc": "I"
-  },
-  {
-   "owner": "net/minecraft/client/gui/Gui",
-   "name": "AUTOSAVE_FADE_SPEED_FACTOR",
-   "desc": "F",
-   "toOwner": "net/minecraft/client/gui/Hud",
-   "toDesc": "F"
-  },
-  {
-   "owner": "net/minecraft/client/gui/Gui",
-   "name": "SAVING_INDICATOR_WIDTH_PADDING_RIGHT",
-   "desc": "I",
-   "toOwner": "net/minecraft/client/gui/Hud",
-   "toDesc": "I"
-  },
-  {
-   "owner": "net/minecraft/client/gui/Gui",
-   "name": "SAVING_INDICATOR_HEIGHT_PADDING_BOTTOM",
-   "desc": "I",
-   "toOwner": "net/minecraft/client/gui/Hud",
-   "toDesc": "I"
   },
   {
    "owner": "net/minecraft/client/gui/contextualbar/LocatorBarRenderer",
@@ -640,62 +262,6 @@
    "desc": "Lnet/minecraft/resources/Identifier;",
    "toOwner": "net/minecraft/client/gui/contextualbar/LocatorBar",
    "toDesc": "Lnet/minecraft/resources/Identifier;"
-  },
-  {
-   "owner": "net/minecraft/client/gui/contextualbar/LocatorBarRenderer",
-   "name": "DOT_SIZE",
-   "desc": "I",
-   "toOwner": "net/minecraft/client/gui/contextualbar/LocatorBar",
-   "toDesc": "I"
-  },
-  {
-   "owner": "net/minecraft/client/gui/contextualbar/LocatorBarRenderer",
-   "name": "VISIBLE_DEGREE_RANGE",
-   "desc": "I",
-   "toOwner": "net/minecraft/client/gui/contextualbar/LocatorBar",
-   "toDesc": "I"
-  },
-  {
-   "owner": "net/minecraft/client/gui/contextualbar/LocatorBarRenderer",
-   "name": "ARROW_WIDTH",
-   "desc": "I",
-   "toOwner": "net/minecraft/client/gui/contextualbar/LocatorBar",
-   "toDesc": "I"
-  },
-  {
-   "owner": "net/minecraft/client/gui/contextualbar/LocatorBarRenderer",
-   "name": "ARROW_HEIGHT",
-   "desc": "I",
-   "toOwner": "net/minecraft/client/gui/contextualbar/LocatorBar",
-   "toDesc": "I"
-  },
-  {
-   "owner": "net/minecraft/client/gui/contextualbar/LocatorBarRenderer",
-   "name": "ARROW_LEFT",
-   "desc": "I",
-   "toOwner": "net/minecraft/client/gui/contextualbar/LocatorBar",
-   "toDesc": "I"
-  },
-  {
-   "owner": "net/minecraft/client/gui/contextualbar/LocatorBarRenderer",
-   "name": "ARROW_PADDING",
-   "desc": "I",
-   "toOwner": "net/minecraft/client/gui/contextualbar/LocatorBar",
-   "toDesc": "I"
-  },
-  {
-   "owner": "net/minecraft/client/gui/screens/ShareToLanScreen",
-   "name": "PORT_LOWER_BOUND",
-   "desc": "I",
-   "toOwner": "net/minecraft/client/gui/screens/MultiplayerOptionsScreen",
-   "toDesc": "I"
-  },
-  {
-   "owner": "net/minecraft/client/gui/screens/ShareToLanScreen",
-   "name": "PORT_HIGHER_BOUND",
-   "desc": "I",
-   "toOwner": "net/minecraft/client/gui/screens/MultiplayerOptionsScreen",
-   "toDesc": "I"
   },
   {
    "owner": "net/minecraft/client/gui/screens/ShareToLanScreen",
@@ -747,431 +313,11 @@
    "toDesc": "Lnet/minecraft/resources/Identifier;"
   },
   {
-   "owner": "net/minecraft/client/model/geom/ModelLayers",
-   "name": "BED_FOOT",
-   "desc": "Lnet/minecraft/client/model/geom/ModelLayerLocation;",
-   "toOwner": "net/minecraft/client/data/models/model/ModelTemplates",
-   "toDesc": "Lnet/minecraft/client/data/models/model/ModelTemplate;"
-  },
-  {
-   "owner": "net/minecraft/client/model/geom/ModelLayers",
-   "name": "BED_HEAD",
-   "desc": "Lnet/minecraft/client/model/geom/ModelLayerLocation;",
-   "toOwner": "net/minecraft/client/data/models/model/ModelTemplates",
-   "toDesc": "Lnet/minecraft/client/data/models/model/ModelTemplate;"
-  },
-  {
    "owner": "net/minecraft/client/renderer/Sheets",
    "name": "DECORATED_POT_SPRITES",
    "desc": "Ljava/util/Map;",
    "toOwner": "net/minecraft/client/renderer/blockentity/DecoratedPotRenderer",
    "toDesc": "Ljava/util/Map;"
-  },
-  {
-   "owner": "net/minecraft/client/renderer/blockentity/HangingSignRenderer",
-   "name": "TRANSFORMATIONS",
-   "desc": "Lnet/minecraft/client/renderer/blockentity/WallAndGroundTransformations;",
-   "toOwner": "net/minecraft/client/renderer/blockentity/DecoratedPotRenderer",
-   "toDesc": "Ljava/util/Map;"
-  },
-  {
-   "owner": "net/minecraft/client/renderer/special/ChestSpecialRenderer",
-   "name": "TRAPPED",
-   "desc": "Lnet/minecraft/client/renderer/MultiblockChestResources;",
-   "toOwner": "net/minecraft/client/renderer/blockentity/state/ChestRenderState$ChestMaterialType",
-   "toDesc": "Lnet/minecraft/client/renderer/blockentity/state/ChestRenderState$ChestMaterialType;"
-  },
-  {
-   "owner": "net/minecraft/client/renderer/special/ChestSpecialRenderer",
-   "name": "CHRISTMAS",
-   "desc": "Lnet/minecraft/client/renderer/MultiblockChestResources;",
-   "toOwner": "net/minecraft/client/renderer/blockentity/state/ChestRenderState$ChestMaterialType",
-   "toDesc": "Lnet/minecraft/client/renderer/blockentity/state/ChestRenderState$ChestMaterialType;"
-  },
-  {
-   "owner": "net/minecraft/client/renderer/special/ChestSpecialRenderer",
-   "name": "COPPER_UNAFFECTED",
-   "desc": "Lnet/minecraft/client/renderer/MultiblockChestResources;",
-   "toOwner": "net/minecraft/client/renderer/blockentity/state/ChestRenderState$ChestMaterialType",
-   "toDesc": "Lnet/minecraft/client/renderer/blockentity/state/ChestRenderState$ChestMaterialType;"
-  },
-  {
-   "owner": "net/minecraft/client/renderer/special/ChestSpecialRenderer",
-   "name": "COPPER_EXPOSED",
-   "desc": "Lnet/minecraft/client/renderer/MultiblockChestResources;",
-   "toOwner": "net/minecraft/client/renderer/blockentity/state/ChestRenderState$ChestMaterialType",
-   "toDesc": "Lnet/minecraft/client/renderer/blockentity/state/ChestRenderState$ChestMaterialType;"
-  },
-  {
-   "owner": "net/minecraft/client/renderer/special/ChestSpecialRenderer",
-   "name": "COPPER_WEATHERED",
-   "desc": "Lnet/minecraft/client/renderer/MultiblockChestResources;",
-   "toOwner": "net/minecraft/client/renderer/blockentity/state/ChestRenderState$ChestMaterialType",
-   "toDesc": "Lnet/minecraft/client/renderer/blockentity/state/ChestRenderState$ChestMaterialType;"
-  },
-  {
-   "owner": "net/minecraft/client/renderer/special/ChestSpecialRenderer",
-   "name": "COPPER_OXIDIZED",
-   "desc": "Lnet/minecraft/client/renderer/MultiblockChestResources;",
-   "toOwner": "net/minecraft/client/renderer/blockentity/state/ChestRenderState$ChestMaterialType",
-   "toDesc": "Lnet/minecraft/client/renderer/blockentity/state/ChestRenderState$ChestMaterialType;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "IMPOSSIBLE",
-   "desc": "Lnet/minecraft/advancements/criterion/ImpossibleTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/ImpossibleTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "PLAYER_KILLED_ENTITY",
-   "desc": "Lnet/minecraft/advancements/criterion/KilledTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/KilledTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "ENTITY_KILLED_PLAYER",
-   "desc": "Lnet/minecraft/advancements/criterion/KilledTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/KilledTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "ENTER_BLOCK",
-   "desc": "Lnet/minecraft/advancements/criterion/EnterBlockTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/EnterBlockTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "INVENTORY_CHANGED",
-   "desc": "Lnet/minecraft/advancements/criterion/InventoryChangeTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/InventoryChangeTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "RECIPE_UNLOCKED",
-   "desc": "Lnet/minecraft/advancements/criterion/RecipeUnlockedTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/RecipeUnlockedTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "PLAYER_HURT_ENTITY",
-   "desc": "Lnet/minecraft/advancements/criterion/PlayerHurtEntityTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/PlayerHurtEntityTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "ENTITY_HURT_PLAYER",
-   "desc": "Lnet/minecraft/advancements/criterion/EntityHurtPlayerTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/EntityHurtPlayerTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "FILLED_BUCKET",
-   "desc": "Lnet/minecraft/advancements/criterion/FilledBucketTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/FilledBucketTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "BREWED_POTION",
-   "desc": "Lnet/minecraft/advancements/criterion/BrewedPotionTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/BrewedPotionTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "CONSTRUCT_BEACON",
-   "desc": "Lnet/minecraft/advancements/criterion/ConstructBeaconTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/ConstructBeaconTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "USED_ENDER_EYE",
-   "desc": "Lnet/minecraft/advancements/criterion/UsedEnderEyeTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/UsedEnderEyeTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "SUMMONED_ENTITY",
-   "desc": "Lnet/minecraft/advancements/criterion/SummonedEntityTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/SummonedEntityTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "BRED_ANIMALS",
-   "desc": "Lnet/minecraft/advancements/criterion/BredAnimalsTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/BredAnimalsTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "LOCATION",
-   "desc": "Lnet/minecraft/advancements/criterion/PlayerTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/PlayerTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "SLEPT_IN_BED",
-   "desc": "Lnet/minecraft/advancements/criterion/PlayerTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/PlayerTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "CURED_ZOMBIE_VILLAGER",
-   "desc": "Lnet/minecraft/advancements/criterion/CuredZombieVillagerTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/CuredZombieVillagerTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "TRADE",
-   "desc": "Lnet/minecraft/advancements/criterion/TradeTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/TradeTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "ITEM_DURABILITY_CHANGED",
-   "desc": "Lnet/minecraft/advancements/criterion/ItemDurabilityTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/ItemDurabilityTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "CHANGED_DIMENSION",
-   "desc": "Lnet/minecraft/advancements/criterion/ChangeDimensionTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/ChangeDimensionTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "TAME_ANIMAL",
-   "desc": "Lnet/minecraft/advancements/criterion/TameAnimalTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/TameAnimalTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "PLACED_BLOCK",
-   "desc": "Lnet/minecraft/advancements/criterion/ItemUsedOnLocationTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/ItemUsedOnLocationTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "CONSUME_ITEM",
-   "desc": "Lnet/minecraft/advancements/criterion/ConsumeItemTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/ConsumeItemTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "EFFECTS_CHANGED",
-   "desc": "Lnet/minecraft/advancements/criterion/EffectsChangedTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/EffectsChangedTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "USED_TOTEM",
-   "desc": "Lnet/minecraft/advancements/criterion/UsedTotemTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/UsedTotemTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "NETHER_TRAVEL",
-   "desc": "Lnet/minecraft/advancements/criterion/DistanceTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/DistanceTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "FISHING_ROD_HOOKED",
-   "desc": "Lnet/minecraft/advancements/criterion/FishingRodHookedTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/FishingRodHookedTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "CHANNELED_LIGHTNING",
-   "desc": "Lnet/minecraft/advancements/criterion/ChanneledLightningTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/ChanneledLightningTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "SHOT_CROSSBOW",
-   "desc": "Lnet/minecraft/advancements/criterion/ShotCrossbowTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/ShotCrossbowTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "SPEAR_MOBS_TRIGGER",
-   "desc": "Lnet/minecraft/advancements/criterion/SpearMobsTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/SpearMobsTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "KILLED_BY_ARROW",
-   "desc": "Lnet/minecraft/advancements/criterion/KilledByArrowTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/KilledByArrowTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "BEE_NEST_DESTROYED",
-   "desc": "Lnet/minecraft/advancements/criterion/BeeNestDestroyedTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/BeeNestDestroyedTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "TARGET_BLOCK_HIT",
-   "desc": "Lnet/minecraft/advancements/criterion/TargetBlockTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/TargetBlockTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "ITEM_USED_ON_BLOCK",
-   "desc": "Lnet/minecraft/advancements/criterion/ItemUsedOnLocationTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/ItemUsedOnLocationTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "DEFAULT_BLOCK_USE",
-   "desc": "Lnet/minecraft/advancements/criterion/DefaultBlockInteractionTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/DefaultBlockInteractionTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "ANY_BLOCK_USE",
-   "desc": "Lnet/minecraft/advancements/criterion/AnyBlockInteractionTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/AnyBlockInteractionTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "GENERATE_LOOT",
-   "desc": "Lnet/minecraft/advancements/criterion/LootTableTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/LootTableTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "THROWN_ITEM_PICKED_UP_BY_ENTITY",
-   "desc": "Lnet/minecraft/advancements/criterion/PickedUpItemTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/PickedUpItemTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "THROWN_ITEM_PICKED_UP_BY_PLAYER",
-   "desc": "Lnet/minecraft/advancements/criterion/PickedUpItemTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/PickedUpItemTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "PLAYER_INTERACTED_WITH_ENTITY",
-   "desc": "Lnet/minecraft/advancements/criterion/PlayerInteractTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/PlayerInteractTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "PLAYER_SHEARED_EQUIPMENT",
-   "desc": "Lnet/minecraft/advancements/criterion/PlayerInteractTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/PlayerInteractTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "START_RIDING_TRIGGER",
-   "desc": "Lnet/minecraft/advancements/criterion/StartRidingTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/StartRidingTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "USING_ITEM",
-   "desc": "Lnet/minecraft/advancements/criterion/UsingItemTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/UsingItemTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "FALL_FROM_HEIGHT",
-   "desc": "Lnet/minecraft/advancements/criterion/DistanceTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/DistanceTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "RIDE_ENTITY_IN_LAVA_TRIGGER",
-   "desc": "Lnet/minecraft/advancements/criterion/DistanceTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/DistanceTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "KILL_MOB_NEAR_SCULK_CATALYST",
-   "desc": "Lnet/minecraft/advancements/criterion/KilledTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/KilledTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "ALLAY_DROP_ITEM_ON_BLOCK",
-   "desc": "Lnet/minecraft/advancements/criterion/ItemUsedOnLocationTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/ItemUsedOnLocationTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "AVOID_VIBRATION",
-   "desc": "Lnet/minecraft/advancements/criterion/PlayerTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/PlayerTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "RECIPE_CRAFTED",
-   "desc": "Lnet/minecraft/advancements/criterion/RecipeCraftedTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/RecipeCraftedTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "CRAFTER_RECIPE_CRAFTED",
-   "desc": "Lnet/minecraft/advancements/criterion/RecipeCraftedTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/RecipeCraftedTrigger;"
-  },
-  {
-   "owner": "net/minecraft/advancements/CriteriaTriggers",
-   "name": "FALL_AFTER_EXPLOSION",
-   "desc": "Lnet/minecraft/advancements/criterion/FallAfterExplosionTrigger;",
-   "toOwner": "net/minecraft/advancements/triggers/CriteriaTriggers",
-   "toDesc": "Lnet/minecraft/advancements/triggers/FallAfterExplosionTrigger;"
   },
   {
    "owner": "net/minecraft/tags/BlockTags",
@@ -1410,20 +556,6 @@
    "desc": "Ljava/util/concurrent/atomic/AtomicInteger;",
    "toOwner": "net/minecraft/server/level/ServerLevel",
    "toDesc": "Ljava/util/concurrent/atomic/AtomicInteger;"
-  },
-  {
-   "owner": "net/minecraft/world/entity/EntityType",
-   "name": "MAGIC_HORSE_WIDTH",
-   "desc": "F",
-   "toOwner": "net/minecraft/world/entity/EntityTypes",
-   "toDesc": "F"
-  },
-  {
-   "owner": "net/minecraft/world/entity/EntityType",
-   "name": "DISPLAY_TRACKING_RANGE",
-   "desc": "I",
-   "toOwner": "net/minecraft/world/entity/EntityTypes",
-   "toDesc": "I"
   },
   {
    "owner": "net/minecraft/world/entity/EntityType",
@@ -2525,286 +1657,6 @@
    "toDesc": "Lnet/minecraft/world/entity/EntityType;"
   },
   {
-   "owner": "net/minecraft/world/item/Items",
-   "name": "YELLOW_TERRACOTTA",
-   "desc": "Lnet/minecraft/world/item/Item;",
-   "toOwner": "net/minecraft/world/level/levelgen/SurfaceSystem",
-   "toDesc": "Lnet/minecraft/world/level/block/state/BlockState;"
-  },
-  {
-   "owner": "net/minecraft/world/item/Items",
-   "name": "LIGHT_GRAY_TERRACOTTA",
-   "desc": "Lnet/minecraft/world/item/Item;",
-   "toOwner": "net/minecraft/world/level/levelgen/SurfaceSystem",
-   "toDesc": "Lnet/minecraft/world/level/block/state/BlockState;"
-  },
-  {
-   "owner": "net/minecraft/world/item/Items",
-   "name": "BROWN_TERRACOTTA",
-   "desc": "Lnet/minecraft/world/item/Item;",
-   "toOwner": "net/minecraft/world/level/levelgen/SurfaceSystem",
-   "toDesc": "Lnet/minecraft/world/level/block/state/BlockState;"
-  },
-  {
-   "owner": "net/minecraft/world/item/Items",
-   "name": "RED_TERRACOTTA",
-   "desc": "Lnet/minecraft/world/item/Item;",
-   "toOwner": "net/minecraft/world/level/levelgen/SurfaceSystem",
-   "toDesc": "Lnet/minecraft/world/level/block/state/BlockState;"
-  },
-  {
-   "owner": "net/minecraft/world/item/Items",
-   "name": "WHITE_BANNER",
-   "desc": "Lnet/minecraft/world/item/Item;",
-   "toOwner": "net/minecraft/world/level/saveddata/maps/MapDecorationTypes",
-   "toDesc": "Lnet/minecraft/core/Holder;"
-  },
-  {
-   "owner": "net/minecraft/world/item/Items",
-   "name": "ORANGE_BANNER",
-   "desc": "Lnet/minecraft/world/item/Item;",
-   "toOwner": "net/minecraft/world/level/saveddata/maps/MapDecorationTypes",
-   "toDesc": "Lnet/minecraft/core/Holder;"
-  },
-  {
-   "owner": "net/minecraft/world/item/Items",
-   "name": "MAGENTA_BANNER",
-   "desc": "Lnet/minecraft/world/item/Item;",
-   "toOwner": "net/minecraft/world/level/saveddata/maps/MapDecorationTypes",
-   "toDesc": "Lnet/minecraft/core/Holder;"
-  },
-  {
-   "owner": "net/minecraft/world/item/Items",
-   "name": "LIGHT_BLUE_BANNER",
-   "desc": "Lnet/minecraft/world/item/Item;",
-   "toOwner": "net/minecraft/world/level/saveddata/maps/MapDecorationTypes",
-   "toDesc": "Lnet/minecraft/core/Holder;"
-  },
-  {
-   "owner": "net/minecraft/world/item/Items",
-   "name": "YELLOW_BANNER",
-   "desc": "Lnet/minecraft/world/item/Item;",
-   "toOwner": "net/minecraft/world/level/saveddata/maps/MapDecorationTypes",
-   "toDesc": "Lnet/minecraft/core/Holder;"
-  },
-  {
-   "owner": "net/minecraft/world/item/Items",
-   "name": "LIME_BANNER",
-   "desc": "Lnet/minecraft/world/item/Item;",
-   "toOwner": "net/minecraft/world/level/saveddata/maps/MapDecorationTypes",
-   "toDesc": "Lnet/minecraft/core/Holder;"
-  },
-  {
-   "owner": "net/minecraft/world/item/Items",
-   "name": "PINK_BANNER",
-   "desc": "Lnet/minecraft/world/item/Item;",
-   "toOwner": "net/minecraft/world/level/saveddata/maps/MapDecorationTypes",
-   "toDesc": "Lnet/minecraft/core/Holder;"
-  },
-  {
-   "owner": "net/minecraft/world/item/Items",
-   "name": "GRAY_BANNER",
-   "desc": "Lnet/minecraft/world/item/Item;",
-   "toOwner": "net/minecraft/world/level/saveddata/maps/MapDecorationTypes",
-   "toDesc": "Lnet/minecraft/core/Holder;"
-  },
-  {
-   "owner": "net/minecraft/world/item/Items",
-   "name": "LIGHT_GRAY_BANNER",
-   "desc": "Lnet/minecraft/world/item/Item;",
-   "toOwner": "net/minecraft/world/level/saveddata/maps/MapDecorationTypes",
-   "toDesc": "Lnet/minecraft/core/Holder;"
-  },
-  {
-   "owner": "net/minecraft/world/item/Items",
-   "name": "CYAN_BANNER",
-   "desc": "Lnet/minecraft/world/item/Item;",
-   "toOwner": "net/minecraft/world/level/saveddata/maps/MapDecorationTypes",
-   "toDesc": "Lnet/minecraft/core/Holder;"
-  },
-  {
-   "owner": "net/minecraft/world/item/Items",
-   "name": "PURPLE_BANNER",
-   "desc": "Lnet/minecraft/world/item/Item;",
-   "toOwner": "net/minecraft/world/level/saveddata/maps/MapDecorationTypes",
-   "toDesc": "Lnet/minecraft/core/Holder;"
-  },
-  {
-   "owner": "net/minecraft/world/item/Items",
-   "name": "BLUE_BANNER",
-   "desc": "Lnet/minecraft/world/item/Item;",
-   "toOwner": "net/minecraft/world/level/saveddata/maps/MapDecorationTypes",
-   "toDesc": "Lnet/minecraft/core/Holder;"
-  },
-  {
-   "owner": "net/minecraft/world/item/Items",
-   "name": "BROWN_BANNER",
-   "desc": "Lnet/minecraft/world/item/Item;",
-   "toOwner": "net/minecraft/world/level/saveddata/maps/MapDecorationTypes",
-   "toDesc": "Lnet/minecraft/core/Holder;"
-  },
-  {
-   "owner": "net/minecraft/world/item/Items",
-   "name": "GREEN_BANNER",
-   "desc": "Lnet/minecraft/world/item/Item;",
-   "toOwner": "net/minecraft/world/level/saveddata/maps/MapDecorationTypes",
-   "toDesc": "Lnet/minecraft/core/Holder;"
-  },
-  {
-   "owner": "net/minecraft/world/item/Items",
-   "name": "RED_BANNER",
-   "desc": "Lnet/minecraft/world/item/Item;",
-   "toOwner": "net/minecraft/world/level/saveddata/maps/MapDecorationTypes",
-   "toDesc": "Lnet/minecraft/core/Holder;"
-  },
-  {
-   "owner": "net/minecraft/world/item/Items",
-   "name": "BLACK_BANNER",
-   "desc": "Lnet/minecraft/world/item/Item;",
-   "toOwner": "net/minecraft/world/level/saveddata/maps/MapDecorationTypes",
-   "toDesc": "Lnet/minecraft/core/Holder;"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/Blocks",
-   "name": "YELLOW_TERRACOTTA",
-   "desc": "Lnet/minecraft/world/level/block/Block;",
-   "toOwner": "net/minecraft/world/level/levelgen/SurfaceSystem",
-   "toDesc": "Lnet/minecraft/world/level/block/state/BlockState;"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/Blocks",
-   "name": "LIGHT_GRAY_TERRACOTTA",
-   "desc": "Lnet/minecraft/world/level/block/Block;",
-   "toOwner": "net/minecraft/world/level/levelgen/SurfaceSystem",
-   "toDesc": "Lnet/minecraft/world/level/block/state/BlockState;"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/Blocks",
-   "name": "BROWN_TERRACOTTA",
-   "desc": "Lnet/minecraft/world/level/block/Block;",
-   "toOwner": "net/minecraft/world/level/levelgen/SurfaceSystem",
-   "toDesc": "Lnet/minecraft/world/level/block/state/BlockState;"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/Blocks",
-   "name": "RED_TERRACOTTA",
-   "desc": "Lnet/minecraft/world/level/block/Block;",
-   "toOwner": "net/minecraft/world/level/levelgen/SurfaceSystem",
-   "toDesc": "Lnet/minecraft/world/level/block/state/BlockState;"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/Blocks",
-   "name": "WHITE_BANNER",
-   "desc": "Lnet/minecraft/world/level/block/Block;",
-   "toOwner": "net/minecraft/world/level/saveddata/maps/MapDecorationTypes",
-   "toDesc": "Lnet/minecraft/core/Holder;"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/Blocks",
-   "name": "ORANGE_BANNER",
-   "desc": "Lnet/minecraft/world/level/block/Block;",
-   "toOwner": "net/minecraft/world/level/saveddata/maps/MapDecorationTypes",
-   "toDesc": "Lnet/minecraft/core/Holder;"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/Blocks",
-   "name": "MAGENTA_BANNER",
-   "desc": "Lnet/minecraft/world/level/block/Block;",
-   "toOwner": "net/minecraft/world/level/saveddata/maps/MapDecorationTypes",
-   "toDesc": "Lnet/minecraft/core/Holder;"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/Blocks",
-   "name": "LIGHT_BLUE_BANNER",
-   "desc": "Lnet/minecraft/world/level/block/Block;",
-   "toOwner": "net/minecraft/world/level/saveddata/maps/MapDecorationTypes",
-   "toDesc": "Lnet/minecraft/core/Holder;"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/Blocks",
-   "name": "YELLOW_BANNER",
-   "desc": "Lnet/minecraft/world/level/block/Block;",
-   "toOwner": "net/minecraft/world/level/saveddata/maps/MapDecorationTypes",
-   "toDesc": "Lnet/minecraft/core/Holder;"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/Blocks",
-   "name": "LIME_BANNER",
-   "desc": "Lnet/minecraft/world/level/block/Block;",
-   "toOwner": "net/minecraft/world/level/saveddata/maps/MapDecorationTypes",
-   "toDesc": "Lnet/minecraft/core/Holder;"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/Blocks",
-   "name": "PINK_BANNER",
-   "desc": "Lnet/minecraft/world/level/block/Block;",
-   "toOwner": "net/minecraft/world/level/saveddata/maps/MapDecorationTypes",
-   "toDesc": "Lnet/minecraft/core/Holder;"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/Blocks",
-   "name": "GRAY_BANNER",
-   "desc": "Lnet/minecraft/world/level/block/Block;",
-   "toOwner": "net/minecraft/world/level/saveddata/maps/MapDecorationTypes",
-   "toDesc": "Lnet/minecraft/core/Holder;"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/Blocks",
-   "name": "LIGHT_GRAY_BANNER",
-   "desc": "Lnet/minecraft/world/level/block/Block;",
-   "toOwner": "net/minecraft/world/level/saveddata/maps/MapDecorationTypes",
-   "toDesc": "Lnet/minecraft/core/Holder;"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/Blocks",
-   "name": "CYAN_BANNER",
-   "desc": "Lnet/minecraft/world/level/block/Block;",
-   "toOwner": "net/minecraft/world/level/saveddata/maps/MapDecorationTypes",
-   "toDesc": "Lnet/minecraft/core/Holder;"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/Blocks",
-   "name": "PURPLE_BANNER",
-   "desc": "Lnet/minecraft/world/level/block/Block;",
-   "toOwner": "net/minecraft/world/level/saveddata/maps/MapDecorationTypes",
-   "toDesc": "Lnet/minecraft/core/Holder;"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/Blocks",
-   "name": "BLUE_BANNER",
-   "desc": "Lnet/minecraft/world/level/block/Block;",
-   "toOwner": "net/minecraft/world/level/saveddata/maps/MapDecorationTypes",
-   "toDesc": "Lnet/minecraft/core/Holder;"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/Blocks",
-   "name": "BROWN_BANNER",
-   "desc": "Lnet/minecraft/world/level/block/Block;",
-   "toOwner": "net/minecraft/world/level/saveddata/maps/MapDecorationTypes",
-   "toDesc": "Lnet/minecraft/core/Holder;"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/Blocks",
-   "name": "GREEN_BANNER",
-   "desc": "Lnet/minecraft/world/level/block/Block;",
-   "toOwner": "net/minecraft/world/level/saveddata/maps/MapDecorationTypes",
-   "toDesc": "Lnet/minecraft/core/Holder;"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/Blocks",
-   "name": "RED_BANNER",
-   "desc": "Lnet/minecraft/world/level/block/Block;",
-   "toOwner": "net/minecraft/world/level/saveddata/maps/MapDecorationTypes",
-   "toDesc": "Lnet/minecraft/core/Holder;"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/Blocks",
-   "name": "BLACK_BANNER",
-   "desc": "Lnet/minecraft/world/level/block/Block;",
-   "toOwner": "net/minecraft/world/level/saveddata/maps/MapDecorationTypes",
-   "toDesc": "Lnet/minecraft/core/Holder;"
-  },
-  {
    "owner": "net/minecraft/world/level/block/PointedDripstoneBlock",
    "name": "TIP_DIRECTION",
    "desc": "Lnet/minecraft/world/level/block/state/properties/EnumProperty;",
@@ -2817,62 +1669,6 @@
    "desc": "Lnet/minecraft/world/level/block/state/properties/EnumProperty;",
    "toOwner": "net/minecraft/world/level/block/SpeleothemBlock",
    "toDesc": "Lnet/minecraft/world/level/block/state/properties/EnumProperty;"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/PointedDripstoneBlock",
-   "name": "DELAY_BEFORE_FALLING",
-   "desc": "I",
-   "toOwner": "net/minecraft/world/level/block/SpeleothemBlock",
-   "toDesc": "I"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/PointedDripstoneBlock",
-   "name": "STALACTITE_DAMAGE_PER_FALL_DISTANCE_AND_SIZE",
-   "desc": "F",
-   "toOwner": "net/minecraft/world/level/block/SpeleothemBlock",
-   "toDesc": "F"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/PointedDripstoneBlock",
-   "name": "STALACTITE_MAX_DAMAGE",
-   "desc": "I",
-   "toOwner": "net/minecraft/world/level/block/SpeleothemBlock",
-   "toDesc": "I"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/PointedDripstoneBlock",
-   "name": "MAX_STALACTITE_HEIGHT_FOR_DAMAGE_CALCULATION",
-   "desc": "I",
-   "toOwner": "net/minecraft/world/level/block/SpeleothemBlock",
-   "toDesc": "I"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/PointedDripstoneBlock",
-   "name": "AVERAGE_DAYS_PER_GROWTH",
-   "desc": "F",
-   "toOwner": "net/minecraft/world/level/block/SpeleothemBlock",
-   "toDesc": "F"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/PointedDripstoneBlock",
-   "name": "GROWTH_PROBABILITY_PER_RANDOM_TICK",
-   "desc": "F",
-   "toOwner": "net/minecraft/world/level/block/SpeleothemBlock",
-   "toDesc": "F"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/PointedDripstoneBlock",
-   "name": "MAX_GROWTH_LENGTH",
-   "desc": "I",
-   "toOwner": "net/minecraft/world/level/block/SpeleothemBlock",
-   "toDesc": "I"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/PointedDripstoneBlock",
-   "name": "MAX_STALAGMITE_SEARCH_RANGE_WHEN_GROWING",
-   "desc": "I",
-   "toOwner": "net/minecraft/world/level/block/SpeleothemBlock",
-   "toDesc": "I"
   },
   {
    "owner": "net/minecraft/world/level/block/PointedDripstoneBlock",
@@ -2915,13 +1711,6 @@
    "desc": "Lnet/minecraft/world/phys/shapes/VoxelShape;",
    "toOwner": "net/minecraft/world/level/block/SpeleothemBlock",
    "toDesc": "Lnet/minecraft/world/phys/shapes/VoxelShape;"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/PointedDripstoneBlock",
-   "name": "MAX_HORIZONTAL_OFFSET",
-   "desc": "F",
-   "toOwner": "net/minecraft/world/level/block/SpeleothemBlock",
-   "toDesc": "F"
   },
   {
    "owner": "net/minecraft/world/level/block/entity/BlockEntityType",
@@ -3265,20 +2054,6 @@
    "desc": "Lcom/mojang/serialization/Codec;",
    "toOwner": "net/minecraft/world/level/biome/Biome",
    "toDesc": "Lcom/mojang/serialization/Codec;"
-  },
-  {
-   "owner": "net/minecraft/world/level/levelgen/structure/templatesystem/StructureProcessorType",
-   "name": "GRAVITY",
-   "desc": "Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructureProcessorType;",
-   "toOwner": "net/minecraft/world/entity/ai/attributes/Attributes",
-   "toDesc": "Lnet/minecraft/core/Holder;"
-  },
-  {
-   "owner": "net/minecraft/world/level/levelgen/structure/templatesystem/StructureProcessorType",
-   "name": "NOP",
-   "desc": "Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructureProcessorType;",
-   "toOwner": "net/minecraft/client/data/models/BlockModelGenerators",
-   "toDesc": "Lnet/minecraft/client/renderer/block/dispatch/VariantMutator;"
   }
  ],
  "retyped": [
@@ -3866,6 +2641,16 @@
   },
   {
    "owner": "com/mojang/blaze3d/vertex/VertexFormatElement",
+   "name": "MAX_COUNT",
+   "desc": "I"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/VertexFormatElement",
+   "name": "BY_ID",
+   "desc": "[Lcom/mojang/blaze3d/vertex/VertexFormatElement;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/VertexFormatElement",
    "name": "ELEMENTS",
    "desc": "Ljava/util/List;"
   },
@@ -3950,6 +2735,141 @@
    "desc": "Lnet/minecraft/client/data/models/model/ModelTemplate;"
   },
   {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "MIN_CROSSHAIR_ATTACK_SPEED",
+   "desc": "F"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "EXPERIENCE_BAR_DISPLAY_TICKS",
+   "desc": "I"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "NUM_HEARTS_PER_ROW",
+   "desc": "I"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "LINE_HEIGHT",
+   "desc": "I"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "PORTAL_OVERLAY_ALPHA_MIN",
+   "desc": "F"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "HEART_SIZE",
+   "desc": "I"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "HEART_SEPARATION",
+   "desc": "I"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "NUM_AIR_BUBBLES",
+   "desc": "I"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "AIR_BUBBLE_SIZE",
+   "desc": "I"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "AIR_BUBBLE_SEPERATION",
+   "desc": "I"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "AIR_BUBBLE_POPPING_DURATION",
+   "desc": "I"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "EMPTY_AIR_BUBBLE_DELAY_DURATION",
+   "desc": "I"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "AIR_BUBBLE_POP_SOUND_VOLUME_BASE",
+   "desc": "F"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "AIR_BUBBLE_POP_SOUND_VOLUME_INCREMENT",
+   "desc": "F"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "AIR_BUBBLE_POP_SOUND_PITCH_BASE",
+   "desc": "F"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "AIR_BUBBLE_POP_SOUND_PITCH_INCREMENT",
+   "desc": "F"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "NUM_AIR_BUBBLE_POPPED_BEFORE_SOUND_VOLUME_INCREASE",
+   "desc": "I"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "NUM_AIR_BUBBLE_POPPED_BEFORE_SOUND_PITCH_INCREASE",
+   "desc": "I"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "AUTOSAVE_FADE_SPEED_FACTOR",
+   "desc": "F"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "SAVING_INDICATOR_WIDTH_PADDING_RIGHT",
+   "desc": "I"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "name": "SAVING_INDICATOR_HEIGHT_PADDING_BOTTOM",
+   "desc": "I"
+  },
+  {
+   "owner": "net/minecraft/client/gui/contextualbar/LocatorBarRenderer",
+   "name": "DOT_SIZE",
+   "desc": "I"
+  },
+  {
+   "owner": "net/minecraft/client/gui/contextualbar/LocatorBarRenderer",
+   "name": "VISIBLE_DEGREE_RANGE",
+   "desc": "I"
+  },
+  {
+   "owner": "net/minecraft/client/gui/contextualbar/LocatorBarRenderer",
+   "name": "ARROW_WIDTH",
+   "desc": "I"
+  },
+  {
+   "owner": "net/minecraft/client/gui/contextualbar/LocatorBarRenderer",
+   "name": "ARROW_HEIGHT",
+   "desc": "I"
+  },
+  {
+   "owner": "net/minecraft/client/gui/contextualbar/LocatorBarRenderer",
+   "name": "ARROW_LEFT",
+   "desc": "I"
+  },
+  {
+   "owner": "net/minecraft/client/gui/contextualbar/LocatorBarRenderer",
+   "name": "ARROW_PADDING",
+   "desc": "I"
+  },
+  {
    "owner": "net/minecraft/client/gui/screens/PauseScreen",
    "name": "FEEDBACK_SUBSCREEN",
    "desc": "Lnet/minecraft/network/chat/Component;"
@@ -3961,6 +2881,16 @@
   },
   {
    "owner": "net/minecraft/client/gui/screens/ShareToLanScreen",
+   "name": "PORT_LOWER_BOUND",
+   "desc": "I"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/ShareToLanScreen",
+   "name": "PORT_HIGHER_BOUND",
+   "desc": "I"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/ShareToLanScreen",
    "name": "INFO_TEXT",
    "desc": "Lnet/minecraft/network/chat/Component;"
   },
@@ -3968,6 +2898,16 @@
    "owner": "net/minecraft/client/gui/screens/inventory/AbstractContainerScreen",
    "name": "INVENTORY_LOCATION",
    "desc": "Lnet/minecraft/resources/Identifier;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/inventory/AbstractContainerScreen",
+   "name": "BACKGROUND_TEXTURE_WIDTH",
+   "desc": "I"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/inventory/AbstractContainerScreen",
+   "name": "BACKGROUND_TEXTURE_HEIGHT",
+   "desc": "I"
   },
   {
    "owner": "net/minecraft/client/gui/screens/inventory/AbstractContainerScreen",
@@ -4283,6 +3223,16 @@
    "owner": "net/minecraft/network/protocol/game/GamePacketTypes",
    "name": "SERVERBOUND_SPECTATE_ENTITY",
    "desc": "Lnet/minecraft/network/protocol/PacketType;"
+  },
+  {
+   "owner": "net/minecraft/world/entity/EntityType",
+   "name": "MAGIC_HORSE_WIDTH",
+   "desc": "F"
+  },
+  {
+   "owner": "net/minecraft/world/entity/EntityType",
+   "name": "DISPLAY_TRACKING_RANGE",
+   "desc": "I"
   },
   {
    "owner": "net/minecraft/world/entity/LivingEntity",
@@ -7876,8 +6826,53 @@
   },
   {
    "owner": "net/minecraft/world/level/block/PointedDripstoneBlock",
+   "name": "DELAY_BEFORE_FALLING",
+   "desc": "I"
+  },
+  {
+   "owner": "net/minecraft/world/level/block/PointedDripstoneBlock",
    "name": "MIN_TRIDENT_VELOCITY_TO_BREAK_DRIPSTONE",
    "desc": "D"
+  },
+  {
+   "owner": "net/minecraft/world/level/block/PointedDripstoneBlock",
+   "name": "STALACTITE_DAMAGE_PER_FALL_DISTANCE_AND_SIZE",
+   "desc": "F"
+  },
+  {
+   "owner": "net/minecraft/world/level/block/PointedDripstoneBlock",
+   "name": "STALACTITE_MAX_DAMAGE",
+   "desc": "I"
+  },
+  {
+   "owner": "net/minecraft/world/level/block/PointedDripstoneBlock",
+   "name": "MAX_STALACTITE_HEIGHT_FOR_DAMAGE_CALCULATION",
+   "desc": "I"
+  },
+  {
+   "owner": "net/minecraft/world/level/block/PointedDripstoneBlock",
+   "name": "AVERAGE_DAYS_PER_GROWTH",
+   "desc": "F"
+  },
+  {
+   "owner": "net/minecraft/world/level/block/PointedDripstoneBlock",
+   "name": "GROWTH_PROBABILITY_PER_RANDOM_TICK",
+   "desc": "F"
+  },
+  {
+   "owner": "net/minecraft/world/level/block/PointedDripstoneBlock",
+   "name": "MAX_GROWTH_LENGTH",
+   "desc": "I"
+  },
+  {
+   "owner": "net/minecraft/world/level/block/PointedDripstoneBlock",
+   "name": "MAX_STALAGMITE_SEARCH_RANGE_WHEN_GROWING",
+   "desc": "I"
+  },
+  {
+   "owner": "net/minecraft/world/level/block/PointedDripstoneBlock",
+   "name": "MAX_HORIZONTAL_OFFSET",
+   "desc": "F"
   },
   {
    "owner": "net/minecraft/world/level/block/entity/DecoratedPotPatterns",
@@ -7963,10 +6958,94 @@
  "ambiguous": [
   {
    "owner": "com/mojang/blaze3d/platform/DestFactor",
+   "name": "CONSTANT_ALPHA",
+   "homes": [
+    "com/mojang/blaze3d/platform/BlendFactor"
+   ]
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/DestFactor",
+   "name": "CONSTANT_COLOR",
+   "homes": [
+    "com/mojang/blaze3d/platform/BlendFactor"
+   ]
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/DestFactor",
+   "name": "DST_ALPHA",
+   "homes": [
+    "com/mojang/blaze3d/platform/BlendFactor"
+   ]
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/DestFactor",
+   "name": "DST_COLOR",
+   "homes": [
+    "com/mojang/blaze3d/platform/BlendFactor"
+   ]
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/DestFactor",
    "name": "ONE",
    "homes": [
     "com/mojang/blaze3d/platform/BlendFactor",
     "net/minecraft/world/phys/Vec2"
+   ]
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/DestFactor",
+   "name": "ONE_MINUS_CONSTANT_ALPHA",
+   "homes": [
+    "com/mojang/blaze3d/platform/BlendFactor"
+   ]
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/DestFactor",
+   "name": "ONE_MINUS_CONSTANT_COLOR",
+   "homes": [
+    "com/mojang/blaze3d/platform/BlendFactor"
+   ]
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/DestFactor",
+   "name": "ONE_MINUS_DST_ALPHA",
+   "homes": [
+    "com/mojang/blaze3d/platform/BlendFactor"
+   ]
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/DestFactor",
+   "name": "ONE_MINUS_DST_COLOR",
+   "homes": [
+    "com/mojang/blaze3d/platform/BlendFactor"
+   ]
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/DestFactor",
+   "name": "ONE_MINUS_SRC_ALPHA",
+   "homes": [
+    "com/mojang/blaze3d/platform/BlendFactor"
+   ]
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/DestFactor",
+   "name": "ONE_MINUS_SRC_COLOR",
+   "homes": [
+    "com/mojang/blaze3d/platform/BlendFactor"
+   ]
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/DestFactor",
+   "name": "SRC_ALPHA",
+   "homes": [
+    "com/mojang/blaze3d/platform/BlendFactor"
+   ]
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/DestFactor",
+   "name": "SRC_COLOR",
+   "homes": [
+    "com/mojang/blaze3d/platform/BlendFactor"
    ]
   },
   {
@@ -7982,10 +7061,101 @@
   },
   {
    "owner": "com/mojang/blaze3d/platform/SourceFactor",
+   "name": "CONSTANT_ALPHA",
+   "homes": [
+    "com/mojang/blaze3d/platform/BlendFactor"
+   ]
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/SourceFactor",
+   "name": "CONSTANT_COLOR",
+   "homes": [
+    "com/mojang/blaze3d/platform/BlendFactor"
+   ]
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/SourceFactor",
+   "name": "DST_ALPHA",
+   "homes": [
+    "com/mojang/blaze3d/platform/BlendFactor"
+   ]
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/SourceFactor",
+   "name": "DST_COLOR",
+   "homes": [
+    "com/mojang/blaze3d/platform/BlendFactor"
+   ]
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/SourceFactor",
    "name": "ONE",
    "homes": [
     "com/mojang/blaze3d/platform/BlendFactor",
     "net/minecraft/world/phys/Vec2"
+   ]
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/SourceFactor",
+   "name": "ONE_MINUS_CONSTANT_ALPHA",
+   "homes": [
+    "com/mojang/blaze3d/platform/BlendFactor"
+   ]
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/SourceFactor",
+   "name": "ONE_MINUS_CONSTANT_COLOR",
+   "homes": [
+    "com/mojang/blaze3d/platform/BlendFactor"
+   ]
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/SourceFactor",
+   "name": "ONE_MINUS_DST_ALPHA",
+   "homes": [
+    "com/mojang/blaze3d/platform/BlendFactor"
+   ]
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/SourceFactor",
+   "name": "ONE_MINUS_DST_COLOR",
+   "homes": [
+    "com/mojang/blaze3d/platform/BlendFactor"
+   ]
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/SourceFactor",
+   "name": "ONE_MINUS_SRC_ALPHA",
+   "homes": [
+    "com/mojang/blaze3d/platform/BlendFactor"
+   ]
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/SourceFactor",
+   "name": "ONE_MINUS_SRC_COLOR",
+   "homes": [
+    "com/mojang/blaze3d/platform/BlendFactor"
+   ]
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/SourceFactor",
+   "name": "SRC_ALPHA",
+   "homes": [
+    "com/mojang/blaze3d/platform/BlendFactor"
+   ]
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/SourceFactor",
+   "name": "SRC_ALPHA_SATURATE",
+   "homes": [
+    "com/mojang/blaze3d/platform/BlendFactor"
+   ]
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/SourceFactor",
+   "name": "SRC_COLOR",
+   "homes": [
+    "com/mojang/blaze3d/platform/BlendFactor"
    ]
   },
   {
@@ -8027,35 +7197,59 @@
    ]
   },
   {
-   "owner": "com/mojang/blaze3d/vertex/VertexFormatElement",
-   "name": "BY_ID",
+   "owner": "com/mojang/blaze3d/vertex/VertexFormat$Mode",
+   "name": "DEBUG_LINES",
    "homes": [
-    "net/minecraft/core/Direction",
-    "net/minecraft/network/protocol/game/ServerboundTestInstanceBlockActionPacket$Action",
-    "net/minecraft/server/ServerLinks$KnownLinkType",
-    "net/minecraft/server/permissions/PermissionLevel",
-    "net/minecraft/world/entity/EquipmentSlot",
-    "net/minecraft/world/entity/EquipmentSlotGroup",
-    "net/minecraft/world/entity/Pose",
-    "net/minecraft/world/entity/animal/axolotl/Axolotl$Variant",
-    "net/minecraft/world/entity/animal/equine/Llama$Variant",
-    "net/minecraft/world/entity/animal/equine/Variant",
-    "net/minecraft/world/entity/animal/fish/TropicalFish$Pattern",
-    "net/minecraft/world/entity/animal/golem/CopperGolemState",
-    "net/minecraft/world/entity/animal/panda/Panda$Gene",
-    "net/minecraft/world/entity/animal/parrot/Parrot$Variant",
-    "net/minecraft/world/entity/animal/rabbit/Rabbit$Variant",
-    "net/minecraft/world/entity/animal/sniffer/Sniffer$State",
-    "net/minecraft/world/inventory/ContainerInput",
-    "net/minecraft/world/item/DyeColor",
-    "net/minecraft/world/item/ItemDisplayContext",
-    "net/minecraft/world/item/ItemUseAnimation",
-    "net/minecraft/world/item/component/FireworkExplosion$Shape",
-    "net/minecraft/world/level/GameType",
-    "net/minecraft/world/level/block/Rotation",
-    "net/minecraft/world/level/levelgen/Heightmap$Types",
-    "net/minecraft/world/scores/DisplaySlot",
-    "net/minecraft/world/scores/TeamColor"
+    "com/mojang/blaze3d/PrimitiveTopology"
+   ]
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/VertexFormat$Mode",
+   "name": "DEBUG_LINE_STRIP",
+   "homes": [
+    "com/mojang/blaze3d/PrimitiveTopology"
+   ]
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/VertexFormat$Mode",
+   "name": "POINTS",
+   "homes": [
+    "com/mojang/blaze3d/PrimitiveTopology"
+   ]
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/VertexFormat$Mode",
+   "name": "TRIANGLES",
+   "homes": [
+    "com/mojang/blaze3d/PrimitiveTopology"
+   ]
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/VertexFormat$Mode",
+   "name": "TRIANGLE_STRIP",
+   "homes": [
+    "com/mojang/blaze3d/PrimitiveTopology"
+   ]
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/VertexFormat$Mode",
+   "name": "TRIANGLE_FAN",
+   "homes": [
+    "com/mojang/blaze3d/PrimitiveTopology"
+   ]
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/VertexFormat$Mode",
+   "name": "QUADS",
+   "homes": [
+    "com/mojang/blaze3d/PrimitiveTopology"
+   ]
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/VertexFormatElement",
+   "name": "POSITION",
+   "homes": [
+    "com/mojang/blaze3d/vertex/DefaultVertexFormat"
    ]
   },
   {
@@ -8237,31 +7431,24 @@
    ]
   },
   {
-   "owner": "net/minecraft/client/gui/Gui",
-   "name": "LINE_HEIGHT",
+   "owner": "net/minecraft/client/model/geom/ModelLayers",
+   "name": "BED_FOOT",
    "homes": [
-    "net/minecraft/client/gui/Hud",
-    "net/minecraft/client/gui/components/CommandSuggestions"
+    "net/minecraft/client/data/models/model/ModelTemplates"
    ]
   },
   {
-   "owner": "net/minecraft/client/gui/screens/inventory/AbstractContainerScreen",
-   "name": "BACKGROUND_TEXTURE_WIDTH",
+   "owner": "net/minecraft/client/model/geom/ModelLayers",
+   "name": "BED_HEAD",
    "homes": [
-    "net/minecraft/client/gui/screens/advancements/AdvancementsScreen",
-    "net/minecraft/client/gui/screens/inventory/BookEditScreen",
-    "net/minecraft/client/gui/screens/inventory/BookViewScreen",
-    "net/minecraft/client/gui/screens/recipebook/RecipeBookComponent"
+    "net/minecraft/client/data/models/model/ModelTemplates"
    ]
   },
   {
-   "owner": "net/minecraft/client/gui/screens/inventory/AbstractContainerScreen",
-   "name": "BACKGROUND_TEXTURE_HEIGHT",
+   "owner": "net/minecraft/client/renderer/blockentity/HangingSignRenderer",
+   "name": "TRANSFORMATIONS",
    "homes": [
-    "net/minecraft/client/gui/screens/advancements/AdvancementsScreen",
-    "net/minecraft/client/gui/screens/inventory/BookEditScreen",
-    "net/minecraft/client/gui/screens/inventory/BookViewScreen",
-    "net/minecraft/client/gui/screens/recipebook/RecipeBookComponent"
+    "net/minecraft/client/renderer/blockentity/DecoratedPotRenderer"
    ]
   },
   {
@@ -8282,6 +7469,48 @@
    "homes": [
     "net/minecraft/client/renderer/blockentity/state/ChestRenderState$ChestMaterialType",
     "net/minecraft/world/entity/SulfurCubeArchetypes"
+   ]
+  },
+  {
+   "owner": "net/minecraft/client/renderer/special/ChestSpecialRenderer",
+   "name": "TRAPPED",
+   "homes": [
+    "net/minecraft/client/renderer/blockentity/state/ChestRenderState$ChestMaterialType"
+   ]
+  },
+  {
+   "owner": "net/minecraft/client/renderer/special/ChestSpecialRenderer",
+   "name": "CHRISTMAS",
+   "homes": [
+    "net/minecraft/client/renderer/blockentity/state/ChestRenderState$ChestMaterialType"
+   ]
+  },
+  {
+   "owner": "net/minecraft/client/renderer/special/ChestSpecialRenderer",
+   "name": "COPPER_UNAFFECTED",
+   "homes": [
+    "net/minecraft/client/renderer/blockentity/state/ChestRenderState$ChestMaterialType"
+   ]
+  },
+  {
+   "owner": "net/minecraft/client/renderer/special/ChestSpecialRenderer",
+   "name": "COPPER_EXPOSED",
+   "homes": [
+    "net/minecraft/client/renderer/blockentity/state/ChestRenderState$ChestMaterialType"
+   ]
+  },
+  {
+   "owner": "net/minecraft/client/renderer/special/ChestSpecialRenderer",
+   "name": "COPPER_WEATHERED",
+   "homes": [
+    "net/minecraft/client/renderer/blockentity/state/ChestRenderState$ChestMaterialType"
+   ]
+  },
+  {
+   "owner": "net/minecraft/client/renderer/special/ChestSpecialRenderer",
+   "name": "COPPER_OXIDIZED",
+   "homes": [
+    "net/minecraft/client/renderer/blockentity/state/ChestRenderState$ChestMaterialType"
    ]
   },
   {
@@ -8476,10 +7705,143 @@
   },
   {
    "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "IMPOSSIBLE",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "PLAYER_KILLED_ENTITY",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "ENTITY_KILLED_PLAYER",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "ENTER_BLOCK",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "INVENTORY_CHANGED",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "RECIPE_UNLOCKED",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "PLAYER_HURT_ENTITY",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "ENTITY_HURT_PLAYER",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
    "name": "ENCHANTED_ITEM",
    "homes": [
     "net/minecraft/advancements/triggers/CriteriaTriggers",
     "net/minecraft/world/level/storage/loot/parameters/LootContextParamSets"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "FILLED_BUCKET",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "BREWED_POTION",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "CONSTRUCT_BEACON",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "USED_ENDER_EYE",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "SUMMONED_ENTITY",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "BRED_ANIMALS",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "LOCATION",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "SLEPT_IN_BED",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "CURED_ZOMBIE_VILLAGER",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "TRADE",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "ITEM_DURABILITY_CHANGED",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
    ]
   },
   {
@@ -8492,10 +7854,94 @@
   },
   {
    "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "CHANGED_DIMENSION",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
    "name": "TICK",
    "homes": [
     "net/minecraft/advancements/triggers/CriteriaTriggers",
     "net/minecraft/world/item/enchantment/EnchantmentEffectComponents"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "TAME_ANIMAL",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "PLACED_BLOCK",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "CONSUME_ITEM",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "EFFECTS_CHANGED",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "USED_TOTEM",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "NETHER_TRAVEL",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "FISHING_ROD_HOOKED",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "CHANNELED_LIGHTNING",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "SHOT_CROSSBOW",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "SPEAR_MOBS_TRIGGER",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "KILLED_BY_ARROW",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
    ]
   },
   {
@@ -8525,10 +7971,150 @@
   },
   {
    "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "BEE_NEST_DESTROYED",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "TARGET_BLOCK_HIT",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "ITEM_USED_ON_BLOCK",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "DEFAULT_BLOCK_USE",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "ANY_BLOCK_USE",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "GENERATE_LOOT",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "THROWN_ITEM_PICKED_UP_BY_ENTITY",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "THROWN_ITEM_PICKED_UP_BY_PLAYER",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "PLAYER_INTERACTED_WITH_ENTITY",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "PLAYER_SHEARED_EQUIPMENT",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "START_RIDING_TRIGGER",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
    "name": "LIGHTNING_STRIKE",
    "homes": [
     "net/minecraft/advancements/triggers/CriteriaTriggers",
     "net/minecraft/world/level/gameevent/GameEvent"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "USING_ITEM",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "FALL_FROM_HEIGHT",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "RIDE_ENTITY_IN_LAVA_TRIGGER",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "KILL_MOB_NEAR_SCULK_CATALYST",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "ALLAY_DROP_ITEM_ON_BLOCK",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "AVOID_VIBRATION",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "RECIPE_CRAFTED",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "CRAFTER_RECIPE_CRAFTED",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
+   ]
+  },
+  {
+   "owner": "net/minecraft/advancements/CriteriaTriggers",
+   "name": "FALL_AFTER_EXPLOSION",
+   "homes": [
+    "net/minecraft/advancements/triggers/CriteriaTriggers"
    ]
   },
   {
@@ -8846,6 +8432,146 @@
    ]
   },
   {
+   "owner": "net/minecraft/world/item/Items",
+   "name": "YELLOW_TERRACOTTA",
+   "homes": [
+    "net/minecraft/world/level/levelgen/SurfaceSystem"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/item/Items",
+   "name": "LIGHT_GRAY_TERRACOTTA",
+   "homes": [
+    "net/minecraft/world/level/levelgen/SurfaceSystem"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/item/Items",
+   "name": "BROWN_TERRACOTTA",
+   "homes": [
+    "net/minecraft/world/level/levelgen/SurfaceSystem"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/item/Items",
+   "name": "RED_TERRACOTTA",
+   "homes": [
+    "net/minecraft/world/level/levelgen/SurfaceSystem"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/item/Items",
+   "name": "WHITE_BANNER",
+   "homes": [
+    "net/minecraft/world/level/saveddata/maps/MapDecorationTypes"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/item/Items",
+   "name": "ORANGE_BANNER",
+   "homes": [
+    "net/minecraft/world/level/saveddata/maps/MapDecorationTypes"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/item/Items",
+   "name": "MAGENTA_BANNER",
+   "homes": [
+    "net/minecraft/world/level/saveddata/maps/MapDecorationTypes"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/item/Items",
+   "name": "LIGHT_BLUE_BANNER",
+   "homes": [
+    "net/minecraft/world/level/saveddata/maps/MapDecorationTypes"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/item/Items",
+   "name": "YELLOW_BANNER",
+   "homes": [
+    "net/minecraft/world/level/saveddata/maps/MapDecorationTypes"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/item/Items",
+   "name": "LIME_BANNER",
+   "homes": [
+    "net/minecraft/world/level/saveddata/maps/MapDecorationTypes"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/item/Items",
+   "name": "PINK_BANNER",
+   "homes": [
+    "net/minecraft/world/level/saveddata/maps/MapDecorationTypes"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/item/Items",
+   "name": "GRAY_BANNER",
+   "homes": [
+    "net/minecraft/world/level/saveddata/maps/MapDecorationTypes"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/item/Items",
+   "name": "LIGHT_GRAY_BANNER",
+   "homes": [
+    "net/minecraft/world/level/saveddata/maps/MapDecorationTypes"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/item/Items",
+   "name": "CYAN_BANNER",
+   "homes": [
+    "net/minecraft/world/level/saveddata/maps/MapDecorationTypes"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/item/Items",
+   "name": "PURPLE_BANNER",
+   "homes": [
+    "net/minecraft/world/level/saveddata/maps/MapDecorationTypes"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/item/Items",
+   "name": "BLUE_BANNER",
+   "homes": [
+    "net/minecraft/world/level/saveddata/maps/MapDecorationTypes"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/item/Items",
+   "name": "BROWN_BANNER",
+   "homes": [
+    "net/minecraft/world/level/saveddata/maps/MapDecorationTypes"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/item/Items",
+   "name": "GREEN_BANNER",
+   "homes": [
+    "net/minecraft/world/level/saveddata/maps/MapDecorationTypes"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/item/Items",
+   "name": "RED_BANNER",
+   "homes": [
+    "net/minecraft/world/level/saveddata/maps/MapDecorationTypes"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/item/Items",
+   "name": "BLACK_BANNER",
+   "homes": [
+    "net/minecraft/world/level/saveddata/maps/MapDecorationTypes"
+   ]
+  },
+  {
    "owner": "net/minecraft/world/level/block/Blocks",
    "name": "WHITE_TERRACOTTA",
    "homes": [
@@ -8859,6 +8585,146 @@
    "homes": [
     "net/minecraft/data/worldgen/SurfaceRuleData",
     "net/minecraft/world/level/levelgen/SurfaceSystem"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/level/block/Blocks",
+   "name": "YELLOW_TERRACOTTA",
+   "homes": [
+    "net/minecraft/world/level/levelgen/SurfaceSystem"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/level/block/Blocks",
+   "name": "LIGHT_GRAY_TERRACOTTA",
+   "homes": [
+    "net/minecraft/world/level/levelgen/SurfaceSystem"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/level/block/Blocks",
+   "name": "BROWN_TERRACOTTA",
+   "homes": [
+    "net/minecraft/world/level/levelgen/SurfaceSystem"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/level/block/Blocks",
+   "name": "RED_TERRACOTTA",
+   "homes": [
+    "net/minecraft/world/level/levelgen/SurfaceSystem"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/level/block/Blocks",
+   "name": "WHITE_BANNER",
+   "homes": [
+    "net/minecraft/world/level/saveddata/maps/MapDecorationTypes"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/level/block/Blocks",
+   "name": "ORANGE_BANNER",
+   "homes": [
+    "net/minecraft/world/level/saveddata/maps/MapDecorationTypes"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/level/block/Blocks",
+   "name": "MAGENTA_BANNER",
+   "homes": [
+    "net/minecraft/world/level/saveddata/maps/MapDecorationTypes"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/level/block/Blocks",
+   "name": "LIGHT_BLUE_BANNER",
+   "homes": [
+    "net/minecraft/world/level/saveddata/maps/MapDecorationTypes"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/level/block/Blocks",
+   "name": "YELLOW_BANNER",
+   "homes": [
+    "net/minecraft/world/level/saveddata/maps/MapDecorationTypes"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/level/block/Blocks",
+   "name": "LIME_BANNER",
+   "homes": [
+    "net/minecraft/world/level/saveddata/maps/MapDecorationTypes"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/level/block/Blocks",
+   "name": "PINK_BANNER",
+   "homes": [
+    "net/minecraft/world/level/saveddata/maps/MapDecorationTypes"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/level/block/Blocks",
+   "name": "GRAY_BANNER",
+   "homes": [
+    "net/minecraft/world/level/saveddata/maps/MapDecorationTypes"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/level/block/Blocks",
+   "name": "LIGHT_GRAY_BANNER",
+   "homes": [
+    "net/minecraft/world/level/saveddata/maps/MapDecorationTypes"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/level/block/Blocks",
+   "name": "CYAN_BANNER",
+   "homes": [
+    "net/minecraft/world/level/saveddata/maps/MapDecorationTypes"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/level/block/Blocks",
+   "name": "PURPLE_BANNER",
+   "homes": [
+    "net/minecraft/world/level/saveddata/maps/MapDecorationTypes"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/level/block/Blocks",
+   "name": "BLUE_BANNER",
+   "homes": [
+    "net/minecraft/world/level/saveddata/maps/MapDecorationTypes"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/level/block/Blocks",
+   "name": "BROWN_BANNER",
+   "homes": [
+    "net/minecraft/world/level/saveddata/maps/MapDecorationTypes"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/level/block/Blocks",
+   "name": "GREEN_BANNER",
+   "homes": [
+    "net/minecraft/world/level/saveddata/maps/MapDecorationTypes"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/level/block/Blocks",
+   "name": "RED_BANNER",
+   "homes": [
+    "net/minecraft/world/level/saveddata/maps/MapDecorationTypes"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/level/block/Blocks",
+   "name": "BLACK_BANNER",
+   "homes": [
+    "net/minecraft/world/level/saveddata/maps/MapDecorationTypes"
    ]
   },
   {
@@ -9001,6 +8867,20 @@
     "net/minecraft/world/level/biome/Biome",
     "net/minecraft/world/level/dimension/DimensionType",
     "net/minecraft/world/level/levelgen/NoiseGeneratorSettings"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/level/levelgen/structure/templatesystem/StructureProcessorType",
+   "name": "GRAVITY",
+   "homes": [
+    "net/minecraft/world/entity/ai/attributes/Attributes"
+   ]
+  },
+  {
+   "owner": "net/minecraft/world/level/levelgen/structure/templatesystem/StructureProcessorType",
+   "name": "NOP",
+   "homes": [
+    "net/minecraft/client/data/models/BlockModelGenerators"
    ]
   }
  ]
