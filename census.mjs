@@ -35,8 +35,14 @@ for (const f of jars) {
   run(['mixin-check.mjs', dest, '--classpath', args.classpath, '--out', fixed]);
   const finalJar = fs.existsSync(fixed) ? fixed : dest;
 
-  const v = run(['jar-verify.mjs', finalJar, '--classpath', args.classpath, ...(args.corpus ? ['--corpus', args.corpus] : []), '--from', FROM, '--to', TO]);
-  const m = run(['mixin-check.mjs', finalJar, '--classpath', args.classpath]);
+  // Bridge known relocations into a compat class, which is the step that turns "we know where it
+  // went" into "the mod calls the right thing".
+  const bridged = dest.replace(/\.jar$/, '.br.jar');
+  run(['jar-bridge.mjs', finalJar, '--from', FROM, '--to', TO, '--classpath', args.classpath, '--out', bridged]);
+  const shipJar = fs.existsSync(bridged) ? bridged : finalJar;
+
+  const v = run(['jar-verify.mjs', shipJar, '--classpath', args.classpath, ...(args.corpus ? ['--corpus', args.corpus] : []), '--from', FROM, '--to', TO]);
+  const m = run(['mixin-check.mjs', shipJar, '--classpath', args.classpath]);
   const links = +(v.match(/^\s*(\d+) link\(s\) will fail/m)?.[1] ?? (/every link resolves/.test(v) ? 0 : NaN));
   const mix = /no mixins in this jar/.test(m) ? 0 : +(m.match(/PROBLEMS\s*:\s*(\d+)/)?.[1] ?? NaN);
   if (Number.isNaN(links) || Number.isNaN(mix)) { perMod.push({ name, state: 'NOT MEASURED' }); bump('not measured'); continue; }

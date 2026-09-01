@@ -17,6 +17,7 @@ import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { readZip, inflateEntry } from './zipfile.mjs';
 import { ClassFile } from './classfile.mjs';
+import { liveRefs } from './bytecode.mjs';
 
 const args = {}, pos = [];
 for (let i = 2; i < process.argv.length; i++) { const t = process.argv[i]; t.startsWith('--') ? args[t.slice(2)] = process.argv[++i] : pos.push(t); }
@@ -127,16 +128,25 @@ const relocated = new Map();      // "owner\tname\tdesc" -> {via, host}
 
 // ── collect every link the jar makes into the target ─────────────────────────────────────────
 const wanted = new Map();   // owner -> Set("kind name desc")
+const reachable = new Set();   // only those an instruction actually names
 let classes = 0;
 function scan(buf) {
   for (const e of readZip(buf)) {
     if (/^META-INF\/jars\/.+\.jar$/.test(e.name)) { try { scan(inflateEntry(e)); } catch { /* skip */ } continue; }
     if (!e.name.endsWith('.class')) continue;
     classes++;
-    for (const r of new ClassFile(inflateEntry(e)).refs()) {
+    // Split what the CODE reaches from what merely sits in the pool. The JVM resolves a constant
+    // pool entry lazily, on first execution of an instruction naming it, so an entry no instruction
+    // reaches can never throw. Counting the pool alone reports links nothing can follow — and after
+    // a call site is redirected the old entry stays behind, inert, and would be reported forever.
+    const data = inflateEntry(e);
+    let live = new Set();
+    try { live = liveRefs(ClassFile, data); } catch { /* fall back to treating everything as live */ }
+    for (const r of new ClassFile(data).refs()) {
       if (!r.owner.startsWith(PREFIX)) continue;
       if (!wanted.has(r.owner)) wanted.set(r.owner, new Set());
       wanted.get(r.owner).add(`${r.kind} ${r.name} ${r.desc}`);
+      if (live.size && live.has(`${r.owner}\t${r.name}\t${r.desc}`)) reachable.add(`${r.owner}\t${r.name}\t${r.desc}`);
     }
   }
 }
@@ -234,7 +244,7 @@ for (let wave = 0; wave < 8; wave++) {
 }
 if (process.env.FOXGRADE_DEBUG) console.error(`  [resolved hierarchy: ${need.size} classes]`);
 
-const missingClasses = [], missingMembers = [], loaderProvided = [];
+const missingClasses = [], missingMembers = [], loaderProvided = [], inert = [];
 let checked = 0;
 for (const [owner, keys] of wanted) {
   if (!declared(owner)) { missingClasses.push([owner, keys.size]); continue; }
@@ -246,6 +256,7 @@ for (const [owner, keys] of wanted) {
     // it. Reported separately rather than hidden, because it is an inference from other people's
     // working mods rather than something proved against the jars.
     if (modProvided.has(`${owner}\t${name}\t${desc}`)) { loaderProvided.push([owner, name, desc]); continue; }
+    if (reachable.size && !reachable.has(`${owner}\t${name}\t${desc}`)) { inert.push([owner, name, desc]); continue; }
     missingMembers.push([owner, name, desc]);
   }
 }
@@ -272,6 +283,9 @@ for (const [o, n, d] of missingMembers.slice(0, 12)) {
 }
 if (missingMembers.length > 12) console.log(`      … ${missingMembers.length - 12} more`);
 
+if (inert.length) {
+  console.log(`    inert              : ${inert.length}   (in the pool, but no instruction reaches them — never resolved)`);
+}
 if (loaderProvided.length) {
   console.log(`    loader-provided    : ${loaderProvided.length}   (absent from the jars, but shipping mods call them on this version)`);
   for (const [o, n] of loaderProvided.slice(0, 5)) console.log(`      ~ ${o.replace(/\//g, '.')}.${n}`);
