@@ -159,6 +159,7 @@ preloadMembers([...allTargets]);
 
 let checked = 0;
 const problems = [];
+const preExisting = [];
 for (const { cls, config } of mixinClasses) {
   const e = byName.get(cls + '.class');
   if (!e) { problems.push({ cls, kind: 'missing', detail: 'declared in the config but not in the jar' }); continue; }
@@ -190,7 +191,14 @@ for (const { cls, config } of mixinClasses) {
   }
   for (const t of targets) {
     const members = declaredMembers(t);
-    if (!members) { problems.push({ cls, kind: 'target-class', detail: `target ${t.replace(/\//g, '.')} does not exist in the target version` }); continue; }
+    if (!members) {
+      // A target class that is ALSO absent from the SOURCE version was never going to apply there
+      // either — boids ships a RealFishingMixin against MobSpawnType, which exists in neither 26.1
+      // nor 26.2, gated behind a mixin plugin for older Minecraft. That is a version-conditional
+      // mixin, not something this port broke, and counting it as fatal blames the port for the
+      // mod's own multi-version scaffolding. Reported separately so it is visible, not hidden.
+      if (sourceMembers.size && !sourceMembers.has(t)) { preExisting.push({ cls, t }); continue; }
+      problems.push({ cls, kind: 'target-class', detail: `target ${t.replace(/\//g, '.')} does not exist in the target version` }); continue; }
     for (const s of strings) {
       if (own.has(s) || members.has(s) || s.length < 4 || resolvedRefs.has(s)) continue;
       const rel = relocs.get(`${t}\t${s}`);
@@ -215,6 +223,7 @@ for (const { cls, config } of mixinClasses) {
 console.log(`  ${path.basename(JAR)}`);
 console.log(`    mixin classes      : ${mixinClasses.length}`);
 console.log(`    target classes read: ${checked}`);
+if (preExisting.length) console.log(`    pre-existing       : ${preExisting.length}   (target absent in the SOURCE version too — conditional mixin, not port breakage)`);
 console.log(`    PROBLEMS           : ${problems.length}`);
 for (const p of problems) {
   console.log(`      ✗ ${p.cls.split('/').pop()}: ${p.detail}`);
@@ -291,7 +300,12 @@ if (args.out && problems.length) {
         continue;
       }
     }
-    const out = new ClassFile(inflateEntry(e)).rewrite((v) => (v === `L${from};` ? `L${to};` : null));
+    // Not equality: a fully-qualified @At/@Inject selector EMBEDS the class descriptor inside a
+    // longer string — target="Lnet/.../Gui;extractHearts(...)" — so an exact match rewrites the
+    // @Mixin value, leaves the selector aimed at the old class, and ships a half-retargeted mixin
+    // that still fails. Every embedded occurrence moves together or the retarget is a lie. The
+    // guard above already established the mixin uses nothing that stayed behind on the old class.
+    const out = new ClassFile(inflateEntry(e)).rewrite((v) => (v.includes(`L${from};`) ? v.split(`L${from};`).join(`L${to};`) : null));
     if (!out) { console.log(`  ! ${cls.split('/').pop()}: could not find its @Mixin target constant`); continue; }
     repl.set(e.name, out); fixed++;
     console.log(`  ✓ ${cls.split('/').pop()} retargeted: ${from.replace(/\//g, '.')} → ${to.replace(/\//g, '.')}`);

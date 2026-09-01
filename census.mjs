@@ -25,41 +25,19 @@ const bump = (k) => tally.set(k, (tally.get(k) || 0) + 1);
 
 for (const f of jars) {
   const name = f.replace(/@.*$/, '');
-  const dest = path.join(OUT, `${name}.jar`);
-  run(['jar-remap.mjs', path.join(DIR, f), '--from', FROM, '--to', TO, '--classpath', args.classpath, '--out', dest]);
-  if (!fs.existsSync(dest)) { perMod.push({ name, state: 'remap failed' }); bump('remap failed'); continue; }
+  // One driver, one artifact. The suffix-chained stages this replaces produced two wrong
+  // measurements in one afternoon, both from reading a stale stage file.
+  const finalJar = path.join(OUT, `${name}.final.jar`);
+  run(['port-pipeline.mjs', path.join(DIR, f), '--from', FROM, '--to', TO, '--classpath', args.classpath,
+       ...(args.source ? ['--source', args.source] : []), '--out', finalJar, '--work', OUT]);
+  if (!fs.existsSync(finalJar)) { perMod.push({ name, state: 'pipeline failed' }); bump('pipeline failed'); continue; }
 
-  // Retargeting is part of the pipeline, not an optional extra: mixin-check --out moves a mixin whose
-  // target class relocated. Measuring before that step counts fixable problems as blockers.
-  const fixed = dest.replace(/\.jar$/, '.mx.jar');
-  run(['mixin-check.mjs', dest, '--classpath', args.classpath, '--out', fixed]);
-  const finalJar = fs.existsSync(fixed) ? fixed : dest;
-
-  // Bridge known relocations into a compat class, which is the step that turns "we know where it
-  // went" into "the mod calls the right thing".
-  const bridged = dest.replace(/\.jar$/, '.br.jar');
-  run(['jar-bridge.mjs', finalJar, '--from', FROM, '--to', TO, '--classpath', args.classpath, '--out', bridged]);
-  const shipJar = fs.existsSync(bridged) ? bridged : finalJar;
-
-  // Swap bundled dependencies whose maintainers already shipped a target build — work that should
-  // never be redone by table, bridge or model. Hash identities come from the original jar; the
-  // ported one's bytes match nothing Modrinth has hosted.
-  const swapped = dest.replace(/\.jar$/, '.dp.jar');
-  run(['jar-deps.mjs', shipJar, '--original', path.join(DIR, f), '--to', TO, '--out', swapped]);
-  const shipJar2 = fs.existsSync(swapped) ? swapped : shipJar;
-
-  // A selector rename that the corroborated table can rewrite is the last mechanical stage.
-  const sel = dest.replace(/\.jar$/, '.sx.jar');
-  run(['mixin-check.mjs', shipJar2, '--classpath', args.classpath, ...(args.source ? ['--source-classpath', args.source] : []), '--out', sel]);
-  const finalShip = fs.existsSync(sel) ? sel : shipJar2;
-
-  const v = run(['jar-verify.mjs', finalShip, '--classpath', args.classpath, ...(args.corpus ? ['--corpus', args.corpus] : []), '--from', FROM, '--to', TO]);
-  const m = run(['mixin-check.mjs', finalShip, '--classpath', args.classpath, ...(args.source ? ['--source-classpath', args.source] : [])]);
+  const v = run(['jar-verify.mjs', finalJar, '--classpath', args.classpath, ...(args.corpus ? ['--corpus', args.corpus] : []), '--from', FROM, '--to', TO]).stdout || '';
+  const m = run(['mixin-check.mjs', finalJar, '--classpath', args.classpath, ...(args.source ? ['--source-classpath', args.source] : [])]).stdout || '';
   const links = +(v.match(/^\s*(\d+) link\(s\) will fail/m)?.[1] ?? (/every link resolves/.test(v) ? 0 : NaN));
   const mix = /no mixins in this jar/.test(m) ? 0 : +(m.match(/PROBLEMS\s*:\s*(\d+)/)?.[1] ?? NaN);
   if (Number.isNaN(links) || Number.isNaN(mix)) { perMod.push({ name, state: 'NOT MEASURED' }); bump('not measured'); continue; }
 
-  // Sort each failure by who can fix it, which is the only classification that changes what we build.
   for (const line of v.split('\n')) {
     if (!/^\s+✗/.test(line)) continue;
     if (/\(\d+ links?\)$/.test(line)) bump('link: class gone (renamed+redesigned, or deleted)');
