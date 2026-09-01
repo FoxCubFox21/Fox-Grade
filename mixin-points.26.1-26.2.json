@@ -4,6 +4,254 @@
  "to": "26.2",
  "corroborated": [
   {
+   "owner": "net/minecraft/client/gui/font/GlyphRenderTypes",
+   "from": "createForIntensityTexture",
+   "to": "createForGrayscaleTexture",
+   "mods": [
+    "aaron-mod",
+    "embers-text-api",
+    "skyblockaddons-unofficial"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/GameRenderer",
+   "from": "extractGui",
+   "to": "gameRenderState",
+   "mods": [
+    "aaron-mod",
+    "better-screens"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "from": "extractEffects",
+   "to": "extractRenderState",
+   "mods": [
+    "aaron-mod",
+    "durability-viewer-updated",
+    "feather-remake",
+    "xaeros-minimap"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/feature/ItemFeatureRenderer",
+   "from": "renderItem",
+   "to": "prepareFoilSubmit",
+   "mods": [
+    "addadd",
+    "asteroid",
+    "custom-glint",
+    "strawberrylib"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/ItemInHandRenderer",
+   "from": "renderArmWithItem",
+   "to": "submitArmWithItem",
+   "mods": [
+    "aaron-mod",
+    "animatium",
+    "asteroid",
+    "bactromod",
+    "bettershields",
+    "clickcrystals",
+    "cookeymod",
+    "enchancement",
+    "first-person-model",
+    "headpat",
+    "impact-frames-pvp",
+    "iris",
+    "just-enough-guns-neoforge",
+    "kitchen-projectiles",
+    "no-ones-view-model",
+    "nofrills",
+    "overlaytweaks",
+    "punchy-fpa",
+    "rearm",
+    "scaleme",
+    "totem-party-popper",
+    "viafabricplus",
+    "vivecraft",
+    "weaponsexpanded",
+    "zannaghs-armor-hider"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/feature/NameTagFeatureRenderer",
+   "from": "renderTranslucent",
+   "to": "prepareText",
+   "mods": [
+    "aaron-mod",
+    "animatium",
+    "axolotlclient",
+    "devonian",
+    "hidetags",
+    "nametagtweaks"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/ScreenEffectRenderer",
+   "from": "renderFire",
+   "to": "submitFire",
+   "mods": [
+    "aaron-mod",
+    "nofrills"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/GameRenderer",
+   "from": "getMainCamera",
+   "to": "mainCamera",
+   "mods": [
+    "aggroindicator",
+    "amber",
+    "asteroid",
+    "atmospherics",
+    "badoptimizations",
+    "better-combat",
+    "chest-tracker-port",
+    "clickcrystals",
+    "coolrain",
+    "disable-fog",
+    "distanthorizons",
+    "enchancement",
+    "fabric-api",
+    "field-guide",
+    "frozenlib",
+    "iris",
+    "life-series",
+    "mcpitanlibarch",
+    "midnightcontrols",
+    "nuit",
+    "particle-tweaks",
+    "player-animation-library",
+    "shoulder-surfing-reloaded",
+    "simple-voice-chat",
+    "skinsrestorer",
+    "sodium",
+    "tiny-takeover-x-punchy",
+    "tweakermore",
+    "vivecraft",
+    "voxelmap-updated"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/LevelRenderer",
+   "from": "renderBlockOutline",
+   "to": "submitBlockOutline",
+   "mods": [
+    "amber",
+    "axolotlclient",
+    "bridging-mod",
+    "distanthorizons",
+    "fabric-api",
+    "highlight",
+    "iris",
+    "mcpitanlibarch",
+    "midnightcontrols",
+    "resourceful-lib",
+    "reward-claim",
+    "simple-voice-chat",
+    "skinsrestorer",
+    "skyblock-custom-scoreboard",
+    "skyblock-profile-viewer",
+    "skycubed",
+    "skyocean",
+    "sodium",
+    "tiny-takeover-x-punchy",
+    "veinminer-client"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/feature/ModelFeatureRenderer",
+   "from": "renderModel",
+   "to": "prepareModel",
+   "mods": [
+    "animatium",
+    "geckolib",
+    "skyhanni"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/ItemInHandRenderer",
+   "from": "renderHandsWithItems",
+   "to": "submitHandsWithItems",
+   "mods": [
+    "animatium",
+    "devonian",
+    "freecam",
+    "impact-frames-pvp",
+    "iris",
+    "player-animation-library",
+    "punchy-fpa",
+    "real-camera",
+    "scatha-pro",
+    "shaketweaks"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/ScreenEffectRenderer",
+   "from": "renderWater",
+   "to": "submitWater",
+   "mods": [
+    "animatium",
+    "iris"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/LevelRenderer",
+   "from": "renderHitOutline",
+   "to": "submitHitOutline",
+   "mods": [
+    "animatium",
+    "clickcrystals",
+    "replaymod",
+    "simple-block-overlay"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/GameRenderer",
+   "from": "getGameRenderState",
+   "to": "gameRenderState",
+   "mods": [
+    "asteroid",
+    "chatshot",
+    "chatting",
+    "highlight",
+    "polyplus",
+    "resourceful-lib",
+    "skyblock-custom-scoreboard",
+    "skyblock-profile-viewer",
+    "skycubed",
+    "skyocean",
+    "tweakeroo"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderBuffers",
+   "from": "bufferSource",
+   "to": "endFrame",
+   "mods": [
+    "impact-frames-pvp",
+    "sodium"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
    "owner": "net/minecraft/client/renderer/LevelRenderer",
    "from": "renderLevel",
    "to": "render",
@@ -12,14 +260,58 @@
     "bedrockify",
     "better-block-entities",
     "bobby",
+    "cameratweaks",
+    "catharsis",
+    "chest-tracker-port",
     "chunks-fade-in",
+    "clickcrystals",
+    "cloud_tweaks",
     "distanthorizons",
     "fabric-api",
     "journeymap",
+    "magiclib-dev",
+    "magiclib",
     "malilib",
+    "natural-motion-blur",
     "nuit",
+    "real-camera",
     "simple-voice-chat",
+    "skinsrestorer",
+    "skyblock-custom-scoreboard",
+    "skyblock-profile-viewer",
+    "skycofl",
+    "skycubed",
+    "skyocean",
+    "stella",
+    "superresolution",
+    "sway",
+    "tiny-takeover-x-punchy",
+    "tweakermore",
+    "wilder-wild",
     "xaeros-minimap"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "from": "destroy",
+   "to": "exitWorldAndClose",
+   "mods": [
+    "audioplayer",
+    "camera-utils",
+    "enhanced-groups",
+    "extended-drawers",
+    "fpsdisplay",
+    "freecam",
+    "life-series",
+    "nicer-skies",
+    "skyblocker-liap",
+    "status",
+    "talk-balloons",
+    "unloaded-activity",
+    "voice-chat-interaction",
+    "worldedit",
+    "yacl"
    ],
    "source": "mixin-groundtruth"
   },
@@ -30,58 +322,48 @@
    "mods": [
     "auth-me",
     "cape-provider",
+    "creamykeys",
     "entity-view-distance",
-    "owo-lib"
-   ],
-   "source": "mixin-groundtruth"
-  },
-  {
-   "owner": "net/minecraft/client/renderer/GameRenderer",
-   "from": "getMainCamera",
-   "to": "mainCamera",
-   "mods": [
-    "badoptimizations",
-    "better-combat",
-    "coolrain",
-    "distanthorizons",
-    "fabric-api",
-    "iris",
-    "nuit",
-    "shoulder-surfing-reloaded",
-    "simple-voice-chat",
-    "sodium"
-   ],
-   "source": "mixin-groundtruth"
-  },
-  {
-   "owner": "net/minecraft/client/renderer/LevelRenderer",
-   "from": "renderBlockOutline",
-   "to": "submitBlockOutline",
-   "mods": [
-    "bridging-mod",
-    "distanthorizons",
-    "fabric-api",
-    "highlight",
-    "iris",
-    "resourceful-lib",
-    "simple-voice-chat",
-    "sodium",
-    "veinminer-client"
+    "feather-remake",
+    "feesh",
+    "impact-frames-pvp",
+    "just-enough-guns-neoforge",
+    "oneconfig",
+    "owo-lib",
+    "reliable-advancements",
+    "shulker-preview",
+    "signed-paintings",
+    "sound-controller",
+    "symbol-chat",
+    "terrastorage"
    ],
    "source": "mixin-groundtruth"
   },
   {
    "owner": "net/minecraft/client/Minecraft",
-   "from": "destroy",
-   "to": "exitWorldAndClose",
+   "from": "renderBuffers",
+   "to": "gameRenderer",
    "mods": [
-    "camera-utils",
-    "fpsdisplay",
-    "freecam",
-    "nicer-skies",
+    "axolotlclient",
+    "better-screens",
+    "devonian",
+    "terrastorage"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/GameRenderer",
+   "from": "getNightVisionScale",
+   "to": "nightVisionScale",
+   "mods": [
+    "bactromod",
+    "better-client-enc",
+    "betternightvision",
+    "essentialclient",
+    "gamma-utils",
+    "iris",
     "skyblocker-liap",
-    "worldedit",
-    "yacl"
+    "tweakermore"
    ],
    "source": "mixin-groundtruth"
   },
@@ -91,6 +373,7 @@
    "to": "levelExtractor",
    "mods": [
     "collective",
+    "itemlocks",
     "nicer-skies"
    ],
    "source": "mixin-groundtruth"
@@ -100,9 +383,15 @@
    "from": "renderScreenEffect",
    "to": "submit",
    "mods": [
+    "enchancement",
     "fabric-api",
     "highlight",
     "resourceful-lib",
+    "reward-claim",
+    "skyblock-custom-scoreboard",
+    "skyblock-profile-viewer",
+    "skycubed",
+    "skyocean",
     "sodium",
     "tweakeroo"
    ],
@@ -119,57 +408,13 @@
    "source": "mixin-groundtruth"
   },
   {
-   "owner": "net/minecraft/client/renderer/ItemInHandRenderer",
-   "from": "renderArmWithItem",
-   "to": "submitArmWithItem",
+   "owner": "net/minecraft/client/gui/Gui",
+   "from": "extractCrosshair",
+   "to": "extractRenderState",
    "mods": [
-    "first-person-model",
-    "iris",
-    "punchy-fpa",
-    "viafabricplus"
-   ],
-   "source": "mixin-groundtruth"
-  },
-  {
-   "owner": "net/minecraft/client/renderer/ItemInHandRenderer",
-   "from": "renderHandsWithItems",
-   "to": "submitHandsWithItems",
-   "mods": [
-    "freecam",
-    "iris",
-    "punchy-fpa"
-   ],
-   "source": "mixin-groundtruth"
-  },
-  {
-   "owner": "net/minecraft/client/renderer/GameRenderer",
-   "from": "getNightVisionScale",
-   "to": "nightVisionScale",
-   "mods": [
-    "gamma-utils",
-    "iris",
-    "skyblocker-liap"
-   ],
-   "source": "mixin-groundtruth"
-  },
-  {
-   "owner": "net/minecraft/client/renderer/feature/ModelFeatureRenderer",
-   "from": "renderModel",
-   "to": "prepareModel",
-   "mods": [
-    "geckolib",
-    "skyhanni"
-   ],
-   "source": "mixin-groundtruth"
-  },
-  {
-   "owner": "net/minecraft/client/renderer/GameRenderer",
-   "from": "getGameRenderState",
-   "to": "gameRenderState",
-   "mods": [
-    "highlight",
-    "resourceful-lib",
-    "tweakeroo"
+    "feather-remake",
+    "xaeros-minimap",
+    "xaeros-world-map"
    ],
    "source": "mixin-groundtruth"
   },
@@ -179,7 +424,12 @@
    "to": "submitBlockOutline",
    "mods": [
     "highlight",
-    "resourceful-lib"
+    "resourceful-lib",
+    "reward-claim",
+    "skyblock-custom-scoreboard",
+    "skyblock-profile-viewer",
+    "skycubed",
+    "skyocean"
    ],
    "source": "mixin-groundtruth"
   },
@@ -194,43 +444,105 @@
    "source": "mixin-groundtruth"
   },
   {
-   "owner": "net/minecraft/client/renderer/feature/ItemFeatureRenderer",
-   "from": "renderItem",
-   "to": "prepareOutlineSubmit",
+   "owner": "net/minecraft/client/gui/screens/Overlay",
+   "from": "isPauseScreen",
+   "to": "isPausing",
    "mods": [
-    "skyblocker-liap",
-    "skyhanni"
+    "minecraft-cursor",
+    "rrls"
    ],
    "source": "mixin-groundtruth"
   },
   {
-   "owner": "net/minecraft/client/Minecraft",
-   "from": "getMainRenderTarget",
-   "to": "gameRenderer",
+   "owner": "net/minecraft/world/entity/animal/camel/CamelHusk",
+   "from": "isBaby",
+   "to": "canBeABaby",
    "mods": [
-    "owo-lib",
-    "skyboxify"
-   ],
-   "source": "mixin-groundtruth"
-  },
-  {
-   "owner": "net/minecraft/client/gui/Gui",
-   "from": "extractCrosshair",
-   "to": "extractRenderState",
-   "mods": [
-    "xaeros-minimap",
-    "xaeros-world-map"
+    "more-babies",
+    "viafabricplus"
    ],
    "source": "mixin-groundtruth"
   }
  ],
  "single": [
   {
+   "owner": "net/minecraft/client/gui/Gui",
+   "from": "extractSelectedItemName",
+   "to": "extractRenderState",
+   "mods": [
+    "aaron-mod"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/feature/FlameFeatureRenderer",
+   "from": "renderFlame",
+   "to": "prepare",
+   "mods": [
+    "animatium"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/LevelRenderer",
+   "from": "getCloudRenderer",
+   "to": "cloudRenderer",
+   "mods": [
+    "animatium"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/SubmitNodeStorage",
+   "from": "endFrame",
+   "to": "submitsPerOrder",
+   "mods": [
+    "asteroid"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/LevelRenderer",
+   "from": "extractBlockDestroyAnimation",
+   "to": "submitBlockOutline",
+   "mods": [
+    "asteroid"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "from": "isSingleplayer",
+   "to": "isMultiplayerServer",
+   "mods": [
+    "autoswitch"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
    "owner": "net/minecraft/client/renderer/LevelRenderer",
    "from": "getTranslucentTarget",
    "to": "translucentTarget",
    "mods": [
     "axiom"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Font",
+   "from": "drawInBatch",
+   "to": "prepareText",
+   "mods": [
+    "axolotlclient"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "from": "extractCameraOverlays",
+   "to": "setScreen",
+   "mods": [
+    "bactromod"
    ],
    "source": "mixin-groundtruth"
   },
@@ -253,11 +565,74 @@
    "source": "mixin-groundtruth"
   },
   {
+   "owner": "net/minecraft/client/gui/Font",
+   "from": "drawInBatch8xOutline",
+   "to": "prepare8xTextOutline",
+   "mods": [
+    "caxton"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/ScreenEffectRenderer",
+   "from": "bufferSource",
+   "to": "submitFire",
+   "mods": [
+    "clickcrystals"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
    "owner": "net/minecraft/client/gui/components/tabs/TabNavigationBar",
    "from": "extractRenderState",
    "to": "extractWidgetRenderState",
    "mods": [
     "controlify"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "from": "getChat",
+   "to": "chatListener",
+   "mods": [
+    "cosmetica"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "from": "extractHotbarAndDecorations",
+   "to": "extractRenderState",
+   "mods": [
+    "durability-viewer-updated"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/world/effect/HealOrHarmMobEffect",
+   "from": "applyInstantenousEffect",
+   "to": "applyInstantaneousEffect",
+   "mods": [
+    "enchancement"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "from": "getChatListener",
+   "to": "instance",
+   "mods": [
+    "essentialclient"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "from": "extractScoreboardSidebar",
+   "to": "extractRenderState",
+   "mods": [
+    "feather-remake"
    ],
    "source": "mixin-groundtruth"
   },
@@ -280,6 +655,24 @@
    "source": "mixin-groundtruth"
   },
   {
+   "owner": "net/minecraft/client/renderer/LevelRenderer",
+   "from": "extractVisibleEntities",
+   "to": "levelRenderState",
+   "mods": [
+    "hitrange"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/GuiRenderer",
+   "from": "bufferSource",
+   "to": "endFrame",
+   "mods": [
+    "impact-frames-pvp"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
    "owner": "net/minecraft/client/gui/Gui",
    "from": "extractItemHotbar",
    "to": "extractRenderState",
@@ -289,36 +682,9 @@
    "source": "mixin-groundtruth"
   },
   {
-   "owner": "net/minecraft/client/renderer/state/level/LevelRenderState",
-   "from": "chunkSectionsToRender",
-   "to": "gameTime",
-   "mods": [
-    "iris"
-   ],
-   "source": "mixin-groundtruth"
-  },
-  {
    "owner": "net/minecraft/client/renderer/LevelRenderer",
    "from": "lambda$addLateDebugPass$0",
    "to": "lambda$addAlwaysOnTopPass$0",
-   "mods": [
-    "iris"
-   ],
-   "source": "mixin-groundtruth"
-  },
-  {
-   "owner": "net/minecraft/client/renderer/ScreenEffectRenderer",
-   "from": "renderWater",
-   "to": "submitWater",
-   "mods": [
-    "iris"
-   ],
-   "source": "mixin-groundtruth"
-  },
-  {
-   "owner": "net/minecraft/client/renderer/feature/NameTagFeatureRenderer",
-   "from": "renderTranslucent",
-   "to": "buildGroup",
    "mods": [
     "iris"
    ],
@@ -343,6 +709,51 @@
    "source": "mixin-groundtruth"
   },
   {
+   "owner": "net/minecraft/world/effect/MobEffect",
+   "from": "applyInstantenousEffect",
+   "to": "applyInstantaneousEffect",
+   "mods": [
+    "life-series"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/world/scores/ReadOnlyScoreInfo",
+   "from": "safeFormatValue",
+   "to": "formatValue",
+   "mods": [
+    "life-series"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/server/level/PlayerSpawnFinder",
+   "from": "getOverworldRespawnPos",
+   "to": "getLevelRespawnPos",
+   "mods": [
+    "moderner-beta"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "from": "getVersionType",
+   "to": "getLaunchedVersion",
+   "mods": [
+    "new-visual-keybing"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/blockentity/AbstractSignRenderer",
+   "from": "submitSignWithText",
+   "to": "submitSignText",
+   "mods": [
+    "obe"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
    "owner": "net/minecraft/client/Minecraft",
    "from": "getToastManager",
    "to": "player",
@@ -352,47 +763,56 @@
    "source": "mixin-groundtruth"
   },
   {
+   "owner": "net/minecraft/client/renderer/state/level/QuadParticleRenderState",
+   "from": "prepare",
+   "to": "buildLayer",
+   "mods": [
+    "particle-tweaks"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/world/level/block/JukeboxBlock",
+   "from": "getSignal",
+   "to": "ownSignal",
+   "mods": [
+    "red-bits"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/gui/Gui",
+   "from": "random",
+   "to": "setScreen",
+   "mods": [
+    "rpg-hud"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/GuiRenderer",
+   "from": "submitNodeCollector",
+   "to": "executeDraw",
+   "mods": [
+    "skyblock-custom-scoreboard"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
    "owner": "net/minecraft/client/renderer/LevelRenderer",
-   "from": "renderHitOutline",
-   "to": "submitHitOutline",
+   "from": "destroyBlockProgress",
+   "to": "levelRenderState",
    "mods": [
-    "replaymod"
+    "skyblockaddons-unofficial"
    ],
    "source": "mixin-groundtruth"
   },
   {
-   "owner": "net/minecraft/client/gui/screens/Overlay",
-   "from": "isPauseScreen",
-   "to": "isPausing",
+   "owner": "net/minecraft/client/particle/ParticleGroup",
+   "from": "getAll",
+   "to": "isEmpty",
    "mods": [
-    "rrls"
-   ],
-   "source": "mixin-groundtruth"
-  },
-  {
-   "owner": "net/minecraft/client/renderer/ScreenEffectRenderer",
-   "from": "renderFire",
-   "to": "buildFireQuad",
-   "mods": [
-    "skyblocker-liap"
-   ],
-   "source": "mixin-groundtruth"
-  },
-  {
-   "owner": "net/minecraft/client/Minecraft",
-   "from": "renderBuffers",
-   "to": "renderFrame",
-   "mods": [
-    "sodium"
-   ],
-   "source": "mixin-groundtruth"
-  },
-  {
-   "owner": "net/minecraft/client/renderer/RenderBuffers",
-   "from": "bufferSource",
-   "to": "endFrame",
-   "mods": [
-    "sodium"
+    "smart-particles"
    ],
    "source": "mixin-groundtruth"
   },
@@ -424,20 +844,38 @@
    "source": "mixin-groundtruth"
   },
   {
-   "owner": "net/minecraft/world/entity/animal/camel/CamelHusk",
-   "from": "isBaby",
-   "to": "canBeABaby",
+   "owner": "net/minecraft/client/Options",
+   "from": "hideGui",
+   "to": "getCameraType",
    "mods": [
-    "viafabricplus"
+    "third-person-nametags"
    ],
    "source": "mixin-groundtruth"
   },
   {
-   "owner": "net/minecraft/client/gui/Gui",
-   "from": "extractEffects",
-   "to": "extractRenderState",
+   "owner": "net/minecraft/client/renderer/feature/FeatureRenderDispatcher",
+   "from": "renderSolidFeatures",
+   "to": "gameRenderState",
    "mods": [
-    "xaeros-minimap"
+    "useless-reptile"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/LevelRenderer",
+   "from": "getCloudsTarget",
+   "to": "cloudsTarget",
+   "mods": [
+    "vivecraft"
+   ],
+   "source": "mixin-groundtruth"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/rendertype/RenderType",
+   "from": "draw",
+   "to": "writeDynamicTransforms",
+   "mods": [
+    "wormhole"
    ],
    "source": "mixin-groundtruth"
   }
