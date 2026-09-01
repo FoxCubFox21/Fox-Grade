@@ -75,7 +75,18 @@ for (const f of fs.readdirSync(HERE).filter((x) => /^members\.[\d.]+-[\d.]+\.jso
   catch { /* ignore */ }
 }
 
-const entries = readZip(fs.readFileSync(JAR));
+// Nested jars carry their own mixins, and amecs proved it the hard way: the crash came from
+// amecs_mouse_inputs.mixins.json, a config inside META-INF/jars, which this check never opened —
+// jar-verify recurses, this did not, so every bundled mixin in every mod was invisible. Entries are
+// flattened with a path prefix so configs and classes pair up within their own jar.
+const entries = [];
+const flatten = (buf, prefix) => {
+  for (const e of readZip(buf)) {
+    if (/^META-INF\/jars\/.+\.jar$/.test(e.name)) { try { flatten(inflateEntry(e), prefix + e.name + '\u0000'); } catch { /* skip */ } continue; }
+    entries.push({ ...e, name: prefix + e.name, raw: e.raw, method: e.method });
+  }
+};
+flatten(fs.readFileSync(JAR), '');
 const byName = new Map(entries.map((e) => [e.name, e]));
 
 // The SOURCE version's classes, which turn a loose guess into a precise test. A string in a mixin's
@@ -102,8 +113,9 @@ for (const e of entries) {
   if (!/mixins?.*\.json$/.test(e.name)) continue;
   let cfg; try { cfg = JSON.parse(inflateEntry(e).toString('utf8')); } catch { continue; }
   const pkg = (cfg.package || '').replace(/\./g, '/');
+  const prefix = e.name.includes('\u0000') ? e.name.slice(0, e.name.lastIndexOf('\u0000') + 1) : '';
   for (const list of ['mixins', 'client', 'server']) for (const m of (cfg[list] || []))
-    mixinClasses.push({ cls: `${pkg}/${m.replace(/\./g, '/')}`, config: e.name });
+    mixinClasses.push({ cls: `${prefix}${pkg}/${m.replace(/\./g, '/')}`, config: e.name });
 }
 if (!mixinClasses.length) { console.log('  no mixins in this jar'); process.exit(0); }
 
@@ -170,6 +182,10 @@ for (const { cls, config } of mixinClasses) {
     // Lnet/minecraft/...; inside the @Mixin annotation names the target class.
     for (const m of value.matchAll(/L(net\/minecraft\/[\w/$]+);/g)) targets.add(m[1]);
     if (/^[\w$]+$/.test(value)) strings.push(value);
+    // A selector may be written in full-signature form — "onScroll(DDLnet/...;)V" — which the bare
+    // identifier collector never matched, so those injections were checked against nothing at all.
+    const sig = value.match(/^([\w$]+)\(.*\)[\w\[/;$]*$/);
+    if (sig && sig[1].length >= 4) strings.push(sig[1]);
   }
   // A method= selector is a bare identifier that is not a member this mixin declares itself.
   const own = new Set(cf.declared().members.map((m) => m.name));
