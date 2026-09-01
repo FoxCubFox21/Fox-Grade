@@ -41,8 +41,20 @@ for (const f of jars) {
   run(['jar-bridge.mjs', finalJar, '--from', FROM, '--to', TO, '--classpath', args.classpath, '--out', bridged]);
   const shipJar = fs.existsSync(bridged) ? bridged : finalJar;
 
-  const v = run(['jar-verify.mjs', shipJar, '--classpath', args.classpath, ...(args.corpus ? ['--corpus', args.corpus] : []), '--from', FROM, '--to', TO]);
-  const m = run(['mixin-check.mjs', shipJar, '--classpath', args.classpath]);
+  // Swap bundled dependencies whose maintainers already shipped a target build — work that should
+  // never be redone by table, bridge or model. Hash identities come from the original jar; the
+  // ported one's bytes match nothing Modrinth has hosted.
+  const swapped = dest.replace(/\.jar$/, '.dp.jar');
+  run(['jar-deps.mjs', shipJar, '--original', path.join(DIR, f), '--to', TO, '--out', swapped]);
+  const shipJar2 = fs.existsSync(swapped) ? swapped : shipJar;
+
+  // A selector rename that the corroborated table can rewrite is the last mechanical stage.
+  const sel = dest.replace(/\.jar$/, '.sx.jar');
+  run(['mixin-check.mjs', shipJar2, '--classpath', args.classpath, ...(args.source ? ['--source-classpath', args.source] : []), '--out', sel]);
+  const finalShip = fs.existsSync(sel) ? sel : shipJar2;
+
+  const v = run(['jar-verify.mjs', finalShip, '--classpath', args.classpath, ...(args.corpus ? ['--corpus', args.corpus] : []), '--from', FROM, '--to', TO]);
+  const m = run(['mixin-check.mjs', finalShip, '--classpath', args.classpath, ...(args.source ? ['--source-classpath', args.source] : [])]);
   const links = +(v.match(/^\s*(\d+) link\(s\) will fail/m)?.[1] ?? (/every link resolves/.test(v) ? 0 : NaN));
   const mix = /no mixins in this jar/.test(m) ? 0 : +(m.match(/PROBLEMS\s*:\s*(\d+)/)?.[1] ?? NaN);
   if (Number.isNaN(links) || Number.isNaN(mix)) { perMod.push({ name, state: 'NOT MEASURED' }); bump('not measured'); continue; }
