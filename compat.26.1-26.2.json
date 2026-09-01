@@ -1,0 +1,34 @@
+{
+ "schema": 1,
+ "_comment": "Hand-verified compat implementations, same standard as members.overrides.json: each entry exists because the old member is GONE from 26.2, a faithful reimplementation was found by reading the 26.2 jar with javap, and the evidence is written down so it can be argued with. jar-bridge compiles these against the real target jars, so a recipe that stops being true stops compiling rather than silently shipping.",
+ "recipes": [
+  {
+   "owner": "net/minecraft/ChatFormatting", "name": "getColor", "desc": "()Ljava/lang/Integer;", "static": false,
+   "body": "net.minecraft.network.chat.TextColor c = net.minecraft.network.chat.TextColor.fromLegacyFormat(self); return c == null ? null : java.lang.Integer.valueOf(c.getValue());",
+   "evidence": "26.2 removed ChatFormatting.getColor(). TextColor.fromLegacyFormat(ChatFormatting) exists in 26.2 and returns null for non-colour formats, which matches getColor()'s old contract of null for BOLD/ITALIC/etc; getValue() is the int. Verified by javap against the 26.2 jar."
+  },
+  {
+   "owner": "net/minecraft/client/resources/language/I18n", "name": "exists", "desc": "(Ljava/lang/String;)Z", "static": true,
+   "body": "return net.minecraft.locale.Language.getInstance().has(a0);",
+   "evidence": "26.2 reduced I18n to get() only. I18n.exists always delegated to the language map; Language.getInstance().has(String) is declared in the 26.2 jar and answers the same question. Verified by javap."
+  }
+ ],
+ "classes": [
+  {
+   "replaces": "net/minecraft/util/Tuple",
+   "name": "foxgrade/Tuple",
+   "evidence": "26.2 deleted net.minecraft.util.Tuple outright — no same-name class anywhere in the jar, no unique same-member replacement. Its whole API is five trivial members (javap of the 26.1 jar), so the honest fix is to ship the class: it is our build of the mod, and a pair type carries no game behaviour.",
+   "source": [
+    "package foxgrade;",
+    "public class Tuple<A, B> {",
+    "  private A a; private B b;",
+    "  public Tuple(A a, B b) { this.a = a; this.b = b; }",
+    "  public A getA() { return a; }",
+    "  public void setA(A a) { this.a = a; }",
+    "  public B getB() { return b; }",
+    "  public void setB(B b) { this.b = b; }",
+    "}"
+   ]
+  }
+ ]
+}

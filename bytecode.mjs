@@ -158,7 +158,7 @@ export function retargetCallSites(ClassFile, buf, decide) {
       const op = out[pc];
       const len = safeLength(out, pc, end, start);
       if (len < 0) break;
-      if (op === 0xb2 || op === 0xb4 || op === 0xb6 || op === 0xb9) {
+      if (op === 0xb2 || op === 0xb4 || op === 0xb6 || op === 0xb8 || op === 0xb9) {
         const idx = out.readUInt16BE(pc + 1);
         const to = redirect.get(idx);
         if (to !== undefined) {

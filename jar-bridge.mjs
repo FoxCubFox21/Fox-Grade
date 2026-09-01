@@ -90,9 +90,19 @@ function colourFix(owner, name, desc) {
   return null;
 }
 
+// Hand-verified compat recipes and replacement classes. A recipe is used only when this jar reaches
+// for its member; a replacement class only when the jar references the deleted type. Both compile
+// against the real target jars below, so an entry that stops being true stops building.
+const compatFile = path.join(HERE, `compat.${FROM}-${TO}.json`);
+const compat = fs.existsSync(compatFile) ? JSON.parse(fs.readFileSync(compatFile, 'utf8')) : { recipes: [], classes: [] };
+const recipeByKey = new Map((compat.recipes || []).map((r) => [`${r.owner}\t${r.name}\t${r.desc}`, r]));
+const classByName = new Map((compat.classes || []).map((c) => [c.replaces, c]));
+
 // Which of them does this jar actually reach for?
 const needed = new Map();
 const colourNeeded = new Map();
+const recipeNeeded = new Map();
+const classNeeded = new Set();
 const colourSeen = new Set();
 const scan = (buf) => {
   for (const e of readZip(buf)) {
@@ -101,6 +111,8 @@ const scan = (buf) => {
     try { for (const r of new ClassFile(inflateEntry(e)).refs()) {
       const k = `${r.owner}\t${r.name}\t${r.desc}`;
       if (byKey.has(k)) { needed.set(k, byKey.get(k)); continue; }
+      if (recipeByKey.has(k)) { recipeNeeded.set(k, recipeByKey.get(k)); continue; }
+      if (classByName.has(r.owner)) classNeeded.add(r.owner);
       if (colourSeen.has(k)) continue;
       colourSeen.add(k);
       if (!r.owner.startsWith('net/minecraft/')) continue;
@@ -111,10 +123,24 @@ const scan = (buf) => {
 };
 const jarBuf = fs.readFileSync(JAR);
 scan(jarBuf);
+// A deleted type can be referenced with no member access at all — a field declaration, a cast, an
+// instanceof — so the class scan looks at type names too, not only member refs.
+if (classByName.size) {
+  const scanTypes = (buf) => {
+    for (const e of readZip(buf)) {
+      if (/^META-INF\/jars\/.+\.jar$/.test(e.name)) { try { scanTypes(inflateEntry(e)); } catch { /* skip */ } continue; }
+      if (!e.name.endsWith('.class')) continue;
+      try { for (const { value } of new ClassFile(inflateEntry(e)).utf8())
+        for (const [dead] of classByName) if (value.includes(dead)) classNeeded.add(dead);
+      } catch { /* skip */ }
+    }
+  };
+  scanTypes(jarBuf);
+}
 console.log(`  ${path.basename(JAR)}`);
 console.log(`    relocations known   : ${relocations.length}`);
-console.log(`    reached by this jar : ${needed.size} relocation(s), ${colourNeeded.size} colour constant(s)`);
-if (!needed.size && !colourNeeded.size) { console.log('    nothing to bridge.'); process.exit(0); }
+console.log(`    reached by this jar : ${needed.size} relocation(s), ${colourNeeded.size} colour constant(s), ${recipeNeeded.size} recipe(s), ${classNeeded.size} deleted class(es)`);
+if (!needed.size && !colourNeeded.size && !recipeNeeded.size && !classNeeded.size) { console.log('    nothing to bridge.'); process.exit(0); }
 
 // Generate one static method per relocation.
 const sigs = [];
@@ -137,6 +163,16 @@ for (const [key, c] of colourNeeded) {
     src: `  public static ${javaType(c.ret)} ${name}() { return ${c.expr}; }` });
 }
 
+for (const [key, r] of recipeNeeded) {
+  const name = `b${n++}`;
+  const ps = paramsOf(r.desc), ret = returnOf(r.desc);
+  // An instance recipe takes the old receiver as its first argument, exactly like a relocation
+  // bridge; a static recipe keeps the original parameter list unchanged.
+  const argDecl = [...(r.static ? [] : [`${javaType('L' + r.owner + ';')} self`]), ...ps.map((p, i) => `${javaType(p)} a${i}`)].join(', ');
+  sigs.push({ key, name, desc: `(${r.static ? '' : 'L' + r.owner + ';'}${ps.join('')})${ret}`,
+    src: `  public static ${javaType(ret)} ${name}(${argDecl}) { ${r.body} }` });
+}
+
 const dir = fs.mkdtempSync('/tmp/foxgrade-bridge-');
 const write = (list) => fs.writeFileSync(path.join(dir, 'Compat.java'),
   `package foxgrade;\npublic final class Compat {\n  private Compat() {}\n${list.map((s) => s.src).join('\n')}\n}\n`);
@@ -156,7 +192,10 @@ for (let round = 0; round < 4 && keep.length; round++) {
   if (keep.length === before) { keep = []; break; }                 // errors we cannot attribute
   console.log(`    dropped ${before - keep.length} that would not compile`);
 }
-if (!keep.length) { console.log('    none of them could be compiled — jar unchanged.'); process.exit(0); }
+// A jar can need only a replacement class — every reference to Tuple, no method bridges at all —
+// and an empty Compat is still a valid (if trivial) class to build the pipeline around.
+if (!keep.length && !classNeeded.size) { console.log('    none of them could be compiled — jar unchanged.'); process.exit(0); }
+if (!keep.length) write(keep), spawnSync('javac', ['-nowarn', '-proc:none', '-cp', args.classpath, '-d', dir, path.join(dir, 'Compat.java')], { encoding: 'utf8' });
 
 const compiled = path.join(dir, 'foxgrade', 'Compat.class');
 if (!fs.existsSync(compiled)) { console.log('    compat class did not build — jar unchanged.'); process.exit(1); }
@@ -168,6 +207,24 @@ const fix = new Map(keep.map((s) => [s.key, { owner: 'foxgrade/Compat', name: s.
 // to do and reported success. So this recurses, rebuilding each bundled jar that needed changes.
 // The compat class goes into every jar that references it, because a nested jar cannot be assumed to
 // see a class that only exists in its parent.
+// Replacement classes: compile each, and rename every reference to the dead type. The rename is the
+// same pool edit the remapper already trusts — a class name is globally unique, so rewriting its
+// UTF-8 entries (bare and inside descriptors) is sound and touches no instruction.
+const replacementClasses = new Map();   // dead internal name -> {name, bytes}
+for (const dead of classNeeded) {
+  const c = classByName.get(dead);
+  const src = path.join(dir, c.name.split('/').pop() + '.java');
+  fs.writeFileSync(src, c.source.join('\n') + '\n');
+  const rr = spawnSync('javac', ['-nowarn', '-proc:none', '-cp', args.classpath, '-d', dir, src], { encoding: 'utf8', maxBuffer: 64e6 });
+  if (rr.status !== 0) { console.log(`    ! replacement for ${dead.split('/').pop()} does not compile — skipped`); continue; }
+  replacementClasses.set(dead, { name: c.name, bytes: fs.readFileSync(path.join(dir, c.name + '.class')) });
+}
+const typeRename = (v) => {
+  let out = v, hit = false;
+  for (const [dead, rc] of replacementClasses) if (out.includes(dead)) { out = out.split(dead).join(rc.name); hit = true; }
+  return hit ? out : null;
+};
+
 const compatBytes = fs.readFileSync(compiled);
 let touched = 0, jarsTouched = 0;
 
@@ -185,14 +242,22 @@ function bridgeJar(buf) {
     }
     if (!e.name.endsWith('.class')) continue;
     try {
-      const out = retargetCallSites(ClassFile, inflateEntry(e), ({ owner, name, desc }) => fix.get(`${owner}\t${name}\t${desc}`) || null);
-      if (out) { replacements.set(e.name, out); touched++; changed = true; }
+      let data = inflateEntry(e);
+      const out = retargetCallSites(ClassFile, data, ({ owner, name, desc }) => fix.get(`${owner}\t${name}\t${desc}`) || null);
+      if (out) data = out;
+      const renamed = replacementClasses.size ? new ClassFile(data).rewrite(typeRename) : null;
+      if (renamed) data = renamed;
+      if (out || renamed) { replacements.set(e.name, data); touched++; changed = true; }
     } catch { /* leave the class exactly as it was */ }
   }
   if (!changed) return null;
   const proto = entries.find((e) => e.name.endsWith('.class')) || entries[0];
   entries.push({ ...proto, name: 'foxgrade/Compat.class' });
   replacements.set('foxgrade/Compat.class', compatBytes);
+  for (const [, rc] of replacementClasses) {
+    entries.push({ ...proto, name: rc.name + '.class' });
+    replacements.set(rc.name + '.class', rc.bytes);
+  }
   jarsTouched++;
   return writeZip(entries, replacements);
 }
