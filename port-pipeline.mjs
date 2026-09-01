@@ -48,5 +48,22 @@ step('deps',     'jar-deps.mjs',    [current, '--original', JAR, '--to', TO, '--
 // was also a live reference stops being one once the call site moved into Compat — so the mixin pass
 // runs again at the end rather than trusting its first answer.
 step('retarget2', 'mixin-check.mjs', [current, '--classpath', args.classpath, ...(args.source ? ['--source-classpath', args.source] : []), '--out', p('5')], p('5'));
+// The JVM's own verifier, as a GATE rather than a debugging tool. The remap can manufacture a
+// class that links perfectly and still fails verification — best-guess sent two types to different
+// destinations in better-block-entities and produced 'Bad return type', invisible to every link
+// count. The measure is RELATIVE to the original jar: mods ship with pre-existing verify failures
+// (bclib does), and only errors this pipeline ADDED are its fault.
+const vfyDir = fs.mkdtempSync(path.join(process.env.HOME, '.foxgrade-vfy-'));
+fs.copyFileSync(path.join(HERE, 'LoadVerify.java'), path.join(vfyDir, 'V.java'));
+spawnSync('javac', ['-d', vfyDir, path.join(vfyDir, 'V.java')], { encoding: 'utf8' });
+const countErrs = (jar) => {
+  const r = spawnSync('java', ['-cp', vfyDir, 'V', jar, args.classpath], { encoding: 'utf8', maxBuffer: 64e6 });
+  return +((r.stdout || '').match(/VERIFY ERRORS\s*:\s*(\d+)/)?.[1] ?? NaN);
+};
+const before = countErrs(JAR), after = countErrs(current);
+if (Number.isNaN(before) || Number.isNaN(after)) console.log('  verify     NOT MEASURED');
+else if (after > before) console.log(`  verify     ✗ REGRESSION: ${before} -> ${after} verify error(s) — this port BROKE bytecode. Do not ship it.`);
+else console.log(`  verify     ${after} error(s)${before ? ` (${before} pre-existing in the original)` : ''}`);
+
 fs.copyFileSync(current, OUT);
 console.log(`  final      ${OUT}`);

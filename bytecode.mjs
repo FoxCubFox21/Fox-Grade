@@ -227,3 +227,142 @@ export function liveRefs(ClassFile, buf) {
   }
   return out;
 }
+
+// ── method synthesis ─────────────────────────────────────────────────────────────────────────
+//
+// Appending a whole method to a class is offset-safe for the same reason pool appends are: no byte
+// in any other method's Code attribute refers to a position outside itself, and the methods table
+// carries its own count. Splice a method_info before the class attributes, bump methods_count, done.
+//
+// The methods synthesized here are STRAIGHT-LINE — loads, one call or one throw, a return. A method
+// with no branches needs no StackMapTable, which keeps this machinery inside what has already been
+// proven against the JVM verifier instead of reimplementing frame computation.
+
+// A tiny pool builder over an existing ClassFile, shared shape with retargetCallSites.
+export function poolBuilder(cf) {
+  const byIndex = new Map(cf.entries.map((e) => [e.index, e]));
+  const utf8At = (i) => { const e = byIndex.get(i); return e && e.tag === 1 ? cf.buf.toString('latin1', e.start + 3, e.end) : null; };
+  let next = cf.buf.readUInt16BE(8);
+  const pool = [], intern = new Map();
+  const utf8 = (s) => {
+    if (intern.has('u' + s)) return intern.get('u' + s);
+    for (const e of cf.entries) if (e.tag === 1 && utf8At(e.index) === s) { intern.set('u' + s, e.index); return e.index; }
+    const b = Buffer.from(s, 'latin1'), h = Buffer.alloc(3); h[0] = 1; h.writeUInt16BE(b.length, 1);
+    pool.push(Buffer.concat([h, b])); const i = next++; intern.set('u' + s, i); return i;
+  };
+  const cls = (n) => { const k = 'c' + n; if (intern.has(k)) return intern.get(k); const u = utf8(n), h = Buffer.alloc(3); h[0] = 7; h.writeUInt16BE(u, 1); pool.push(h); const i = next++; intern.set(k, i); return i; };
+  const nat = (n, d) => { const k = `n${n}\t${d}`; if (intern.has(k)) return intern.get(k); const b = Buffer.alloc(5); b[0] = 12; b.writeUInt16BE(utf8(n), 1); b.writeUInt16BE(utf8(d), 3); pool.push(b); const i = next++; intern.set(k, i); return i; };
+  const ref = (tag, o, n, d) => { const k = `r${tag}${o}\t${n}\t${d}`; if (intern.has(k)) return intern.get(k); const c = cls(o), na = nat(n, d); const b = Buffer.alloc(5); b[0] = tag; b.writeUInt16BE(c, 1); b.writeUInt16BE(na, 3); pool.push(b); const i = next++; intern.set(k, i); return i; };
+  const str = (s) => { const k = 's' + s; if (intern.has(k)) return intern.get(k); const u = utf8(s), h = Buffer.alloc(3); h[0] = 8; h.writeUInt16BE(u, 1); pool.push(h); const i = next++; intern.set(k, i); return i; };
+  return { utf8, cls, nat, methodref: (o, n, d) => ref(10, o, n, d), interfaceref: (o, n, d) => ref(11, o, n, d), str, flush: () => ({ pool, next }) };
+}
+
+const SLOTS = { J: 2, D: 2 };
+export function paramSlots(desc) {
+  const out = []; let i = 1;
+  while (desc[i] !== ')') { let s = i; while (desc[i] === '[') i++; if (desc[i] === 'L') i = desc.indexOf(';', i); const t = desc.slice(s, i + 1); out.push({ t, wide: SLOTS[t] === 2 }); i++; }
+  return out;
+}
+const loadOp = (t) => (t === 'J' ? 0x16 : t === 'F' ? 0x17 : t === 'D' ? 0x18 : 'IZBCS'.includes(t) ? 0x15 : 0x19);
+const returnOp = (t) => (t === 'V' ? 0xb1 : t === 'J' ? 0xad : t === 'F' ? 0xae : t === 'D' ? 0xaf : 'IZBCS'.includes(t) ? 0xac : 0xb0);
+
+// One synthesized method: either `throws` (message string) or `call` {owner,name,desc,iface} which
+// receives this method's own arguments in order (an instance method passes `this` first).
+export function assembleMethod(pb, { name, desc, static: isStatic, throws, call }) {
+  const code = [];
+  if (throws) {
+    const ex = pb.cls('java/lang/UnsupportedOperationException');
+    const ctor = pb.methodref('java/lang/UnsupportedOperationException', '<init>', '(Ljava/lang/String;)V');
+    const msg = pb.str(throws);
+    code.push(0xbb, ex >> 8, ex & 255, 0x59, 0x13, msg >> 8, msg & 255, 0xb7, ctor >> 8, ctor & 255, 0xbf);
+  } else {
+    let slot = 0;
+    if (!isStatic) { code.push(0x2a); slot = 1; }                     // aload_0: this
+    for (const p of paramSlots(desc)) { code.push(loadOp(p.t), slot); slot += p.wide ? 2 : 1; }
+    const idx = call.iface ? pb.interfaceref(call.owner, call.name, call.desc) : pb.methodref(call.owner, call.name, call.desc);
+    if (call.iface) code.push(0xb9, idx >> 8, idx & 255, slot + (isStatic ? 0 : 0), 0);
+    else code.push(call.special ? 0xb7 : call.static ? 0xb8 : 0xb6, idx >> 8, idx & 255);
+    code.push(returnOp(desc.slice(desc.indexOf(')') + 1)));
+  }
+  const maxLocals = 1 + paramSlots(desc).reduce((a, p) => a + (p.wide ? 2 : 1), 0) + (isStatic ? 0 : 1);
+  const codeAttr = Buffer.alloc(14 + code.length);
+  codeAttr.writeUInt16BE(pb.utf8('Code'), 0);
+  codeAttr.writeUInt32BE(8 + code.length + 4, 2);
+  codeAttr.writeUInt16BE(Math.max(6, maxLocals + 2), 6);              // max_stack: generous, straight-line
+  codeAttr.writeUInt16BE(maxLocals, 8);
+  codeAttr.writeUInt32BE(code.length, 10);
+  Buffer.from(code).copy(codeAttr, 14);
+  const tail = Buffer.alloc(4);                                       // exception_table_length, attrs
+  const head = Buffer.alloc(8);
+  head.writeUInt16BE(isStatic ? 0x0009 : 0x0001, 0);                  // public [static]
+  head.writeUInt16BE(pb.utf8(name), 2);
+  head.writeUInt16BE(pb.utf8(desc), 4);
+  head.writeUInt16BE(1, 6);                                           // one attribute: Code
+  return Buffer.concat([head, codeAttr, tail]);
+}
+
+// Append methods, and optionally re-parent the class: `newSuper` replaces the super_class (used when
+// the old super became an interface — it moves to the interface list and Object takes its place,
+// with the <init> super-call repointed, which resolves because Object.<init> shares the descriptor).
+export function transformClass(ClassFile, buf, { methods = [], newSuper, addInterface, repointInit } = {}) {
+  const cf = new ClassFile(buf);
+  const pb = poolBuilder(cf);
+  const assembled = methods.map((m) => assembleMethod(pb, m));
+  const objIdx = newSuper ? pb.cls(newSuper) : 0;
+  const ifaceIdx = addInterface ? pb.cls(addInterface) : 0;
+  const initIdx = repointInit ? pb.methodref(newSuper, '<init>', '()V') : 0;
+  const { pool, next } = pb.flush();
+
+  const head = Buffer.from(buf.subarray(0, cf.poolEnd));
+  head.writeUInt16BE(next, 8);
+  let out = Buffer.concat([head, ...pool, buf.subarray(cf.poolEnd)]);
+  const cf2 = new ClassFile(out);
+
+  let p = cf2.poolEnd + 2;                                            // access_flags
+  p += 2;                                                             // this_class
+  if (newSuper) out.writeUInt16BE(objIdx, p);
+  const superIdxPos = p; p += 2;
+  const ifCountPos = p; const ifCount = out.readUInt16BE(p); p += 2 + ifCount * 2;
+  if (addInterface) {
+    out = Buffer.concat([out.subarray(0, p), Buffer.from([ifaceIdx >> 8, ifaceIdx & 255]), out.subarray(p)]);
+    out.writeUInt16BE(ifCount + 1, ifCountPos);
+    p += 2;
+  }
+  // walk fields, then methods, to find the splice point
+  const cf3 = { buf: out };
+  const skipMembers = (pos) => {
+    const count = out.readUInt16BE(pos); pos += 2;
+    for (let i = 0; i < count; i++) { pos += 6; const attrs = out.readUInt16BE(pos); pos += 2; for (let a = 0; a < attrs; a++) { pos += 2; pos += 4 + out.readUInt32BE(pos); } }
+    return pos;
+  };
+  p = skipMembers(p);                                                 // fields
+  const methodCountPos = p;
+  const endOfMethods = skipMembers(p);
+  if (assembled.length) {
+    out.writeUInt16BE(out.readUInt16BE(methodCountPos) + assembled.length, methodCountPos);
+    out = Buffer.concat([out.subarray(0, endOfMethods), ...assembled, out.subarray(endOfMethods)]);
+  }
+  if (repointInit && initIdx) {
+    // Re-point every invokespecial <init> aimed at the old super. Same 3-byte instruction, new index.
+    const cf4 = new ClassFile(out);
+    const byIndex = new Map(cf4.entries.map((e) => [e.index, e]));
+    const u = (i) => { const e = byIndex.get(i); return e && e.tag === 1 ? out.toString('latin1', e.start + 3, e.end) : null; };
+    const oldSuperInits = new Set();
+    for (const e of cf4.entries) {
+      if (e.tag !== 10) continue;
+      const c = byIndex.get(out.readUInt16BE(e.start + 1));
+      const owner = c && c.tag === 7 ? u(out.readUInt16BE(c.start + 1)) : null;
+      const nt = byIndex.get(out.readUInt16BE(e.start + 3));
+      const nm = nt && nt.tag === 12 ? u(out.readUInt16BE(nt.start + 1)) : null;
+      if (owner === repointInit && nm === '<init>') oldSuperInits.add(e.index);
+    }
+    for (const { start, length } of codeRanges(cf4)) {
+      let pc = start; const end = start + length;
+      while (pc < end) {
+        if (out[pc] === 0xb7 && oldSuperInits.has(out.readUInt16BE(pc + 1))) out.writeUInt16BE(initIdx, pc + 1);
+        const n = safeLength(out, pc, end, start); if (n < 0) break; pc += n;
+      }
+    }
+  }
+  return out;
+}
