@@ -32,8 +32,8 @@ for (const f of jars) {
        ...(args.source ? ['--source', args.source] : []), '--out', finalJar, '--work', OUT]);
   if (!fs.existsSync(finalJar)) { perMod.push({ name, state: 'pipeline failed' }); bump('pipeline failed'); continue; }
 
-  const v = run(['jar-verify.mjs', finalJar, '--classpath', args.classpath, ...(args.corpus ? ['--corpus', args.corpus] : []), '--from', FROM, '--to', TO]).stdout || '';
-  const m = run(['mixin-check.mjs', finalJar, '--classpath', args.classpath, ...(args.source ? ['--source-classpath', args.source] : [])]).stdout || '';
+  const v = run(['jar-verify.mjs', finalJar, '--classpath', args.classpath, ...(args.corpus ? ['--corpus', args.corpus] : []), '--from', FROM, '--to', TO]);
+  const m = run(['mixin-check.mjs', finalJar, '--classpath', args.classpath, ...(args.source ? ['--source-classpath', args.source] : [])]);
   const links = +(v.match(/^\s*(\d+) link\(s\) will fail/m)?.[1] ?? (/every link resolves/.test(v) ? 0 : NaN));
   const mix = /no mixins in this jar/.test(m) ? 0 : +(m.match(/PROBLEMS\s*:\s*(\d+)/)?.[1] ?? NaN);
   if (Number.isNaN(links) || Number.isNaN(mix)) { perMod.push({ name, state: 'NOT MEASURED' }); bump('not measured'); continue; }
