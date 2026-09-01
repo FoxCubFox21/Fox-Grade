@@ -48,15 +48,64 @@ if (!fs.existsSync(table)) { console.error(`no members.${FROM}-${TO}.json to wor
 const relocations = JSON.parse(fs.readFileSync(table, 'utf8')).relocations || [];
 const byKey = new Map(relocations.map((r) => [`${r.owner}\t${r.name}\t${r.desc}`, r]));
 
+// 26.2 collapsed the sixteen per-colour constants into one record. Blocks.RED_BED is gone; there is
+// a ColorCollection called Blocks.BED with a component accessor per colour, so the value now lives at
+// Blocks.BED.red(). registry-mine was right to report the old name as removed rather than invent a
+// destination for it — the destination is not a constant at all, it is a method call, which is
+// exactly what a compat layer can express and a renamer cannot.
+const COLOURS = [['WHITE','white'],['ORANGE','orange'],['MAGENTA','magenta'],['LIGHT_BLUE','lightBlue'],
+  ['YELLOW','yellow'],['LIME','lime'],['PINK','pink'],['GRAY','gray'],['LIGHT_GRAY','lightGray'],
+  ['CYAN','cyan'],['PURPLE','purple'],['BLUE','blue'],['BROWN','brown'],['GREEN','green'],
+  ['RED','red'],['BLACK','black']];
+const COLOR_COLLECTION = 'Lnet/minecraft/world/level/block/ColorCollection;';
+
+// javap once per owner: what does the TARGET declare, and with which descriptor.
+const declCache = new Map();
+function targetFields(owner) {
+  if (declCache.has(owner)) return declCache.get(owner);
+  const r = spawnSync('javap', ['-p', '-s', '-cp', args.classpath, owner.replace(/\//g, '.')], { encoding: 'utf8', maxBuffer: 64e6 });
+  const out = new Map();
+  const lines = (r.stdout || '').split('\n');
+  for (let i = 0; i < lines.length; i++) {
+    const d = lines[i].match(/^\s*descriptor:\s*(\S+)\s*$/);
+    if (!d) continue;
+    const nm = (lines[i - 1] || '').match(/([\w$]+);?\s*$/);
+    if (nm && !/\(/.test(lines[i - 1])) out.set(nm[1], d[1]);
+  }
+  declCache.set(owner, out);
+  return out;
+}
+
+// owner.NAME -> owner.BASE.colour(), when NAME is <COLOUR>_<BASE> and BASE is a ColorCollection.
+function colourFix(owner, name, desc) {
+  if (desc.startsWith('(')) return null;                 // a method, not a constant
+  const fields = targetFields(owner);
+  if (!fields.size || fields.has(name)) return null;     // still present: nothing to fix
+  for (const [CONST, accessor] of COLOURS) {
+    if (!name.startsWith(CONST + '_')) continue;
+    const base = name.slice(CONST.length + 1);
+    if (fields.get(base) !== COLOR_COLLECTION) continue;
+    return { expr: `${owner.replace(/\//g, '.')}.${base}.${accessor}()`, ret: desc };
+  }
+  return null;
+}
+
 // Which of them does this jar actually reach for?
 const needed = new Map();
+const colourNeeded = new Map();
+const colourSeen = new Set();
 const scan = (buf) => {
   for (const e of readZip(buf)) {
     if (/^META-INF\/jars\/.+\.jar$/.test(e.name)) { try { scan(inflateEntry(e)); } catch { /* skip */ } continue; }
     if (!e.name.endsWith('.class')) continue;
     try { for (const r of new ClassFile(inflateEntry(e)).refs()) {
       const k = `${r.owner}\t${r.name}\t${r.desc}`;
-      if (byKey.has(k)) needed.set(k, byKey.get(k));
+      if (byKey.has(k)) { needed.set(k, byKey.get(k)); continue; }
+      if (colourSeen.has(k)) continue;
+      colourSeen.add(k);
+      if (!r.owner.startsWith('net/minecraft/')) continue;
+      const c = colourFix(r.owner, r.name, r.desc);
+      if (c) colourNeeded.set(k, c);
     } } catch { /* skip */ }
   }
 };
@@ -64,8 +113,8 @@ const jarBuf = fs.readFileSync(JAR);
 scan(jarBuf);
 console.log(`  ${path.basename(JAR)}`);
 console.log(`    relocations known   : ${relocations.length}`);
-console.log(`    reached by this jar : ${needed.size}`);
-if (!needed.size) { console.log('    nothing to bridge.'); process.exit(0); }
+console.log(`    reached by this jar : ${needed.size} relocation(s), ${colourNeeded.size} colour constant(s)`);
+if (!needed.size && !colourNeeded.size) { console.log('    nothing to bridge.'); process.exit(0); }
 
 // Generate one static method per relocation.
 const sigs = [];
@@ -80,6 +129,12 @@ for (const [key, r] of needed) {
   const body = ret === 'V' ? `${call};` : `return ${call};`;
   sigs.push({ key, r, name, desc: `(L${r.owner};${ps.join('')})${ret}`,
     src: `  public static ${javaType(ret)} ${name}(${argDecl}) { ${body} }` });
+}
+
+for (const [key, c] of colourNeeded) {
+  const name = `b${n++}`;
+  sigs.push({ key, name, desc: `()${c.ret}`,
+    src: `  public static ${javaType(c.ret)} ${name}() { return ${c.expr}; }` });
 }
 
 const dir = fs.mkdtempSync('/tmp/foxgrade-bridge-');

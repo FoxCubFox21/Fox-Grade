@@ -33,16 +33,22 @@ const FIXED = new Map([
 ]);
 for (let op = 0x99; op <= 0xa8; op++) FIXED.set(op, 3);          // ifeq..jsr
 
-export function insnLength(buf, pc) {
+// codeStart matters: tableswitch and lookupswitch pad to a 4-byte boundary measured from the START
+// OF THE CODE ARRAY, not from the file offset. Using the absolute position gets the padding right
+// only when the code happens to begin on a multiple of four, and silently wrong otherwise — the walk
+// then desynchronises and patches a byte in the middle of an operand. That produced exactly one
+// corrupted class in the corpus, caught by the JVM verifier as "Inconsistent stackmap frames at
+// branch target 139" rather than by anything in this project.
+export function insnLength(buf, pc, codeStart = 0) {
   const op = buf[pc];
   if (op === 0xc4) return buf[pc + 1] === 0x84 ? 6 : 4;          // wide
   if (op === 0xaa) {                                             // tableswitch
-    let p = pc + 1 + ((4 - ((pc + 1) % 4)) % 4);
+    const p = pc + 1 + ((4 - ((pc + 1 - codeStart) % 4)) % 4);
     const low = buf.readInt32BE(p + 4), high = buf.readInt32BE(p + 8);
     return (p + 12 + (high - low + 1) * 4) - pc;
   }
   if (op === 0xab) {                                             // lookupswitch
-    let p = pc + 1 + ((4 - ((pc + 1) % 4)) % 4);
+    const p = pc + 1 + ((4 - ((pc + 1 - codeStart) % 4)) % 4);
     const n = buf.readInt32BE(p + 4);
     return (p + 8 + n * 8) - pc;
   }
@@ -51,8 +57,8 @@ export function insnLength(buf, pc) {
 
 // A walk that loses sync would read operands as opcodes and could compute a length of zero or less,
 // which is an infinite loop rather than a wrong answer. Every caller goes through this instead.
-export function safeLength(buf, pc, end) {
-  const n = insnLength(buf, pc);
+export function safeLength(buf, pc, end, codeStart = 0) {
+  const n = insnLength(buf, pc, codeStart);
   return (!Number.isFinite(n) || n < 1 || pc + n > end) ? -1 : n;
 }
 
@@ -150,7 +156,7 @@ export function retargetCallSites(ClassFile, buf, decide) {
     const end = start + length;
     while (pc < end) {
       const op = out[pc];
-      const len = safeLength(out, pc, end);
+      const len = safeLength(out, pc, end, start);
       if (len < 0) break;
       if (op === 0xb2 || op === 0xb4 || op === 0xb6 || op === 0xb9) {
         const idx = out.readUInt16BE(pc + 1);
@@ -189,7 +195,7 @@ export function liveRefs(ClassFile, buf) {
       const op = buf[pc];
       // Every opcode that names a member: get/put static and field, the four invokes.
       if ((op >= 0xb2 && op <= 0xb9)) used.add(buf.readUInt16BE(pc + 1));
-      const n = safeLength(buf, pc, end);
+      const n = safeLength(buf, pc, end, start);
       if (n < 0) break;                    // desynced: stop rather than spin or misread
       pc += n;
     }
