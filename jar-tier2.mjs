@@ -721,8 +721,15 @@ ${groupSrc.map((g) => `===== FILE ${g.cls} =====\n\`\`\`java\n${g.src}\n\`\`\``)
   // runtime, and neither javac nor link resolution objects to it. This is the shape of "compiles,
   // resolves, and is broken" that both gates were built to catch and neither can see.
   const unassigned = [];
+  // A @Shadow field is DECLARED and never assigned by design — Mixin merges it with the target's
+  // real field at apply time. The null-gate predates mixin porting and read that shape as a bug,
+  // refusing a correct port of blur's MixinGui for shadowing `minecraft`. Only fields the mixin
+  // framework will not fill still count.
+  const shadowed = new Set();
+  for (const m of ported.source.matchAll(/@Shadow[\s\S]{0,160}?(?:private|protected|public)[^;=(]*?\b(\w+)\s*;/g)) shadowed.add(m[1]);
   for (const m of ported.source.matchAll(/^\s*private\s+(?:static\s+)?(?:final\s+)?[\w.<>$\[\], ]+?\s+(\w+)\s*;/gm)) {
     const name = m[1];
+    if (shadowed.has(name)) continue;
     const writes = new RegExp(`(?:^|[^.\\w])${name}\\s*=(?!=)`, 'm');
     const reads = new RegExp(`(?:^|[^.\\w])${name}(?!\\s*=[^=])\\b`, 'g');
     if (!writes.test(ported.source) && (ported.source.match(reads) || []).length > 1) unassigned.push(name);

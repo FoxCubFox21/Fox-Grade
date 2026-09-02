@@ -152,8 +152,13 @@ function preloadMembers(names) {
       const h = part.match(/\b(?:class|interface)\s+([\w.$]+)/);
       if (!h) continue;
       const names2 = new Set();
+      const simple = h[1].split('.').pop();   // inner classes print ctors as Outer$Inner(...), so keep the $
       for (const l of part.split('\n')) {
-        const m = l.match(/([\w$]+)\s*\(/); if (m) { names2.add(m[1]); continue; }
+        // javap prints a constructor under the class's own name; the JVM and every @At string call
+        // it <init>. Without this mapping the member set never contains <init>, so every @At
+        // targeting a constructor read as "gone" — OptionInstance$IntRange.<init> was flagged while
+        // javap showed two live constructors.
+        const m = l.match(/([\w$]+)\s*\(/); if (m) { names2.add(m[1] === simple ? '<init>' : m[1]); continue; }
         // Fields too. Collecting only methods left the retarget guard blind to exactly the case it
         // exists for: a mixin @Shadowing a FIELD of its original target. A method line ends in ");"
         // so it cannot be caught here by accident.
@@ -257,6 +262,12 @@ for (const { cls, config } of mixinClasses) {
       // does not in the target. Fabric will refuse to start on it either way, so report it.
       const was = sourceMembers.get(t);
       if (!was || !was.has(s)) continue;
+      // The pairing is a cross-product over every class the mixin mentions, and it accused the
+      // OFFICIAL 26.2 midnightlib: "title" lives on Screen (the real @Mixin target, alive in 26.2)
+      // but was paired with Gui, which merely appears in the pool. A selector that resolves on ANY
+      // mentioned class in the target version is not credibly broken — only one that resolves
+      // nowhere is worth reporting.
+      if ([...targets].some((t2) => t2 !== t && declaredMembers(t2)?.has(s))) continue;
       const renamed = memberRenames.get(`${t}\t${s}`);
       if (renamed && members.has(renamed)) {
         problems.push({ cls, kind: 'renamed', target: t, from: s, to: renamed,
