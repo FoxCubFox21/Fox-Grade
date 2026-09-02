@@ -35,3 +35,4 @@
 - 8235c17f9c1dbeaa…  16-boat-item-view.jar
 - 8ff71d811c518c74…  17-boids.jar
 - acf718ff855bf16b…  18-animaticarefabricated.jar
+19 blur-plus-v2: PASSED — blur + fade on all designed screen categories (chat never in scope; config is per-category opt-in). First AI-repaired mixin verified in game. sha: a7ed83dcbd908084…
