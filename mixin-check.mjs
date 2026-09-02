@@ -176,7 +176,7 @@ for (const { cls, config } of mixinClasses) {
   const e = byName.get(cls + '.class');
   if (!e) { problems.push({ cls, kind: 'missing', detail: 'declared in the config but not in the jar' }); continue; }
   const cf = new ClassFile(inflateEntry(e));
-  const strings = [], targets = new Set();
+  const strings = [], targets = new Set(), atTargets = [];
   for (const { value } of cf.utf8()) {
     if (!ClassFile.isPlain(value)) continue;
     // Lnet/minecraft/...; inside the @Mixin annotation names the target class.
@@ -186,6 +186,13 @@ for (const { cls, config } of mixinClasses) {
     // identifier collector never matched, so those injections were checked against nothing at all.
     const sig = value.match(/^([\w$]+)\(.*\)[\w\[/;$]*$/);
     if (sig && sig[1].length >= 4) strings.push(sig[1]);
+    // @At target strings are owner-QUALIFIED member references — "Lnet/.../Minecraft;screen:L...;"
+    // for a field, "Lnet/.../Gui;render(...)V" for a method — and were invisible to every audit:
+    // blur-plus shipped an @At still naming Minecraft.screen, a field this project knows relocated,
+    // and crashed through two clean verdicts. Owner-qualified beats the bare cross-product: the
+    // member is checked against exactly the class the annotation names.
+    const at = value.match(/^L([\w/$]+);([\w$<>]+)[:(]/);
+    if (at && at[1].startsWith('net/minecraft/')) atTargets.push({ owner: at[1], name: at[2], raw: value });
   }
   // A method= selector is a bare identifier that is not a member this mixin declares itself.
   const own = new Set(cf.declared().members.map((m) => m.name));
@@ -204,6 +211,15 @@ for (const { cls, config } of mixinClasses) {
     if (!r.owner.startsWith('net/minecraft/')) continue;
     const dm = declaredMembers(r.owner);
     if (dm && dm.has(r.name)) resolvedRefs.add(r.name);
+  }
+  for (const a of atTargets) {
+    const tm = declaredMembers(a.owner);
+    if (tm && tm.has(a.name)) continue;                              // still there: fine
+    const was = sourceMembers.get(a.owner);
+    if (was && !was.has(a.name)) continue;                           // never existed: not port breakage
+    const rel = relocs.get(`${a.owner}\t${a.name}`);
+    problems.push({ cls, kind: 'at-target', detail: `@At target "${a.owner.split('/').pop()}.${a.name}" ${tm ? 'is gone from the target version' : 'names a class javap cannot see'}${rel ? ` — it moved to ${rel.host.replace(/\//g, '.')}` : ''}`,
+      fix: rel ? 'the @At string needs rewriting at its new home — and if the member became a method, a decision' : 'needs a new anchor — a decision, not a rewrite' });
   }
   for (const t of targets) {
     const members = declaredMembers(t);
@@ -264,6 +280,20 @@ if (args.out && problems.length) {
   // it into the annotation.
   const renamedByCls = new Map();
   for (const p of problems.filter((x) => x.kind === 'renamed')) {
+    // A corroborated successor is evidence about @Inject hooks. ModifyVariable and Redirect bind to
+    // the target's internals — variables, exact instructions — and blur-plus showed what a
+    // name-successor rewrite does to them: extractGui (a worker routine) was retargeted onto
+    // gameRenderState (an accessor), and Mixin refused the whole class at apply time. If the mixin
+    // class carries either annotation, its selectors are reported but never rewritten.
+    const eCls = byName.get(p.cls + '.class');
+    if (eCls) {
+      try {
+        let tight = false;
+        for (const { value } of new ClassFile(inflateEntry(eCls)).utf8())
+          if (/ModifyVariable|Redirect;$/.test(value)) { tight = true; break; }
+        if (tight) { console.log(`  ! ${p.cls.split('/').pop()}: uses ModifyVariable/Redirect — selector ${p.from} NOT rewritten (needs a decision)`); continue; }
+      } catch { /* unreadable: fall through to the rewrite */ }
+    }
     if (!renamedByCls.has(p.cls)) renamedByCls.set(p.cls, []);
     renamedByCls.get(p.cls).push(p);
   }
