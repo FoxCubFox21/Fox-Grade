@@ -82,7 +82,7 @@ for (const f of fs.readdirSync(HERE).filter((x) => /^members\.[\d.]+-[\d.]+\.jso
 const entries = [];
 const flatten = (buf, prefix) => {
   for (const e of readZip(buf)) {
-    if (/^META-INF\/jars\/.+\.jar$/.test(e.name)) { try { flatten(inflateEntry(e), prefix + e.name + '\u0000'); } catch { /* skip */ } continue; }
+    if (/^META-INF\/jars\/.+\.jar$/.test(e.name)) { try { flatten(inflateEntry(e), prefix + e.name + ':::'); } catch { /* skip */ } continue; }
     entries.push({ ...e, name: prefix + e.name, raw: e.raw, method: e.method });
   }
 };
@@ -107,13 +107,31 @@ if (args['source-classpath']) {
   }
 }
 
-// Which classes are mixins, from every mixin config in the jar.
-const mixinClasses = [];
+// Which mixin configs does the LOADER actually apply? Only the ones each jar's own fabric.mod.json
+// registers under its "mixins" key. Scanning every mixins-looking file audited configs Fabric never
+// loads — asyncparticles ships an asyncparticles-neoforge.mixins.json for its NeoForge build, dead
+// weight on Fabric, and every problem in it was a phantom. Registration is the ground truth, and it
+// is scoped per jar: a nested jar's manifest registers that jar's configs.
+const registered = new Set();
 for (const e of entries) {
-  if (!/mixins?.*\.json$/.test(e.name)) continue;
+  if (e.name.split(':::').pop() !== 'fabric.mod.json') continue;
+  const prefix = e.name.includes(':::') ? e.name.slice(0, e.name.lastIndexOf(':::') + 3) : '';
+  try {
+    for (const m of JSON.parse(inflateEntry(e).toString('utf8')).mixins || [])
+      registered.add(prefix + (typeof m === 'string' ? m : m.config));
+  } catch { /* an unreadable manifest registers nothing */ }
+}
+
+// Which classes are mixins, from every REGISTERED config in the jar.
+const mixinClasses = [];
+const skippedConfigs = [];
+for (const e of entries) {
+  const base = e.name.split(':::').pop().split('/').pop();
+  if (!/mixins?.*\.json$/.test(base) || base === 'fabric.mod.json') continue;
+  if (registered.size && !registered.has(e.name)) { skippedConfigs.push(e.name.split(':::').pop()); continue; }
   let cfg; try { cfg = JSON.parse(inflateEntry(e).toString('utf8')); } catch { continue; }
   const pkg = (cfg.package || '').replace(/\./g, '/');
-  const prefix = e.name.includes('\u0000') ? e.name.slice(0, e.name.lastIndexOf('\u0000') + 1) : '';
+  const prefix = e.name.includes(':::') ? e.name.slice(0, e.name.lastIndexOf(':::') + 3) : '';
   for (const list of ['mixins', 'client', 'server']) for (const m of (cfg[list] || []))
     mixinClasses.push({ cls: `${prefix}${pkg}/${m.replace(/\./g, '/')}`, config: e.name });
 }
@@ -174,7 +192,7 @@ const problems = [];
 const preExisting = [];
 for (const { cls, config } of mixinClasses) {
   const e = byName.get(cls + '.class');
-  if (!e) { problems.push({ cls, kind: 'missing', detail: 'declared in the config but not in the jar' }); continue; }
+  if (!e) { problems.push({ cls, kind: 'missing', detail: `declared in ${config.split(':::').pop()} but not in the jar (looked for ${cls.split(':::').pop()})` }); continue; }
   const cf = new ClassFile(inflateEntry(e));
   const strings = [], targets = new Set(), atTargets = [];
   for (const { value } of cf.utf8()) {
@@ -254,6 +272,7 @@ for (const { cls, config } of mixinClasses) {
 
 console.log(`  ${path.basename(JAR)}`);
 console.log(`    mixin classes      : ${mixinClasses.length}`);
+if (skippedConfigs.length) console.log(`    configs not loaded : ${skippedConfigs.length} (present but unregistered — other loaders' builds)`);
 console.log(`    target classes read: ${checked}`);
 if (preExisting.length) console.log(`    pre-existing       : ${preExisting.length}   (target absent in the SOURCE version too — conditional mixin, not port breakage)`);
 console.log(`    PROBLEMS           : ${problems.length}`);
