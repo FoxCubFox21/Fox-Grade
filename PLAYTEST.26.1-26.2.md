@@ -16,3 +16,22 @@
 16 boat-item-view: PASSED (caveat) — item shows in hand while boating (vanilla never does); hides while actively rowing, believed intended paddle-priority, not A/B'd against 26.1
 17 boids: PASSED — loads, config correct, EntityTypes.SALMON/COD/TROPICAL_FISH remaps verified in bytecode+config; conditional RealFishingMixin soft-warns as predicted (squid not in defaults — spread-out is correct)
 18 animaticarefabricated: PASSED (init-scope) — Tier 2-authored config classes load and run; full texture depth needs an OptiFine anim pack
+
+## Verified-jar identities (a verdict attaches to these bytes, not to a mod name)
+- 0b6b3ea2c6deeb19…  01-adorabuild-structures.jar
+- cfe4523b923ce263…  03-almanac.jar
+- 42e5ed5b8f165a1c…  04-alternate-current.jar
+- 9a3539189f9ab244…  05-ambient-environment.jar
+- b9ef34f5406c455b…  06-amecs.jar
+- 5bc0de9e579ece1d…  07-appleskin.jar
+- 6594d05aee42a6dd…  08-armor-statues.jar
+- e13c68149eac7d00…  09-attributefix.jar
+- 26cd2528b87b2288…  10-badoptimizations.jar
+- fe6718091a43664c…  11-better-compatibility-checker.jar
+- 55cd54e664e50059…  12-better-mount-hud.jar
+- d10baa89354075c7…  13-better-stats.jar
+- 1d1f72817e1f5868…  14-betterhurtcam.jar
+- a8e2c8b55749bb31…  15-blur-plus.jar
+- 8235c17f9c1dbeaa…  16-boat-item-view.jar
+- 8ff71d811c518c74…  17-boids.jar
+- acf718ff855bf16b…  18-animaticarefabricated.jar
