@@ -24,7 +24,7 @@ import { readZip, inflateEntry, writeZip } from './zipfile.mjs';
 import { ClassFile } from './classfile.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
-const FLAGS = new Set(['dry', 'foxai', 'ollama', 'keep', 'allow-stubs', 'last-resort', 'no-lookup', 'no-group']);
+const FLAGS = new Set(['dry', 'foxai', 'ollama', 'keep', 'allow-stubs', 'last-resort', 'no-lookup', 'no-group', 'mixin-fix']);
 const args = {}, pos = [];
 for (let i = 2; i < process.argv.length; i++) {
   const t = process.argv[i];
@@ -191,7 +191,43 @@ function groupFor(cls) {
   return callers;
 }
 
-const candidates = broken.filter((b) => !isMixin(b.name)).slice(0, MAX_FILES);
+// Mixin classes were excluded outright in the early days — a safety choice from before the checker
+// could parse @At strings or guard tight injectors. With --mixin-fix, mixin-check's findings become
+// porting targets: the diagnosis rides along in the prompt, and classes whose only breakage is an
+// annotation string (invisible to link checking) are attempted too.
+const mixinIssues = new Map();      // full class name -> [diagnosis lines]
+if (args['mixin-fix']) {
+  const mcArgs = [path.join(HERE, 'mixin-check.mjs'), JAR, '--classpath', cp];
+  if (args['source-classpath']) mcArgs.push('--source-classpath', args['source-classpath']);
+  const mc = spawnSync('node', mcArgs, { encoding: 'utf8', maxBuffer: 64e6 });
+  // Reports name classes by basename; resolve each against the jar's own mixin packages. A basename
+  // two mixin classes share is skipped — guessing which one was meant could port the wrong file.
+  const bySimple = new Map();
+  for (const e of readZip(fs.readFileSync(JAR))) {
+    if (!e.name.endsWith('.class') || !isMixin(e.name)) continue;
+    const cn = e.name.replace(/\.class$/, '');
+    const simple = cn.split('/').pop();
+    bySimple.set(simple, bySimple.has(simple) ? null : cn);
+  }
+  let cur = null;
+  for (const line of (mc.stdout || '').split('\n')) {
+    const head = line.match(/✗ ([\w$]+): (.*)$/);
+    if (head) {
+      cur = bySimple.get(head[1]) || null;
+      if (cur) { if (!mixinIssues.has(cur)) mixinIssues.set(cur, []); mixinIssues.get(cur).push(head[2]); }
+      continue;
+    }
+    const tail = line.match(/^\s+(fix:.*|— .*)$/);
+    if (tail && cur) mixinIssues.get(cur).push('  ' + tail[1]);
+  }
+  if (mixinIssues.size) say(`  --mixin-fix: ${mixinIssues.size} mixin class(es) with broken anchors join the attempt list`);
+  for (const [cn, issues] of mixinIssues) {
+    const hit = broken.find((b) => b.name === cn + '.class');
+    if (hit) hit.mixinIssues = issues;
+    else broken.push({ name: cn + '.class', bad: [], mixinIssues: issues });
+  }
+}
+const candidates = broken.filter((b) => (args['mixin-fix'] && b.mixinIssues) || !isMixin(b.name)).slice(0, MAX_FILES);
 if (!candidates.length) { console.log('\n  nothing here that Tier 2 can safely attempt'); process.exit(0); }
 console.log(`\n    will attempt : ${candidates.length} file(s)`);
 if (args.dry) { for (const c of candidates) { console.log(`\n  ── ${c.name}`); for (const b of c.bad.slice(0, 6)) console.log(`      ${b.owner.replace(/\//g, '.')}.${b.name} ${b.desc}   (${b.why})`); } process.exit(0); }
@@ -497,6 +533,15 @@ name-remapped; what remains are genuine API redesigns.
 BROKEN LINKS — every one of these fails at runtime today:
 ${facts.join('\n')}
 
+${c.mixinIssues ? `THIS IS A MIXIN CLASS, and its injection anchors are broken. The mixin checker's diagnosis:
+${c.mixinIssues.map((x) => '- ' + x).join('\n')}
+
+MIXIN RULES, which outrank everything below:
+- Keep EVERY handler method and EVERY injector annotation (@Inject/@ModifyVariable/@Redirect/@ModifyArg/@WrapOperation). Deleting one deletes the mod's feature silently — if an anchor truly has no successor, keep the handler and mark it // FOXGRADE: with the reason instead.
+- You MAY move the whole mixin to a new target class (@Mixin value), rewrite @At target strings, change selectors, and convert a @Shadow of a removed field into the target's accessor path — but a @Shadow must only name members the NEW target really declares.
+- @At target strings use descriptor form: "Lpkg/Cls;name:Ldesc;" for a field, "Lpkg/Cls;name(args)ret" for a method. They must name members that exist in ${TO} — use LOOKUP to confirm.
+- The class must still compile with SpongePowered Mixin on the classpath; keep the package and class name unchanged.
+` : ''}
 ${sigBlocks.length ? `THE ACTUAL TARGET API (from javap — these signatures are ground truth, do not guess):\n${sigBlocks.join('\n\n')}\n` : ''}
 The source below is DECOMPILED, so it may not compile even before your changes: lost generic
 parameters, missing casts, a raw type where a parameterised one belongs. Fix those too — they are
@@ -639,7 +684,9 @@ ${groupSrc.map((g) => `===== FILE ${g.cls} =====\n\`\`\`java\n${g.src}\n\`\`\``)
     if (!declCache.has(r.owner)) preload([r.owner]);
     if (!declCache.get(r.owner) || !resolves(r.owner, `${r.name} ${r.desc}`)) after.push(r);
   }
-  if (after.length >= c.bad.length) { say(`     rejected: ${c.bad.length} broken links before, ${after.length} after`); results.push([cls, `no improvement (${c.bad.length}→${after.length})`]); continue; }
+  const annotationOnly = c.mixinIssues && c.bad.length === 0;
+  if (!annotationOnly && after.length >= c.bad.length) { say(`     rejected: ${c.bad.length} broken links before, ${after.length} after`); results.push([cls, `no improvement (${c.bad.length}→${after.length})`]); continue; }
+  if (annotationOnly && after.length > 0) { say(`     rejected: the mixin fix introduced ${after.length} broken link(s) where there were none`); results.push([cls, `introduced ${after.length} link(s)`]); continue; }
   // "Compiles, and fewer broken links" is NOT the same as "ported". A model that cannot find the
   // replacement API can always satisfy both gates by deleting the feature — and it did exactly that
   // here, turning isRotten() into a constant false and assuming naturalRegeneration is on. Both
@@ -652,6 +699,23 @@ ${groupSrc.map((g) => `===== FILE ${g.cls} =====\n\`\`\`java\n${g.src}\n\`\`\``)
   // /** javadoc */ block and the line-comment regex missed it, so a port that declares a field, never
   // assigns it, and passes it to a call was accepted: compiles, every link resolves, null at runtime.
   // It flagged its own uncertainty correctly and the detector could not see it.
+  // A mixin port that sheds injectors sheds features with no crash — the model's easiest wrong
+  // answer is deleting the annotation whose anchor it could not fix. Count injector annotations in
+  // the BYTES on both sides; source counting would miss a handler the model silently dropped.
+  if (c.mixinIssues) {
+    const countInjectors = (buf) => {
+      let n = 0;
+      try { for (const { value } of new ClassFile(buf).utf8()) if (/^Lorg\/spongepowered\/asm\/mixin\/injection\/(Inject|ModifyVariable|Redirect|ModifyArg|ModifyArgs|ModifyConstant);$|^Lcom\/llamalad7\/mixinextras\/injector\//.test(value)) n++; } catch { /* unreadable: treat as zero */ }
+      return n;
+    };
+    const before = countInjectors(inflateEntry(entries.find((e) => e.name === cls + '.class')));
+    const after2 = countInjectors(ported.bytes);
+    if (after2 < before) {
+      say(`     refused: the port has ${after2} injector annotation(s) where the original had ${before} — a dropped injector is a feature dying silently`);
+      results.push([cls, `refused: dropped ${before - after2} injector(s)`]);
+      continue;
+    }
+  }
   const stubs = (ported.source.match(/FOXGRADE:/g) || []).length;
   // Independently of any marker: a private field that is read but never assigned is a null at
   // runtime, and neither javac nor link resolution objects to it. This is the shape of "compiles,
