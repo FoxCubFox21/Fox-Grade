@@ -1,0 +1,214 @@
+{
+ "schema": 1,
+ "from": "26.2",
+ "to": "26.3s",
+ "source": "jar-diff: class renames inferred from consistent single-type substitutions in surviving signatures",
+ "renames": [
+  {
+   "from": "com.mojang.blaze3d.pipeline.RenderPipeline",
+   "to": "com.mojang.renderpearl.api.pipeline.RenderPipeline",
+   "sightings": 119,
+   "classes": 23,
+   "share": 1
+  },
+  {
+   "from": "net.minecraft.world.level.levelgen.structure.StructurePieceAccessor",
+   "to": "net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder",
+   "sightings": 76,
+   "classes": 40,
+   "share": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.buffers.GpuBuffer",
+   "to": "com.mojang.renderpearl.api.buffers.GpuBuffer",
+   "sightings": 48,
+   "classes": 23,
+   "share": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.textures.GpuTextureView",
+   "to": "com.mojang.renderpearl.api.textures.GpuTextureView",
+   "sightings": 47,
+   "classes": 24,
+   "share": 1
+  },
+  {
+   "from": "net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration",
+   "to": "net.minecraft.world.level.levelgen.feature.TreeFeature",
+   "sightings": 46,
+   "classes": 24,
+   "share": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.buffers.GpuBufferSlice",
+   "to": "com.mojang.renderpearl.api.buffers.GpuBufferSlice",
+   "sightings": 28,
+   "classes": 13,
+   "share": 1
+  },
+  {
+   "from": "net.minecraft.server.commands.data.DataCommands$DataProvider",
+   "to": "net.minecraft.server.commands.ArgProvider",
+   "sightings": 26,
+   "classes": 8,
+   "share": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.textures.GpuTexture",
+   "to": "com.mojang.renderpearl.api.textures.GpuTexture",
+   "sightings": 22,
+   "classes": 15,
+   "share": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.vertex.VertexFormat",
+   "to": "com.mojang.renderpearl.api.vertex.VertexFormat",
+   "sightings": 21,
+   "classes": 7,
+   "share": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.textures.GpuSampler",
+   "to": "com.mojang.renderpearl.api.textures.GpuSampler",
+   "sightings": 17,
+   "classes": 8,
+   "share": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.IndexType",
+   "to": "com.mojang.renderpearl.api.pipeline.IndexType",
+   "sightings": 14,
+   "classes": 6,
+   "share": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.systems.GpuDevice",
+   "to": "com.mojang.renderpearl.api.device.GpuDevice",
+   "sightings": 9,
+   "classes": 6,
+   "share": 1
+  }
+ ],
+ "rejected": [
+  {
+   "from": "net.minecraft.world.level.storage.loot.providers.number.NumberProvider",
+   "to": "net.minecraft.core.Holder",
+   "sightings": 75,
+   "classes": 26,
+   "share": 1,
+   "why": "old type still exists"
+  },
+  {
+   "from": "java.util.List",
+   "to": "java.util.Optional",
+   "sightings": 54,
+   "classes": 36,
+   "share": 0.68,
+   "why": "new type not found"
+  },
+  {
+   "from": "net.minecraft.world.level.levelgen.DensityFunction",
+   "to": "net.minecraft.world.level.levelgen.densityfunction.DensityFunction",
+   "sightings": 24,
+   "classes": 2,
+   "share": 0.6,
+   "why": "only 60% of this type's changes"
+  },
+  {
+   "from": "java.util.List",
+   "to": "net.minecraft.core.HolderSet",
+   "sightings": 19,
+   "classes": 11,
+   "share": 0.24,
+   "why": "only 24% of this type's changes"
+  },
+  {
+   "from": "com.mojang.authlib.yggdrasil.FriendsService$ResultCode",
+   "to": "com.mojang.authlib.services.FriendsService$ResultCode",
+   "sightings": 16,
+   "classes": 5,
+   "share": 1,
+   "why": "new type not found"
+  },
+  {
+   "from": "net.minecraft.world.level.levelgen.DensityFunction",
+   "to": "net.minecraft.world.level.levelgen.densityfunction.DensitySampler$Bound",
+   "sightings": 16,
+   "classes": 2,
+   "share": 0.4,
+   "why": "only 40% of this type's changes"
+  },
+  {
+   "from": "net.minecraft.world.item.Item",
+   "to": "net.minecraft.world.item.ItemStack",
+   "sightings": 15,
+   "classes": 11,
+   "share": 0.24,
+   "why": "old type still exists"
+  },
+  {
+   "from": "net.minecraft.core.HolderLookup$Provider",
+   "to": "net.minecraft.data.loot.LootTableSubProvider$Context",
+   "sightings": 14,
+   "classes": 14,
+   "share": 0.78,
+   "why": "old type still exists"
+  },
+  {
+   "from": "java.util.function.Predicate",
+   "to": "net.minecraft.server.packs.resources.ResourceManager$Selector",
+   "sightings": 13,
+   "classes": 5,
+   "share": 0.72,
+   "why": "only 72% of this type's changes"
+  },
+  {
+   "from": "net.minecraft.tags.TagKey",
+   "to": "net.minecraft.core.HolderSet",
+   "sightings": 11,
+   "classes": 5,
+   "share": 1,
+   "why": "old type still exists"
+  },
+  {
+   "from": "net.minecraft.world.level.WorldGenLevel",
+   "to": "net.minecraft.world.level.LevelAccessor",
+   "sightings": 11,
+   "classes": 9,
+   "share": 1,
+   "why": "old type still exists"
+  },
+  {
+   "from": "net.minecraft.world.item.ItemStackTemplate",
+   "to": "net.minecraft.world.item.crafting.TransmuteResult",
+   "sightings": 10,
+   "classes": 3,
+   "share": 1,
+   "why": "old type still exists"
+  },
+  {
+   "from": "net.minecraft.world.level.levelgen.synth.NormalNoise$NoiseParameters",
+   "to": "net.minecraft.world.level.levelgen.synth.NormalNoise",
+   "sightings": 8,
+   "classes": 5,
+   "share": 0.89,
+   "why": "only 89% of this type's changes"
+  },
+  {
+   "from": "net.minecraft.server.level.ServerLevel",
+   "to": "net.minecraft.server.MinecraftServer",
+   "sightings": 8,
+   "classes": 6,
+   "share": 1,
+   "why": "old type still exists"
+  },
+  {
+   "from": "net.minecraft.world.item.slot.SlotSource",
+   "to": "net.minecraft.core.Holder",
+   "sightings": 8,
+   "classes": 5,
+   "share": 1,
+   "why": "old type still exists"
+  }
+ ]
+}

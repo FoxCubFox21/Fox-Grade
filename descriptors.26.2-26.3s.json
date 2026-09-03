@@ -1,0 +1,3554 @@
+{
+ "schema": 1,
+ "from": "26.2",
+ "to": "26.3s",
+ "source": "jar-diff: supertype widening",
+ "widened": [
+  {
+   "owner": "net/minecraft/client/renderer/SubmitNodeCollection",
+   "kind": "field",
+   "name": "translucentBlocksAndItems",
+   "from": "Lnet/minecraft/client/renderer/feature/phase/TranslucentFeatureRenderPhase;",
+   "to": "Lnet/minecraft/client/renderer/feature/phase/FeatureRenderPhase;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/SubmitNodeCollection",
+   "kind": "field",
+   "name": "translucentModels",
+   "from": "Lnet/minecraft/client/renderer/feature/phase/TranslucentFeatureRenderPhase;",
+   "to": "Lnet/minecraft/client/renderer/feature/phase/FeatureRenderPhase;"
+  },
+  {
+   "owner": "net/minecraft/world/level/storage/loot/predicates/LocationCheck",
+   "kind": "field",
+   "name": "offset",
+   "from": "Lnet/minecraft/core/BlockPos;",
+   "to": "Lnet/minecraft/core/Vec3i;"
+  }
+ ],
+ "narrowed": [
+  {
+   "owner": "net/minecraft/world/attribute/modifier/ColorModifier",
+   "kind": "field",
+   "name": "MULTIPLY_RGB",
+   "from": "Lnet/minecraft/world/attribute/modifier/ColorModifier;",
+   "to": "Lnet/minecraft/world/attribute/modifier/ColorModifier$RgbModifier;"
+  },
+  {
+   "owner": "net/minecraft/world/attribute/modifier/ColorModifier",
+   "kind": "field",
+   "name": "MULTIPLY_ARGB",
+   "from": "Lnet/minecraft/world/attribute/modifier/ColorModifier;",
+   "to": "Lnet/minecraft/world/attribute/modifier/ColorModifier$ArgbModifier;"
+  },
+  {
+   "owner": "net/minecraft/world/item/SwingAnimationType",
+   "kind": "field",
+   "name": "CODEC",
+   "from": "Lcom/mojang/serialization/Codec;",
+   "to": "Lnet/minecraft/util/StringRepresentable$EnumCodec;"
+  }
+ ],
+ "changed": [
+  {
+   "owner": "com/mojang/blaze3d/TracyFrameCapture",
+   "kind": "field",
+   "name": "frameBuffer",
+   "from": "Lcom/mojang/blaze3d/textures/GpuTexture;",
+   "to": "Lcom/mojang/renderpearl/api/textures/GpuTexture;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/TracyFrameCapture",
+   "kind": "field",
+   "name": "frameBufferView",
+   "from": "Lcom/mojang/blaze3d/textures/GpuTextureView;",
+   "to": "Lcom/mojang/renderpearl/api/textures/GpuTextureView;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/TracyFrameCapture",
+   "kind": "field",
+   "name": "pixelbuffer",
+   "from": "Lcom/mojang/blaze3d/buffers/GpuBuffer;",
+   "to": "Lcom/mojang/renderpearl/api/buffers/GpuBuffer;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/font/GlyphBitmap",
+   "kind": "method",
+   "name": "upload",
+   "from": "(IILcom/mojang/blaze3d/textures/GpuTexture;)V",
+   "to": "(IILcom/mojang/renderpearl/api/textures/GpuTexture;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/font/TrueTypeGlyphProvider$Glyph$1",
+   "kind": "method",
+   "name": "upload",
+   "from": "(IILcom/mojang/blaze3d/textures/GpuTexture;)V",
+   "to": "(IILcom/mojang/renderpearl/api/textures/GpuTexture;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/pipeline/MainTarget",
+   "kind": "method",
+   "name": "allocateColorAttachment",
+   "from": "(Lcom/mojang/blaze3d/pipeline/MainTarget$Dimension;)Lcom/mojang/blaze3d/textures/GpuTexture;",
+   "to": "(Lcom/mojang/blaze3d/pipeline/MainTarget$Dimension;)Lcom/mojang/renderpearl/api/textures/GpuTexture;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/pipeline/MainTarget",
+   "kind": "method",
+   "name": "allocateDepthAttachment",
+   "from": "(Lcom/mojang/blaze3d/pipeline/MainTarget$Dimension;)Lcom/mojang/blaze3d/textures/GpuTexture;",
+   "to": "(Lcom/mojang/blaze3d/pipeline/MainTarget$Dimension;)Lcom/mojang/renderpearl/api/textures/GpuTexture;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/pipeline/RenderTarget",
+   "kind": "field",
+   "name": "colorTexture",
+   "from": "Lcom/mojang/blaze3d/textures/GpuTexture;",
+   "to": "Lcom/mojang/renderpearl/api/textures/GpuTexture;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/pipeline/RenderTarget",
+   "kind": "field",
+   "name": "colorTextureView",
+   "from": "Lcom/mojang/blaze3d/textures/GpuTextureView;",
+   "to": "Lcom/mojang/renderpearl/api/textures/GpuTextureView;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/pipeline/RenderTarget",
+   "kind": "field",
+   "name": "depthTexture",
+   "from": "Lcom/mojang/blaze3d/textures/GpuTexture;",
+   "to": "Lcom/mojang/renderpearl/api/textures/GpuTexture;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/pipeline/RenderTarget",
+   "kind": "field",
+   "name": "depthTextureView",
+   "from": "Lcom/mojang/blaze3d/textures/GpuTextureView;",
+   "to": "Lcom/mojang/renderpearl/api/textures/GpuTextureView;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/pipeline/RenderTarget",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Ljava/lang/String;ZLcom/mojang/blaze3d/GpuFormat;)V",
+   "to": "(Ljava/lang/String;Lcom/mojang/renderpearl/api/GpuFormat;Lcom/mojang/renderpearl/api/GpuFormat;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/pipeline/RenderTarget",
+   "kind": "method",
+   "name": "blitAndBlendToTexture",
+   "from": "(Lcom/mojang/blaze3d/textures/GpuTextureView;Lcom/mojang/blaze3d/textures/GpuTextureView;)V",
+   "to": "(Lcom/mojang/renderpearl/api/textures/GpuTextureView;Lcom/mojang/renderpearl/api/textures/GpuTextureView;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/pipeline/RenderTarget",
+   "kind": "method",
+   "name": "getColorTexture",
+   "from": "()Lcom/mojang/blaze3d/textures/GpuTexture;",
+   "to": "()Lcom/mojang/renderpearl/api/textures/GpuTexture;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/pipeline/RenderTarget",
+   "kind": "method",
+   "name": "getColorTextureView",
+   "from": "()Lcom/mojang/blaze3d/textures/GpuTextureView;",
+   "to": "()Lcom/mojang/renderpearl/api/textures/GpuTextureView;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/pipeline/RenderTarget",
+   "kind": "method",
+   "name": "getDepthTexture",
+   "from": "()Lcom/mojang/blaze3d/textures/GpuTexture;",
+   "to": "()Lcom/mojang/renderpearl/api/textures/GpuTexture;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/pipeline/RenderTarget",
+   "kind": "method",
+   "name": "getDepthTextureView",
+   "from": "()Lcom/mojang/blaze3d/textures/GpuTextureView;",
+   "to": "()Lcom/mojang/renderpearl/api/textures/GpuTextureView;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/pipeline/TextureTarget",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Ljava/lang/String;IIZLcom/mojang/blaze3d/GpuFormat;)V",
+   "to": "(Ljava/lang/String;IILcom/mojang/renderpearl/api/GpuFormat;Lcom/mojang/renderpearl/api/GpuFormat;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/ClipboardManager",
+   "kind": "method",
+   "name": "getClipboard",
+   "from": "(Lcom/mojang/blaze3d/platform/Window;Lorg/lwjgl/glfw/GLFWErrorCallbackI;)Ljava/lang/String;",
+   "to": "()Ljava/lang/String;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/ClipboardManager",
+   "kind": "method",
+   "name": "setClipboard",
+   "from": "(Lcom/mojang/blaze3d/platform/Window;Ljava/lang/String;)V",
+   "to": "(Ljava/lang/String;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/IconSet",
+   "kind": "method",
+   "name": "getStandardIcons",
+   "from": "(Lnet/minecraft/server/packs/PackResources;)Ljava/util/List;",
+   "to": "(Lnet/minecraft/server/packs/PackMetadataResources;)Ljava/util/List;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/IconSet",
+   "kind": "method",
+   "name": "getFile",
+   "from": "(Lnet/minecraft/server/packs/PackResources;Ljava/lang/String;)Lnet/minecraft/server/packs/resources/IoSupplier;",
+   "to": "(Lnet/minecraft/server/packs/PackMetadataResources;Ljava/lang/String;)Lnet/minecraft/server/packs/resources/IoSupplier;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/InputConstants",
+   "kind": "method",
+   "name": "isKeyDown",
+   "from": "(Lcom/mojang/blaze3d/platform/Window;I)Z",
+   "to": "(I)Z"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/Lighting",
+   "kind": "field",
+   "name": "buffer",
+   "from": "Lcom/mojang/blaze3d/buffers/GpuBuffer;",
+   "to": "Lcom/mojang/renderpearl/api/buffers/GpuBuffer;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/Monitor",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Ljava/lang/String;JLjava/util/List;Lcom/mojang/blaze3d/platform/VideoMode;II)V",
+   "to": "(Ljava/lang/String;ILjava/util/List;Lcom/mojang/blaze3d/platform/VideoMode;II)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/Monitor",
+   "kind": "method",
+   "name": "tryCreate",
+   "from": "(J)Lcom/mojang/blaze3d/platform/Monitor;",
+   "to": "(I)Lcom/mojang/blaze3d/platform/Monitor;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/Monitor",
+   "kind": "method",
+   "name": "queryMonitorName",
+   "from": "(J)Ljava/lang/String;",
+   "to": "(I)Ljava/lang/String;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/MonitorManager",
+   "kind": "field",
+   "name": "monitors",
+   "from": "Lit/unimi/dsi/fastutil/longs/Long2ObjectMap;",
+   "to": "Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/MonitorManager",
+   "kind": "method",
+   "name": "getMonitor",
+   "from": "(J)Lcom/mojang/blaze3d/platform/Monitor;",
+   "to": "(I)Lcom/mojang/blaze3d/platform/Monitor;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/TextInputManager",
+   "kind": "method",
+   "name": "startTextInput",
+   "from": "()V",
+   "to": "(Ljava/lang/Object;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/TextInputManager",
+   "kind": "method",
+   "name": "onTextInputFocusChange",
+   "from": "(Z)V",
+   "to": "(Ljava/lang/Object;Z)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/TextureUtil",
+   "kind": "method",
+   "name": "writeAsPNG",
+   "from": "(Ljava/nio/file/Path;Ljava/lang/String;Lcom/mojang/blaze3d/textures/GpuTexture;ILjava/util/function/IntUnaryOperator;)V",
+   "to": "(Ljava/nio/file/Path;Ljava/lang/String;Lcom/mojang/renderpearl/api/textures/GpuTexture;ILjava/util/function/IntUnaryOperator;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/TextureUtil",
+   "kind": "method",
+   "name": "lambda$writeAsPNG$1",
+   "from": "(Lcom/mojang/blaze3d/buffers/GpuBuffer;ILcom/mojang/blaze3d/textures/GpuTexture;Ljava/util/function/IntUnaryOperator;Ljava/nio/file/Path;Ljava/lang/String;)V",
+   "to": "(Lcom/mojang/renderpearl/api/buffers/GpuBuffer;ILcom/mojang/renderpearl/api/textures/GpuTexture;Ljava/util/function/IntUnaryOperator;Ljava/nio/file/Path;Ljava/lang/String;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/VideoMode",
+   "kind": "field",
+   "name": "refreshRate",
+   "from": "I",
+   "to": "F"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/VideoMode",
+   "kind": "method",
+   "name": "getRefreshRate",
+   "from": "()I",
+   "to": "()F"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/Window",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lcom/mojang/blaze3d/platform/WindowEventHandler;Lcom/mojang/blaze3d/platform/DisplayData;Ljava/lang/String;ZLjava/lang/String;Lcom/mojang/blaze3d/platform/MonitorManager;Lcom/mojang/blaze3d/systems/GpuBackend;)V",
+   "to": "(Lcom/mojang/blaze3d/platform/WindowEventHandler;Lcom/mojang/blaze3d/platform/DisplayData;Ljava/lang/String;ZLjava/lang/String;Lcom/mojang/blaze3d/platform/MonitorManager;Lcom/mojang/renderpearl/api/device/GpuBackend;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/Window",
+   "kind": "method",
+   "name": "createWindow",
+   "from": "(Lcom/mojang/blaze3d/systems/GpuBackend;IILjava/lang/String;J)J",
+   "to": "(Lcom/mojang/renderpearl/api/device/GpuBackend;IILjava/lang/String;)J"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/Window",
+   "kind": "method",
+   "name": "onMove",
+   "from": "(JII)V",
+   "to": "(II)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/Window",
+   "kind": "method",
+   "name": "onFramebufferResize",
+   "from": "(JII)V",
+   "to": "(II)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/Window",
+   "kind": "method",
+   "name": "onResize",
+   "from": "(JII)V",
+   "to": "(II)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/Window",
+   "kind": "method",
+   "name": "onFocus",
+   "from": "(JZ)V",
+   "to": "(Z)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/Window",
+   "kind": "method",
+   "name": "allowedWindowMinSize",
+   "from": "(I)I",
+   "to": "(II)I"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/cursor/CursorType",
+   "kind": "method",
+   "name": "select",
+   "from": "(Lcom/mojang/blaze3d/platform/Window;)V",
+   "to": "()V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/resource/RenderTargetDescriptor",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(IIZLorg/joml/Vector4fc;Lcom/mojang/blaze3d/GpuFormat;)V",
+   "to": "(IILcom/mojang/blaze3d/resource/RenderTargetDescriptor$TextureProperties;Lcom/mojang/blaze3d/resource/RenderTargetDescriptor$TextureProperties;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderSystem$AutoStorageIndexBuffer",
+   "kind": "field",
+   "name": "buffer",
+   "from": "Lcom/mojang/blaze3d/buffers/GpuBuffer;",
+   "to": "Lcom/mojang/renderpearl/api/buffers/GpuBuffer;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderSystem$AutoStorageIndexBuffer",
+   "kind": "field",
+   "name": "type",
+   "from": "Lcom/mojang/blaze3d/IndexType;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/IndexType;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderSystem$AutoStorageIndexBuffer",
+   "kind": "method",
+   "name": "type",
+   "from": "()Lcom/mojang/blaze3d/IndexType;",
+   "to": "()Lcom/mojang/renderpearl/api/pipeline/IndexType;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderSystem$GpuAsyncTask",
+   "kind": "field",
+   "name": "fence",
+   "from": "Lcom/mojang/blaze3d/buffers/GpuFence;",
+   "to": "Lcom/mojang/renderpearl/api/commands/GpuFence;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderSystem$GpuAsyncTask",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Ljava/lang/Runnable;Lcom/mojang/blaze3d/buffers/GpuFence;)V",
+   "to": "(Ljava/lang/Runnable;Lcom/mojang/renderpearl/api/commands/GpuFence;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderSystem$GpuAsyncTask",
+   "kind": "method",
+   "name": "fence",
+   "from": "()Lcom/mojang/blaze3d/buffers/GpuFence;",
+   "to": "()Lcom/mojang/renderpearl/api/commands/GpuFence;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderSystem",
+   "kind": "field",
+   "name": "DEVICE",
+   "from": "Lcom/mojang/blaze3d/systems/GpuDevice;",
+   "to": "Lcom/mojang/renderpearl/api/device/GpuDevice;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderSystem",
+   "kind": "field",
+   "name": "shaderFog",
+   "from": "Lcom/mojang/blaze3d/buffers/GpuBufferSlice;",
+   "to": "Lcom/mojang/renderpearl/api/buffers/GpuBufferSlice;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderSystem",
+   "kind": "field",
+   "name": "shaderLightDirections",
+   "from": "Lcom/mojang/blaze3d/buffers/GpuBufferSlice;",
+   "to": "Lcom/mojang/renderpearl/api/buffers/GpuBufferSlice;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderSystem",
+   "kind": "field",
+   "name": "projectionMatrixBuffer",
+   "from": "Lcom/mojang/blaze3d/buffers/GpuBufferSlice;",
+   "to": "Lcom/mojang/renderpearl/api/buffers/GpuBufferSlice;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderSystem",
+   "kind": "field",
+   "name": "savedProjectionMatrixBuffer",
+   "from": "Lcom/mojang/blaze3d/buffers/GpuBufferSlice;",
+   "to": "Lcom/mojang/renderpearl/api/buffers/GpuBufferSlice;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderSystem",
+   "kind": "field",
+   "name": "globalSettingsUniform",
+   "from": "Lcom/mojang/blaze3d/buffers/GpuBuffer;",
+   "to": "Lcom/mojang/renderpearl/api/buffers/GpuBuffer;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderSystem",
+   "kind": "method",
+   "name": "pollEvents",
+   "from": "()V",
+   "to": "(Lcom/mojang/blaze3d/platform/SDLEventHandler;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderSystem",
+   "kind": "method",
+   "name": "setShaderFog",
+   "from": "(Lcom/mojang/blaze3d/buffers/GpuBufferSlice;)V",
+   "to": "(Lcom/mojang/renderpearl/api/buffers/GpuBufferSlice;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderSystem",
+   "kind": "method",
+   "name": "getShaderFog",
+   "from": "()Lcom/mojang/blaze3d/buffers/GpuBufferSlice;",
+   "to": "()Lcom/mojang/renderpearl/api/buffers/GpuBufferSlice;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderSystem",
+   "kind": "method",
+   "name": "setShaderLights",
+   "from": "(Lcom/mojang/blaze3d/buffers/GpuBufferSlice;)V",
+   "to": "(Lcom/mojang/renderpearl/api/buffers/GpuBufferSlice;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderSystem",
+   "kind": "method",
+   "name": "getShaderLights",
+   "from": "()Lcom/mojang/blaze3d/buffers/GpuBufferSlice;",
+   "to": "()Lcom/mojang/renderpearl/api/buffers/GpuBufferSlice;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderSystem",
+   "kind": "method",
+   "name": "initRenderer",
+   "from": "(Lcom/mojang/blaze3d/systems/GpuDevice;)V",
+   "to": "(Lcom/mojang/renderpearl/api/device/GpuDevice;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderSystem",
+   "kind": "method",
+   "name": "setProjectionMatrix",
+   "from": "(Lcom/mojang/blaze3d/buffers/GpuBufferSlice;Lcom/mojang/blaze3d/ProjectionType;)V",
+   "to": "(Lcom/mojang/renderpearl/api/buffers/GpuBufferSlice;Lcom/mojang/blaze3d/ProjectionType;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderSystem",
+   "kind": "method",
+   "name": "getProjectionMatrixBuffer",
+   "from": "()Lcom/mojang/blaze3d/buffers/GpuBufferSlice;",
+   "to": "()Lcom/mojang/renderpearl/api/buffers/GpuBufferSlice;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderSystem",
+   "kind": "method",
+   "name": "getSequentialBuffer",
+   "from": "(Lcom/mojang/blaze3d/PrimitiveTopology;)Lcom/mojang/blaze3d/systems/RenderSystem$AutoStorageIndexBuffer;",
+   "to": "(Lcom/mojang/renderpearl/api/pipeline/PrimitiveTopology;)Lcom/mojang/blaze3d/systems/RenderSystem$AutoStorageIndexBuffer;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderSystem",
+   "kind": "method",
+   "name": "setGlobalSettingsUniform",
+   "from": "(Lcom/mojang/blaze3d/buffers/GpuBuffer;)V",
+   "to": "(Lcom/mojang/renderpearl/api/buffers/GpuBuffer;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderSystem",
+   "kind": "method",
+   "name": "getGlobalSettingsUniform",
+   "from": "()Lcom/mojang/blaze3d/buffers/GpuBuffer;",
+   "to": "()Lcom/mojang/renderpearl/api/buffers/GpuBuffer;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderSystem",
+   "kind": "method",
+   "name": "getDevice",
+   "from": "()Lcom/mojang/blaze3d/systems/GpuDevice;",
+   "to": "()Lcom/mojang/renderpearl/api/device/GpuDevice;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderSystem",
+   "kind": "method",
+   "name": "tryGetDevice",
+   "from": "()Lcom/mojang/blaze3d/systems/GpuDevice;",
+   "to": "()Lcom/mojang/renderpearl/api/device/GpuDevice;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderSystem",
+   "kind": "method",
+   "name": "getDynamicUniforms",
+   "from": "()Lnet/minecraft/client/renderer/DynamicUniforms;",
+   "to": "()Lnet/minecraft/client/renderer/DynamicGpuData;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/RenderSystem",
+   "kind": "method",
+   "name": "bindDefaultUniforms",
+   "from": "(Lcom/mojang/blaze3d/systems/RenderPass;)V",
+   "to": "(Lcom/mojang/renderpearl/api/commands/RenderPass;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/SamplerCache",
+   "kind": "field",
+   "name": "samplers",
+   "from": "[Lcom/mojang/blaze3d/textures/GpuSampler;",
+   "to": "[Lcom/mojang/renderpearl/api/textures/GpuSampler;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/SamplerCache",
+   "kind": "method",
+   "name": "getSampler",
+   "from": "(Lcom/mojang/blaze3d/textures/AddressMode;Lcom/mojang/blaze3d/textures/AddressMode;Lcom/mojang/blaze3d/textures/FilterMode;Lcom/mojang/blaze3d/textures/FilterMode;Z)Lcom/mojang/blaze3d/textures/GpuSampler;",
+   "to": "(Lcom/mojang/renderpearl/api/textures/AddressMode;Lcom/mojang/renderpearl/api/textures/AddressMode;Lcom/mojang/renderpearl/api/textures/FilterMode;Lcom/mojang/renderpearl/api/textures/FilterMode;Z)Lcom/mojang/renderpearl/api/textures/GpuSampler;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/SamplerCache",
+   "kind": "method",
+   "name": "encode",
+   "from": "(Lcom/mojang/blaze3d/textures/AddressMode;Lcom/mojang/blaze3d/textures/AddressMode;Lcom/mojang/blaze3d/textures/FilterMode;Lcom/mojang/blaze3d/textures/FilterMode;Z)I",
+   "to": "(Lcom/mojang/renderpearl/api/textures/AddressMode;Lcom/mojang/renderpearl/api/textures/AddressMode;Lcom/mojang/renderpearl/api/textures/FilterMode;Lcom/mojang/renderpearl/api/textures/FilterMode;Z)I"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/TimerQuery",
+   "kind": "field",
+   "name": "activeEncoder",
+   "from": "Lcom/mojang/blaze3d/systems/CommandEncoder;",
+   "to": "Lcom/mojang/renderpearl/api/commands/CommandEncoder;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/systems/TimerQuery",
+   "kind": "field",
+   "name": "queryPool",
+   "from": "Lcom/mojang/blaze3d/systems/GpuQueryPool;",
+   "to": "Lcom/mojang/renderpearl/api/commands/GpuQueryPool;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/BufferBuilder",
+   "kind": "field",
+   "name": "format",
+   "from": "Lcom/mojang/blaze3d/vertex/VertexFormat;",
+   "to": "Lcom/mojang/renderpearl/api/vertex/VertexFormat;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/BufferBuilder",
+   "kind": "field",
+   "name": "primitiveTopology",
+   "from": "Lcom/mojang/blaze3d/PrimitiveTopology;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/PrimitiveTopology;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/BufferBuilder",
+   "kind": "field",
+   "name": "elements",
+   "from": "[Lcom/mojang/blaze3d/vertex/VertexFormatElement;",
+   "to": "[Lcom/mojang/renderpearl/api/vertex/VertexFormatElement;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/BufferBuilder",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lcom/mojang/blaze3d/vertex/ByteBufferBuilder;Lcom/mojang/blaze3d/PrimitiveTopology;Lcom/mojang/blaze3d/vertex/VertexFormat;)V",
+   "to": "(Lcom/mojang/blaze3d/vertex/ByteBufferBuilder;Lcom/mojang/renderpearl/api/pipeline/PrimitiveTopology;Lcom/mojang/renderpearl/api/vertex/VertexFormat;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/DefaultVertexFormat",
+   "kind": "field",
+   "name": "POSITION_FORMAT",
+   "from": "Lcom/mojang/blaze3d/GpuFormat;",
+   "to": "Lcom/mojang/renderpearl/api/GpuFormat;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/DefaultVertexFormat",
+   "kind": "field",
+   "name": "COLOR_FORMAT",
+   "from": "Lcom/mojang/blaze3d/GpuFormat;",
+   "to": "Lcom/mojang/renderpearl/api/GpuFormat;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/DefaultVertexFormat",
+   "kind": "field",
+   "name": "UV0_FORMAT",
+   "from": "Lcom/mojang/blaze3d/GpuFormat;",
+   "to": "Lcom/mojang/renderpearl/api/GpuFormat;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/DefaultVertexFormat",
+   "kind": "field",
+   "name": "UV1_FORMAT",
+   "from": "Lcom/mojang/blaze3d/GpuFormat;",
+   "to": "Lcom/mojang/renderpearl/api/GpuFormat;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/DefaultVertexFormat",
+   "kind": "field",
+   "name": "UV2_FORMAT",
+   "from": "Lcom/mojang/blaze3d/GpuFormat;",
+   "to": "Lcom/mojang/renderpearl/api/GpuFormat;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/DefaultVertexFormat",
+   "kind": "field",
+   "name": "NORMAL_FORMAT",
+   "from": "Lcom/mojang/blaze3d/GpuFormat;",
+   "to": "Lcom/mojang/renderpearl/api/GpuFormat;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/DefaultVertexFormat",
+   "kind": "field",
+   "name": "LINE_WIDTH_FORMAT",
+   "from": "Lcom/mojang/blaze3d/GpuFormat;",
+   "to": "Lcom/mojang/renderpearl/api/GpuFormat;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/DefaultVertexFormat",
+   "kind": "field",
+   "name": "BLOCK",
+   "from": "Lcom/mojang/blaze3d/vertex/VertexFormat;",
+   "to": "Lcom/mojang/renderpearl/api/vertex/VertexFormat;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/DefaultVertexFormat",
+   "kind": "field",
+   "name": "ENTITY",
+   "from": "Lcom/mojang/blaze3d/vertex/VertexFormat;",
+   "to": "Lcom/mojang/renderpearl/api/vertex/VertexFormat;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/DefaultVertexFormat",
+   "kind": "field",
+   "name": "PARTICLE",
+   "from": "Lcom/mojang/blaze3d/vertex/VertexFormat;",
+   "to": "Lcom/mojang/renderpearl/api/vertex/VertexFormat;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/DefaultVertexFormat",
+   "kind": "field",
+   "name": "POSITION",
+   "from": "Lcom/mojang/blaze3d/vertex/VertexFormat;",
+   "to": "Lcom/mojang/renderpearl/api/vertex/VertexFormat;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/DefaultVertexFormat",
+   "kind": "field",
+   "name": "POSITION_COLOR",
+   "from": "Lcom/mojang/blaze3d/vertex/VertexFormat;",
+   "to": "Lcom/mojang/renderpearl/api/vertex/VertexFormat;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/DefaultVertexFormat",
+   "kind": "field",
+   "name": "POSITION_COLOR_NORMAL",
+   "from": "Lcom/mojang/blaze3d/vertex/VertexFormat;",
+   "to": "Lcom/mojang/renderpearl/api/vertex/VertexFormat;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/DefaultVertexFormat",
+   "kind": "field",
+   "name": "POSITION_COLOR_LIGHTMAP",
+   "from": "Lcom/mojang/blaze3d/vertex/VertexFormat;",
+   "to": "Lcom/mojang/renderpearl/api/vertex/VertexFormat;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/DefaultVertexFormat",
+   "kind": "field",
+   "name": "POSITION_TEX",
+   "from": "Lcom/mojang/blaze3d/vertex/VertexFormat;",
+   "to": "Lcom/mojang/renderpearl/api/vertex/VertexFormat;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/DefaultVertexFormat",
+   "kind": "field",
+   "name": "POSITION_TEX_COLOR",
+   "from": "Lcom/mojang/blaze3d/vertex/VertexFormat;",
+   "to": "Lcom/mojang/renderpearl/api/vertex/VertexFormat;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/DefaultVertexFormat",
+   "kind": "field",
+   "name": "POSITION_COLOR_TEX_LIGHTMAP",
+   "from": "Lcom/mojang/blaze3d/vertex/VertexFormat;",
+   "to": "Lcom/mojang/renderpearl/api/vertex/VertexFormat;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/DefaultVertexFormat",
+   "kind": "field",
+   "name": "POSITION_TEX_LIGHTMAP_COLOR",
+   "from": "Lcom/mojang/blaze3d/vertex/VertexFormat;",
+   "to": "Lcom/mojang/renderpearl/api/vertex/VertexFormat;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/DefaultVertexFormat",
+   "kind": "field",
+   "name": "POSITION_TEX_COLOR_NORMAL",
+   "from": "Lcom/mojang/blaze3d/vertex/VertexFormat;",
+   "to": "Lcom/mojang/renderpearl/api/vertex/VertexFormat;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/DefaultVertexFormat",
+   "kind": "field",
+   "name": "POSITION_COLOR_LINE_WIDTH",
+   "from": "Lcom/mojang/blaze3d/vertex/VertexFormat;",
+   "to": "Lcom/mojang/renderpearl/api/vertex/VertexFormat;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/DefaultVertexFormat",
+   "kind": "field",
+   "name": "POSITION_COLOR_NORMAL_LINE_WIDTH",
+   "from": "Lcom/mojang/blaze3d/vertex/VertexFormat;",
+   "to": "Lcom/mojang/renderpearl/api/vertex/VertexFormat;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/MeshData$DrawState",
+   "kind": "field",
+   "name": "format",
+   "from": "Lcom/mojang/blaze3d/vertex/VertexFormat;",
+   "to": "Lcom/mojang/renderpearl/api/vertex/VertexFormat;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/MeshData$DrawState",
+   "kind": "field",
+   "name": "primitiveTopology",
+   "from": "Lcom/mojang/blaze3d/PrimitiveTopology;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/PrimitiveTopology;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/MeshData$DrawState",
+   "kind": "field",
+   "name": "indexType",
+   "from": "Lcom/mojang/blaze3d/IndexType;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/IndexType;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/MeshData$DrawState",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lcom/mojang/blaze3d/vertex/VertexFormat;IILcom/mojang/blaze3d/PrimitiveTopology;Lcom/mojang/blaze3d/IndexType;)V",
+   "to": "(Lcom/mojang/renderpearl/api/vertex/VertexFormat;IILcom/mojang/renderpearl/api/pipeline/PrimitiveTopology;Lcom/mojang/renderpearl/api/pipeline/IndexType;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/MeshData$DrawState",
+   "kind": "method",
+   "name": "format",
+   "from": "()Lcom/mojang/blaze3d/vertex/VertexFormat;",
+   "to": "()Lcom/mojang/renderpearl/api/vertex/VertexFormat;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/MeshData$DrawState",
+   "kind": "method",
+   "name": "primitiveTopology",
+   "from": "()Lcom/mojang/blaze3d/PrimitiveTopology;",
+   "to": "()Lcom/mojang/renderpearl/api/pipeline/PrimitiveTopology;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/MeshData$DrawState",
+   "kind": "method",
+   "name": "indexType",
+   "from": "()Lcom/mojang/blaze3d/IndexType;",
+   "to": "()Lcom/mojang/renderpearl/api/pipeline/IndexType;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/MeshData$SortState",
+   "kind": "field",
+   "name": "indexType",
+   "from": "Lcom/mojang/blaze3d/IndexType;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/IndexType;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/MeshData$SortState",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lcom/mojang/blaze3d/vertex/CompactVectorArray;Lcom/mojang/blaze3d/IndexType;)V",
+   "to": "(Lcom/mojang/blaze3d/vertex/CompactVectorArray;Lcom/mojang/renderpearl/api/pipeline/IndexType;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/MeshData$SortState",
+   "kind": "method",
+   "name": "indexWriter",
+   "from": "(JLcom/mojang/blaze3d/IndexType;)Lit/unimi/dsi/fastutil/ints/IntConsumer;",
+   "to": "(JLcom/mojang/renderpearl/api/pipeline/IndexType;)Lit/unimi/dsi/fastutil/ints/IntConsumer;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/MeshData$SortState",
+   "kind": "method",
+   "name": "indexType",
+   "from": "()Lcom/mojang/blaze3d/IndexType;",
+   "to": "()Lcom/mojang/renderpearl/api/pipeline/IndexType;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/MeshData",
+   "kind": "method",
+   "name": "decodeQuadCentroids",
+   "from": "(Ljava/nio/ByteBuffer;ILcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/vertex/CompactVectorArray;I)V",
+   "to": "(Ljava/nio/ByteBuffer;ILcom/mojang/renderpearl/api/vertex/VertexFormat;Lcom/mojang/blaze3d/vertex/CompactVectorArray;I)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/StagingBuffer$Cpu",
+   "kind": "method",
+   "name": "copyTo",
+   "from": "(Lcom/mojang/blaze3d/systems/CommandEncoder;Lcom/mojang/blaze3d/buffers/GpuBuffer;JJJ)V",
+   "to": "(Lcom/mojang/renderpearl/api/commands/CommandEncoder;Lcom/mojang/renderpearl/api/buffers/GpuBuffer;JJJ)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/StagingBuffer$PersistentlyMapped",
+   "kind": "field",
+   "name": "currentMappedView",
+   "from": "Lcom/mojang/blaze3d/buffers/GpuBufferSlice$MappedView;",
+   "to": "Lcom/mojang/renderpearl/api/buffers/GpuBufferSlice$MappedView;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/StagingBuffer$PersistentlyMapped",
+   "kind": "field",
+   "name": "currentGPUBuffer",
+   "from": "Lcom/mojang/blaze3d/buffers/GpuBuffer;",
+   "to": "Lcom/mojang/renderpearl/api/buffers/GpuBuffer;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/StagingBuffer$PersistentlyMapped",
+   "kind": "method",
+   "name": "copyTo",
+   "from": "(Lcom/mojang/blaze3d/systems/CommandEncoder;Lcom/mojang/blaze3d/buffers/GpuBuffer;JJJ)V",
+   "to": "(Lcom/mojang/renderpearl/api/commands/CommandEncoder;Lcom/mojang/renderpearl/api/buffers/GpuBuffer;JJJ)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/StagingBuffer$Uploader",
+   "kind": "field",
+   "name": "encoder",
+   "from": "Lcom/mojang/blaze3d/systems/CommandEncoder;",
+   "to": "Lcom/mojang/renderpearl/api/commands/CommandEncoder;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/StagingBuffer$Uploader",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lcom/mojang/blaze3d/vertex/StagingBuffer;Lcom/mojang/blaze3d/systems/CommandEncoder;)V",
+   "to": "(Lcom/mojang/blaze3d/vertex/StagingBuffer;Lcom/mojang/renderpearl/api/commands/CommandEncoder;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/StagingBuffer$Uploader",
+   "kind": "method",
+   "name": "copyTo",
+   "from": "(Lcom/mojang/blaze3d/vertex/StagingBuffer$BufferHandle;Lcom/mojang/blaze3d/buffers/GpuBuffer;J)V",
+   "to": "(Lcom/mojang/blaze3d/vertex/StagingBuffer$BufferHandle;Lcom/mojang/renderpearl/api/buffers/GpuBuffer;J)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/StagingBuffer",
+   "kind": "method",
+   "name": "create",
+   "from": "(Ljava/lang/String;Lcom/mojang/blaze3d/systems/GpuDevice;I)Lcom/mojang/blaze3d/vertex/StagingBuffer;",
+   "to": "(Ljava/lang/String;Lcom/mojang/renderpearl/api/device/GpuDevice;I)Lcom/mojang/blaze3d/vertex/StagingBuffer;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/StagingBuffer",
+   "kind": "method",
+   "name": "copyTo",
+   "from": "(Lcom/mojang/blaze3d/systems/CommandEncoder;Lcom/mojang/blaze3d/buffers/GpuBuffer;JJJ)V",
+   "to": "(Lcom/mojang/renderpearl/api/commands/CommandEncoder;Lcom/mojang/renderpearl/api/buffers/GpuBuffer;JJJ)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/StagingBuffer",
+   "kind": "method",
+   "name": "startUploading",
+   "from": "(Lcom/mojang/blaze3d/systems/CommandEncoder;)Lcom/mojang/blaze3d/vertex/StagingBuffer$Uploader;",
+   "to": "(Lcom/mojang/renderpearl/api/commands/CommandEncoder;)Lcom/mojang/blaze3d/vertex/StagingBuffer$Uploader;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/UberGpuBuffer$UberGpuBufferHeap",
+   "kind": "field",
+   "name": "gpuBuffer",
+   "from": "Lcom/mojang/blaze3d/buffers/GpuBuffer;",
+   "to": "Lcom/mojang/renderpearl/api/buffers/GpuBuffer;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/UberGpuBuffer$UberGpuBufferHeap",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(JLcom/mojang/blaze3d/systems/GpuDevice;ILjava/lang/String;)V",
+   "to": "(JLcom/mojang/renderpearl/api/device/GpuDevice;ILjava/lang/String;)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/UberGpuBuffer",
+   "kind": "method",
+   "name": "uploadStagedAllocations",
+   "from": "(Lcom/mojang/blaze3d/systems/GpuDevice;Lcom/mojang/blaze3d/vertex/StagingBuffer$Uploader;)Z",
+   "to": "(Lcom/mojang/renderpearl/api/device/GpuDevice;Lcom/mojang/blaze3d/vertex/StagingBuffer$Uploader;)Z"
+  },
+  {
+   "owner": "com/mojang/blaze3d/vertex/UberGpuBuffer",
+   "kind": "method",
+   "name": "getGpuBuffer",
+   "from": "(Lcom/mojang/blaze3d/vertex/TlsfAllocator$Allocation;)Lcom/mojang/blaze3d/buffers/GpuBuffer;",
+   "to": "(Lcom/mojang/blaze3d/vertex/TlsfAllocator$Allocation;)Lcom/mojang/renderpearl/api/buffers/GpuBuffer;"
+  },
+  {
+   "owner": "com/mojang/realmsclient/RealmsMainScreen",
+   "kind": "method",
+   "name": "lambda$initDataFetcher$4",
+   "from": "(Lcom/mojang/realmsclient/dto/RealmsServerPlayerLists;)V",
+   "to": "(Lcom/mojang/realmsclient/gui/RealmsDataFetcher;Lcom/mojang/realmsclient/dto/RealmsNews;)V"
+  },
+  {
+   "owner": "com/mojang/realmsclient/RealmsMainScreen",
+   "kind": "method",
+   "name": "lambda$initDataFetcher$3",
+   "from": "(Ljava/lang/Boolean;)V",
+   "to": "(Lcom/mojang/realmsclient/dto/RealmsServerPlayerLists;)V"
+  },
+  {
+   "owner": "com/mojang/realmsclient/RealmsMainScreen",
+   "kind": "method",
+   "name": "lambda$init$6",
+   "from": "(Lnet/minecraft/client/gui/components/Button;)V",
+   "to": "(Lcom/mojang/realmsclient/RealmsAvailability$Result;)V"
+  },
+  {
+   "owner": "com/mojang/realmsclient/RealmsMainScreen",
+   "kind": "method",
+   "name": "lambda$init$5",
+   "from": "(Lnet/minecraft/client/gui/components/Button;)V",
+   "to": "(Lnet/minecraft/client/gui/components/CycleButton;Ljava/lang/Boolean;)V"
+  },
+  {
+   "owner": "com/mojang/realmsclient/RealmsMainScreen",
+   "kind": "method",
+   "name": "lambda$init$0",
+   "from": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/gui/components/Button;)V",
+   "to": "(Lnet/minecraft/client/gui/components/Button;)V"
+  },
+  {
+   "owner": "com/mojang/realmsclient/client/RealmsClient$Environment",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;)V",
+   "to": "(Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V"
+  },
+  {
+   "owner": "com/mojang/realmsclient/client/Request",
+   "kind": "method",
+   "name": "addVersionHeaders",
+   "from": "(IZ)V",
+   "to": "(Ljava/lang/String;IZ)V"
+  },
+  {
+   "owner": "com/mojang/realmsclient/gui/screens/RealmsSelectWorldTemplateScreen",
+   "kind": "method",
+   "name": "access$000",
+   "from": "(Lcom/mojang/realmsclient/gui/screens/RealmsSelectWorldTemplateScreen;)Lnet/minecraft/client/Minecraft;",
+   "to": "(Lcom/mojang/realmsclient/gui/screens/RealmsSelectWorldTemplateScreen;)Lnet/minecraft/client/gui/Font;"
+  },
+  {
+   "owner": "com/mojang/realmsclient/gui/screens/configuration/RealmsConfigureWorldScreen",
+   "kind": "method",
+   "name": "saveSettings",
+   "from": "(Ljava/lang/String;Ljava/lang/String;Lcom/mojang/realmsclient/dto/RegionSelectionPreference;Lcom/mojang/realmsclient/dto/RealmsRegion;)V",
+   "to": "(Ljava/lang/String;Ljava/lang/String;Lcom/mojang/realmsclient/dto/RegionSelectionPreference;Lcom/mojang/realmsclient/dto/RealmsRegion;Ljava/lang/Integer;Ljava/lang/Integer;)Z"
+  },
+  {
+   "owner": "com/mojang/realmsclient/gui/screens/configuration/RealmsSettingsTab",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lcom/mojang/realmsclient/gui/screens/configuration/RealmsConfigureWorldScreen;Lnet/minecraft/client/Minecraft;Lcom/mojang/realmsclient/dto/RealmsServer;Ljava/util/Map;)V",
+   "to": "(Lcom/mojang/realmsclient/gui/screens/configuration/RealmsConfigureWorldScreen;Lnet/minecraft/client/Minecraft;Lcom/mojang/realmsclient/dto/RealmsServer;Lcom/mojang/realmsclient/dto/RealmTierConfigurationDto;Ljava/util/Map;)V"
+  },
+  {
+   "owner": "com/mojang/realmsclient/gui/screens/configuration/RealmsSettingsTab",
+   "kind": "method",
+   "name": "save",
+   "from": "()V",
+   "to": "()Z"
+  },
+  {
+   "owner": "net/minecraft/client/Camera",
+   "kind": "method",
+   "name": "extractRenderState",
+   "from": "(Lnet/minecraft/client/renderer/state/level/CameraRenderState;F)V",
+   "to": "(Lnet/minecraft/client/renderer/state/level/CameraRenderState;Lnet/minecraft/client/DeltaTracker;)V"
+  },
+  {
+   "owner": "net/minecraft/client/ClientClockManager",
+   "kind": "method",
+   "name": "lambda$getInstance$0",
+   "from": "(Lnet/minecraft/core/Holder;)Lnet/minecraft/client/ClientClockManager$ClockInstance;",
+   "to": "(Lnet/minecraft/core/Holder;)Lnet/minecraft/client/ClientClockManager$ClientClockInstance;"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "kind": "field",
+   "name": "windowSurface",
+   "from": "Lcom/mojang/blaze3d/systems/GpuSurface;",
+   "to": "Lcom/mojang/renderpearl/api/device/GpuSurface;"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "kind": "field",
+   "name": "backendCreationException",
+   "from": "Lcom/mojang/blaze3d/systems/BackendCreationException;",
+   "to": "Lcom/mojang/renderpearl/api/device/BackendCreationException;"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "kind": "method",
+   "name": "createUserApiService",
+   "from": "(Lcom/mojang/authlib/yggdrasil/YggdrasilAuthenticationService;Lnet/minecraft/client/main/GameConfig;)Lcom/mojang/authlib/minecraft/UserApiService;",
+   "to": "(Lcom/mojang/authlib/services/MinecraftServicesDiscoveryService;Lnet/minecraft/client/main/GameConfig;)Lcom/mojang/authlib/minecraft/UserApiService;"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "kind": "method",
+   "name": "getProfileResult",
+   "from": "()Lcom/mojang/authlib/yggdrasil/ProfileResult;",
+   "to": "()Lcom/mojang/authlib/services/ProfileResult;"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "kind": "method",
+   "name": "windowSurface",
+   "from": "()Lcom/mojang/blaze3d/systems/GpuSurface;",
+   "to": "()Lcom/mojang/renderpearl/api/device/GpuSurface;"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "kind": "method",
+   "name": "lambda$fillSystemReport$3",
+   "from": "(Lcom/mojang/blaze3d/systems/GpuDevice;)Ljava/lang/Object;",
+   "to": "(Lcom/mojang/renderpearl/api/device/GpuDevice;)Ljava/lang/Object;"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "kind": "method",
+   "name": "lambda$new$7",
+   "from": "()I",
+   "to": "(Lnet/minecraft/client/telemetry/TelemetryPropertyMap$Builder;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "kind": "method",
+   "name": "lambda$new$4",
+   "from": "(Lnet/minecraft/client/GameLoadCookie;Ljava/util/Optional;)V",
+   "to": "(Lnet/minecraft/client/GameLoadCookie;Ljava/lang/Throwable;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "kind": "method",
+   "name": "lambda$new$6",
+   "from": "(Lnet/minecraft/client/GameLoadCookie;)V",
+   "to": "()I"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "kind": "method",
+   "name": "lambda$new$5",
+   "from": "(Lnet/minecraft/client/GameLoadCookie;Ljava/lang/Throwable;)V",
+   "to": "(Lnet/minecraft/client/GameLoadCookie;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "kind": "method",
+   "name": "lambda$new$3",
+   "from": "(Lnet/minecraft/client/resources/language/ClientLanguage;)V",
+   "to": "(Lnet/minecraft/client/GameLoadCookie;Ljava/util/Optional;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "kind": "method",
+   "name": "lambda$new$2",
+   "from": "(Lnet/minecraft/resources/Identifier;Lcom/mojang/blaze3d/shaders/ShaderType;)Ljava/lang/String;",
+   "to": "(Lnet/minecraft/client/resources/language/ClientLanguage;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Minecraft",
+   "kind": "method",
+   "name": "lambda$new$0",
+   "from": "()Lcom/mojang/authlib/yggdrasil/ProfileResult;",
+   "to": "()Lcom/mojang/authlib/services/ProfileResult;"
+  },
+  {
+   "owner": "net/minecraft/client/MouseHandler",
+   "kind": "method",
+   "name": "onDrop",
+   "from": "(JLjava/util/List;I)V",
+   "to": "(JLjava/util/List;)V"
+  },
+  {
+   "owner": "net/minecraft/client/MouseHandler",
+   "kind": "method",
+   "name": "onMove",
+   "from": "(JDD)V",
+   "to": "(JDDDD)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$108",
+   "from": "(Ljava/lang/Integer;)V",
+   "to": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/MusicToastDisplayState;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$107",
+   "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Integer;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Lnet/minecraft/client/MusicToastDisplayState;)Lnet/minecraft/client/gui/components/Tooltip;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$106",
+   "from": "(Ljava/lang/Integer;)V",
+   "to": "(Lnet/minecraft/client/sounds/MusicManager$MusicFrequency;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$105",
+   "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Integer;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/sounds/MusicManager$MusicFrequency;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$104",
+   "from": "(Lnet/minecraft/client/MusicToastDisplayState;)V",
+   "to": "(Ljava/lang/String;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$103",
+   "from": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/MusicToastDisplayState;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Ljava/lang/String;)Ljava/util/Optional;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$102",
+   "from": "(Lnet/minecraft/client/MusicToastDisplayState;)Lnet/minecraft/client/gui/components/Tooltip;",
+   "to": "()Ljava/util/List;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$101",
+   "from": "(Lnet/minecraft/client/sounds/MusicManager$MusicFrequency;)V",
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/String;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$100",
+   "from": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/sounds/MusicManager$MusicFrequency;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Lnet/minecraft/client/NarratorStatus;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$99",
+   "from": "(Ljava/lang/String;)V",
+   "to": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/NarratorStatus;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$98",
+   "from": "(Ljava/lang/String;)Ljava/util/Optional;",
+   "to": "(Lnet/minecraft/server/level/ParticleStatus;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$97",
+   "from": "()Ljava/util/List;",
+   "to": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/server/level/ParticleStatus;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$96",
+   "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/String;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Ljava/lang/Integer;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$95",
+   "from": "(Lnet/minecraft/client/NarratorStatus;)V",
+   "to": "()I"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$94",
+   "from": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/NarratorStatus;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Integer;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$93",
+   "from": "(Lnet/minecraft/server/level/ParticleStatus;)V",
+   "to": "(Ljava/lang/Integer;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$92",
+   "from": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/server/level/ParticleStatus;)Lnet/minecraft/network/chat/Component;",
+   "to": "()I"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$91",
+   "from": "(Ljava/lang/Integer;)V",
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Integer;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$90",
+   "from": "()I",
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Double;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$89",
+   "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Integer;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Boolean;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$88",
+   "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Double;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Ljava/lang/Integer;)Ljava/lang/Double;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$87",
+   "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Boolean;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Ljava/lang/Double;)Ljava/lang/Integer;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$86",
+   "from": "(Ljava/lang/Integer;)Ljava/lang/Double;",
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Integer;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$85",
+   "from": "(Ljava/lang/Double;)Ljava/lang/Integer;",
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Integer;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$84",
+   "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Integer;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Boolean;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$83",
+   "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Integer;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Boolean;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$80",
+   "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Boolean;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Ljava/lang/Boolean;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$79",
+   "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Boolean;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Ljava/lang/Boolean;)Lnet/minecraft/client/gui/components/Tooltip;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$78",
+   "from": "(Ljava/lang/Boolean;)Lnet/minecraft/client/gui/components/Tooltip;",
+   "to": "(Ljava/lang/Boolean;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$77",
+   "from": "(Ljava/lang/Boolean;)V",
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Boolean;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$76",
+   "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Boolean;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Ljava/lang/Boolean;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$75",
+   "from": "(Ljava/lang/Boolean;)V",
+   "to": "(Ljava/lang/Boolean;)Lnet/minecraft/client/gui/components/Tooltip;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$74",
+   "from": "(Ljava/lang/Boolean;)Lnet/minecraft/client/gui/components/Tooltip;",
+   "to": "(Lnet/minecraft/sounds/SoundSource;)Lnet/minecraft/client/OptionInstance;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$73",
+   "from": "(Lnet/minecraft/sounds/SoundSource;)Lnet/minecraft/client/OptionInstance;",
+   "to": "(Lnet/minecraft/client/PresenceSharing;)V"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$72",
+   "from": "(Lnet/minecraft/client/PresenceSharing;)V",
+   "to": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/PresenceSharing;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$71",
+   "from": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/PresenceSharing;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Lnet/minecraft/client/PresenceSharing;)Lnet/minecraft/client/gui/components/Tooltip;"
+  },
+  {
+   "owner": "net/minecraft/client/Options",
+   "kind": "method",
+   "name": "lambda$new$70",
+   "from": "(Lnet/minecraft/client/PresenceSharing;)Lnet/minecraft/client/gui/components/Tooltip;",
+   "to": "(Ljava/lang/Boolean;)V"
+  },
+  {
+   "owner": "net/minecraft/client/PreferredGraphicsApi",
+   "kind": "method",
+   "name": "getBackendsToTry",
+   "from": "()[Lcom/mojang/blaze3d/systems/GpuBackend;",
+   "to": "()[Lcom/mojang/renderpearl/api/device/GpuBackend;"
+  },
+  {
+   "owner": "net/minecraft/client/Screenshot",
+   "kind": "method",
+   "name": "lambda$takeScreenshot$1",
+   "from": "(Lcom/mojang/blaze3d/buffers/GpuBuffer;IIILcom/mojang/blaze3d/textures/GpuTexture;Ljava/util/function/Consumer;)V",
+   "to": "(Lcom/mojang/renderpearl/api/buffers/GpuBuffer;IIILcom/mojang/renderpearl/api/textures/GpuTexture;Ljava/util/function/Consumer;)V"
+  },
+  {
+   "owner": "net/minecraft/client/data/models/BlockModelGenerators",
+   "kind": "method",
+   "name": "createFarmland",
+   "from": "()V",
+   "to": "(Lnet/minecraft/world/level/block/Block;Lnet/minecraft/client/resources/model/sprite/Material;Lnet/minecraft/client/resources/model/sprite/Material;Lnet/minecraft/client/data/models/model/ModelTemplate;)V"
+  },
+  {
+   "owner": "net/minecraft/client/data/models/BlockModelGenerators",
+   "kind": "method",
+   "name": "lambda$run$7",
+   "from": "(Lnet/minecraft/world/item/DyeColor;Lnet/minecraft/world/level/block/Block;)V",
+   "to": "(Lnet/minecraft/client/data/models/model/TextureMapping;)V"
+  },
+  {
+   "owner": "net/minecraft/client/data/models/EquipmentAssetProvider",
+   "kind": "method",
+   "name": "onlyHumanoid",
+   "from": "(Ljava/lang/String;)Lnet/minecraft/client/resources/model/EquipmentClientInfo;",
+   "to": "(Ljava/lang/String;)Lnet/minecraft/client/resources/model/EquipmentClientInfo$Builder;"
+  },
+  {
+   "owner": "net/minecraft/client/data/models/EquipmentAssetProvider",
+   "kind": "method",
+   "name": "humanoidAndMountArmor",
+   "from": "(Ljava/lang/String;)Lnet/minecraft/client/resources/model/EquipmentClientInfo;",
+   "to": "(Ljava/lang/String;)Lnet/minecraft/client/resources/model/EquipmentClientInfo$Builder;"
+  },
+  {
+   "owner": "net/minecraft/client/data/models/ItemModelGenerators$TrimMaterialData",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/world/item/equipment/trim/MaterialAssetGroup;Lnet/minecraft/resources/ResourceKey;)V",
+   "to": "(Lnet/minecraft/world/item/equipment/trim/TrimMaterials$Palette;Lnet/minecraft/resources/ResourceKey;)V"
+  },
+  {
+   "owner": "net/minecraft/client/data/models/ItemModelGenerators",
+   "kind": "method",
+   "name": "generateTrimmableItem",
+   "from": "(Lnet/minecraft/world/item/Item;Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/resources/Identifier;Z)V",
+   "to": "(Lnet/minecraft/world/item/Item;Lnet/minecraft/resources/Identifier;ZLjava/util/Map;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/GuiGraphicsExtractor",
+   "kind": "method",
+   "name": "innerFill",
+   "from": "(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/gui/render/TextureSetup;IIIIILjava/lang/Integer;)V",
+   "to": "(Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;Lnet/minecraft/client/gui/render/TextureSetup;IIIIILjava/lang/Integer;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/GuiGraphicsExtractor",
+   "kind": "method",
+   "name": "blitNineSlicedSprite",
+   "from": "(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;Lnet/minecraft/client/resources/metadata/gui/GuiSpriteScaling$NineSlice;IIIII)V",
+   "to": "(Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;Lnet/minecraft/client/resources/metadata/gui/GuiSpriteScaling$NineSlice;IIIII)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/GuiGraphicsExtractor",
+   "kind": "method",
+   "name": "blitNineSliceInnerSegment",
+   "from": "(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/resources/metadata/gui/GuiSpriteScaling$NineSlice;Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;IIIIIIIIIII)V",
+   "to": "(Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;Lnet/minecraft/client/resources/metadata/gui/GuiSpriteScaling$NineSlice;Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;IIIIIIIIIII)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/GuiGraphicsExtractor",
+   "kind": "method",
+   "name": "blitTiledSprite",
+   "from": "(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;IIIIIIIIIII)V",
+   "to": "(Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;IIIIIIIIIII)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/GuiGraphicsExtractor",
+   "kind": "method",
+   "name": "innerTiledBlit",
+   "from": "(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lcom/mojang/blaze3d/textures/GpuTextureView;Lcom/mojang/blaze3d/textures/GpuSampler;IIIIIIFFFFI)V",
+   "to": "(Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;Lcom/mojang/renderpearl/api/textures/GpuTextureView;Lcom/mojang/renderpearl/api/textures/GpuSampler;IIIIIIFFFFI)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/GuiGraphicsExtractor",
+   "kind": "method",
+   "name": "tooltip",
+   "from": "(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;Lnet/minecraft/resources/Identifier;)V",
+   "to": "(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;Lnet/minecraft/resources/Identifier;Z)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/GuiGraphicsExtractor",
+   "kind": "method",
+   "name": "lambda$setTooltipForNextFrameInternal$0",
+   "from": "(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;Lnet/minecraft/resources/Identifier;)V",
+   "to": "(Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;Lnet/minecraft/resources/Identifier;Z)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/components/DebugScreenOverlay",
+   "kind": "method",
+   "name": "extractLines",
+   "from": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Ljava/util/List;Z)V",
+   "to": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Ljava/util/List;ZI)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/components/OptionsList$HeaderEntry",
+   "kind": "field",
+   "name": "widget",
+   "from": "Lnet/minecraft/client/gui/components/StringWidget;",
+   "to": "Lnet/minecraft/client/gui/components/FocusableTextWidget;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/components/SubtitleOverlay$Subtitle",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/network/chat/Component;FLnet/minecraft/world/phys/Vec3;)V",
+   "to": "(Lnet/minecraft/network/chat/Component;FLnet/minecraft/world/phys/Vec3;Z)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/components/debug/DebugEntryFps",
+   "kind": "method",
+   "name": "presentModeName",
+   "from": "(Lcom/mojang/blaze3d/systems/GpuSurface$PresentMode;)Ljava/lang/String;",
+   "to": "(Lcom/mojang/renderpearl/api/device/GpuSurface$PresentMode;)Ljava/lang/String;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/components/debug/DebugEntrySystemSpecs",
+   "kind": "method",
+   "name": "typeName",
+   "from": "(Lcom/mojang/blaze3d/systems/DeviceType;)Ljava/lang/String;",
+   "to": "(Lcom/mojang/renderpearl/api/device/DeviceType;)Ljava/lang/String;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/components/debugchart/AbstractDebugChart",
+   "kind": "method",
+   "name": "extractRenderState",
+   "from": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V",
+   "to": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;III)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/components/debugchart/ProfilerPieChart",
+   "kind": "method",
+   "name": "extractRenderState",
+   "from": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V",
+   "to": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/font/AtlasGlyphProvider$Instance",
+   "kind": "field",
+   "name": "textureView",
+   "from": "Lcom/mojang/blaze3d/textures/GpuTextureView;",
+   "to": "Lcom/mojang/renderpearl/api/textures/GpuTextureView;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/font/AtlasGlyphProvider$Instance",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/gui/font/GlyphRenderTypes;Lcom/mojang/blaze3d/textures/GpuTextureView;Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;FFIIFLnet/minecraft/network/chat/Style;)V",
+   "to": "(Lnet/minecraft/client/gui/font/GlyphRenderTypes;Lcom/mojang/renderpearl/api/textures/GpuTextureView;Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;FFIIFLnet/minecraft/network/chat/Style;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/font/AtlasGlyphProvider$Instance",
+   "kind": "method",
+   "name": "guiPipeline",
+   "from": "()Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "()Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/font/AtlasGlyphProvider$Instance",
+   "kind": "method",
+   "name": "textureView",
+   "from": "()Lcom/mojang/blaze3d/textures/GpuTextureView;",
+   "to": "()Lcom/mojang/renderpearl/api/textures/GpuTextureView;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/font/GlyphRenderTypes",
+   "kind": "field",
+   "name": "guiPipeline",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/font/GlyphRenderTypes",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/renderer/rendertype/RenderType;Lnet/minecraft/client/renderer/rendertype/RenderType;Lnet/minecraft/client/renderer/rendertype/RenderType;Lcom/mojang/blaze3d/pipeline/RenderPipeline;)V",
+   "to": "(Lnet/minecraft/client/renderer/rendertype/RenderType;Lnet/minecraft/client/renderer/rendertype/RenderType;Lnet/minecraft/client/renderer/rendertype/RenderType;Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/font/GlyphRenderTypes",
+   "kind": "method",
+   "name": "guiPipeline",
+   "from": "()Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "()Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/font/PlayerGlyphProvider$Instance",
+   "kind": "method",
+   "name": "guiPipeline",
+   "from": "()Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "()Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/font/PlayerGlyphProvider$Instance",
+   "kind": "method",
+   "name": "textureView",
+   "from": "()Lcom/mojang/blaze3d/textures/GpuTextureView;",
+   "to": "()Lcom/mojang/renderpearl/api/textures/GpuTextureView;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/font/TextRenderable",
+   "kind": "method",
+   "name": "textureView",
+   "from": "()Lcom/mojang/blaze3d/textures/GpuTextureView;",
+   "to": "()Lcom/mojang/renderpearl/api/textures/GpuTextureView;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/font/TextRenderable",
+   "kind": "method",
+   "name": "guiPipeline",
+   "from": "()Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "()Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/font/glyphs/BakedSheetGlyph$EffectInstance",
+   "kind": "method",
+   "name": "textureView",
+   "from": "()Lcom/mojang/blaze3d/textures/GpuTextureView;",
+   "to": "()Lcom/mojang/renderpearl/api/textures/GpuTextureView;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/font/glyphs/BakedSheetGlyph$EffectInstance",
+   "kind": "method",
+   "name": "guiPipeline",
+   "from": "()Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "()Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/font/glyphs/BakedSheetGlyph$GlyphInstance",
+   "kind": "method",
+   "name": "textureView",
+   "from": "()Lcom/mojang/blaze3d/textures/GpuTextureView;",
+   "to": "()Lcom/mojang/renderpearl/api/textures/GpuTextureView;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/font/glyphs/BakedSheetGlyph$GlyphInstance",
+   "kind": "method",
+   "name": "guiPipeline",
+   "from": "()Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "()Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/font/glyphs/BakedSheetGlyph",
+   "kind": "field",
+   "name": "textureView",
+   "from": "Lcom/mojang/blaze3d/textures/GpuTextureView;",
+   "to": "Lcom/mojang/renderpearl/api/textures/GpuTextureView;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/font/glyphs/BakedSheetGlyph",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lcom/mojang/blaze3d/font/GlyphInfo;Lnet/minecraft/client/gui/font/GlyphRenderTypes;Lcom/mojang/blaze3d/textures/GpuTextureView;FFFFFFFF)V",
+   "to": "(Lcom/mojang/blaze3d/font/GlyphInfo;Lnet/minecraft/client/gui/font/GlyphRenderTypes;Lcom/mojang/renderpearl/api/textures/GpuTextureView;FFFFFFFF)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/font/glyphs/SpecialGlyphs$1",
+   "kind": "method",
+   "name": "upload",
+   "from": "(IILcom/mojang/blaze3d/textures/GpuTexture;)V",
+   "to": "(IILcom/mojang/renderpearl/api/textures/GpuTexture;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/font/providers/BitmapProvider$Glyph$1",
+   "kind": "method",
+   "name": "upload",
+   "from": "(IILcom/mojang/blaze3d/textures/GpuTexture;)V",
+   "to": "(IILcom/mojang/renderpearl/api/textures/GpuTexture;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/font/providers/BitmapProvider$ImageDataHolder",
+   "kind": "field",
+   "name": "gpuBuffer",
+   "from": "Lcom/mojang/blaze3d/buffers/GpuBuffer;",
+   "to": "Lcom/mojang/renderpearl/api/buffers/GpuBuffer;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/font/providers/BitmapProvider$ImageDataHolder",
+   "kind": "method",
+   "name": "gpuData",
+   "from": "()Lcom/mojang/blaze3d/buffers/GpuBuffer;",
+   "to": "()Lcom/mojang/renderpearl/api/buffers/GpuBuffer;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/font/providers/UnihexProvider$Glyph$2",
+   "kind": "method",
+   "name": "upload",
+   "from": "(IILcom/mojang/blaze3d/textures/GpuTexture;)V",
+   "to": "(IILcom/mojang/renderpearl/api/textures/GpuTexture;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/narration/ScreenNarrationCollector$Output",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/gui/narration/ScreenNarrationCollector;I)V",
+   "to": "(Lnet/minecraft/client/gui/narration/ScreenNarrationCollector;ILnet/minecraft/client/gui/narration/NarrationTrigger;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/narration/ScreenNarrationCollector",
+   "kind": "method",
+   "name": "update",
+   "from": "(Ljava/util/function/Consumer;)V",
+   "to": "(Ljava/util/function/Consumer;Lnet/minecraft/client/gui/narration/NarrationTrigger;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/GuiItemAtlas$SlotView",
+   "kind": "field",
+   "name": "textureView",
+   "from": "Lcom/mojang/blaze3d/textures/GpuTextureView;",
+   "to": "Lcom/mojang/renderpearl/api/textures/GpuTextureView;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/GuiItemAtlas$SlotView",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lcom/mojang/blaze3d/textures/GpuTextureView;FFFF)V",
+   "to": "(Lcom/mojang/renderpearl/api/textures/GpuTextureView;FFFF)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/GuiItemAtlas$SlotView",
+   "kind": "method",
+   "name": "textureView",
+   "from": "()Lcom/mojang/blaze3d/textures/GpuTextureView;",
+   "to": "()Lcom/mojang/renderpearl/api/textures/GpuTextureView;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/GuiItemAtlas",
+   "kind": "field",
+   "name": "texture",
+   "from": "Lcom/mojang/blaze3d/textures/GpuTexture;",
+   "to": "Lcom/mojang/renderpearl/api/textures/GpuTexture;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/GuiItemAtlas",
+   "kind": "field",
+   "name": "textureView",
+   "from": "Lcom/mojang/blaze3d/textures/GpuTextureView;",
+   "to": "Lcom/mojang/renderpearl/api/textures/GpuTextureView;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/GuiItemAtlas",
+   "kind": "field",
+   "name": "depthTexture",
+   "from": "Lcom/mojang/blaze3d/textures/GpuTexture;",
+   "to": "Lcom/mojang/renderpearl/api/textures/GpuTexture;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/GuiItemAtlas",
+   "kind": "field",
+   "name": "depthTextureView",
+   "from": "Lcom/mojang/blaze3d/textures/GpuTextureView;",
+   "to": "Lcom/mojang/renderpearl/api/textures/GpuTextureView;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/GuiRenderer$Draw",
+   "kind": "field",
+   "name": "pipeline",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/GuiRenderer$Draw",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/renderer/StagedVertexBuffer$Draw;Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/gui/render/TextureSetup;Lnet/minecraft/client/gui/navigation/ScreenRectangle;)V",
+   "to": "(Lnet/minecraft/client/renderer/StagedVertexBuffer$Draw;Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;Lnet/minecraft/client/gui/render/TextureSetup;Lnet/minecraft/client/gui/navigation/ScreenRectangle;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/GuiRenderer$Draw",
+   "kind": "method",
+   "name": "pipeline",
+   "from": "()Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "()Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/GuiRenderer",
+   "kind": "field",
+   "name": "previousPipeline",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/GuiRenderer",
+   "kind": "method",
+   "name": "executeDrawRange",
+   "from": "(Ljava/util/function/Supplier;Lcom/mojang/blaze3d/pipeline/RenderTarget;Lcom/mojang/blaze3d/buffers/GpuBufferSlice;II)V",
+   "to": "(Ljava/util/function/Supplier;Lcom/mojang/blaze3d/pipeline/RenderTarget;Lcom/mojang/renderpearl/api/buffers/GpuBufferSlice;II)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/GuiRenderer",
+   "kind": "method",
+   "name": "executeDraw",
+   "from": "(Lnet/minecraft/client/gui/render/GuiRenderer$Draw;Lcom/mojang/blaze3d/systems/RenderPass;)V",
+   "to": "(Lnet/minecraft/client/gui/render/GuiRenderer$Draw;Lcom/mojang/renderpearl/api/commands/RenderPass;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/GuiRenderer",
+   "kind": "method",
+   "name": "enableScissor",
+   "from": "(Lnet/minecraft/client/gui/navigation/ScreenRectangle;Lcom/mojang/blaze3d/systems/RenderPass;)V",
+   "to": "(Lnet/minecraft/client/gui/navigation/ScreenRectangle;Lcom/mojang/renderpearl/api/commands/RenderPass;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/TextureSetup",
+   "kind": "field",
+   "name": "texure0",
+   "from": "Lcom/mojang/blaze3d/textures/GpuTextureView;",
+   "to": "Lcom/mojang/renderpearl/api/textures/GpuTextureView;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/TextureSetup",
+   "kind": "field",
+   "name": "texure1",
+   "from": "Lcom/mojang/blaze3d/textures/GpuTextureView;",
+   "to": "Lcom/mojang/renderpearl/api/textures/GpuTextureView;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/TextureSetup",
+   "kind": "field",
+   "name": "texure2",
+   "from": "Lcom/mojang/blaze3d/textures/GpuTextureView;",
+   "to": "Lcom/mojang/renderpearl/api/textures/GpuTextureView;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/TextureSetup",
+   "kind": "field",
+   "name": "sampler0",
+   "from": "Lcom/mojang/blaze3d/textures/GpuSampler;",
+   "to": "Lcom/mojang/renderpearl/api/textures/GpuSampler;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/TextureSetup",
+   "kind": "field",
+   "name": "sampler1",
+   "from": "Lcom/mojang/blaze3d/textures/GpuSampler;",
+   "to": "Lcom/mojang/renderpearl/api/textures/GpuSampler;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/TextureSetup",
+   "kind": "field",
+   "name": "sampler2",
+   "from": "Lcom/mojang/blaze3d/textures/GpuSampler;",
+   "to": "Lcom/mojang/renderpearl/api/textures/GpuSampler;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/TextureSetup",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lcom/mojang/blaze3d/textures/GpuTextureView;Lcom/mojang/blaze3d/textures/GpuTextureView;Lcom/mojang/blaze3d/textures/GpuTextureView;Lcom/mojang/blaze3d/textures/GpuSampler;Lcom/mojang/blaze3d/textures/GpuSampler;Lcom/mojang/blaze3d/textures/GpuSampler;)V",
+   "to": "(Lcom/mojang/renderpearl/api/textures/GpuTextureView;Lcom/mojang/renderpearl/api/textures/GpuTextureView;Lcom/mojang/renderpearl/api/textures/GpuTextureView;Lcom/mojang/renderpearl/api/textures/GpuSampler;Lcom/mojang/renderpearl/api/textures/GpuSampler;Lcom/mojang/renderpearl/api/textures/GpuSampler;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/TextureSetup",
+   "kind": "method",
+   "name": "singleTexture",
+   "from": "(Lcom/mojang/blaze3d/textures/GpuTextureView;Lcom/mojang/blaze3d/textures/GpuSampler;)Lnet/minecraft/client/gui/render/TextureSetup;",
+   "to": "(Lcom/mojang/renderpearl/api/textures/GpuTextureView;Lcom/mojang/renderpearl/api/textures/GpuSampler;)Lnet/minecraft/client/gui/render/TextureSetup;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/TextureSetup",
+   "kind": "method",
+   "name": "singleTextureWithLightmap",
+   "from": "(Lcom/mojang/blaze3d/textures/GpuTextureView;Lcom/mojang/blaze3d/textures/GpuSampler;)Lnet/minecraft/client/gui/render/TextureSetup;",
+   "to": "(Lcom/mojang/renderpearl/api/textures/GpuTextureView;Lcom/mojang/renderpearl/api/textures/GpuSampler;)Lnet/minecraft/client/gui/render/TextureSetup;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/TextureSetup",
+   "kind": "method",
+   "name": "doubleTexture",
+   "from": "(Lcom/mojang/blaze3d/textures/GpuTextureView;Lcom/mojang/blaze3d/textures/GpuSampler;Lcom/mojang/blaze3d/textures/GpuTextureView;Lcom/mojang/blaze3d/textures/GpuSampler;)Lnet/minecraft/client/gui/render/TextureSetup;",
+   "to": "(Lcom/mojang/renderpearl/api/textures/GpuTextureView;Lcom/mojang/renderpearl/api/textures/GpuSampler;Lcom/mojang/renderpearl/api/textures/GpuTextureView;Lcom/mojang/renderpearl/api/textures/GpuSampler;)Lnet/minecraft/client/gui/render/TextureSetup;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/TextureSetup",
+   "kind": "method",
+   "name": "texure0",
+   "from": "()Lcom/mojang/blaze3d/textures/GpuTextureView;",
+   "to": "()Lcom/mojang/renderpearl/api/textures/GpuTextureView;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/TextureSetup",
+   "kind": "method",
+   "name": "texure1",
+   "from": "()Lcom/mojang/blaze3d/textures/GpuTextureView;",
+   "to": "()Lcom/mojang/renderpearl/api/textures/GpuTextureView;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/TextureSetup",
+   "kind": "method",
+   "name": "texure2",
+   "from": "()Lcom/mojang/blaze3d/textures/GpuTextureView;",
+   "to": "()Lcom/mojang/renderpearl/api/textures/GpuTextureView;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/TextureSetup",
+   "kind": "method",
+   "name": "sampler0",
+   "from": "()Lcom/mojang/blaze3d/textures/GpuSampler;",
+   "to": "()Lcom/mojang/renderpearl/api/textures/GpuSampler;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/TextureSetup",
+   "kind": "method",
+   "name": "sampler1",
+   "from": "()Lcom/mojang/blaze3d/textures/GpuSampler;",
+   "to": "()Lcom/mojang/renderpearl/api/textures/GpuSampler;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/TextureSetup",
+   "kind": "method",
+   "name": "sampler2",
+   "from": "()Lcom/mojang/blaze3d/textures/GpuSampler;",
+   "to": "()Lcom/mojang/renderpearl/api/textures/GpuSampler;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/pip/PictureInPictureRenderer",
+   "kind": "field",
+   "name": "texture",
+   "from": "Lcom/mojang/blaze3d/textures/GpuTexture;",
+   "to": "Lcom/mojang/renderpearl/api/textures/GpuTexture;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/pip/PictureInPictureRenderer",
+   "kind": "field",
+   "name": "textureView",
+   "from": "Lcom/mojang/blaze3d/textures/GpuTextureView;",
+   "to": "Lcom/mojang/renderpearl/api/textures/GpuTextureView;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/pip/PictureInPictureRenderer",
+   "kind": "field",
+   "name": "depthTexture",
+   "from": "Lcom/mojang/blaze3d/textures/GpuTexture;",
+   "to": "Lcom/mojang/renderpearl/api/textures/GpuTexture;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/render/pip/PictureInPictureRenderer",
+   "kind": "field",
+   "name": "depthTextureView",
+   "from": "Lcom/mojang/blaze3d/textures/GpuTextureView;",
+   "to": "Lcom/mojang/renderpearl/api/textures/GpuTextureView;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/ErrorScreen",
+   "kind": "field",
+   "name": "message",
+   "from": "Lnet/minecraft/network/chat/Component;",
+   "to": "Lnet/minecraft/client/gui/components/MultiLineLabel;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/PauseScreen",
+   "kind": "method",
+   "name": "lambda$createPauseMenu$11",
+   "from": "(Lnet/minecraft/client/gui/components/Button;)V",
+   "to": "()V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/Screen",
+   "kind": "method",
+   "name": "runNarration",
+   "from": "(Z)V",
+   "to": "(ZLnet/minecraft/client/gui/narration/NarrationTrigger;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/Screen",
+   "kind": "method",
+   "name": "updateNarratorStatus",
+   "from": "(Z)V",
+   "to": "(ZLnet/minecraft/client/gui/narration/NarrationTrigger;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/advancements/AdvancementTab",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/Minecraft;Lnet/minecraft/client/gui/screens/advancements/AdvancementsScreen;Lnet/minecraft/client/gui/screens/advancements/AdvancementTabType;ILnet/minecraft/advancements/AdvancementNode;Lnet/minecraft/advancements/DisplayInfo;)V",
+   "to": "(Lnet/minecraft/client/Minecraft;Lnet/minecraft/client/gui/screens/advancements/AdvancementsScreen;Lnet/minecraft/client/gui/screens/advancements/AdvancementTabType;ILnet/minecraft/client/gui/screens/advancements/AdvancementWidget;Lnet/minecraft/world/item/ItemStackTemplate;Lnet/minecraft/network/chat/Component;Lnet/minecraft/resources/Identifier;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/advancements/AdvancementTab",
+   "kind": "method",
+   "name": "addWidget",
+   "from": "(Lnet/minecraft/client/gui/screens/advancements/AdvancementWidget;Lnet/minecraft/advancements/AdvancementHolder;)V",
+   "to": "(Lnet/minecraft/client/gui/screens/advancements/AdvancementWidget;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/advancements/AdvancementWidget",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/gui/screens/advancements/AdvancementTab;Lnet/minecraft/client/Minecraft;Lnet/minecraft/advancements/AdvancementNode;Lnet/minecraft/advancements/DisplayInfo;)V",
+   "to": "(Lnet/minecraft/client/Minecraft;Lnet/minecraft/advancements/AdvancementNode;Lnet/minecraft/advancements/DisplayInfo;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/advancements/AdvancementWidget",
+   "kind": "method",
+   "name": "extractHover",
+   "from": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IIFII)V",
+   "to": "(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IIFIII)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/advancements/AdvancementWidget",
+   "kind": "method",
+   "name": "attachToParent",
+   "from": "()V",
+   "to": "(Lnet/minecraft/client/gui/screens/advancements/AdvancementTab;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/friends/AddFriendWidget",
+   "kind": "method",
+   "name": "lambda$new$1",
+   "from": "(Ljava/lang/Runnable;Lcom/mojang/authlib/yggdrasil/FriendsService$ResultCode;)V",
+   "to": "(Ljava/lang/Runnable;Lcom/mojang/authlib/services/FriendsService$ResultCode;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/friends/FriendEntry",
+   "kind": "field",
+   "name": "presence",
+   "from": "Lcom/mojang/authlib/yggdrasil/response/PresenceStatusDto;",
+   "to": "Lcom/mojang/authlib/services/response/PresenceStatusDto;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/friends/FriendEntry",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/Minecraft;Lnet/minecraft/client/gui/screens/friends/FriendsOverlayScreen;Lnet/minecraft/client/gui/screens/social/PlayerSocialManager$PlayerData;Lcom/mojang/authlib/yggdrasil/response/PresenceStatusDto;ZLjava/lang/Runnable;)V",
+   "to": "(Lnet/minecraft/client/Minecraft;Lnet/minecraft/client/gui/screens/friends/FriendsOverlayScreen;Lnet/minecraft/client/gui/screens/social/PlayerSocialManager$PlayerData;Lcom/mojang/authlib/services/response/PresenceStatusDto;ZLjava/lang/Runnable;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/friends/FriendEntry",
+   "kind": "method",
+   "name": "presenceStatusComponent",
+   "from": "(Lcom/mojang/authlib/yggdrasil/response/PresenceStatusDto;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Lcom/mojang/authlib/services/response/PresenceStatusDto;)Lnet/minecraft/network/chat/Component;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/friends/FriendEntry",
+   "kind": "method",
+   "name": "applyPresence",
+   "from": "(Lcom/mojang/authlib/yggdrasil/response/PresenceStatusDto;)V",
+   "to": "(Lcom/mojang/authlib/services/response/PresenceStatusDto;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/friends/FriendsOverlayScreen",
+   "kind": "method",
+   "name": "lambda$populateLists$4",
+   "from": "(Lcom/mojang/authlib/yggdrasil/FriendsService$ResultCode;)V",
+   "to": "(Lcom/mojang/authlib/services/FriendsService$ResultCode;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/friends/FriendsOverlayScreen",
+   "kind": "method",
+   "name": "lambda$populateLists$2",
+   "from": "(Lcom/mojang/authlib/yggdrasil/FriendsService$ResultCode;)V",
+   "to": "(Lcom/mojang/authlib/services/FriendsService$ResultCode;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/friends/FriendsOverlayScreen",
+   "kind": "method",
+   "name": "lambda$populateLists$1",
+   "from": "(Ljava/util/UUID;Lcom/mojang/authlib/yggdrasil/FriendsService$ResultCode;Ljava/lang/Throwable;)V",
+   "to": "(Ljava/util/UUID;Lcom/mojang/authlib/services/FriendsService$ResultCode;Ljava/lang/Throwable;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/friends/FriendsTab",
+   "kind": "method",
+   "name": "applyPresenceUpdate",
+   "from": "(Lcom/mojang/authlib/yggdrasil/response/PresenceResponse;)V",
+   "to": "(Lcom/mojang/authlib/services/response/PresenceResponse;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/friends/FriendsTab",
+   "kind": "method",
+   "name": "lambda$applyPresenceUpdate$0",
+   "from": "(Lcom/mojang/authlib/yggdrasil/response/PresenceResponse;Lnet/minecraft/client/gui/components/AbstractWidget;)V",
+   "to": "(Lcom/mojang/authlib/services/response/PresenceResponse;Lnet/minecraft/client/gui/components/AbstractWidget;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/inventory/AbstractSignEditScreen",
+   "kind": "field",
+   "name": "text",
+   "from": "Lnet/minecraft/world/level/block/entity/SignText;",
+   "to": "Lnet/minecraft/world/level/block/entity/SignText$Mutable;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/inventory/AbstractSignEditScreen",
+   "kind": "method",
+   "name": "lambda$new$1",
+   "from": "(I)[Ljava/lang/String;",
+   "to": "(Lnet/minecraft/world/level/block/entity/SignBlockEntity;Ljava/lang/String;)Z"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/inventory/AbstractSignEditScreen",
+   "kind": "method",
+   "name": "lambda$new$0",
+   "from": "(ZI)Lnet/minecraft/network/chat/Component;",
+   "to": "()Ljava/lang/String;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/inventory/HangingSignEditScreen",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/world/level/block/entity/SignBlockEntity;ZZ)V",
+   "to": "(Lnet/minecraft/world/level/block/entity/SignBlockEntity;Lnet/minecraft/world/level/block/entity/SignTextSlot;Z)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/inventory/SignEditScreen",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/world/level/block/entity/SignBlockEntity;ZZ)V",
+   "to": "(Lnet/minecraft/world/level/block/entity/SignBlockEntity;Lnet/minecraft/world/level/block/entity/SignTextSlot;Z)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/options/OnlineOptionsScreen",
+   "kind": "method",
+   "name": "lambda$applyFriendSettings$0",
+   "from": "(Lnet/minecraft/client/gui/screens/social/PlayerSocialManager;ZZLjava/util/function/Consumer;Lcom/mojang/authlib/yggdrasil/FriendsService$ResultCode;Ljava/lang/Throwable;)V",
+   "to": "(Lnet/minecraft/client/gui/screens/social/PlayerSocialManager;ZZLjava/util/function/Consumer;Lcom/mojang/authlib/services/FriendsService$ResultCode;Ljava/lang/Throwable;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/options/OptionsScreen",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/gui/screens/Screen;Lnet/minecraft/client/Options;Z)V",
+   "to": "(Lnet/minecraft/client/gui/screens/Screen;Lnet/minecraft/client/Options;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/options/OptionsScreen",
+   "kind": "method",
+   "name": "lambda$init$11",
+   "from": "(Lnet/minecraft/client/gui/components/Button;)V",
+   "to": "(Lnet/minecraft/client/gui/screens/options/OptionsScreen;Lnet/minecraft/client/gui/components/AbstractWidget;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/options/OptionsScreen",
+   "kind": "method",
+   "name": "lambda$init$10",
+   "from": "()Lnet/minecraft/client/gui/screens/Screen;",
+   "to": "(Lnet/minecraft/client/gui/components/Button;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/options/OptionsScreen",
+   "kind": "method",
+   "name": "lambda$init$0",
+   "from": "(Lnet/minecraft/client/gui/components/Button;)V",
+   "to": "()Lnet/minecraft/client/gui/screens/Screen;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/options/VideoSettingsScreen",
+   "kind": "method",
+   "name": "displayOptions",
+   "from": "(Lnet/minecraft/client/Options;)[Lnet/minecraft/client/OptionInstance;",
+   "to": "(Lnet/minecraft/client/Options;Z)[Lnet/minecraft/client/OptionInstance;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/social/PlayerSocialManager",
+   "kind": "field",
+   "name": "friendsService",
+   "from": "Lcom/mojang/authlib/yggdrasil/FriendsService;",
+   "to": "Lcom/mojang/authlib/services/FriendsService;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/social/PlayerSocialManager",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/Minecraft;Lcom/mojang/authlib/minecraft/UserApiService;Lcom/mojang/authlib/yggdrasil/FriendsService;Lnet/minecraft/client/gui/screens/social/RemoteFriendListUpdateHandler;)V",
+   "to": "(Lnet/minecraft/client/Minecraft;Lcom/mojang/authlib/minecraft/UserApiService;Lcom/mojang/authlib/services/FriendsService;Lnet/minecraft/client/gui/screens/social/RemoteFriendListUpdateHandler;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/social/PlayerSocialManager",
+   "kind": "method",
+   "name": "handleResult",
+   "from": "(Lcom/mojang/authlib/yggdrasil/FriendsService$ResultCode;)V",
+   "to": "(Lcom/mojang/authlib/services/FriendsService$ResultCode;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/social/PlayerSocialManager",
+   "kind": "method",
+   "name": "showFailureToast",
+   "from": "(Lcom/mojang/authlib/yggdrasil/FriendsService$ResultCode;)V",
+   "to": "(Lcom/mojang/authlib/services/FriendsService$ResultCode;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/social/PlayerSocialManager",
+   "kind": "method",
+   "name": "lambda$remap$0",
+   "from": "(Lcom/mojang/authlib/yggdrasil/response/FriendDto;)Lnet/minecraft/client/gui/screens/social/PlayerSocialManager$PlayerData;",
+   "to": "(Lcom/mojang/authlib/services/response/FriendDto;)Lnet/minecraft/client/gui/screens/social/PlayerSocialManager$PlayerData;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/social/PlayerSocialManager",
+   "kind": "method",
+   "name": "lambda$runAction$1",
+   "from": "(Lcom/mojang/authlib/yggdrasil/FriendsService$ResultCode;)Ljava/util/concurrent/CompletionStage;",
+   "to": "(Lcom/mojang/authlib/services/FriendsService$ResultCode;)Ljava/util/concurrent/CompletionStage;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/social/PlayerSocialManager",
+   "kind": "method",
+   "name": "lambda$runAction$2",
+   "from": "(Lcom/mojang/authlib/yggdrasil/FriendsService$ResultCode;Ljava/lang/Void;)Lcom/mojang/authlib/yggdrasil/FriendsService$ResultCode;",
+   "to": "(Lcom/mojang/authlib/services/FriendsService$ResultCode;Ljava/lang/Void;)Lcom/mojang/authlib/services/FriendsService$ResultCode;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/social/PlayerSocialManager",
+   "kind": "method",
+   "name": "lambda$runAction$0",
+   "from": "(Ljava/util/function/Supplier;)Lcom/mojang/authlib/yggdrasil/FriendsService$ResultCode;",
+   "to": "(Ljava/util/function/Supplier;)Lcom/mojang/authlib/services/FriendsService$ResultCode;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/social/PlayerSocialManager",
+   "kind": "method",
+   "name": "lambda$updateFriendSettings$0",
+   "from": "(ZZ)Lcom/mojang/authlib/yggdrasil/FriendsService$ResultCode;",
+   "to": "(ZZ)Lcom/mojang/authlib/services/FriendsService$ResultCode;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/social/PlayerSocialManager",
+   "kind": "method",
+   "name": "lambda$revokeOutgoingFriendRequest$0",
+   "from": "(Ljava/util/UUID;)Lcom/mojang/authlib/yggdrasil/FriendsService$ResultCode;",
+   "to": "(Ljava/util/UUID;)Lcom/mojang/authlib/services/FriendsService$ResultCode;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/social/PlayerSocialManager",
+   "kind": "method",
+   "name": "lambda$declineIncomingFriendRequest$0",
+   "from": "(Ljava/util/UUID;)Lcom/mojang/authlib/yggdrasil/FriendsService$ResultCode;",
+   "to": "(Ljava/util/UUID;)Lcom/mojang/authlib/services/FriendsService$ResultCode;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/social/PlayerSocialManager",
+   "kind": "method",
+   "name": "lambda$acceptIncomingFriendRequest$0",
+   "from": "(Ljava/util/UUID;)Lcom/mojang/authlib/yggdrasil/FriendsService$ResultCode;",
+   "to": "(Ljava/util/UUID;)Lcom/mojang/authlib/services/FriendsService$ResultCode;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/social/PlayerSocialManager",
+   "kind": "method",
+   "name": "lambda$removeFriend$0",
+   "from": "(Ljava/util/UUID;)Lcom/mojang/authlib/yggdrasil/FriendsService$ResultCode;",
+   "to": "(Ljava/util/UUID;)Lcom/mojang/authlib/services/FriendsService$ResultCode;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/social/PlayerSocialManager",
+   "kind": "method",
+   "name": "lambda$sendFriendRequest$0",
+   "from": "(Ljava/lang/String;)Lcom/mojang/authlib/yggdrasil/FriendsService$ResultCode;",
+   "to": "(Ljava/lang/String;)Lcom/mojang/authlib/services/FriendsService$ResultCode;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/social/PresenceHandler",
+   "kind": "field",
+   "name": "friendsService",
+   "from": "Lcom/mojang/authlib/yggdrasil/FriendsService;",
+   "to": "Lcom/mojang/authlib/services/FriendsService;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/social/PresenceHandler",
+   "kind": "field",
+   "name": "latestPresence",
+   "from": "Lcom/mojang/authlib/yggdrasil/response/PresenceResponse;",
+   "to": "Lcom/mojang/authlib/services/response/PresenceResponse;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/social/PresenceHandler",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/Minecraft;Lcom/mojang/authlib/yggdrasil/FriendsService;)V",
+   "to": "(Lnet/minecraft/client/Minecraft;Lcom/mojang/authlib/services/FriendsService;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/social/PresenceHandler",
+   "kind": "method",
+   "name": "getLatestPresence",
+   "from": "()Lcom/mojang/authlib/yggdrasil/response/PresenceResponse;",
+   "to": "()Lcom/mojang/authlib/services/response/PresenceResponse;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/social/PresenceHandler",
+   "kind": "method",
+   "name": "getPublicPresenceStatus",
+   "from": "()Lcom/mojang/authlib/yggdrasil/response/PresenceStatus;",
+   "to": "()Lcom/mojang/authlib/services/response/PresenceStatus;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/social/PresenceHandler",
+   "kind": "method",
+   "name": "getPresenceStatus",
+   "from": "()Lcom/mojang/authlib/yggdrasil/response/PresenceStatus;",
+   "to": "()Lcom/mojang/authlib/services/response/PresenceStatus;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/social/PresenceHandler",
+   "kind": "method",
+   "name": "lambda$updatePresence$0",
+   "from": "(Lcom/mojang/authlib/yggdrasil/response/PresenceStatus;)V",
+   "to": "(Lcom/mojang/authlib/services/response/PresenceStatus;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/social/PresenceHandler",
+   "kind": "method",
+   "name": "lambda$updatePresence$1",
+   "from": "(Lcom/mojang/authlib/yggdrasil/response/PresenceResponse;)V",
+   "to": "(Lcom/mojang/authlib/services/response/PresenceResponse;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/social/RemoteFriendListUpdateHandler",
+   "kind": "field",
+   "name": "friendsService",
+   "from": "Lcom/mojang/authlib/yggdrasil/FriendsService;",
+   "to": "Lcom/mojang/authlib/services/FriendsService;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/social/RemoteFriendListUpdateHandler",
+   "kind": "field",
+   "name": "latestFriendData",
+   "from": "Lcom/mojang/authlib/yggdrasil/response/FriendData;",
+   "to": "Lcom/mojang/authlib/services/response/FriendData;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/social/RemoteFriendListUpdateHandler",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lcom/mojang/authlib/yggdrasil/FriendsService;Lnet/minecraft/client/Minecraft;)V",
+   "to": "(Lcom/mojang/authlib/services/FriendsService;Lnet/minecraft/client/Minecraft;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/social/RemoteFriendListUpdateHandler",
+   "kind": "method",
+   "name": "getLatestFriendData",
+   "from": "()Lcom/mojang/authlib/yggdrasil/response/FriendData;",
+   "to": "()Lcom/mojang/authlib/services/response/FriendData;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/social/RemoteFriendListUpdateHandler",
+   "kind": "method",
+   "name": "mapResultCodeToState",
+   "from": "(Lcom/mojang/authlib/yggdrasil/FriendsService$ResultCode;)Lnet/minecraft/client/gui/screens/social/RemoteFriendListUpdateHandler$State;",
+   "to": "(Lcom/mojang/authlib/services/FriendsService$ResultCode;)Lnet/minecraft/client/gui/screens/social/RemoteFriendListUpdateHandler$State;"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/social/RemoteFriendListUpdateHandler",
+   "kind": "method",
+   "name": "detectChangesAndShowToast",
+   "from": "(Lcom/mojang/authlib/yggdrasil/response/FriendData;Lnet/minecraft/client/gui/screens/social/RemoteFriendListUpdateHandler$State;)Z",
+   "to": "(Lcom/mojang/authlib/services/response/FriendData;Lnet/minecraft/client/gui/screens/social/RemoteFriendListUpdateHandler$State;)Z"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/social/RemoteFriendListUpdateHandler",
+   "kind": "method",
+   "name": "lambda$detectChangesAndShowToast$0",
+   "from": "(Lcom/mojang/authlib/yggdrasil/response/FriendDto;)V",
+   "to": "(Lcom/mojang/authlib/services/response/FriendDto;)V"
+  },
+  {
+   "owner": "net/minecraft/client/model/effects/SpearAnimations",
+   "kind": "method",
+   "name": "thirdPersonHandUse",
+   "from": "(Lnet/minecraft/client/model/geom/ModelPart;Lnet/minecraft/client/model/geom/ModelPart;ZLnet/minecraft/world/item/ItemStack;Lnet/minecraft/client/renderer/entity/state/HumanoidRenderState;)V",
+   "to": "(Lnet/minecraft/client/model/geom/ModelPart;Lnet/minecraft/client/model/geom/ModelPart;Lnet/minecraft/world/entity/HumanoidArm;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/client/renderer/entity/state/HumanoidRenderState;)V"
+  },
+  {
+   "owner": "net/minecraft/client/model/effects/SpearAnimations",
+   "kind": "method",
+   "name": "thirdPersonAttackHand",
+   "from": "(Lnet/minecraft/client/model/HumanoidModel;Lnet/minecraft/client/renderer/entity/state/HumanoidRenderState;)V",
+   "to": "(Lnet/minecraft/client/model/HumanoidModel;FLnet/minecraft/world/entity/HumanoidArm;)V"
+  },
+  {
+   "owner": "net/minecraft/client/multiplayer/AccountProfileKeyPairManager",
+   "kind": "method",
+   "name": "parsePublicKey",
+   "from": "(Lcom/mojang/authlib/yggdrasil/response/KeyPairResponse;)Lnet/minecraft/world/entity/player/ProfilePublicKey$Data;",
+   "to": "(Lcom/mojang/authlib/services/response/KeyPairResponse;)Lnet/minecraft/world/entity/player/ProfilePublicKey$Data;"
+  },
+  {
+   "owner": "net/minecraft/client/multiplayer/ClientChunkCache",
+   "kind": "method",
+   "name": "replaceWithPacketData",
+   "from": "(IILnet/minecraft/network/FriendlyByteBuf;Ljava/util/Map;Ljava/util/function/Consumer;)Lnet/minecraft/world/level/chunk/LevelChunk;",
+   "to": "(IILnet/minecraft/network/protocol/game/ClientboundLevelChunkPacketData;)Lnet/minecraft/world/level/chunk/LevelChunk;"
+  },
+  {
+   "owner": "net/minecraft/client/multiplayer/ClientLevel",
+   "kind": "method",
+   "name": "createFireworks",
+   "from": "(DDDDDDLjava/util/List;)V",
+   "to": "(DDDDDDLjava/util/List;Z)V"
+  },
+  {
+   "owner": "net/minecraft/client/multiplayer/ClientLevel",
+   "kind": "method",
+   "name": "lambda$addEnvironmentAttributeLayers$0",
+   "from": "(ILjava/lang/Integer;I)Ljava/lang/Integer;",
+   "to": "(Lorg/joml/Vector3fc;Lorg/joml/Vector3fc;I)Lorg/joml/Vector3fc;"
+  },
+  {
+   "owner": "net/minecraft/client/multiplayer/ClientSuggestionProvider",
+   "kind": "method",
+   "name": "suggestRegistryElements",
+   "from": "(Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/commands/SharedSuggestionProvider$ElementSuggestionType;Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;Lcom/mojang/brigadier/context/CommandContext;)Ljava/util/concurrent/CompletableFuture;",
+   "to": "(Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/commands/SharedSuggestionProvider$ElementSuggestionType;Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;Lcom/mojang/brigadier/context/CommandContext;Ljava/util/function/Predicate;)Ljava/util/concurrent/CompletableFuture;"
+  },
+  {
+   "owner": "net/minecraft/client/multiplayer/ClientSuggestionProvider",
+   "kind": "method",
+   "name": "lambda$suggestRegistryElements$0",
+   "from": "(Lnet/minecraft/commands/SharedSuggestionProvider$ElementSuggestionType;Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;Lnet/minecraft/core/Registry;)Ljava/util/concurrent/CompletableFuture;",
+   "to": "(Lnet/minecraft/commands/SharedSuggestionProvider$ElementSuggestionType;Lcom/mojang/brigadier/suggestion/SuggestionsBuilder;Ljava/util/function/Predicate;Lnet/minecraft/core/Registry;)Ljava/util/concurrent/CompletableFuture;"
+  },
+  {
+   "owner": "net/minecraft/client/multiplayer/MultiPlayerGameMode",
+   "kind": "method",
+   "name": "piercingAttack",
+   "from": "(Lnet/minecraft/world/item/component/PiercingWeapon;)V",
+   "to": "(Lnet/minecraft/world/item/component/SwingAnimation;Lnet/minecraft/world/item/component/PiercingWeapon;)V"
+  },
+  {
+   "owner": "net/minecraft/client/multiplayer/chat/report/ReportEnvironment",
+   "kind": "method",
+   "name": "clientInfo",
+   "from": "()Lcom/mojang/authlib/yggdrasil/request/AbuseReportRequest$ClientInfo;",
+   "to": "()Lcom/mojang/authlib/services/request/AbuseReportRequest$ClientInfo;"
+  },
+  {
+   "owner": "net/minecraft/client/multiplayer/chat/report/ReportEnvironment",
+   "kind": "method",
+   "name": "thirdPartyServerInfo",
+   "from": "()Lcom/mojang/authlib/yggdrasil/request/AbuseReportRequest$ThirdPartyServerInfo;",
+   "to": "()Lcom/mojang/authlib/services/request/AbuseReportRequest$ThirdPartyServerInfo;"
+  },
+  {
+   "owner": "net/minecraft/client/multiplayer/chat/report/ReportEnvironment",
+   "kind": "method",
+   "name": "realmInfo",
+   "from": "()Lcom/mojang/authlib/yggdrasil/request/AbuseReportRequest$RealmInfo;",
+   "to": "()Lcom/mojang/authlib/services/request/AbuseReportRequest$RealmInfo;"
+  },
+  {
+   "owner": "net/minecraft/client/particle/FireworkParticles$Starter",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/multiplayer/ClientLevel;DDDDDDLnet/minecraft/client/particle/ParticleEngine;Ljava/util/List;)V",
+   "to": "(Lnet/minecraft/client/multiplayer/ClientLevel;DDDDDDLnet/minecraft/client/particle/ParticleEngine;Ljava/util/List;Z)V"
+  },
+  {
+   "owner": "net/minecraft/client/particle/SingleQuadParticle$Layer",
+   "kind": "field",
+   "name": "pipeline",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/particle/SingleQuadParticle$Layer",
+   "kind": "method",
+   "name": "pipeline",
+   "from": "()Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "()Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/player/LocalPlayer",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/Minecraft;Lnet/minecraft/client/multiplayer/ClientLevel;Lnet/minecraft/client/multiplayer/ClientPacketListener;Lnet/minecraft/stats/StatsCounter;Lnet/minecraft/client/ClientRecipeBook;Lnet/minecraft/world/entity/player/Input;ZLnet/minecraft/client/multiplayer/chat/ChatAbilities;)V",
+   "to": "(Lnet/minecraft/client/Minecraft;Lnet/minecraft/client/multiplayer/ClientLevel;Lnet/minecraft/client/multiplayer/ClientPacketListener;Lnet/minecraft/stats/StatsCounter;Lnet/minecraft/client/ClientRecipeBook;Lnet/minecraft/world/entity/player/Input;ZLnet/minecraft/client/multiplayer/chat/ChatAbilities;Lnet/minecraft/client/player/ItemActivation;)V"
+  },
+  {
+   "owner": "net/minecraft/client/player/LocalPlayer",
+   "kind": "method",
+   "name": "drop",
+   "from": "(Z)Z",
+   "to": "(Z)V"
+  },
+  {
+   "owner": "net/minecraft/client/player/LocalPlayer",
+   "kind": "method",
+   "name": "openTextEdit",
+   "from": "(Lnet/minecraft/world/level/block/entity/SignBlockEntity;Z)V",
+   "to": "(Lnet/minecraft/world/level/block/entity/SignBlockEntity;Lnet/minecraft/world/level/block/entity/SignTextSlot;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/BindGroupLayouts",
+   "kind": "field",
+   "name": "DYNAMIC_TRANSFORMS",
+   "from": "Lcom/mojang/blaze3d/pipeline/BindGroupLayout;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/BindGroupLayout;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/BindGroupLayouts",
+   "kind": "field",
+   "name": "PROJECTION",
+   "from": "Lcom/mojang/blaze3d/pipeline/BindGroupLayout;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/BindGroupLayout;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/BindGroupLayouts",
+   "kind": "field",
+   "name": "CHUNK_SECTION",
+   "from": "Lcom/mojang/blaze3d/pipeline/BindGroupLayout;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/BindGroupLayout;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/BindGroupLayouts",
+   "kind": "field",
+   "name": "FOG",
+   "from": "Lcom/mojang/blaze3d/pipeline/BindGroupLayout;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/BindGroupLayout;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/BindGroupLayouts",
+   "kind": "field",
+   "name": "GLOBALS",
+   "from": "Lcom/mojang/blaze3d/pipeline/BindGroupLayout;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/BindGroupLayout;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/BindGroupLayouts",
+   "kind": "field",
+   "name": "LIGHTING",
+   "from": "Lcom/mojang/blaze3d/pipeline/BindGroupLayout;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/BindGroupLayout;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/BindGroupLayouts",
+   "kind": "field",
+   "name": "SAMPLER0",
+   "from": "Lcom/mojang/blaze3d/pipeline/BindGroupLayout;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/BindGroupLayout;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/BindGroupLayouts",
+   "kind": "field",
+   "name": "SAMPLER1",
+   "from": "Lcom/mojang/blaze3d/pipeline/BindGroupLayout;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/BindGroupLayout;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/BindGroupLayouts",
+   "kind": "field",
+   "name": "SAMPLER2",
+   "from": "Lcom/mojang/blaze3d/pipeline/BindGroupLayout;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/BindGroupLayout;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/BindGroupLayouts",
+   "kind": "field",
+   "name": "SAMPLER0_SAMPLER2",
+   "from": "Lcom/mojang/blaze3d/pipeline/BindGroupLayout;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/BindGroupLayout;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/BindGroupLayouts",
+   "kind": "field",
+   "name": "SAMPLER0_SAMPLER1",
+   "from": "Lcom/mojang/blaze3d/pipeline/BindGroupLayout;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/BindGroupLayout;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/BindGroupLayouts",
+   "kind": "field",
+   "name": "SAMPLER0_SAMPLER1_SAMPLER2",
+   "from": "Lcom/mojang/blaze3d/pipeline/BindGroupLayout;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/BindGroupLayout;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/BindGroupLayouts",
+   "kind": "field",
+   "name": "CLOUD_INFO",
+   "from": "Lcom/mojang/blaze3d/pipeline/BindGroupLayout;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/BindGroupLayout;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/BindGroupLayouts",
+   "kind": "field",
+   "name": "DISSOLVE_MASK_SAMPLER",
+   "from": "Lcom/mojang/blaze3d/pipeline/BindGroupLayout;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/BindGroupLayout;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/BindGroupLayouts",
+   "kind": "field",
+   "name": "IN_SAMPLER",
+   "from": "Lcom/mojang/blaze3d/pipeline/BindGroupLayout;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/BindGroupLayout;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/BindGroupLayouts",
+   "kind": "field",
+   "name": "LIGHTMAP_INFO",
+   "from": "Lcom/mojang/blaze3d/pipeline/BindGroupLayout;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/BindGroupLayout;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/BindGroupLayouts",
+   "kind": "field",
+   "name": "SPRITE_ANIMATION_INFO",
+   "from": "Lcom/mojang/blaze3d/pipeline/BindGroupLayout;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/BindGroupLayout;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/BindGroupLayouts",
+   "kind": "field",
+   "name": "SPRITE",
+   "from": "Lcom/mojang/blaze3d/pipeline/BindGroupLayout;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/BindGroupLayout;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/BindGroupLayouts",
+   "kind": "field",
+   "name": "CURRENT_SPRITE_NEXT_SPRITE",
+   "from": "Lcom/mojang/blaze3d/pipeline/BindGroupLayout;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/BindGroupLayout;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/CubeMap",
+   "kind": "field",
+   "name": "vertexBuffer",
+   "from": "Lcom/mojang/blaze3d/buffers/GpuBuffer;",
+   "to": "Lcom/mojang/renderpearl/api/buffers/GpuBuffer;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/CubeMap",
+   "kind": "method",
+   "name": "initializeVertices",
+   "from": "()Lcom/mojang/blaze3d/buffers/GpuBuffer;",
+   "to": "()Lcom/mojang/renderpearl/api/buffers/GpuBuffer;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/DebugCrosshairRenderer",
+   "kind": "field",
+   "name": "crosshairBuffer",
+   "from": "Lcom/mojang/blaze3d/buffers/GpuBuffer;",
+   "to": "Lcom/mojang/renderpearl/api/buffers/GpuBuffer;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/DebugCrosshairRenderer",
+   "kind": "method",
+   "name": "render",
+   "from": "(Lnet/minecraft/client/renderer/state/level/CameraRenderState;I)V",
+   "to": "(Lnet/minecraft/client/renderer/state/level/CameraRenderState;ILcom/mojang/renderpearl/api/textures/GpuTextureView;Lcom/mojang/renderpearl/api/textures/GpuTextureView;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/GameRenderer",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lnet/minecraft/client/Minecraft;Lnet/minecraft/client/renderer/ItemInHandRenderer;Lnet/minecraft/client/resources/model/ModelManager;)V",
+   "to": "(Lnet/minecraft/client/Minecraft;Lnet/minecraft/client/renderer/FirstPersonHandsAndItemsRenderer;Lnet/minecraft/client/resources/model/ModelManager;Lnet/minecraft/client/renderer/item/ItemModelResolver;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/GameRenderer",
+   "kind": "method",
+   "name": "renderItemInHand",
+   "from": "(Lnet/minecraft/client/renderer/state/level/CameraRenderState;FLorg/joml/Matrix4fc;)V",
+   "to": "(Lnet/minecraft/client/renderer/state/level/CameraRenderState;Lnet/minecraft/client/renderer/state/level/PlayerRenderState;Lcom/mojang/renderpearl/api/textures/GpuTextureView;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/GameRenderer",
+   "kind": "method",
+   "name": "render",
+   "from": "(Lnet/minecraft/client/DeltaTracker;Z)V",
+   "to": "()V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/GameRenderer",
+   "kind": "method",
+   "name": "renderLevel",
+   "from": "(Lnet/minecraft/client/DeltaTracker;)V",
+   "to": "()V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/GameRenderer",
+   "kind": "method",
+   "name": "extractCamera",
+   "from": "(Lnet/minecraft/client/DeltaTracker;FF)V",
+   "to": "(Lnet/minecraft/client/DeltaTracker;F)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/GameRenderer",
+   "kind": "method",
+   "name": "lightmap",
+   "from": "()Lcom/mojang/blaze3d/textures/GpuTextureView;",
+   "to": "()Lcom/mojang/renderpearl/api/textures/GpuTextureView;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/GameRenderer",
+   "kind": "method",
+   "name": "levelLightmap",
+   "from": "()Lcom/mojang/blaze3d/textures/GpuTextureView;",
+   "to": "()Lcom/mojang/renderpearl/api/textures/GpuTextureView;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/GameRenderer",
+   "kind": "method",
+   "name": "lambda$preloadUiShader$0",
+   "from": "(Lnet/minecraft/server/packs/resources/ResourceProvider;Lnet/minecraft/resources/Identifier;Lcom/mojang/blaze3d/shaders/ShaderType;)Ljava/lang/String;",
+   "to": "(Lnet/minecraft/server/packs/resources/ResourceProvider;Lnet/minecraft/resources/Identifier;Lcom/mojang/renderpearl/api/pipeline/ShaderType;)Ljava/lang/String;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/GlobalSettingsUniform",
+   "kind": "field",
+   "name": "buffer",
+   "from": "Lcom/mojang/blaze3d/buffers/GpuBuffer;",
+   "to": "Lcom/mojang/renderpearl/api/buffers/GpuBuffer;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/GlobalSettingsUniform",
+   "kind": "method",
+   "name": "update",
+   "from": "(IIDJLnet/minecraft/client/DeltaTracker;ILnet/minecraft/world/phys/Vec3;Z)V",
+   "to": "(IIDJFILnet/minecraft/world/phys/Vec3;Z)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/LevelRenderer",
+   "kind": "field",
+   "name": "chunkLayerSampler",
+   "from": "Lcom/mojang/blaze3d/textures/GpuSampler;",
+   "to": "Lcom/mojang/renderpearl/api/textures/GpuSampler;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/LevelRenderer",
+   "kind": "method",
+   "name": "render",
+   "from": "(Lcom/mojang/blaze3d/resource/GraphicsResourceAllocator;Lnet/minecraft/client/DeltaTracker;ZLnet/minecraft/client/renderer/state/level/CameraRenderState;Lorg/joml/Matrix4fc;Lcom/mojang/blaze3d/buffers/GpuBufferSlice;Lorg/joml/Vector4f;Z)V",
+   "to": "(Lcom/mojang/blaze3d/resource/GraphicsResourceAllocator;ZLnet/minecraft/client/renderer/state/level/CameraRenderState;Lcom/mojang/renderpearl/api/buffers/GpuBufferSlice;Lorg/joml/Vector4f;ZZ)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/LevelRenderer",
+   "kind": "method",
+   "name": "addSkyPass",
+   "from": "(Lcom/mojang/blaze3d/framegraph/FrameGraphBuilder;Lnet/minecraft/client/renderer/state/level/CameraRenderState;Lcom/mojang/blaze3d/buffers/GpuBufferSlice;)V",
+   "to": "(Lcom/mojang/blaze3d/framegraph/FrameGraphBuilder;Lnet/minecraft/client/renderer/state/level/CameraRenderState;Lcom/mojang/renderpearl/api/buffers/GpuBufferSlice;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/LevelRenderer",
+   "kind": "method",
+   "name": "addMainPass",
+   "from": "(Lcom/mojang/blaze3d/framegraph/FrameGraphBuilder;Lnet/minecraft/client/renderer/feature/FeatureRenderDispatcher$PreparedFrame;Lcom/mojang/blaze3d/buffers/GpuBufferSlice;Lnet/minecraft/client/renderer/state/level/LevelRenderState;Lnet/minecraft/util/profiling/ProfilerFiller;Lnet/minecraft/client/renderer/chunk/ChunkSectionsToRender;)V",
+   "to": "(Lcom/mojang/blaze3d/framegraph/FrameGraphBuilder;Lnet/minecraft/client/renderer/feature/FeatureRenderDispatcher$PreparedFrame;Lcom/mojang/renderpearl/api/buffers/GpuBufferSlice;Lnet/minecraft/client/renderer/chunk/ChunkSectionsToRender;Z)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/LevelRenderer",
+   "kind": "method",
+   "name": "prepareChunkRenders",
+   "from": "(Lorg/joml/Matrix4fc;)Lnet/minecraft/client/renderer/chunk/ChunkSectionsToRender;",
+   "to": "(Lorg/joml/Matrix4fc;Z)Lnet/minecraft/client/renderer/chunk/ChunkSectionsToRender;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/LevelRenderer",
+   "kind": "method",
+   "name": "isSectionCompiledAndVisible",
+   "from": "(Lnet/minecraft/core/BlockPos;)Z",
+   "to": "(Lnet/minecraft/core/BlockPos;J)Z"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/LevelRenderer",
+   "kind": "method",
+   "name": "lambda$prepareChunkRenders$1",
+   "from": "(I[Lcom/mojang/blaze3d/buffers/GpuBufferSlice;Lcom/mojang/blaze3d/systems/RenderPass$UniformUploader;)V",
+   "to": "(Lnet/minecraft/client/renderer/chunk/ChunkSectionLayer;)Ljava/util/List;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/LevelRenderer",
+   "kind": "method",
+   "name": "lambda$prepareChunkRenders$0",
+   "from": "(I)Ljava/util/List;",
+   "to": "(Lnet/minecraft/client/renderer/chunk/ChunkSectionLayer;)Ljava/util/List;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/LevelRenderer",
+   "kind": "method",
+   "name": "lambda$addMainPass$0",
+   "from": "(Lcom/mojang/blaze3d/buffers/GpuBufferSlice;Lnet/minecraft/client/renderer/state/level/LevelRenderState;Lnet/minecraft/util/profiling/ProfilerFiller;Lnet/minecraft/client/renderer/chunk/ChunkSectionsToRender;Lcom/mojang/blaze3d/resource/ResourceHandle;Lnet/minecraft/client/renderer/feature/FeatureRenderDispatcher$PreparedFrame;Lcom/mojang/blaze3d/resource/ResourceHandle;Lcom/mojang/blaze3d/resource/ResourceHandle;Lcom/mojang/blaze3d/resource/ResourceHandle;Lcom/mojang/blaze3d/resource/ResourceHandle;)V",
+   "to": "(Lcom/mojang/renderpearl/api/buffers/GpuBufferSlice;ZLnet/minecraft/client/renderer/chunk/ChunkSectionsToRender;Lnet/minecraft/client/renderer/feature/FeatureRenderDispatcher$PreparedFrame;ZZ)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/LevelRenderer",
+   "kind": "method",
+   "name": "lambda$addSkyPass$0",
+   "from": "(Lcom/mojang/blaze3d/buffers/GpuBufferSlice;Lnet/minecraft/client/renderer/state/level/SkyRenderState;)V",
+   "to": "(Lcom/mojang/renderpearl/api/buffers/GpuBufferSlice;Lnet/minecraft/client/renderer/state/level/SkyRenderState;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/Lightmap",
+   "kind": "field",
+   "name": "texture",
+   "from": "Lcom/mojang/blaze3d/textures/GpuTexture;",
+   "to": "Lcom/mojang/renderpearl/api/textures/GpuTexture;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/Lightmap",
+   "kind": "field",
+   "name": "textureView",
+   "from": "Lcom/mojang/blaze3d/textures/GpuTextureView;",
+   "to": "Lcom/mojang/renderpearl/api/textures/GpuTextureView;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/Lightmap",
+   "kind": "method",
+   "name": "getTextureView",
+   "from": "()Lcom/mojang/blaze3d/textures/GpuTextureView;",
+   "to": "()Lcom/mojang/renderpearl/api/textures/GpuTextureView;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/MappableRingBuffer",
+   "kind": "field",
+   "name": "buffers",
+   "from": "[Lcom/mojang/blaze3d/buffers/GpuBuffer;",
+   "to": "[Lcom/mojang/renderpearl/api/buffers/GpuBuffer;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/MappableRingBuffer",
+   "kind": "field",
+   "name": "fences",
+   "from": "[Lcom/mojang/blaze3d/buffers/GpuFence;",
+   "to": "[Lcom/mojang/renderpearl/api/commands/GpuFence;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/MappableRingBuffer",
+   "kind": "method",
+   "name": "currentBuffer",
+   "from": "()Lcom/mojang/blaze3d/buffers/GpuBuffer;",
+   "to": "()Lcom/mojang/renderpearl/api/buffers/GpuBuffer;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/OrderedSubmitNodeCollector",
+   "kind": "method",
+   "name": "submitBreakingBlockModel",
+   "from": "(Lcom/mojang/blaze3d/vertex/PoseStack;Ljava/util/List;I)V",
+   "to": "(Lcom/mojang/blaze3d/vertex/PoseStack;Ljava/util/List;IZ)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/OrderedSubmitNodeCollector",
+   "kind": "method",
+   "name": "submitItem",
+   "from": "(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/ItemDisplayContext;III[ILjava/util/List;Lnet/minecraft/client/renderer/item/ItemStackRenderState$FoilType;)V",
+   "to": "(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/ItemDisplayContext;III[ILnet/minecraft/client/resources/model/geometry/ItemQuads;Lnet/minecraft/client/renderer/item/ItemStackRenderState$FoilType;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/PlayerSkinRenderCache$RenderInfo",
+   "kind": "field",
+   "name": "textureView",
+   "from": "Lcom/mojang/blaze3d/textures/GpuTextureView;",
+   "to": "Lcom/mojang/renderpearl/api/textures/GpuTextureView;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/PlayerSkinRenderCache$RenderInfo",
+   "kind": "method",
+   "name": "textureView",
+   "from": "()Lcom/mojang/blaze3d/textures/GpuTextureView;",
+   "to": "()Lcom/mojang/renderpearl/api/textures/GpuTextureView;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/PostChain",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Ljava/util/List;Ljava/util/Map;Ljava/util/Set;Lnet/minecraft/client/renderer/Projection;Lnet/minecraft/client/renderer/ProjectionMatrixBuffer;)V",
+   "to": "(Lnet/minecraft/resources/Identifier;Ljava/util/List;Ljava/util/Map;Ljava/util/Set;Lnet/minecraft/client/renderer/Projection;Lnet/minecraft/client/renderer/ProjectionMatrixBuffer;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/PostPass$Input",
+   "kind": "method",
+   "name": "texture",
+   "from": "(Ljava/util/Map;)Lcom/mojang/blaze3d/textures/GpuTextureView;",
+   "to": "(Ljava/util/Map;)Lcom/mojang/renderpearl/api/textures/GpuTextureView;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/PostPass$InputTexture",
+   "kind": "field",
+   "name": "view",
+   "from": "Lcom/mojang/blaze3d/textures/GpuTextureView;",
+   "to": "Lcom/mojang/renderpearl/api/textures/GpuTextureView;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/PostPass$InputTexture",
+   "kind": "field",
+   "name": "sampler",
+   "from": "Lcom/mojang/blaze3d/textures/GpuSampler;",
+   "to": "Lcom/mojang/renderpearl/api/textures/GpuSampler;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/PostPass$InputTexture",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Ljava/lang/String;Lcom/mojang/blaze3d/textures/GpuTextureView;Lcom/mojang/blaze3d/textures/GpuSampler;)V",
+   "to": "(Ljava/lang/String;Lcom/mojang/renderpearl/api/textures/GpuTextureView;Lcom/mojang/renderpearl/api/textures/GpuSampler;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/PostPass$InputTexture",
+   "kind": "method",
+   "name": "view",
+   "from": "()Lcom/mojang/blaze3d/textures/GpuTextureView;",
+   "to": "()Lcom/mojang/renderpearl/api/textures/GpuTextureView;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/PostPass$InputTexture",
+   "kind": "method",
+   "name": "sampler",
+   "from": "()Lcom/mojang/blaze3d/textures/GpuSampler;",
+   "to": "()Lcom/mojang/renderpearl/api/textures/GpuSampler;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/PostPass$TargetInput",
+   "kind": "method",
+   "name": "texture",
+   "from": "(Ljava/util/Map;)Lcom/mojang/blaze3d/textures/GpuTextureView;",
+   "to": "(Ljava/util/Map;)Lcom/mojang/renderpearl/api/textures/GpuTextureView;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/PostPass",
+   "kind": "field",
+   "name": "pipeline",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/PostPass",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Lcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;Ljava/util/Map;Ljava/util/List;)V",
+   "to": "(Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;Lnet/minecraft/resources/Identifier;Ljava/util/Map;Ljava/util/List;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/PostPass",
+   "kind": "method",
+   "name": "addToFrame",
+   "from": "(Lcom/mojang/blaze3d/framegraph/FrameGraphBuilder;Ljava/util/Map;Lcom/mojang/blaze3d/buffers/GpuBufferSlice;)V",
+   "to": "(Lcom/mojang/blaze3d/framegraph/FrameGraphBuilder;Ljava/util/Map;Lcom/mojang/renderpearl/api/buffers/GpuBufferSlice;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/PostPass",
+   "kind": "method",
+   "name": "lambda$addToFrame$1",
+   "from": "(Lcom/mojang/blaze3d/resource/ResourceHandle;Lcom/mojang/blaze3d/buffers/GpuBufferSlice;Ljava/util/Map;)V",
+   "to": "(Lcom/mojang/blaze3d/resource/ResourceHandle;Lcom/mojang/renderpearl/api/buffers/GpuBufferSlice;Ljava/util/Map;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/ProjectionMatrixBuffer",
+   "kind": "field",
+   "name": "buffer",
+   "from": "Lcom/mojang/blaze3d/buffers/GpuBuffer;",
+   "to": "Lcom/mojang/renderpearl/api/buffers/GpuBuffer;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/ProjectionMatrixBuffer",
+   "kind": "field",
+   "name": "bufferSlice",
+   "from": "Lcom/mojang/blaze3d/buffers/GpuBufferSlice;",
+   "to": "Lcom/mojang/renderpearl/api/buffers/GpuBufferSlice;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/ProjectionMatrixBuffer",
+   "kind": "method",
+   "name": "writeBuffer",
+   "from": "(Lorg/joml/Matrix4f;)Lcom/mojang/blaze3d/buffers/GpuBufferSlice;",
+   "to": "(Lorg/joml/Matrix4f;)Lcom/mojang/renderpearl/api/buffers/GpuBufferSlice;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "GLOBALS_SNIPPET",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline$Snippet;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "MATRICES_FOG_SNIPPET",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline$Snippet;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "MATRICES_FOG_LIGHT_DIR_SNIPPET",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline$Snippet;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "GENERIC_BLOCKS_SNIPPET",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline$Snippet;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "TERRAIN_SNIPPET",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline$Snippet;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "BLOCK_SNIPPET",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline$Snippet;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "ENTITY_SNIPPET",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline$Snippet;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "ENTITY_EMISSIVE_SNIPPET",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline$Snippet;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "BEACON_BEAM_SNIPPET",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline$Snippet;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "ITEM_SNIPPET",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline$Snippet;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "TEXT_SNIPPET",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline$Snippet;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "WORLD_TEXT_SNIPPET",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline$Snippet;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "END_PORTAL_SNIPPET",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline$Snippet;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "CLOUDS_SNIPPET",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline$Snippet;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "LINES_SNIPPET",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline$Snippet;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "DEBUG_FILLED_SNIPPET",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline$Snippet;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "PARTICLE_SNIPPET",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline$Snippet;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "WEATHER_SNIPPET",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline$Snippet;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "GUI_SNIPPET",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline$Snippet;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "GUI_TEXTURED_SNIPPET",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline$Snippet;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "GUI_TEXT_SNIPPET",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline$Snippet;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "OUTLINE_SNIPPET",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline$Snippet;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "POST_PROCESSING_SNIPPET",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline$Snippet;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "SOLID_BLOCK",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "SOLID_TERRAIN",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "WIREFRAME",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "CUTOUT_BLOCK",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "CUTOUT_TERRAIN",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "TRANSLUCENT_TERRAIN",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "TRANSLUCENT_BLOCK",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "ARMOR_CUTOUT_NO_CULL",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "ARMOR_DECAL_CUTOUT_NO_CULL",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "ENTITY_SOLID",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "ENTITY_SOLID_Z_OFFSET_FORWARD",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "ENTITY_CUTOUT_CULL",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "ENTITY_CUTOUT",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "ENTITY_CUTOUT_Z_OFFSET",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "ENTITY_CUTOUT_DISSOLVE",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "ENTITY_TRANSLUCENT",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "ENTITY_TRANSLUCENT_EMISSIVE",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "ENTITY_TRANSLUCENT_CULL",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "END_CRYSTAL_BEAM",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "BANNER_PATTERN",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "BREEZE_WIND",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "ENERGY_SWIRL",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "EYES",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "ENTITY_SHADOW",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "ITEM_CUTOUT",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "ITEM_TRANSLUCENT",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "BEACON_BEAM_OPAQUE",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "BEACON_BEAM_TRANSLUCENT",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "LEASH",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "WATER_MASK",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "GLINT",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "CRUMBLING",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "TEXT",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "GUI_TEXT",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "TEXT_GRAYSCALE",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "GUI_TEXT_GRAYSCALE",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "TEXT_POLYGON_OFFSET",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "TEXT_GRAYSCALE_POLYGON_OFFSET",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "TEXT_SEE_THROUGH",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "TEXT_GRAYSCALE_SEE_THROUGH",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "LIGHTNING",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "DRAGON_RAYS",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "END_PORTAL",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "END_GATEWAY",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "FLAT_CLOUDS",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "CLOUDS",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "LINES",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "LINES_TRANSLUCENT",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "LINES_DEPTH_BIAS",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "SECONDARY_BLOCK_OUTLINE",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "DEBUG_POINTS",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "DEBUG_FILLED_BOX",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "DEBUG_QUADS",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "DEBUG_TRIANGLE_FAN",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "WORLD_BORDER",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "OPAQUE_PARTICLE",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "TRANSLUCENT_PARTICLE",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "SKY",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "END_SKY",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "SUNRISE_SUNSET",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  }
+ ]
+}
