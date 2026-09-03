@@ -1,0 +1,1501 @@
+{
+ "schema": 1,
+ "from": "26.2",
+ "to": "26.3s",
+ "source": "jar-diff: unique simple name with agreeing members",
+ "moves": [
+  {
+   "from": "com.mojang.blaze3d.opengl.GlConst",
+   "to": "com.mojang.renderpearl.backend.opengl.GlConst",
+   "shared": 128,
+   "of": 140,
+   "ratio": 0.91
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlStateManager",
+   "to": "com.mojang.renderpearl.backend.opengl.GlStateManager",
+   "shared": 96,
+   "of": 106,
+   "ratio": 0.91
+  },
+  {
+   "from": "net.minecraft.world.level.block.RedStoneWireBlock",
+   "to": "net.minecraft.world.level.block.RedstoneWireBlock",
+   "shared": 49,
+   "of": 53,
+   "ratio": 0.92
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.EnderMan",
+   "to": "net.minecraft.world.entity.monster.Enderman",
+   "shared": 48,
+   "of": 48,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.VulkanPhysicalDevice",
+   "to": "com.mojang.renderpearl.backend.vulkan.VulkanPhysicalDevice",
+   "shared": 29,
+   "of": 30,
+   "ratio": 0.97
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.VulkanGpuSurface",
+   "to": "com.mojang.renderpearl.backend.vulkan.VulkanGpuSurface",
+   "shared": 26,
+   "of": 31,
+   "ratio": 0.84
+  },
+  {
+   "from": "net.minecraft.client.gui.screens.options.WorldOptionsScreen",
+   "to": "net.minecraft.client.gui.screens.WorldOptionsScreen",
+   "shared": 25,
+   "of": 35,
+   "ratio": 0.71
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.VulkanRenderPass",
+   "to": "com.mojang.renderpearl.backend.vulkan.VulkanRenderPass",
+   "shared": 24,
+   "of": 43,
+   "ratio": 0.56
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.VulkanDebug$Enabled",
+   "to": "com.mojang.renderpearl.backend.vulkan.VulkanDebug$Enabled",
+   "shared": 21,
+   "of": 21,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.pipeline.ColorTargetState",
+   "to": "com.mojang.renderpearl.api.pipeline.ColorTargetState",
+   "shared": 20,
+   "of": 25,
+   "ratio": 0.8
+  },
+  {
+   "from": "com.mojang.blaze3d.pipeline.RenderPipeline$Snippet",
+   "to": "com.mojang.renderpearl.api.pipeline.RenderPipeline$Snippet",
+   "shared": 17,
+   "of": 26,
+   "ratio": 0.65
+  },
+  {
+   "from": "com.mojang.blaze3d.systems.DeviceFeatures",
+   "to": "com.mojang.renderpearl.api.device.DeviceFeatures",
+   "shared": 17,
+   "of": 18,
+   "ratio": 0.94
+  },
+  {
+   "from": "com.mojang.blaze3d.systems.DeviceInfo",
+   "to": "com.mojang.renderpearl.api.device.DeviceInfo",
+   "shared": 17,
+   "of": 26,
+   "ratio": 0.65
+  },
+  {
+   "from": "com.mojang.blaze3d.util.TransientBlockAllocator",
+   "to": "com.mojang.renderpearl.backend.util.TransientBlockAllocator",
+   "shared": 16,
+   "of": 23,
+   "ratio": 0.7
+  },
+  {
+   "from": "net.minecraft.resources.RegistryFileCodec",
+   "to": "net.minecraft.core.registries.codec.RegistryFileCodec",
+   "shared": 16,
+   "of": 20,
+   "ratio": 0.8
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.DirectStateAccess",
+   "to": "com.mojang.renderpearl.backend.opengl.DirectStateAccess",
+   "shared": 15,
+   "of": 16,
+   "ratio": 0.94
+  },
+  {
+   "from": "com.mojang.blaze3d.systems.DeviceLimits",
+   "to": "com.mojang.renderpearl.api.device.DeviceLimits",
+   "shared": 15,
+   "of": 17,
+   "ratio": 0.88
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.DirectStateAccess$Core",
+   "to": "com.mojang.renderpearl.backend.opengl.DirectStateAccess$Core",
+   "shared": 14,
+   "of": 14,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.DirectStateAccess$Emulated",
+   "to": "com.mojang.renderpearl.backend.opengl.DirectStateAccess$Emulated",
+   "shared": 14,
+   "of": 14,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.vertex.VertexFormat",
+   "to": "com.mojang.renderpearl.api.vertex.VertexFormat",
+   "shared": 14,
+   "of": 16,
+   "ratio": 0.88
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.VulkanInstance",
+   "to": "com.mojang.renderpearl.backend.vulkan.VulkanInstance",
+   "shared": 14,
+   "of": 16,
+   "ratio": 0.88
+  },
+  {
+   "from": "net.minecraft.resources.RegistryFixedCodec",
+   "to": "net.minecraft.core.registries.codec.RegistryFixedCodec",
+   "shared": 14,
+   "of": 17,
+   "ratio": 0.82
+  },
+  {
+   "from": "com.mojang.blaze3d.buffers.GpuBuffer",
+   "to": "com.mojang.renderpearl.api.buffers.GpuBuffer",
+   "shared": 13,
+   "of": 22,
+   "ratio": 0.59
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlDebug",
+   "to": "com.mojang.renderpearl.backend.opengl.GlDebug",
+   "shared": 13,
+   "of": 15,
+   "ratio": 0.87
+  },
+  {
+   "from": "com.mojang.blaze3d.systems.RenderPass$Draw",
+   "to": "com.mojang.renderpearl.api.commands.RenderPass$Draw",
+   "shared": 13,
+   "of": 21,
+   "ratio": 0.62
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.VulkanUtils",
+   "to": "com.mojang.renderpearl.backend.vulkan.VulkanUtils",
+   "shared": 13,
+   "of": 15,
+   "ratio": 0.87
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.init.VulkanFeature",
+   "to": "com.mojang.renderpearl.backend.vulkan.init.VulkanFeature",
+   "shared": 13,
+   "of": 16,
+   "ratio": 0.81
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlTexture",
+   "to": "com.mojang.renderpearl.backend.opengl.GlTexture",
+   "shared": 12,
+   "of": 16,
+   "ratio": 0.75
+  },
+  {
+   "from": "com.mojang.blaze3d.shaders.GpuDebugOptions",
+   "to": "com.mojang.renderpearl.api.device.GpuDebugOptions",
+   "shared": 12,
+   "of": 12,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.systems.RenderPass$RenderArea",
+   "to": "com.mojang.renderpearl.api.commands.RenderPass$RenderArea",
+   "shared": 12,
+   "of": 13,
+   "ratio": 0.92
+  },
+  {
+   "from": "com.mojang.blaze3d.textures.GpuTexture",
+   "to": "com.mojang.renderpearl.api.textures.GpuTexture",
+   "shared": 12,
+   "of": 22,
+   "ratio": 0.55
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.init.VulkanPNextStruct",
+   "to": "com.mojang.renderpearl.backend.vulkan.init.VulkanPNextStruct",
+   "shared": 12,
+   "of": 13,
+   "ratio": 0.92
+  },
+  {
+   "from": "net.minecraft.util.datafix.fixes.BlockRenameFix",
+   "to": "net.minecraft.util.datafix.fixes.LegacyBlockRenameFix",
+   "shared": 12,
+   "of": 12,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.world.level.levelgen.structure.placement.StructurePlacement$ExclusionZone",
+   "to": "net.minecraft.world.level.levelgen.structure.placement.AbstractSpreadingStructurePlacement$ExclusionZone",
+   "shared": 12,
+   "of": 12,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlHeuristics",
+   "to": "com.mojang.renderpearl.backend.opengl.GlHeuristics",
+   "shared": 11,
+   "of": 14,
+   "ratio": 0.79
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlTransientMemory$PersistentMapping$Rotation",
+   "to": "com.mojang.renderpearl.backend.opengl.GlTransientMemory$PersistentMapping$Rotation",
+   "shared": 11,
+   "of": 11,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.VulkanQueue$Submission$SubmitStage",
+   "to": "com.mojang.renderpearl.backend.vulkan.VulkanQueue$Submission$SubmitStage",
+   "shared": 11,
+   "of": 11,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.VulkanTransientMemory$VulkanAllocation",
+   "to": "com.mojang.renderpearl.backend.vulkan.VulkanTransientMemory$VulkanAllocation",
+   "shared": 11,
+   "of": 12,
+   "ratio": 0.92
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.EnderMan$EndermanLookForPlayerGoal",
+   "to": "net.minecraft.world.entity.monster.Enderman$EndermanLookForPlayerGoal",
+   "shared": 11,
+   "of": 14,
+   "ratio": 0.79
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlProgram",
+   "to": "com.mojang.renderpearl.backend.opengl.GlProgram",
+   "shared": 10,
+   "of": 16,
+   "ratio": 0.63
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlSurface",
+   "to": "com.mojang.renderpearl.backend.opengl.GlSurface",
+   "shared": 10,
+   "of": 13,
+   "ratio": 0.77
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlTransientMemory$PersistentMapping$GlAllocation",
+   "to": "com.mojang.renderpearl.backend.opengl.GlTransientMemory$PersistentMapping$GlAllocation",
+   "shared": 10,
+   "of": 10,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.pipeline.DepthStencilState",
+   "to": "com.mojang.renderpearl.api.pipeline.DepthStencilState",
+   "shared": 10,
+   "of": 15,
+   "ratio": 0.67
+  },
+  {
+   "from": "com.mojang.blaze3d.systems.RenderPassBackend",
+   "to": "com.mojang.renderpearl.backend.api.RenderPassBackend",
+   "shared": 10,
+   "of": 20,
+   "ratio": 0.5
+  },
+  {
+   "from": "com.mojang.blaze3d.util.TransientBlockAllocator$Allocation",
+   "to": "com.mojang.renderpearl.backend.util.TransientBlockAllocator$Allocation",
+   "shared": 10,
+   "of": 10,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.VulkanGpuTexture",
+   "to": "com.mojang.renderpearl.backend.vulkan.VulkanGpuTexture",
+   "shared": 10,
+   "of": 12,
+   "ratio": 0.83
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.VulkanQueue$Submission$SemaphoreOp",
+   "to": "com.mojang.renderpearl.backend.vulkan.VulkanQueue$Submission$SemaphoreOp",
+   "shared": 10,
+   "of": 10,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.VulkanUtils$DeviceUUID",
+   "to": "com.mojang.renderpearl.backend.vulkan.VulkanUtils$DeviceUUID",
+   "shared": 10,
+   "of": 10,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.world.clock.ServerClockManager$ClockInstance",
+   "to": "net.minecraft.world.clock.ServerClockManager$ServerClockInstance",
+   "shared": 10,
+   "of": 10,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlDebug$LogEntry",
+   "to": "com.mojang.renderpearl.backend.opengl.GlDebug$LogEntry",
+   "shared": 9,
+   "of": 9,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlSampler",
+   "to": "com.mojang.renderpearl.backend.opengl.GlSampler",
+   "shared": 9,
+   "of": 18,
+   "ratio": 0.5
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.VulkanCommandPool",
+   "to": "com.mojang.renderpearl.backend.vulkan.VulkanCommandPool",
+   "shared": 9,
+   "of": 11,
+   "ratio": 0.82
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.VulkanDebug$Disabled",
+   "to": "com.mojang.renderpearl.backend.vulkan.VulkanDebug$Disabled",
+   "shared": 9,
+   "of": 9,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.VulkanQueue",
+   "to": "com.mojang.renderpearl.backend.vulkan.VulkanQueue",
+   "shared": 9,
+   "of": 12,
+   "ratio": 0.75
+  },
+  {
+   "from": "net.minecraft.client.renderer.ShaderManager$CompilationCache",
+   "to": "net.minecraft.client.renderer.ShaderManager$PostChainCache",
+   "shared": 9,
+   "of": 10,
+   "ratio": 0.9
+  },
+  {
+   "from": "net.minecraft.world.level.block.DirtPathBlock",
+   "to": "net.minecraft.world.level.block.PathBlock",
+   "shared": 9,
+   "of": 12,
+   "ratio": 0.75
+  },
+  {
+   "from": "com.mojang.blaze3d.buffers.GpuBufferSlice$MappedView",
+   "to": "com.mojang.renderpearl.api.buffers.GpuBufferSlice$MappedView",
+   "shared": 8,
+   "of": 11,
+   "ratio": 0.73
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlBuffer",
+   "to": "com.mojang.renderpearl.backend.opengl.GlBuffer",
+   "shared": 8,
+   "of": 8,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlQueryPool",
+   "to": "com.mojang.renderpearl.backend.opengl.GlQueryPool",
+   "shared": 8,
+   "of": 8,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlTransientMemory",
+   "to": "com.mojang.renderpearl.backend.opengl.GlTransientMemory",
+   "shared": 8,
+   "of": 14,
+   "ratio": 0.57
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.Uniform$Utb",
+   "to": "com.mojang.renderpearl.backend.opengl.Uniform$Utb",
+   "shared": 8,
+   "of": 14,
+   "ratio": 0.57
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.VulkanDebug",
+   "to": "com.mojang.renderpearl.backend.vulkan.VulkanDebug",
+   "shared": 8,
+   "of": 9,
+   "ratio": 0.89
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.VulkanQueryPool",
+   "to": "com.mojang.renderpearl.backend.vulkan.VulkanQueryPool",
+   "shared": 8,
+   "of": 10,
+   "ratio": 0.8
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.checkpoints.CheckpointExtension$QueueCheckpoints",
+   "to": "com.mojang.renderpearl.backend.vulkan.checkpoints.CheckpointExtension$QueueCheckpoints",
+   "shared": 8,
+   "of": 8,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.util.datafix.fixes.AbstractBlockPropertyFix",
+   "to": "net.minecraft.util.datafix.fixes.LegacyAbstractBlockPropertyFix",
+   "shared": 8,
+   "of": 8,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.util.datafix.fixes.BlockPropertyRenameAndFix",
+   "to": "net.minecraft.util.datafix.fixes.LegacyBlockPropertyRenameAndFix",
+   "shared": 8,
+   "of": 8,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.world.entity.ai.goal.CatLieOnBedGoal",
+   "to": "net.minecraft.world.entity.ai.goal.CatLieOnBlockGoal",
+   "shared": 8,
+   "of": 8,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.buffers.GpuBufferSlice",
+   "to": "com.mojang.renderpearl.api.buffers.GpuBufferSlice",
+   "shared": 7,
+   "of": 12,
+   "ratio": 0.58
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlStateManager$BlendState",
+   "to": "com.mojang.renderpearl.backend.opengl.GlStateManager$BlendState",
+   "shared": 7,
+   "of": 8,
+   "ratio": 0.88
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlTextureView",
+   "to": "com.mojang.renderpearl.backend.opengl.GlTextureView",
+   "shared": 7,
+   "of": 13,
+   "ratio": 0.54
+  },
+  {
+   "from": "com.mojang.blaze3d.systems.GpuSurface$Configuration",
+   "to": "com.mojang.renderpearl.api.device.GpuSurface$Configuration",
+   "shared": 7,
+   "of": 10,
+   "ratio": 0.7
+  },
+  {
+   "from": "com.mojang.blaze3d.systems.HintsAndWorkarounds",
+   "to": "com.mojang.renderpearl.api.device.HintsAndWorkarounds",
+   "shared": 7,
+   "of": 8,
+   "ratio": 0.88
+  },
+  {
+   "from": "com.mojang.blaze3d.systems.TracyGpuProfiler",
+   "to": "com.mojang.renderpearl.frontend.TracyGpuProfiler",
+   "shared": 7,
+   "of": 11,
+   "ratio": 0.64
+  },
+  {
+   "from": "com.mojang.blaze3d.vertex.VertexFormatElement",
+   "to": "com.mojang.renderpearl.api.vertex.VertexFormatElement",
+   "shared": 7,
+   "of": 10,
+   "ratio": 0.7
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.checkpoints.AbstractCheckpointStorage$Checkpoint",
+   "to": "com.mojang.renderpearl.backend.vulkan.checkpoints.AbstractCheckpointStorage$Checkpoint",
+   "shared": 7,
+   "of": 10,
+   "ratio": 0.7
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.checkpoints.CheckpointExtension$StageCheckpoint",
+   "to": "com.mojang.renderpearl.backend.vulkan.checkpoints.CheckpointExtension$StageCheckpoint",
+   "shared": 7,
+   "of": 10,
+   "ratio": 0.7
+  },
+  {
+   "from": "net.minecraft.client.renderer.entity.layers.EquipmentLayerRenderer$TrimSpriteKey",
+   "to": "net.minecraft.client.renderer.entity.layers.EquipmentLayerRenderer$TrimTextureKey",
+   "shared": 7,
+   "of": 11,
+   "ratio": 0.64
+  },
+  {
+   "from": "net.minecraft.world.level.storage.loot.ValidationContext$RecursiveReferenceProblem",
+   "to": "net.minecraft.world.level.storage.loot.ValidationContext$RecursiveElementReferenceProblem",
+   "shared": 7,
+   "of": 7,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlBuffer$Direct",
+   "to": "com.mojang.renderpearl.backend.opengl.GlBuffer$Direct",
+   "shared": 6,
+   "of": 9,
+   "ratio": 0.67
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlDebugLabel",
+   "to": "com.mojang.renderpearl.backend.opengl.GlDebugLabel",
+   "shared": 6,
+   "of": 12,
+   "ratio": 0.5
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlStateManager$BooleanState",
+   "to": "com.mojang.renderpearl.backend.opengl.GlStateManager$BooleanState",
+   "shared": 6,
+   "of": 6,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.Uniform$Ubo",
+   "to": "com.mojang.renderpearl.backend.opengl.Uniform$Ubo",
+   "shared": 6,
+   "of": 6,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.VulkanGpuBuffer$Direct",
+   "to": "com.mojang.renderpearl.backend.vulkan.VulkanGpuBuffer$Direct",
+   "shared": 6,
+   "of": 9,
+   "ratio": 0.67
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.VulkanGpuTextureView",
+   "to": "com.mojang.renderpearl.backend.vulkan.VulkanGpuTextureView",
+   "shared": 6,
+   "of": 10,
+   "ratio": 0.6
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.VulkanQueue$Submission",
+   "to": "com.mojang.renderpearl.backend.vulkan.VulkanQueue$Submission",
+   "shared": 6,
+   "of": 8,
+   "ratio": 0.75
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.checkpoints.AbstractCheckpointStorage$Frame",
+   "to": "com.mojang.renderpearl.backend.vulkan.checkpoints.AbstractCheckpointStorage$Frame",
+   "shared": 6,
+   "of": 6,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.checkpoints.AbstractCheckpointStorage",
+   "to": "com.mojang.renderpearl.backend.vulkan.checkpoints.AbstractCheckpointStorage",
+   "shared": 6,
+   "of": 10,
+   "ratio": 0.6
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.checkpoints.AmdCheckpointExtension",
+   "to": "com.mojang.renderpearl.backend.vulkan.checkpoints.AmdCheckpointExtension",
+   "shared": 6,
+   "of": 7,
+   "ratio": 0.86
+  },
+  {
+   "from": "net.minecraft.world.level.levelgen.DensityFunctions$HolderHolder",
+   "to": "net.minecraft.world.level.levelgen.densityfunction.DensityFunctions$HolderHolder",
+   "shared": 6,
+   "of": 12,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.client.particle.SoulParticle",
+   "to": "net.minecraft.client.particle.EmissiveRisingParticle",
+   "shared": 6,
+   "of": 6,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.FrameBufferCache$CacheKey",
+   "to": "com.mojang.renderpearl.backend.opengl.FrameBufferCache$CacheKey",
+   "shared": 5,
+   "of": 6,
+   "ratio": 0.83
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlDebugLabel$Core",
+   "to": "com.mojang.renderpearl.backend.opengl.GlDebugLabel$Core",
+   "shared": 5,
+   "of": 10,
+   "ratio": 0.5
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlTransientMemory$Fallback$GlAllocation",
+   "to": "com.mojang.renderpearl.backend.opengl.GlTransientMemory$Fallback$GlAllocation",
+   "shared": 5,
+   "of": 8,
+   "ratio": 0.63
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.Uniform$Sampler",
+   "to": "com.mojang.renderpearl.backend.opengl.Uniform$Sampler",
+   "shared": 5,
+   "of": 8,
+   "ratio": 0.63
+  },
+  {
+   "from": "com.mojang.blaze3d.systems.RenderPassDescriptor$Attachment",
+   "to": "com.mojang.renderpearl.api.commands.RenderPassDescriptor$Attachment",
+   "shared": 5,
+   "of": 8,
+   "ratio": 0.63
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.DestructionQueue",
+   "to": "com.mojang.renderpearl.backend.vulkan.DestructionQueue",
+   "shared": 5,
+   "of": 7,
+   "ratio": 0.71
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.VulkanTransientMemory$TransientGpuBuffer",
+   "to": "com.mojang.renderpearl.backend.vulkan.VulkanTransientMemory$TransientGpuBuffer",
+   "shared": 5,
+   "of": 10,
+   "ratio": 0.5
+  },
+  {
+   "from": "net.minecraft.util.datafix.fixes.JigsawRotationFix",
+   "to": "net.minecraft.util.datafix.fixes.LegacyJigsawRotationFix",
+   "shared": 5,
+   "of": 5,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlBackend",
+   "to": "com.mojang.renderpearl.backend.opengl.GlBackend",
+   "shared": 4,
+   "of": 7,
+   "ratio": 0.57
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlFence",
+   "to": "com.mojang.renderpearl.backend.opengl.GlFence",
+   "shared": 4,
+   "of": 6,
+   "ratio": 0.67
+  },
+  {
+   "from": "com.mojang.blaze3d.systems.GpuSurfaceBackend",
+   "to": "com.mojang.renderpearl.backend.api.GpuSurfaceBackend",
+   "shared": 4,
+   "of": 7,
+   "ratio": 0.57
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.VulkanCommandEncoder$1",
+   "to": "com.mojang.renderpearl.backend.vulkan.VulkanCommandEncoder$1",
+   "shared": 4,
+   "of": 6,
+   "ratio": 0.67
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.checkpoints.NoopCheckpointExtension",
+   "to": "com.mojang.renderpearl.backend.vulkan.checkpoints.NoopCheckpointExtension",
+   "shared": 4,
+   "of": 6,
+   "ratio": 0.67
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.checkpoints.NvidiaCheckpointExtension",
+   "to": "com.mojang.renderpearl.backend.vulkan.checkpoints.NvidiaCheckpointExtension",
+   "shared": 4,
+   "of": 5,
+   "ratio": 0.8
+  },
+  {
+   "from": "net.minecraft.client.ClientClockManager$ClockInstance",
+   "to": "net.minecraft.client.ClientClockManager$ClientClockInstance",
+   "shared": 4,
+   "of": 4,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.EnderMan$EndermanFreezeWhenLookedAt",
+   "to": "net.minecraft.world.entity.monster.Enderman$EndermanFreezeWhenLookedAt",
+   "shared": 4,
+   "of": 6,
+   "ratio": 0.67
+  },
+  {
+   "from": "net.minecraft.world.level.block.RedStoneWireBlock$1",
+   "to": "net.minecraft.world.level.block.RedstoneWireBlock$1",
+   "shared": 4,
+   "of": 4,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlStateManager$DepthState",
+   "to": "com.mojang.renderpearl.backend.opengl.GlStateManager$DepthState",
+   "shared": 3,
+   "of": 4,
+   "ratio": 0.75
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlStateManager$PolygonOffsetState",
+   "to": "com.mojang.renderpearl.backend.opengl.GlStateManager$PolygonOffsetState",
+   "shared": 3,
+   "of": 4,
+   "ratio": 0.75
+  },
+  {
+   "from": "com.mojang.blaze3d.systems.GpuQueryPool",
+   "to": "com.mojang.renderpearl.api.commands.GpuQueryPool",
+   "shared": 3,
+   "of": 4,
+   "ratio": 0.75
+  },
+  {
+   "from": "com.mojang.blaze3d.util.TransientBlockAllocator$Allocator$1",
+   "to": "com.mojang.renderpearl.backend.util.TransientBlockAllocator$Allocator$1",
+   "shared": 3,
+   "of": 5,
+   "ratio": 0.6
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.DestructionQueue$Destroyer",
+   "to": "com.mojang.renderpearl.backend.vulkan.DestructionQueue$Destroyer",
+   "shared": 3,
+   "of": 3,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.VulkanGpuBuffer",
+   "to": "com.mojang.renderpearl.backend.vulkan.VulkanGpuBuffer",
+   "shared": 3,
+   "of": 3,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.checkpoints.NoopCheckpointExtension$NoopCheckpointStorage",
+   "to": "com.mojang.renderpearl.backend.vulkan.checkpoints.NoopCheckpointExtension$NoopCheckpointStorage",
+   "shared": 3,
+   "of": 5,
+   "ratio": 0.6
+  },
+  {
+   "from": "net.minecraft.util.datafix.fixes.BlockRenameFix$1",
+   "to": "net.minecraft.util.datafix.fixes.LegacyBlockRenameFix$1",
+   "shared": 3,
+   "of": 3,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.world.entity.monster.EnderMan$EndermanLeaveBlockGoal",
+   "to": "net.minecraft.world.entity.monster.Enderman$EndermanLeaveBlockGoal",
+   "shared": 3,
+   "of": 5,
+   "ratio": 0.6
+  },
+  {
+   "from": "com.mojang.blaze3d.buffers.GpuFence",
+   "to": "com.mojang.renderpearl.api.commands.GpuFence",
+   "shared": 2,
+   "of": 2,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlStateManager$ColorLogicState",
+   "to": "com.mojang.renderpearl.backend.opengl.GlStateManager$ColorLogicState",
+   "shared": 2,
+   "of": 3,
+   "ratio": 0.67
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlStateManager$TextureState",
+   "to": "com.mojang.renderpearl.backend.opengl.GlStateManager$TextureState",
+   "shared": 2,
+   "of": 2,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlUtil",
+   "to": "com.mojang.renderpearl.backend.opengl.GlUtil",
+   "shared": 2,
+   "of": 2,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.systems.GpuQuery",
+   "to": "com.mojang.renderpearl.api.commands.GpuQuery",
+   "shared": 2,
+   "of": 2,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.systems.SurfaceException",
+   "to": "com.mojang.renderpearl.api.device.SurfaceException",
+   "shared": 2,
+   "of": 2,
+   "ratio": 1
+  },
+  {
+   "from": "net.minecraft.client.resources.sounds.UnderwaterAmbientSoundInstances$SubSound",
+   "to": "net.minecraft.client.resources.sounds.UnderLiquidAmbientSoundInstance",
+   "shared": 2,
+   "of": 3,
+   "ratio": 0.67
+  },
+  {
+   "from": "net.minecraft.world.level.storage.loot.predicates.LootItemConditions",
+   "to": "net.minecraft.world.level.storage.loot.predicates.LootItemConditionTypes",
+   "shared": 2,
+   "of": 2,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.GpuDeviceLossException",
+   "to": "com.mojang.renderpearl.api.device.GpuDeviceLossException",
+   "shared": 1,
+   "of": 1,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.GpuOutOfMemoryException",
+   "to": "com.mojang.renderpearl.api.device.GpuOutOfMemoryException",
+   "shared": 1,
+   "of": 1,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlDebugLabel$Empty",
+   "to": "com.mojang.renderpearl.backend.opengl.GlDebugLabel$Empty",
+   "shared": 1,
+   "of": 1,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlProgram$1",
+   "to": "com.mojang.renderpearl.backend.opengl.GlProgram$1",
+   "shared": 1,
+   "of": 2,
+   "ratio": 0.5
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlSampler$1",
+   "to": "com.mojang.renderpearl.backend.opengl.GlSampler$1",
+   "shared": 1,
+   "of": 2,
+   "ratio": 0.5
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlStateManager$CullState",
+   "to": "com.mojang.renderpearl.backend.opengl.GlStateManager$CullState",
+   "shared": 1,
+   "of": 2,
+   "ratio": 0.5
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlStateManager$ScissorState",
+   "to": "com.mojang.renderpearl.backend.opengl.GlStateManager$ScissorState",
+   "shared": 1,
+   "of": 2,
+   "ratio": 0.5
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.Uniform",
+   "to": "com.mojang.renderpearl.backend.opengl.Uniform",
+   "shared": 1,
+   "of": 1,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.Destroyable",
+   "to": "com.mojang.renderpearl.backend.vulkan.Destroyable",
+   "shared": 1,
+   "of": 1,
+   "ratio": 1
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.VulkanRenderPass$1",
+   "to": "com.mojang.renderpearl.backend.vulkan.VulkanRenderPass$1",
+   "shared": 1,
+   "of": 2,
+   "ratio": 0.5
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.checkpoints.CheckpointExtension$CheckpointStorage",
+   "to": "com.mojang.renderpearl.backend.vulkan.checkpoints.CheckpointExtension$CheckpointStorage",
+   "shared": 1,
+   "of": 2,
+   "ratio": 0.5
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.glsl.ShaderCompileException",
+   "to": "com.mojang.renderpearl.util.ShaderCompileException",
+   "shared": 1,
+   "of": 1,
+   "ratio": 1
+  }
+ ],
+ "weak": [
+  {
+   "from": "com.mojang.blaze3d.GpuFormat$ComponentType",
+   "to": "com.mojang.renderpearl.api.GpuFormat$ComponentType",
+   "shared": 4,
+   "of": 24,
+   "ratio": 0.17
+  },
+  {
+   "from": "com.mojang.blaze3d.GpuFormat",
+   "to": "com.mojang.renderpearl.api.GpuFormat",
+   "shared": 8,
+   "of": 71,
+   "ratio": 0.11
+  },
+  {
+   "from": "com.mojang.blaze3d.IndexType",
+   "to": "com.mojang.renderpearl.api.pipeline.IndexType",
+   "shared": 3,
+   "of": 10,
+   "ratio": 0.3
+  },
+  {
+   "from": "com.mojang.blaze3d.PrimitiveTopology",
+   "to": "com.mojang.renderpearl.api.pipeline.PrimitiveTopology",
+   "shared": 6,
+   "of": 18,
+   "ratio": 0.33
+  },
+  {
+   "from": "com.mojang.blaze3d.buffers.GpuBuffer$Usage",
+   "to": "com.mojang.renderpearl.api.buffers.GpuBuffer$Usage",
+   "shared": 0,
+   "of": 0,
+   "ratio": 0
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.BufferStorage$Immutable",
+   "to": "com.mojang.renderpearl.backend.opengl.BufferStorage$Immutable",
+   "shared": 1,
+   "of": 3,
+   "ratio": 0.33
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.BufferStorage$Mutable",
+   "to": "com.mojang.renderpearl.backend.opengl.BufferStorage$Mutable",
+   "shared": 1,
+   "of": 3,
+   "ratio": 0.33
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.BufferStorage",
+   "to": "com.mojang.renderpearl.backend.opengl.BufferStorage",
+   "shared": 1,
+   "of": 4,
+   "ratio": 0.25
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.FrameBufferAttachment",
+   "to": "com.mojang.renderpearl.backend.opengl.FrameBufferAttachment",
+   "shared": 2,
+   "of": 4,
+   "ratio": 0.5
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.FrameBufferCache",
+   "to": "com.mojang.renderpearl.backend.opengl.FrameBufferCache",
+   "shared": 2,
+   "of": 6,
+   "ratio": 0.33
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlBuffer$Direct$1",
+   "to": "com.mojang.renderpearl.backend.opengl.GlBuffer$Direct$1",
+   "shared": 2,
+   "of": 4,
+   "ratio": 0.5
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlCommandEncoder",
+   "to": "com.mojang.renderpearl.backend.opengl.GlCommandEncoder",
+   "shared": 16,
+   "of": 47,
+   "ratio": 0.34
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlConst$1",
+   "to": "com.mojang.renderpearl.backend.opengl.GlConst$1",
+   "shared": 1,
+   "of": 10,
+   "ratio": 0.1
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlDebugLabel$Ext",
+   "to": "com.mojang.renderpearl.backend.opengl.GlDebugLabel$Ext",
+   "shared": 2,
+   "of": 7,
+   "ratio": 0.29
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlDevice",
+   "to": "com.mojang.renderpearl.backend.opengl.GlDevice",
+   "shared": 16,
+   "of": 56,
+   "ratio": 0.29
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlRenderPass",
+   "to": "com.mojang.renderpearl.backend.opengl.GlRenderPass",
+   "shared": 19,
+   "of": 43,
+   "ratio": 0.44
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlRenderPipeline",
+   "to": "com.mojang.renderpearl.backend.opengl.GlRenderPipeline",
+   "shared": 0,
+   "of": 9,
+   "ratio": 0
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlShaderModule",
+   "to": "com.mojang.renderpearl.backend.opengl.GlShaderModule",
+   "shared": 5,
+   "of": 11,
+   "ratio": 0.45
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlTransientMemory$Fallback",
+   "to": "com.mojang.renderpearl.backend.opengl.GlTransientMemory$Fallback",
+   "shared": 6,
+   "of": 16,
+   "ratio": 0.38
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlTransientMemory$PersistentMapping",
+   "to": "com.mojang.renderpearl.backend.opengl.GlTransientMemory$PersistentMapping",
+   "shared": 11,
+   "of": 27,
+   "ratio": 0.41
+  },
+  {
+   "from": "com.mojang.blaze3d.opengl.GlTransientMemory$TransientGpuBuffer",
+   "to": "com.mojang.renderpearl.backend.opengl.GlTransientMemory$TransientGpuBuffer",
+   "shared": 4,
+   "of": 9,
+   "ratio": 0.44
+  },
+  {
+   "from": "com.mojang.blaze3d.pipeline.BindGroupLayout$Builder",
+   "to": "com.mojang.renderpearl.api.pipeline.BindGroupLayout$Builder",
+   "shared": 2,
+   "of": 7,
+   "ratio": 0.29
+  },
+  {
+   "from": "com.mojang.blaze3d.pipeline.BindGroupLayout$UniformDescription",
+   "to": "com.mojang.renderpearl.api.pipeline.BindGroupLayout$UniformDescription",
+   "shared": 5,
+   "of": 12,
+   "ratio": 0.42
+  },
+  {
+   "from": "com.mojang.blaze3d.pipeline.BindGroupLayout",
+   "to": "com.mojang.renderpearl.api.pipeline.BindGroupLayout",
+   "shared": 3,
+   "of": 9,
+   "ratio": 0.33
+  },
+  {
+   "from": "com.mojang.blaze3d.pipeline.BlendEquation",
+   "to": "com.mojang.renderpearl.api.pipeline.BlendEquation",
+   "shared": 3,
+   "of": 10,
+   "ratio": 0.3
+  },
+  {
+   "from": "com.mojang.blaze3d.pipeline.BlendFunction",
+   "to": "com.mojang.renderpearl.api.pipeline.BlendFunction",
+   "shared": 4,
+   "of": 22,
+   "ratio": 0.18
+  },
+  {
+   "from": "com.mojang.blaze3d.pipeline.ColorTargetState$WriteMask",
+   "to": "com.mojang.renderpearl.api.pipeline.ColorTargetState$WriteMask",
+   "shared": 0,
+   "of": 0,
+   "ratio": 0
+  },
+  {
+   "from": "com.mojang.blaze3d.pipeline.CompiledRenderPipeline",
+   "to": "com.mojang.renderpearl.api.pipeline.CompiledRenderPipeline",
+   "shared": 0,
+   "of": 1,
+   "ratio": 0
+  },
+  {
+   "from": "com.mojang.blaze3d.pipeline.RenderPipeline$Builder",
+   "to": "com.mojang.renderpearl.api.pipeline.RenderPipeline$Builder",
+   "shared": 11,
+   "of": 37,
+   "ratio": 0.3
+  },
+  {
+   "from": "com.mojang.blaze3d.pipeline.RenderPipeline",
+   "to": "com.mojang.renderpearl.api.pipeline.RenderPipeline",
+   "shared": 14,
+   "of": 32,
+   "ratio": 0.44
+  },
+  {
+   "from": "com.mojang.blaze3d.platform.BlendFactor",
+   "to": "com.mojang.renderpearl.api.pipeline.BlendFactor",
+   "shared": 2,
+   "of": 21,
+   "ratio": 0.1
+  },
+  {
+   "from": "com.mojang.blaze3d.platform.BlendOp",
+   "to": "com.mojang.renderpearl.api.pipeline.BlendOp",
+   "shared": 2,
+   "of": 11,
+   "ratio": 0.18
+  },
+  {
+   "from": "com.mojang.blaze3d.platform.CompareOp",
+   "to": "com.mojang.renderpearl.api.pipeline.CompareOp",
+   "shared": 2,
+   "of": 14,
+   "ratio": 0.14
+  },
+  {
+   "from": "com.mojang.blaze3d.platform.PolygonMode",
+   "to": "com.mojang.renderpearl.api.pipeline.PolygonMode",
+   "shared": 2,
+   "of": 8,
+   "ratio": 0.25
+  },
+  {
+   "from": "com.mojang.blaze3d.shaders.ShaderSource",
+   "to": "com.mojang.renderpearl.api.pipeline.ShaderSource",
+   "shared": 0,
+   "of": 1,
+   "ratio": 0
+  },
+  {
+   "from": "com.mojang.blaze3d.shaders.ShaderType",
+   "to": "com.mojang.renderpearl.api.pipeline.ShaderType",
+   "shared": 6,
+   "of": 14,
+   "ratio": 0.43
+  },
+  {
+   "from": "com.mojang.blaze3d.shaders.UniformType",
+   "to": "com.mojang.renderpearl.api.pipeline.UniformType",
+   "shared": 2,
+   "of": 8,
+   "ratio": 0.25
+  },
+  {
+   "from": "com.mojang.blaze3d.systems.BackendCreationException$Reason",
+   "to": "com.mojang.renderpearl.api.device.BackendCreationException$Reason",
+   "shared": 4,
+   "of": 18,
+   "ratio": 0.22
+  },
+  {
+   "from": "com.mojang.blaze3d.systems.BackendCreationException",
+   "to": "com.mojang.renderpearl.api.device.BackendCreationException",
+   "shared": 2,
+   "of": 6,
+   "ratio": 0.33
+  },
+  {
+   "from": "com.mojang.blaze3d.systems.CommandEncoder",
+   "to": "com.mojang.renderpearl.api.commands.CommandEncoder",
+   "shared": 1,
+   "of": 35,
+   "ratio": 0.03
+  },
+  {
+   "from": "com.mojang.blaze3d.systems.CommandEncoderBackend",
+   "to": "com.mojang.renderpearl.backend.api.CommandEncoderBackend",
+   "shared": 2,
+   "of": 17,
+   "ratio": 0.12
+  },
+  {
+   "from": "com.mojang.blaze3d.systems.DeviceType",
+   "to": "com.mojang.renderpearl.api.device.DeviceType",
+   "shared": 2,
+   "of": 11,
+   "ratio": 0.18
+  },
+  {
+   "from": "com.mojang.blaze3d.systems.GpuBackend",
+   "to": "com.mojang.renderpearl.api.device.GpuBackend",
+   "shared": 1,
+   "of": 4,
+   "ratio": 0.25
+  },
+  {
+   "from": "com.mojang.blaze3d.systems.GpuDevice",
+   "to": "com.mojang.renderpearl.api.device.GpuDevice",
+   "shared": 3,
+   "of": 25,
+   "ratio": 0.12
+  },
+  {
+   "from": "com.mojang.blaze3d.systems.GpuDeviceBackend",
+   "to": "com.mojang.renderpearl.backend.api.GpuDeviceBackend",
+   "shared": 3,
+   "of": 17,
+   "ratio": 0.18
+  },
+  {
+   "from": "com.mojang.blaze3d.systems.GpuSurface$PresentMode",
+   "to": "com.mojang.renderpearl.api.device.GpuSurface$PresentMode",
+   "shared": 2,
+   "of": 13,
+   "ratio": 0.15
+  },
+  {
+   "from": "com.mojang.blaze3d.systems.GpuSurface",
+   "to": "com.mojang.renderpearl.api.device.GpuSurface",
+   "shared": 6,
+   "of": 14,
+   "ratio": 0.43
+  },
+  {
+   "from": "com.mojang.blaze3d.systems.RenderPass$UniformUploader",
+   "to": "com.mojang.renderpearl.api.commands.RenderPass$UniformUploader",
+   "shared": 0,
+   "of": 1,
+   "ratio": 0
+  },
+  {
+   "from": "com.mojang.blaze3d.systems.RenderPass",
+   "to": "com.mojang.renderpearl.api.commands.RenderPass",
+   "shared": 11,
+   "of": 32,
+   "ratio": 0.34
+  },
+  {
+   "from": "com.mojang.blaze3d.systems.RenderPassDescriptor",
+   "to": "com.mojang.renderpearl.api.commands.RenderPassDescriptor",
+   "shared": 4,
+   "of": 15,
+   "ratio": 0.27
+  },
+  {
+   "from": "com.mojang.blaze3d.systems.TransientMemory",
+   "to": "com.mojang.renderpearl.api.buffers.TransientMemory",
+   "shared": 4,
+   "of": 18,
+   "ratio": 0.22
+  },
+  {
+   "from": "com.mojang.blaze3d.textures.AddressMode",
+   "to": "com.mojang.renderpearl.api.textures.AddressMode",
+   "shared": 2,
+   "of": 8,
+   "ratio": 0.25
+  },
+  {
+   "from": "com.mojang.blaze3d.textures.FilterMode",
+   "to": "com.mojang.renderpearl.api.textures.FilterMode",
+   "shared": 2,
+   "of": 8,
+   "ratio": 0.25
+  },
+  {
+   "from": "com.mojang.blaze3d.textures.GpuSampler",
+   "to": "com.mojang.renderpearl.api.textures.GpuSampler",
+   "shared": 2,
+   "of": 8,
+   "ratio": 0.25
+  },
+  {
+   "from": "com.mojang.blaze3d.textures.GpuTexture$Usage",
+   "to": "com.mojang.renderpearl.api.textures.GpuTexture$Usage",
+   "shared": 0,
+   "of": 0,
+   "ratio": 0
+  },
+  {
+   "from": "com.mojang.blaze3d.textures.GpuTextureView",
+   "to": "com.mojang.renderpearl.api.textures.GpuTextureView",
+   "shared": 5,
+   "of": 11,
+   "ratio": 0.45
+  },
+  {
+   "from": "com.mojang.blaze3d.util.TransientBlockAllocator$Allocator",
+   "to": "com.mojang.renderpearl.backend.util.TransientBlockAllocator$Allocator",
+   "shared": 0,
+   "of": 3,
+   "ratio": 0
+  },
+  {
+   "from": "com.mojang.blaze3d.vertex.VertexFormat$Builder",
+   "to": "com.mojang.renderpearl.api.vertex.VertexFormat$Builder",
+   "shared": 5,
+   "of": 11,
+   "ratio": 0.45
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.VulkanBackend",
+   "to": "com.mojang.renderpearl.backend.vulkan.VulkanBackend",
+   "shared": 9,
+   "of": 28,
+   "ratio": 0.32
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.VulkanCommandEncoder",
+   "to": "com.mojang.renderpearl.backend.vulkan.VulkanCommandEncoder",
+   "shared": 21,
+   "of": 49,
+   "ratio": 0.43
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.VulkanConst$1",
+   "to": "com.mojang.renderpearl.backend.vulkan.VulkanConst$1",
+   "shared": 1,
+   "of": 10,
+   "ratio": 0.1
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.VulkanConst",
+   "to": "com.mojang.renderpearl.backend.vulkan.VulkanConst",
+   "shared": 2,
+   "of": 14,
+   "ratio": 0.14
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.VulkanDevice",
+   "to": "com.mojang.renderpearl.backend.vulkan.VulkanDevice",
+   "shared": 11,
+   "of": 51,
+   "ratio": 0.22
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.VulkanGpuBuffer$Direct$1",
+   "to": "com.mojang.renderpearl.backend.vulkan.VulkanGpuBuffer$Direct$1",
+   "shared": 2,
+   "of": 4,
+   "ratio": 0.5
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.VulkanGpuSampler",
+   "to": "com.mojang.renderpearl.backend.vulkan.VulkanGpuSampler",
+   "shared": 9,
+   "of": 19,
+   "ratio": 0.47
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.VulkanRenderPipeline",
+   "to": "com.mojang.renderpearl.backend.vulkan.VulkanRenderPipeline",
+   "shared": 7,
+   "of": 28,
+   "ratio": 0.25
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.VulkanTransientMemory",
+   "to": "com.mojang.renderpearl.backend.vulkan.VulkanTransientMemory",
+   "shared": 20,
+   "of": 42,
+   "ratio": 0.48
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.checkpoints.AmdCheckpointExtension$AmdCheckpointStorage",
+   "to": "com.mojang.renderpearl.backend.vulkan.checkpoints.AmdCheckpointExtension$AmdCheckpointStorage",
+   "shared": 3,
+   "of": 7,
+   "ratio": 0.43
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.checkpoints.CheckpointExtension$CheckpointType",
+   "to": "com.mojang.renderpearl.backend.vulkan.checkpoints.CheckpointExtension$CheckpointType",
+   "shared": 2,
+   "of": 8,
+   "ratio": 0.25
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.checkpoints.CheckpointExtension",
+   "to": "com.mojang.renderpearl.backend.vulkan.checkpoints.CheckpointExtension",
+   "shared": 1,
+   "of": 3,
+   "ratio": 0.33
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.checkpoints.NvidiaCheckpointExtension$NvidiaCheckpointStorage",
+   "to": "com.mojang.renderpearl.backend.vulkan.checkpoints.NvidiaCheckpointExtension$NvidiaCheckpointStorage",
+   "shared": 1,
+   "of": 3,
+   "ratio": 0.33
+  },
+  {
+   "from": "com.mojang.blaze3d.vulkan.glsl.GlslCompiler",
+   "to": "com.mojang.renderpearl.frontend.shaders.GlslCompiler",
+   "shared": 1,
+   "of": 13,
+   "ratio": 0.08
+  },
+  {
+   "from": "net.minecraft.core.RegistryCodecs",
+   "to": "net.minecraft.core.registries.codec.RegistryCodecs",
+   "shared": 1,
+   "of": 5,
+   "ratio": 0.2
+  },
+  {
+   "from": "net.minecraft.resources.HolderSetCodec",
+   "to": "net.minecraft.core.registries.codec.HolderSetCodec",
+   "shared": 9,
+   "of": 22,
+   "ratio": 0.41
+  },
+  {
+   "from": "net.minecraft.server.commands.ItemCommands",
+   "to": "net.minecraft.server.commands.item.ItemCommands",
+   "shared": 12,
+   "of": 51,
+   "ratio": 0.24
+  },
+  {
+   "from": "net.minecraft.world.level.levelgen.DensityFunction",
+   "to": "net.minecraft.world.level.levelgen.densityfunction.DensityFunction",
+   "shared": 2,
+   "of": 19,
+   "ratio": 0.11
+  },
+  {
+   "from": "net.minecraft.world.level.levelgen.DensityFunctions",
+   "to": "net.minecraft.world.level.levelgen.densityfunction.DensityFunctions",
+   "shared": 5,
+   "of": 50,
+   "ratio": 0.1
+  }
+ ]
+}
