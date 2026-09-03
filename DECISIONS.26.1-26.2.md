@@ -147,3 +147,16 @@ Generated from the retargeted jars under the registration-aware checker.
     fix: needs a new anchor — a decision, not a rewrite
 ✗ MixinStorageIoWorker: @At target "PriorityConsecutiveExecutor.<init>" is gone from the target version
     fix: needs a new anchor — a decision, not a rewrite
+
+## ambient-environment — the silent one, investigated to the runtime boundary
+Static analysis exonerates everything it can see, in order:
+- its one mixin injects `AmbientEnvironmentCommon.init()` at `Minecraft.<init>` TAIL — ctor signature identical in 26.1 and 26.2
+- its technique swaps `BiomeColors.GRASS/WATER_COLOR_RESOLVER` statics via an accessor mixin — both fields exist in 26.2
+- the vanilla consumer chain is byte-identical across versions: BlockTintSources$2-9 → BiomeColors.getAverage* → ClientLevel tintCaches, resolver statics read in exactly the same two classes
+- every link resolves, every mixin target resolves, 0 verify errors
+
+A swapped resolver would work in 26.2 exactly as in 26.1 — yet the noise never appears. The remaining
+suspects live only at runtime: whether the injection actually applies (its refmap is unreadable, and a
+missed inject with require=0 is silent), or whether init() throws and something swallows it. The probe:
+launch porttest with `-Dmixin.debug.verbose=true` and read whether MixinMinecraft and
+BiomeColorsAccessor apply. One launch settles it.
