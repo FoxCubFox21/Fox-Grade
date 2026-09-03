@@ -350,7 +350,19 @@ function callAI(prompt) {
     try { return JSON.parse(r.stdout).response || ''; } catch { return ''; }
   }
   const r = spawnSync('claude', ['-p', prompt], { encoding: 'utf8', maxBuffer: 64e6, timeout: 900000 });
-  return r.stdout || '';
+  const out = r.stdout || '';
+  // An exhausted usage window returns EMPTY, not an error — and a batch that keeps going turns every
+  // remaining mod into four instant no-code attempts that read like the model failing at porting.
+  // 106 such lines in one overnight run. The source porter learned this lesson years of bugs ago
+  // (FATAL abort on billing errors); this is the same rule: three consecutive empties is not three
+  // hard classes, it is a dead model — stop loudly so the batch can resume when the window does.
+  callAI.empties = out.trim() ? 0 : (callAI.empties || 0) + 1;
+  if (callAI.empties >= 3) {
+    say('\n  ✗ FATAL: 3 consecutive empty model replies — the usage window is exhausted, not the ideas.');
+    say('    Nothing after this point would be a real attempt. Aborting so the run can resume later.');
+    process.exit(3);
+  }
+  return out;
 }
 // Check the model's factual claims against the jars.
 //
