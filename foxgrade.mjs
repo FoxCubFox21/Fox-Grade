@@ -195,6 +195,37 @@ if (toPort.length) {
 
 // ── 5. install, keeping every original ───────────────────────────────────────────────────────
 const installs = [...plan.filter((p) => p.official), ...results.filter((r) => r.state === 'ported')];
+
+// A mod whose library is missing stops Minecraft at a wall of red text before anything loads, and
+// that is the tool's failure to finish the job, not the person's to debug. Anything an installed
+// mod declares as a dependency is fetched for the target version if it is not already present.
+const present = new Set();
+for (const f of fs.readdirSync(PROFILE.mods)) {
+  if (!f.endsWith('.jar')) continue;
+  try { for (const e of readZip(fs.readFileSync(path.join(PROFILE.mods, f)))) if (e.name === 'fabric.mod.json') present.add(JSON.parse(inflateEntry(e).toString('utf8')).id); } catch { /* skip */ }
+}
+const SKIP_DEPS = new Set(['minecraft', 'java', 'fabricloader', 'fabric', 'fabric-api', 'fabric-language-kotlin']);
+const missingDeps = new Set();
+for (const m of installs) {
+  // Read from the jar we are INSTALLING (a ported build, or the current file for an official
+  // update whose replacement is not downloaded yet) and do it before the install step moves
+  // anything: reading m.full after the rename silently found nothing.
+  const src = m.official ? m.full : m.jar;
+  try {
+    for (const e of readZip(fs.readFileSync(src))) {
+      if (e.name !== 'fabric.mod.json') continue;
+      for (const d of Object.keys(JSON.parse(inflateEntry(e).toString('utf8')).depends || {}))
+        if (!SKIP_DEPS.has(d) && !present.has(d)) missingDeps.add(d);
+    }
+  } catch { /* skip */ }
+}
+const fetchedDeps = [];
+if (missingDeps.size && !DRY) {
+  for (const id of missingDeps) {
+    const r = spawnSync('node', [path.join(HERE, 'fetch-deps-by-id.mjs'), id, '--to', TARGET, '--out', PROFILE.mods], { encoding: 'utf8', timeout: 120000 });
+    if ((r.stdout || '').includes('OK ')) fetchedDeps.push(id);
+  }
+}
 say('');
 if (DRY) { say(c.dim('  (dry run — nothing was changed)')); }
 else if (installs.length) {
@@ -218,6 +249,7 @@ if (failed.length) {
   say(`   ${c.y(`${failed.length} left alone`)}, still in your mods folder as they were:`);
   for (const f of failed) say(`      ${f.name} — ${f.why}. ${/rendering/.test(f.why) ? 'Wait for its author to update it.' : 'Check its page for a newer build.'}`);
 }
+if (fetchedDeps.length) say(`   ${c.g(`${fetchedDeps.length} library mod(s)`)} downloaded because the updated mods need them`);
 if (installs.length && !DRY) {
   say('');
   say(`  Your original files are safe in ${c.dim(BACKUP.replace(os.homedir(), '~'))} — delete that folder when you are happy.`);

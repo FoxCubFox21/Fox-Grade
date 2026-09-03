@@ -12,6 +12,7 @@
 //   node jar-remap.mjs mod.jar --from 1.16.5 --to 26.2 --classpath "<target jars>"   # report only
 //   node jar-remap.mjs mod.jar --from 1.16.5 --to 26.2 --classpath ... --out new.jar
 import fs from 'node:fs';
+import { loadRules } from './rules-load.mjs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
@@ -83,7 +84,7 @@ for (const u of units) for (const e of classesOf(u)) {
 }
 
 // ── rules ────────────────────────────────────────────────────────────────────────────────────
-const data = JSON.parse(fs.readFileSync(path.join(HERE, 'rules.json'), 'utf8'));
+const data = loadRules(HERE);
 // Intermediary tables are generated per install rather than shipped (they are a join over Mojang's
 // own mappings). Fold in any that have been built — released Fabric mods are unportable without one.
 for (const f of fs.readdirSync(HERE).filter((x) => /^intermediary\.[\d.]+\.json$/.test(x))) {

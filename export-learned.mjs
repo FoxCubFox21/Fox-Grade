@@ -8,6 +8,7 @@
 //   node export-learned.mjs --to 26.2 --out my-rules.json
 //   (then open a pull request; CI re-verifies before anything is merged)
 import fs from 'node:fs';
+import { loadRules } from './rules-load.mjs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -27,7 +28,7 @@ const PROVEN = {
 };
 const REFUSED = ['wild', 'structural-matcher', 'inference'];
 
-const rules = JSON.parse(fs.readFileSync(path.join(HERE, 'rules.json'), 'utf8'));
+const rules = loadRules(HERE);
 const out = { schema: 1, target: args.to || '26.2', generated: 'local-export', entries: [] };
 let refused = 0, dupes = 0;
 const seen = new Set();

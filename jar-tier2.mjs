@@ -21,6 +21,7 @@ import path from 'node:path';
 import { spawnSync, spawn } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { readZip, inflateEntry, writeZip } from './zipfile.mjs';
+import { loadRules } from './rules-load.mjs';
 import { ClassFile } from './classfile.mjs';
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
@@ -244,7 +245,7 @@ if (VINEFLOWER) {
 }
 
 // ── 2. advisories + real signatures, so the model is told facts rather than asked to recall them ──
-const rules = JSON.parse(fs.readFileSync(path.join(HERE, 'rules.json'), 'utf8'));
+const rules = loadRules(HERE);
 const advisories = new Map();
 for (const a of (rules[TO]?.advisories || [])) if (a && typeof a === 'object' && a.when) advisories.set(a.when, a);
 // Relocations are the precise kind of fact worth handing a model: the member still exists, it just

@@ -6,3 +6,4 @@ mappings-*.txt
 *-mappings.txt
 client.txt
 server.txt
+rules.json

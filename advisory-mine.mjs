@@ -17,6 +17,7 @@
 //
 //   node advisory-mine.mjs --pairs pairs.json --to 26.2 --classpath "<target jars>"
 import fs from 'node:fs';
+import { loadRules } from './rules-load.mjs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
@@ -40,7 +41,7 @@ for (const j of cp.split(':')) {
 }
 if (!real.size) { console.error('need --classpath'); process.exit(2); }
 
-const data = JSON.parse(fs.readFileSync(path.join(HERE, 'rules.json'), 'utf8'));
+const data = loadRules(HERE);
 // Anything already renameable is not an advisory — say it once, in the strongest form available.
 const renameable = new Set();
 for (const [k, v] of Object.entries(data)) {

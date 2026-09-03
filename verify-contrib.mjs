@@ -8,6 +8,7 @@
 //
 //   node verify-contrib.mjs their-rules.json --classpath "<target jars>" --target 26.2
 import fs from 'node:fs';
+import { loadRules } from './rules-load.mjs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
@@ -23,7 +24,7 @@ if (!cp) { console.error('need --classpath to verify against the real jars'); pr
 
 const real = indexJars(cp, spawnSync, fs);
 if (!real) { console.error('no classes found on that classpath — nothing could be verified'); process.exit(2); }
-const data = JSON.parse(fs.readFileSync(path.join(HERE, 'rules.json'), 'utf8'));
+const data = loadRules(HERE);
 const sub = JSON.parse(fs.readFileSync(file, 'utf8'));
 const jarVersion = args.target || sub.target || '26.2';
 const entries = (sub.entries || []).map((e) => ({ ...e, block: e.block || sub.target || '26.2', file }));
