@@ -1,7 +1,7 @@
 {
  "schema": 1,
- "from": null,
- "to": null,
+ "from": "26.2",
+ "to": "26.3p",
  "source": "jar-diff: unique descriptor match within one class",
  "renames": [
   {
@@ -836,10 +836,14 @@
    "from": "loadGlfw",
    "to": "loadSdl",
    "shared": 4,
-   "why": "13 members in the new class share this descriptor",
+   "why": "14 members in the new class share this descriptor",
    "alternatives": [
     {
      "name": "loadSdl",
+     "run": 4
+    },
+    {
+     "name": "loadSPNG",
      "run": 4
     }
    ]
@@ -851,10 +855,14 @@
    "from": "loadTinyFD",
    "to": "loadSdl",
    "shared": 4,
-   "why": "13 members in the new class share this descriptor",
+   "why": "14 members in the new class share this descriptor",
    "alternatives": [
     {
      "name": "loadSdl",
+     "run": 4
+    },
+    {
+     "name": "loadSPNG",
      "run": 4
     }
    ]
@@ -934,7 +942,7 @@
    "from": "toggleFullScreen",
    "to": "updateFullscreenState",
    "shared": 11,
-   "why": "10 members in the new class share this descriptor",
+   "why": "11 members in the new class share this descriptor",
    "alternatives": [
     {
      "name": "updateFullscreenState",
@@ -949,7 +957,7 @@
      "run": 2
     },
     {
-     "name": "onDisplayModeChanged",
+     "name": "show",
      "run": 1
     }
    ]
@@ -961,7 +969,7 @@
    "from": "isSoftScreen",
    "to": "isWindowFullscreen",
    "shared": 6,
-   "why": "13 members in the new class share this descriptor",
+   "why": "11 members in the new class share this descriptor",
    "alternatives": [
     {
      "name": "isWindowFullscreen",
@@ -1007,7 +1015,7 @@
    "from": "openTrialAvailablePopup",
    "to": "openPdpIfNoRealms",
    "shared": 4,
-   "why": "18 members in the new class share this descriptor",
+   "why": "19 members in the new class share this descriptor",
    "alternatives": [
     {
      "name": "openPdpIfNoRealms",
@@ -1265,7 +1273,7 @@
    "from": "clearPostEffect",
    "to": "toggleSpectatorPostEffect",
    "shared": 11,
-   "why": "15 members in the new class share this descriptor",
+   "why": "14 members in the new class share this descriptor",
    "alternatives": [
     {
      "name": "toggleSpectatorPostEffect",
@@ -1276,12 +1284,12 @@
      "run": 10
     },
     {
-     "name": "preparePostEffects",
+     "name": "applyPostEffects",
      "run": 10
     },
     {
-     "name": "applyPostEffects",
-     "run": 10
+     "name": "renderLevel",
+     "run": 2
     }
    ]
   },
@@ -1290,14 +1298,10 @@
    "kind": "method",
    "desc": "()V",
    "from": "togglePostEffect",
-   "to": "preparePostEffects",
-   "shared": 11,
-   "why": "15 members in the new class share this descriptor",
+   "to": "clearSpectatedEntityPostEffect",
+   "shared": 10,
+   "why": "14 members in the new class share this descriptor",
    "alternatives": [
-    {
-     "name": "preparePostEffects",
-     "run": 11
-    },
     {
      "name": "clearSpectatedEntityPostEffect",
      "run": 10
@@ -1309,6 +1313,10 @@
     {
      "name": "applyPostEffects",
      "run": 10
+    },
+    {
+     "name": "renderLevel",
+     "run": 2
     }
    ]
   },
@@ -1374,141 +1382,6 @@
    ]
   },
   {
-   "owner": "net/minecraft/client/renderer/LevelRenderer",
-   "kind": "method",
-   "desc": "()Lcom/mojang/blaze3d/pipeline/RenderTarget;",
-   "from": "translucentTarget",
-   "to": "terrainDepthTarget",
-   "shared": 6,
-   "why": "5 members in the new class share this descriptor",
-   "alternatives": [
-    {
-     "name": "terrainDepthTarget",
-     "run": 6
-    },
-    {
-     "name": "depthBoundsTarget",
-     "run": 6
-    },
-    {
-     "name": "depthBoundsCopyTarget",
-     "run": 6
-    },
-    {
-     "name": "accumulateTarget",
-     "run": 6
-    }
-   ]
-  },
-  {
-   "owner": "net/minecraft/client/renderer/LevelRenderer",
-   "kind": "method",
-   "desc": "()Lcom/mojang/blaze3d/pipeline/RenderTarget;",
-   "from": "itemEntityTarget",
-   "to": "depthBoundsCopyTarget",
-   "shared": 7,
-   "why": "5 members in the new class share this descriptor",
-   "alternatives": [
-    {
-     "name": "depthBoundsCopyTarget",
-     "run": 7
-    },
-    {
-     "name": "terrainDepthTarget",
-     "run": 6
-    },
-    {
-     "name": "depthBoundsTarget",
-     "run": 6
-    },
-    {
-     "name": "accumulateTarget",
-     "run": 6
-    }
-   ]
-  },
-  {
-   "owner": "net/minecraft/client/renderer/LevelRenderer",
-   "kind": "method",
-   "desc": "()Lcom/mojang/blaze3d/pipeline/RenderTarget;",
-   "from": "particlesTarget",
-   "to": "depthBoundsTarget",
-   "shared": 7,
-   "why": "5 members in the new class share this descriptor",
-   "alternatives": [
-    {
-     "name": "depthBoundsTarget",
-     "run": 7
-    },
-    {
-     "name": "terrainDepthTarget",
-     "run": 6
-    },
-    {
-     "name": "depthBoundsCopyTarget",
-     "run": 6
-    },
-    {
-     "name": "accumulateTarget",
-     "run": 6
-    }
-   ]
-  },
-  {
-   "owner": "net/minecraft/client/renderer/LevelRenderer",
-   "kind": "method",
-   "desc": "()Lcom/mojang/blaze3d/pipeline/RenderTarget;",
-   "from": "weatherTarget",
-   "to": "terrainDepthTarget",
-   "shared": 6,
-   "why": "5 members in the new class share this descriptor",
-   "alternatives": [
-    {
-     "name": "terrainDepthTarget",
-     "run": 6
-    },
-    {
-     "name": "depthBoundsTarget",
-     "run": 6
-    },
-    {
-     "name": "depthBoundsCopyTarget",
-     "run": 6
-    },
-    {
-     "name": "accumulateTarget",
-     "run": 6
-    }
-   ]
-  },
-  {
-   "owner": "net/minecraft/client/renderer/LevelRenderer",
-   "kind": "method",
-   "desc": "()Lcom/mojang/blaze3d/pipeline/RenderTarget;",
-   "from": "cloudsTarget",
-   "to": "depthBoundsTarget",
-   "shared": 8,
-   "why": "5 members in the new class share this descriptor",
-   "alternatives": [
-    {
-     "name": "depthBoundsTarget",
-     "run": 8
-    },
-    {
-     "name": "terrainDepthTarget",
-     "run": 6
-    },
-    {
-     "name": "depthBoundsCopyTarget",
-     "run": 6
-    },
-    {
-     "name": "accumulateTarget",
-     "run": 6
-    }
-   ]
-  },
-  {
    "owner": "net/minecraft/client/renderer/LevelTargetBundle",
    "kind": "field",
    "desc": "Lcom/mojang/blaze3d/resource/ResourceHandle;",
@@ -1526,7 +1399,7 @@
      "run": 2
     },
     {
-     "name": "depthBoundsCopy",
+     "name": "depthBoundsCulled",
      "run": 2
     },
     {
@@ -1703,52 +1576,6 @@
    "alternatives": [
     {
      "name": "prepareSubmit",
-     "run": 7
-    }
-   ]
-  },
-  {
-   "owner": "net/minecraft/client/renderer/rendertype/OutputTarget",
-   "kind": "field",
-   "desc": "Lnet/minecraft/client/renderer/rendertype/OutputTarget;",
-   "from": "WEATHER_TARGET",
-   "to": "TERRAIN_DEPTH_TARGET",
-   "shared": 7,
-   "why": "5 members in the new class share this descriptor",
-   "alternatives": [
-    {
-     "name": "TERRAIN_DEPTH_TARGET",
-     "run": 7
-    },
-    {
-     "name": "DEPTH_BOUNDS_TARGET",
-     "run": 7
-    },
-    {
-     "name": "ACCUMULATE_TARGET",
-     "run": 7
-    }
-   ]
-  },
-  {
-   "owner": "net/minecraft/client/renderer/rendertype/OutputTarget",
-   "kind": "field",
-   "desc": "Lnet/minecraft/client/renderer/rendertype/OutputTarget;",
-   "from": "ITEM_ENTITY_TARGET",
-   "to": "TERRAIN_DEPTH_TARGET",
-   "shared": 7,
-   "why": "5 members in the new class share this descriptor",
-   "alternatives": [
-    {
-     "name": "TERRAIN_DEPTH_TARGET",
-     "run": 7
-    },
-    {
-     "name": "DEPTH_BOUNDS_TARGET",
-     "run": 7
-    },
-    {
-     "name": "ACCUMULATE_TARGET",
      "run": 7
     }
    ]
@@ -2213,11 +2040,15 @@
    "from": "DEBUG_CARVERS",
    "to": "DEBUG_CALCULATE_SOLID",
    "shared": 8,
-   "why": "85 members in the new class share this descriptor",
+   "why": "86 members in the new class share this descriptor",
    "alternatives": [
     {
      "name": "DEBUG_CALCULATE_SOLID",
      "run": 8
+    },
+    {
+     "name": "DEBUG_ENABLE_FARLANDS",
+     "run": 6
     },
     {
      "name": "IS_RENDERDOC_ATTACHED",
@@ -2232,10 +2063,14 @@
    "from": "DEBUG_PREFER_WAYLAND",
    "to": "DEBUG_CALCULATE_SOLID",
    "shared": 6,
-   "why": "85 members in the new class share this descriptor",
+   "why": "86 members in the new class share this descriptor",
    "alternatives": [
     {
      "name": "DEBUG_CALCULATE_SOLID",
+     "run": 6
+    },
+    {
+     "name": "DEBUG_ENABLE_FARLANDS",
      "run": 6
     },
     {
@@ -2473,25 +2308,52 @@
    "owner": "net/minecraft/core/registries/BuiltInRegistries",
    "kind": "field",
    "desc": "Lnet/minecraft/core/Registry;",
+   "from": "LOOT_NUMBER_PROVIDER_TYPE",
+   "to": "CONTEXT_FLOAT_PROVIDER_TYPE",
+   "shared": 14,
+   "why": "85 members in the new class share this descriptor",
+   "alternatives": [
+    {
+     "name": "CONTEXT_FLOAT_PROVIDER_TYPE",
+     "run": 14
+    },
+    {
+     "name": "CONTEXT_INT_PROVIDER_TYPE",
+     "run": 14
+    },
+    {
+     "name": "BLOCK_STATE_PROVIDER_TYPE",
+     "run": 14
+    },
+    {
+     "name": "CARVER_TYPE",
+     "run": 7
+    }
+   ]
+  },
+  {
+   "owner": "net/minecraft/core/registries/BuiltInRegistries",
+   "kind": "field",
+   "desc": "Lnet/minecraft/core/Registry;",
    "from": "CARVER",
    "to": "CARVER_TYPE",
    "shared": 6,
-   "why": "84 members in the new class share this descriptor",
+   "why": "85 members in the new class share this descriptor",
    "alternatives": [
     {
      "name": "CARVER_TYPE",
      "run": 6
     },
     {
+     "name": "CONTEXT_FLOAT_PROVIDER_TYPE",
+     "run": 2
+    },
+    {
+     "name": "CONTEXT_INT_PROVIDER_TYPE",
+     "run": 2
+    },
+    {
      "name": "BLOCK_STATE_PROVIDER_TYPE",
-     "run": 2
-    },
-    {
-     "name": "MATERIAL_CONDITION_TYPE",
-     "run": 2
-    },
-    {
-     "name": "MATERIAL_RULE_TYPE",
      "run": 2
     }
    ]
@@ -2503,11 +2365,15 @@
    "from": "FEATURE",
    "to": "FEATURE_TYPE",
    "shared": 7,
-   "why": "84 members in the new class share this descriptor",
+   "why": "85 members in the new class share this descriptor",
    "alternatives": [
     {
      "name": "FEATURE_TYPE",
      "run": 7
+    },
+    {
+     "name": "CONTEXT_FLOAT_PROVIDER_TYPE",
+     "run": 2
     },
     {
      "name": "BLOCK_STATE_PROVIDER_TYPE",
@@ -2515,10 +2381,6 @@
     },
     {
      "name": "MATERIAL_CONDITION_TYPE",
-     "run": 2
-    },
-    {
-     "name": "MATERIAL_RULE_TYPE",
      "run": 2
     }
    ]
@@ -2530,23 +2392,23 @@
    "from": "BLOCKSTATE_PROVIDER_TYPE",
    "to": "BLOCK_STATE_PROVIDER_TYPE",
    "shared": 19,
-   "why": "84 members in the new class share this descriptor",
+   "why": "85 members in the new class share this descriptor",
    "alternatives": [
     {
      "name": "BLOCK_STATE_PROVIDER_TYPE",
      "run": 19
     },
     {
+     "name": "CONTEXT_FLOAT_PROVIDER_TYPE",
+     "run": 14
+    },
+    {
+     "name": "CONTEXT_INT_PROVIDER_TYPE",
+     "run": 14
+    },
+    {
      "name": "CARVER_TYPE",
      "run": 7
-    },
-    {
-     "name": "FEATURE_TYPE",
-     "run": 5
-    },
-    {
-     "name": "MATERIAL_CONDITION_TYPE",
-     "run": 5
     }
    ]
   },
@@ -2557,7 +2419,7 @@
    "from": "MATERIAL_CONDITION",
    "to": "MATERIAL_CONDITION_TYPE",
    "shared": 18,
-   "why": "84 members in the new class share this descriptor",
+   "why": "85 members in the new class share this descriptor",
    "alternatives": [
     {
      "name": "MATERIAL_CONDITION_TYPE",
@@ -2568,12 +2430,12 @@
      "run": 9
     },
     {
-     "name": "BLOCK_STATE_PROVIDER_TYPE",
+     "name": "CONTEXT_FLOAT_PROVIDER_TYPE",
      "run": 3
     },
     {
-     "name": "CARVER_TYPE",
-     "run": 2
+     "name": "CONTEXT_INT_PROVIDER_TYPE",
+     "run": 3
     }
    ]
   },
@@ -2584,7 +2446,7 @@
    "from": "MATERIAL_RULE",
    "to": "MATERIAL_RULE_TYPE",
    "shared": 13,
-   "why": "84 members in the new class share this descriptor",
+   "why": "85 members in the new class share this descriptor",
    "alternatives": [
     {
      "name": "MATERIAL_RULE_TYPE",
@@ -2599,7 +2461,7 @@
      "run": 3
     },
     {
-     "name": "CARVER_TYPE",
+     "name": "CONTEXT_FLOAT_PROVIDER_TYPE",
      "run": 2
     }
    ]
@@ -2611,22 +2473,22 @@
    "from": "BLOCK_TYPE",
    "to": "BLOCK_STATE_PROVIDER_TYPE",
    "shared": 6,
-   "why": "84 members in the new class share this descriptor",
+   "why": "85 members in the new class share this descriptor",
    "alternatives": [
     {
      "name": "BLOCK_STATE_PROVIDER_TYPE",
      "run": 6
     },
     {
+     "name": "CONTEXT_FLOAT_PROVIDER_TYPE",
+     "run": 5
+    },
+    {
+     "name": "CONTEXT_INT_PROVIDER_TYPE",
+     "run": 5
+    },
+    {
      "name": "CARVER_TYPE",
-     "run": 5
-    },
-    {
-     "name": "FEATURE_TYPE",
-     "run": 5
-    },
-    {
-     "name": "MATERIAL_CONDITION_TYPE",
      "run": 5
     }
    ]
@@ -2638,11 +2500,15 @@
    "from": "BLOCK_TYPE",
    "to": "BLOCK_TRANSFORMER",
    "shared": 7,
-   "why": "152 members in the new class share this descriptor",
+   "why": "155 members in the new class share this descriptor",
    "alternatives": [
     {
      "name": "BLOCK_TRANSFORMER",
      "run": 7
+    },
+    {
+     "name": "BLOCK_STATE_PROVIDER",
+     "run": 6
     },
     {
      "name": "CARVER_TYPE",
@@ -2651,10 +2517,33 @@
     {
      "name": "FEATURE_TYPE",
      "run": 5
+    }
+   ]
+  },
+  {
+   "owner": "net/minecraft/core/registries/Registries",
+   "kind": "field",
+   "desc": "Lnet/minecraft/resources/ResourceKey;",
+   "from": "LOOT_NUMBER_PROVIDER_TYPE",
+   "to": "CONTEXT_FLOAT_PROVIDER_TYPE",
+   "shared": 14,
+   "why": "155 members in the new class share this descriptor",
+   "alternatives": [
+    {
+     "name": "CONTEXT_FLOAT_PROVIDER_TYPE",
+     "run": 14
     },
     {
-     "name": "MATERIAL_CONDITION_TYPE",
-     "run": 5
+     "name": "CONTEXT_INT_PROVIDER_TYPE",
+     "run": 14
+    },
+    {
+     "name": "BLOCK_STATE_PROVIDER",
+     "run": 9
+    },
+    {
+     "name": "CONTEXT_FLOAT_PROVIDER",
+     "run": 9
     }
    ]
   },
@@ -2665,7 +2554,7 @@
    "from": "CONFIGURED_CARVER",
    "to": "CARVER_TYPE",
    "shared": 6,
-   "why": "152 members in the new class share this descriptor",
+   "why": "155 members in the new class share this descriptor",
    "alternatives": [
     {
      "name": "CARVER_TYPE",
@@ -2676,12 +2565,12 @@
      "run": 3
     },
     {
-     "name": "MATERIAL_CONDITION_TYPE",
+     "name": "CONTEXT_FLOAT_PROVIDER_TYPE",
      "run": 3
     },
     {
-     "name": "MATERIAL_RULE_TYPE",
-     "run": 2
+     "name": "CONTEXT_INT_PROVIDER_TYPE",
+     "run": 3
     }
    ]
   },
@@ -2692,23 +2581,23 @@
    "from": "CONFIGURED_FEATURE",
    "to": "FEATURE_TYPE",
    "shared": 7,
-   "why": "152 members in the new class share this descriptor",
+   "why": "155 members in the new class share this descriptor",
    "alternatives": [
     {
      "name": "FEATURE_TYPE",
      "run": 7
     },
     {
-     "name": "MATERIAL_CONDITION_TYPE",
+     "name": "CONTEXT_FLOAT_PROVIDER_TYPE",
      "run": 3
     },
     {
-     "name": "MATERIAL_RULE_TYPE",
-     "run": 2
+     "name": "CONTEXT_INT_PROVIDER_TYPE",
+     "run": 3
     },
     {
-     "name": "SLOT_SOURCE",
-     "run": 2
+     "name": "MATERIAL_CONDITION_TYPE",
+     "run": 3
     }
    ]
   },
@@ -3210,6 +3099,33 @@
    ]
   },
   {
+   "owner": "net/minecraft/server/network/ServerGamePacketListenerImpl",
+   "kind": "field",
+   "desc": "I",
+   "from": "MAX_COMMAND_SUGGESTIONS",
+   "to": "MAX_DISTANCE_TO_VALID_POSITION",
+   "shared": 4,
+   "why": "20 members in the new class share this descriptor",
+   "alternatives": [
+    {
+     "name": "MAX_DISTANCE_TO_VALID_POSITION",
+     "run": 4
+    },
+    {
+     "name": "INVALID_POSITION_CORRECTION_MAX_INTERVAL_TICKS",
+     "run": 4
+    },
+    {
+     "name": "vehiclePositionLastResetAt",
+     "run": 4
+    },
+    {
+     "name": "MIN_SUPPORTED_BLOCKS_RESEND_TICKS",
+     "run": 3
+    }
+   ]
+  },
+  {
    "owner": "net/minecraft/tags/BlockTags",
    "kind": "field",
    "desc": "Lnet/minecraft/tags/TagKey;",
@@ -3297,11 +3213,15 @@
    "from": "BREWING_FUEL",
    "to": "BREWING_POTION_INPUTS",
    "shared": 8,
-   "why": "218 members in the new class share this descriptor",
+   "why": "219 members in the new class share this descriptor",
    "alternatives": [
     {
      "name": "BREWING_POTION_INPUTS",
      "run": 8
+    },
+    {
+     "name": "FURNACE_FUEL_BOTTOM_TAKEABLE",
+     "run": 5
     },
     {
      "name": "CONCRETE_STAIRS",
@@ -3309,10 +3229,6 @@
     },
     {
      "name": "CONCRETE_SLABS",
-     "run": 2
-    },
-    {
-     "name": "DOUSES_CAMPFIRES",
      "run": 2
     }
    ]
@@ -4320,25 +4236,6 @@
    ]
   },
   {
-   "owner": "net/minecraft/world/level/storage/loot/providers/number/NumberProviders",
-   "kind": "field",
-   "desc": "Lcom/mojang/serialization/Codec;",
-   "from": "TYPED_CODEC",
-   "to": "DIRECT_CODEC",
-   "shared": 6,
-   "why": "3 members in the new class share this descriptor",
-   "alternatives": [
-    {
-     "name": "DIRECT_CODEC",
-     "run": 6
-    },
-    {
-     "name": "LIST_CODEC",
-     "run": 6
-    }
-   ]
-  },
-  {
    "owner": "net/minecraft/world/timeline/Timelines",
    "kind": "field",
    "desc": "I",
@@ -4887,13 +4784,6 @@
   {
    "owner": "com/mojang/blaze3d/platform/MacosUtil",
    "kind": "field",
-   "name": "IS_MACOS",
-   "desc": "Z",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "com/mojang/blaze3d/platform/MacosUtil",
-   "kind": "field",
    "name": "NS_RESIZABLE_WINDOW_MASK",
    "desc": "I",
    "why": "nothing arrived with this descriptor"
@@ -5095,6 +4985,76 @@
    "why": "nothing arrived with this descriptor"
   },
   {
+   "owner": "com/mojang/blaze3d/platform/NativeImage$Format",
+   "kind": "field",
+   "name": "supportedByStb",
+   "desc": "Z",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/NativeImage$Format",
+   "kind": "method",
+   "name": "<init>",
+   "desc": "(Ljava/lang/String;IIZZZZZIIIIIZ)V",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/NativeImage$Format",
+   "kind": "method",
+   "name": "supportedByStb",
+   "desc": "()Z",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/NativeImage$Format",
+   "kind": "method",
+   "name": "getStbFormat",
+   "desc": "(I)Lcom/mojang/blaze3d/platform/NativeImage$Format;",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/NativeImage$WriteCallback",
+   "kind": "method",
+   "name": "invoke",
+   "desc": "(JJI)V",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/NativeImage",
+   "kind": "field",
+   "name": "useStbFree",
+   "desc": "Z",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/NativeImage",
+   "kind": "method",
+   "name": "<init>",
+   "desc": "(Lcom/mojang/blaze3d/platform/NativeImage$Format;IIZJ)V",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/NativeImage",
+   "kind": "method",
+   "name": "read",
+   "desc": "(Lcom/mojang/blaze3d/platform/NativeImage$Format;Ljava/io/InputStream;)Lcom/mojang/blaze3d/platform/NativeImage;",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/NativeImage",
+   "kind": "method",
+   "name": "read",
+   "desc": "(Lcom/mojang/blaze3d/platform/NativeImage$Format;Ljava/nio/ByteBuffer;)Lcom/mojang/blaze3d/platform/NativeImage;",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/NativeImage",
+   "kind": "method",
+   "name": "writeToChannel",
+   "desc": "(Ljava/nio/channels/WritableByteChannel;)Z",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
    "owner": "com/mojang/blaze3d/platform/TextInputManager",
    "kind": "field",
    "name": "imeRequested",
@@ -5274,14 +5234,14 @@
    "kind": "method",
    "name": "setBootErrorCallback",
    "desc": "()V",
-   "why": "10 members in the new class share this descriptor"
+   "why": "11 members in the new class share this descriptor"
   },
   {
    "owner": "com/mojang/blaze3d/platform/Window",
    "kind": "method",
    "name": "setDefaultErrorCallback",
    "desc": "()V",
-   "why": "10 members in the new class share this descriptor"
+   "why": "11 members in the new class share this descriptor"
   },
   {
    "owner": "com/mojang/blaze3d/platform/Window",
@@ -5323,7 +5283,7 @@
    "kind": "method",
    "name": "isMinimized",
    "desc": "()Z",
-   "why": "13 members in the new class share this descriptor"
+   "why": "11 members in the new class share this descriptor"
   },
   {
    "owner": "com/mojang/blaze3d/platform/Window",
@@ -5351,7 +5311,7 @@
    "kind": "method",
    "name": "updateRawMouseInput",
    "desc": "(Z)V",
-   "why": "7 members in the new class share this descriptor"
+   "why": "6 members in the new class share this descriptor"
   },
   {
    "owner": "com/mojang/blaze3d/platform/Window",
@@ -6475,6 +6435,13 @@
   },
   {
    "owner": "net/minecraft/client/MouseHandler",
+   "kind": "field",
+   "name": "fakeRightMouse",
+   "desc": "I",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/client/MouseHandler",
    "kind": "method",
    "name": "simulateRightClick",
    "desc": "(Lnet/minecraft/client/input/MouseButtonInfo;Z)Lnet/minecraft/client/input/MouseButtonInfo;",
@@ -6562,7 +6529,7 @@
    "kind": "field",
    "name": "rawMouseInput",
    "desc": "Lnet/minecraft/client/OptionInstance;",
-   "why": "95 members in the new class share this descriptor"
+   "why": "96 members in the new class share this descriptor"
   },
   {
    "owner": "net/minecraft/client/Options",
@@ -6576,7 +6543,7 @@
    "kind": "method",
    "name": "rawMouseInput",
    "desc": "()Lnet/minecraft/client/OptionInstance;",
-   "why": "95 members in the new class share this descriptor"
+   "why": "96 members in the new class share this descriptor"
   },
   {
    "owner": "net/minecraft/client/Options",
@@ -6617,13 +6584,6 @@
    "owner": "net/minecraft/client/Options",
    "kind": "method",
    "name": "lambda$new$89",
-   "desc": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Integer;)Lnet/minecraft/network/chat/Component;",
-   "why": "compiler-generated"
-  },
-  {
-   "owner": "net/minecraft/client/Options",
-   "kind": "method",
-   "name": "lambda$new$84",
    "desc": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Integer;)Lnet/minecraft/network/chat/Component;",
    "why": "compiler-generated"
   },
@@ -6749,21 +6709,7 @@
   {
    "owner": "net/minecraft/client/Options",
    "kind": "method",
-   "name": "lambda$new$80",
-   "desc": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Boolean;)Lnet/minecraft/network/chat/Component;",
-   "why": "compiler-generated"
-  },
-  {
-   "owner": "net/minecraft/client/Options",
-   "kind": "method",
    "name": "lambda$new$79",
-   "desc": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Boolean;)Lnet/minecraft/network/chat/Component;",
-   "why": "compiler-generated"
-  },
-  {
-   "owner": "net/minecraft/client/Options",
-   "kind": "method",
-   "name": "lambda$new$76",
    "desc": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Boolean;)Lnet/minecraft/network/chat/Component;",
    "why": "compiler-generated"
   },
@@ -6779,62 +6725,6 @@
    "kind": "method",
    "name": "lambda$new$85",
    "desc": "(Ljava/lang/Double;)Ljava/lang/Integer;",
-   "why": "compiler-generated"
-  },
-  {
-   "owner": "net/minecraft/client/Options",
-   "kind": "method",
-   "name": "lambda$new$78",
-   "desc": "(Ljava/lang/Boolean;)Lnet/minecraft/client/gui/components/Tooltip;",
-   "why": "compiler-generated"
-  },
-  {
-   "owner": "net/minecraft/client/Options",
-   "kind": "method",
-   "name": "lambda$new$74",
-   "desc": "(Ljava/lang/Boolean;)Lnet/minecraft/client/gui/components/Tooltip;",
-   "why": "compiler-generated"
-  },
-  {
-   "owner": "net/minecraft/client/Options",
-   "kind": "method",
-   "name": "lambda$new$77",
-   "desc": "(Ljava/lang/Boolean;)V",
-   "why": "compiler-generated"
-  },
-  {
-   "owner": "net/minecraft/client/Options",
-   "kind": "method",
-   "name": "lambda$new$75",
-   "desc": "(Ljava/lang/Boolean;)V",
-   "why": "compiler-generated"
-  },
-  {
-   "owner": "net/minecraft/client/Options",
-   "kind": "method",
-   "name": "lambda$new$73",
-   "desc": "(Lnet/minecraft/sounds/SoundSource;)Lnet/minecraft/client/OptionInstance;",
-   "why": "compiler-generated"
-  },
-  {
-   "owner": "net/minecraft/client/Options",
-   "kind": "method",
-   "name": "lambda$new$72",
-   "desc": "(Lnet/minecraft/client/PresenceSharing;)V",
-   "why": "compiler-generated"
-  },
-  {
-   "owner": "net/minecraft/client/Options",
-   "kind": "method",
-   "name": "lambda$new$71",
-   "desc": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/PresenceSharing;)Lnet/minecraft/network/chat/Component;",
-   "why": "compiler-generated"
-  },
-  {
-   "owner": "net/minecraft/client/Options",
-   "kind": "method",
-   "name": "lambda$new$70",
-   "desc": "(Lnet/minecraft/client/PresenceSharing;)Lnet/minecraft/client/gui/components/Tooltip;",
    "why": "compiler-generated"
   },
   {
@@ -7673,6 +7563,13 @@
   {
    "owner": "net/minecraft/client/gui/screens/Screen",
    "kind": "method",
+   "name": "fillCrashDetails",
+   "desc": "(Lnet/minecraft/CrashReport;)V",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/Screen",
+   "kind": "method",
    "name": "scheduleNarration",
    "desc": "(JZ)V",
    "why": "nothing arrived with this descriptor"
@@ -7689,6 +7586,13 @@
    "kind": "method",
    "name": "updateNarratorStatus",
    "desc": "(Z)V",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/Screen",
+   "kind": "method",
+   "name": "lambda$fillCrashDetails$0",
+   "desc": "()Ljava/lang/String;",
    "why": "nothing arrived with this descriptor"
   },
   {
@@ -7801,6 +7705,20 @@
    "kind": "method",
    "name": "onUpdateAdvancementProgress",
    "desc": "(Lnet/minecraft/advancements/AdvancementNode;Lnet/minecraft/advancements/AdvancementProgress;)V",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/debug/DebugOptionsScreen$CategoryEntry",
+   "kind": "field",
+   "name": "category",
+   "desc": "Lnet/minecraft/network/chat/Component;",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/debug/DebugOptionsScreen$CategoryEntry",
+   "kind": "field",
+   "name": "this$0",
+   "desc": "Lnet/minecraft/client/gui/screens/debug/DebugOptionsScreen;",
    "why": "nothing arrived with this descriptor"
   },
   {
@@ -8030,8 +7948,15 @@
   {
    "owner": "net/minecraft/client/gui/screens/options/VideoSettingsScreen",
    "kind": "method",
-   "name": "displayOptions",
-   "desc": "(Lnet/minecraft/client/Options;)[Lnet/minecraft/client/OptionInstance;",
+   "name": "lambda$addOptions$1",
+   "desc": "(Lcom/mojang/blaze3d/platform/Monitor;Lcom/mojang/blaze3d/platform/Window;Ljava/lang/Integer;)V",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/options/VideoSettingsScreen",
+   "kind": "method",
+   "name": "lambda$addOptions$0",
+   "desc": "(Lcom/mojang/blaze3d/platform/Monitor;Lnet/minecraft/network/chat/Component;Ljava/lang/Integer;)Lnet/minecraft/network/chat/Component;",
    "why": "nothing arrived with this descriptor"
   },
   {
@@ -8252,6 +8177,20 @@
    "why": "nothing arrived with this descriptor"
   },
   {
+   "owner": "net/minecraft/client/gui/screens/worldselection/AbstractGameRulesScreen$CategoryRuleEntry",
+   "kind": "field",
+   "name": "label",
+   "desc": "Lnet/minecraft/network/chat/Component;",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/worldselection/AbstractGameRulesScreen$CategoryRuleEntry",
+   "kind": "field",
+   "name": "this$0",
+   "desc": "Lnet/minecraft/client/gui/screens/worldselection/AbstractGameRulesScreen;",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
    "owner": "net/minecraft/client/input/InputWithModifiers",
    "kind": "field",
    "name": "NOT_DIGIT",
@@ -8302,6 +8241,13 @@
   },
   {
    "owner": "net/minecraft/client/model/monster/piglin/ZombifiedPiglinModel",
+   "kind": "method",
+   "name": "setupAnim",
+   "desc": "(Ljava/lang/Object;)V",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/client/model/monster/zombie/DrownedModel",
    "kind": "method",
    "name": "setupAnim",
    "desc": "(Ljava/lang/Object;)V",
@@ -8863,6 +8809,13 @@
   {
    "owner": "net/minecraft/client/renderer/GameRenderer",
    "kind": "method",
+   "name": "preloadUiShader",
+   "desc": "(Lnet/minecraft/server/packs/resources/ResourceProvider;)V",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/GameRenderer",
+   "kind": "method",
    "name": "renderItemInHand",
    "desc": "(Lnet/minecraft/client/renderer/state/level/CameraRenderState;FLorg/joml/Matrix4fc;)V",
    "why": "nothing arrived with this descriptor"
@@ -9005,6 +8958,48 @@
    "kind": "method",
    "name": "isSectionCompiledAndVisible",
    "desc": "(Lnet/minecraft/core/BlockPos;)Z",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/LevelRenderer",
+   "kind": "method",
+   "name": "entityOutlineTarget",
+   "desc": "()Lcom/mojang/blaze3d/pipeline/RenderTarget;",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/LevelRenderer",
+   "kind": "method",
+   "name": "translucentTarget",
+   "desc": "()Lcom/mojang/blaze3d/pipeline/RenderTarget;",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/LevelRenderer",
+   "kind": "method",
+   "name": "itemEntityTarget",
+   "desc": "()Lcom/mojang/blaze3d/pipeline/RenderTarget;",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/LevelRenderer",
+   "kind": "method",
+   "name": "particlesTarget",
+   "desc": "()Lcom/mojang/blaze3d/pipeline/RenderTarget;",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/LevelRenderer",
+   "kind": "method",
+   "name": "weatherTarget",
+   "desc": "()Lcom/mojang/blaze3d/pipeline/RenderTarget;",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/LevelRenderer",
+   "kind": "method",
+   "name": "cloudsTarget",
+   "desc": "()Lcom/mojang/blaze3d/pipeline/RenderTarget;",
    "why": "nothing arrived with this descriptor"
   },
   {
@@ -10275,6 +10270,13 @@
    "why": "nothing arrived with this descriptor"
   },
   {
+   "owner": "net/minecraft/client/renderer/ShaderManager$Configs",
+   "kind": "method",
+   "name": "<init>",
+   "desc": "(Ljava/util/Map;Ljava/util/Map;)V",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
    "owner": "net/minecraft/client/renderer/ShaderManager$ShaderSourceKey",
    "kind": "field",
    "name": "type",
@@ -10322,6 +10324,13 @@
    "name": "createPreprocessor",
    "desc": "(Ljava/util/Map;Lnet/minecraft/resources/Identifier;)Lcom/mojang/blaze3d/preprocessor/GlslPreprocessor;",
    "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/ShaderManager",
+   "kind": "method",
+   "name": "isShader",
+   "desc": "(Lnet/minecraft/resources/Identifier;)Z",
+   "why": "no candidate at all"
   },
   {
    "owner": "net/minecraft/client/renderer/ShaderManager",
@@ -14066,7 +14075,7 @@
    "kind": "field",
    "name": "DECORATED_POT_PATTERN",
    "desc": "Lnet/minecraft/core/Registry;",
-   "why": "84 members in the new class share this descriptor"
+   "why": "85 members in the new class share this descriptor"
   },
   {
    "owner": "net/minecraft/core/registries/BuiltInRegistries",
@@ -14437,6 +14446,27 @@
    "kind": "method",
    "name": "lambda$run$2",
    "desc": "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/AssertionError;",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/data/info/DatapackStructureReport",
+   "kind": "field",
+   "name": "PSEUDO_REGISTRY",
+   "desc": "Lnet/minecraft/data/info/DatapackStructureReport$Entry;",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/data/info/DatapackStructureReport",
+   "kind": "field",
+   "name": "MANUAL_ENTRIES",
+   "desc": "Ljava/util/Map;",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/data/info/DatapackStructureReport",
+   "kind": "method",
+   "name": "lambda$listRegistries$3",
+   "desc": "(Ljava/util/Map;Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/data/info/DatapackStructureReport$Entry;)V",
    "why": "nothing arrived with this descriptor"
   },
   {
@@ -16671,6 +16701,97 @@
    "name": "<init>",
    "desc": "()V",
    "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/nbt/NbtUtils",
+   "kind": "field",
+   "name": "INDENT",
+   "desc": "I",
+   "why": "2 members in the new class share this descriptor"
+  },
+  {
+   "owner": "net/minecraft/nbt/NbtUtils",
+   "kind": "method",
+   "name": "writeFluidState",
+   "desc": "(Lnet/minecraft/world/level/material/FluidState;)Lnet/minecraft/nbt/CompoundTag;",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/nbt/NbtUtils",
+   "kind": "method",
+   "name": "prettyPrint",
+   "desc": "(Lnet/minecraft/nbt/Tag;Z)Ljava/lang/String;",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/nbt/NbtUtils",
+   "kind": "method",
+   "name": "prettyPrint",
+   "desc": "(Ljava/lang/StringBuilder;Lnet/minecraft/nbt/Tag;IZ)Ljava/lang/StringBuilder;",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/nbt/NbtUtils",
+   "kind": "method",
+   "name": "indent",
+   "desc": "(ILjava/lang/StringBuilder;)Ljava/lang/StringBuilder;",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/nbt/NbtUtils",
+   "kind": "method",
+   "name": "packBlockState",
+   "desc": "(Lnet/minecraft/nbt/CompoundTag;)Ljava/lang/String;",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/nbt/NbtUtils",
+   "kind": "method",
+   "name": "unpackBlockState",
+   "desc": "(Ljava/lang/String;)Lnet/minecraft/nbt/CompoundTag;",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/nbt/NbtUtils",
+   "kind": "method",
+   "name": "lambda$unpackStructureTemplate$1",
+   "desc": "(Ljava/util/Map;Lnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/nbt/ListTag;",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/nbt/NbtUtils",
+   "kind": "method",
+   "name": "lambda$unpackStructureTemplate$2",
+   "desc": "(Lnet/minecraft/nbt/CompoundTag;Ljava/lang/String;)Ljava/lang/String;",
+   "why": "compiler-generated"
+  },
+  {
+   "owner": "net/minecraft/nbt/NbtUtils",
+   "kind": "method",
+   "name": "lambda$packStructureTemplate$4",
+   "desc": "(Lnet/minecraft/nbt/ListTag;Lnet/minecraft/nbt/CompoundTag;)V",
+   "why": "compiler-generated"
+  },
+  {
+   "owner": "net/minecraft/nbt/NbtUtils",
+   "kind": "method",
+   "name": "lambda$packStructureTemplate$2",
+   "desc": "(Lnet/minecraft/nbt/CompoundTag;)Ljava/util/Optional;",
+   "why": "compiler-generated"
+  },
+  {
+   "owner": "net/minecraft/nbt/NbtUtils",
+   "kind": "method",
+   "name": "lambda$packStructureTemplate$1",
+   "desc": "(Lnet/minecraft/nbt/ListTag;Lnet/minecraft/nbt/ListTag;Lnet/minecraft/nbt/ListTag;)V",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/nbt/NbtUtils",
+   "kind": "method",
+   "name": "lambda$packStructureTemplate$0",
+   "desc": "(Lnet/minecraft/nbt/Tag;)Ljava/util/stream/Stream;",
+   "why": "compiler-generated"
   },
   {
    "owner": "net/minecraft/network/Connection",
@@ -20419,13 +20540,6 @@
   },
   {
    "owner": "net/minecraft/server/network/ServerGamePacketListenerImpl",
-   "kind": "field",
-   "name": "MAX_COMMAND_SUGGESTIONS",
-   "desc": "I",
-   "why": "17 members in the new class share this descriptor"
-  },
-  {
-   "owner": "net/minecraft/server/network/ServerGamePacketListenerImpl",
    "kind": "method",
    "name": "handleAnimate",
    "desc": "(Lnet/minecraft/network/protocol/game/ServerboundSwingPacket;)V",
@@ -20611,6 +20725,27 @@
    "kind": "method",
    "name": "<clinit>",
    "desc": "()V",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/server/packs/VanillaPackResources",
+   "kind": "method",
+   "name": "asProvider",
+   "desc": "()Lnet/minecraft/server/packs/resources/ResourceProvider;",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/server/packs/VanillaPackResources",
+   "kind": "method",
+   "name": "lambda$asProvider$0",
+   "desc": "(Lnet/minecraft/resources/Identifier;)Ljava/util/Optional;",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/server/packs/VanillaPackResources",
+   "kind": "method",
+   "name": "lambda$asProvider$1",
+   "desc": "(Lnet/minecraft/server/packs/resources/IoSupplier;)Lnet/minecraft/server/packs/resources/Resource;",
    "why": "nothing arrived with this descriptor"
   },
   {
@@ -21375,6 +21510,20 @@
    "name": "CLIENT",
    "desc": "Lnet/minecraft/world/InteractionResult$SwingSource;",
    "why": "3 members in the new class share this descriptor"
+  },
+  {
+   "owner": "net/minecraft/world/attribute/AttributeType",
+   "kind": "method",
+   "name": "<init>",
+   "desc": "(Lcom/mojang/serialization/Codec;Ljava/util/Map;Lcom/mojang/serialization/Codec;Lnet/minecraft/world/attribute/LerpFunction;Lnet/minecraft/world/attribute/LerpFunction;Lnet/minecraft/world/attribute/LerpFunction;Lnet/minecraft/world/attribute/LerpFunction;Lnet/minecraft/util/ToFloatFunction;)V",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/world/attribute/AttributeType",
+   "kind": "method",
+   "name": "ofInterpolated",
+   "desc": "(Lcom/mojang/serialization/Codec;Ljava/util/Map;Lnet/minecraft/world/attribute/LerpFunction;Lnet/minecraft/world/attribute/LerpFunction;Lnet/minecraft/util/ToFloatFunction;)Lnet/minecraft/world/attribute/AttributeType;",
+   "why": "nothing arrived with this descriptor"
   },
   {
    "owner": "net/minecraft/world/attribute/BedRule",
@@ -23743,6 +23892,20 @@
    "why": "nothing arrived with this descriptor"
   },
   {
+   "owner": "net/minecraft/world/item/crafting/AbstractCookingRecipe",
+   "kind": "method",
+   "name": "cookingMapCodec",
+   "desc": "(Lnet/minecraft/world/item/crafting/AbstractCookingRecipe$Factory;I)Lcom/mojang/serialization/MapCodec;",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/world/item/crafting/AbstractCookingRecipe",
+   "kind": "method",
+   "name": "lambda$cookingMapCodec$0",
+   "desc": "(ILnet/minecraft/world/item/crafting/AbstractCookingRecipe$Factory;Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
    "owner": "net/minecraft/world/item/crafting/Ingredient",
    "kind": "method",
    "name": "lambda$display$0",
@@ -23922,6 +24085,48 @@
    "kind": "method",
    "name": "lambda$new$0",
    "desc": "(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/entity/EquipmentSlot;Lnet/minecraft/world/item/Item;)V",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/world/item/enchantment/effects/ReplaceBlock",
+   "kind": "field",
+   "name": "blockState",
+   "desc": "Lnet/minecraft/world/level/levelgen/feature/stateproviders/BlockStateProvider;",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/world/item/enchantment/effects/ReplaceBlock",
+   "kind": "method",
+   "name": "<init>",
+   "desc": "(Lnet/minecraft/core/Vec3i;Ljava/util/Optional;Lnet/minecraft/world/level/levelgen/feature/stateproviders/BlockStateProvider;Ljava/util/Optional;)V",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/world/item/enchantment/effects/ReplaceBlock",
+   "kind": "method",
+   "name": "blockState",
+   "desc": "()Lnet/minecraft/world/level/levelgen/feature/stateproviders/BlockStateProvider;",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/world/item/enchantment/effects/ReplaceDisk",
+   "kind": "field",
+   "name": "blockState",
+   "desc": "Lnet/minecraft/world/level/levelgen/feature/stateproviders/BlockStateProvider;",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/world/item/enchantment/effects/ReplaceDisk",
+   "kind": "method",
+   "name": "<init>",
+   "desc": "(Lnet/minecraft/world/item/enchantment/LevelBasedValue;Lnet/minecraft/world/item/enchantment/LevelBasedValue;Lnet/minecraft/core/Vec3i;Ljava/util/Optional;Lnet/minecraft/world/level/levelgen/feature/stateproviders/BlockStateProvider;Ljava/util/Optional;)V",
+   "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/world/item/enchantment/effects/ReplaceDisk",
+   "kind": "method",
+   "name": "blockState",
+   "desc": "()Lnet/minecraft/world/level/levelgen/feature/stateproviders/BlockStateProvider;",
    "why": "nothing arrived with this descriptor"
   },
   {
@@ -24476,6 +24681,13 @@
    "name": "hasAnyStructureAt",
    "desc": "(Lnet/minecraft/core/BlockPos;)Z",
    "why": "nothing arrived with this descriptor"
+  },
+  {
+   "owner": "net/minecraft/world/level/StructureManager",
+   "kind": "method",
+   "name": "lambda$getStructureWithPieceAt$1",
+   "desc": "(Lnet/minecraft/core/Registry;Ljava/util/function/Predicate;Lnet/minecraft/world/level/levelgen/structure/Structure;)Z",
+   "why": "compiler-generated"
   },
   {
    "owner": "net/minecraft/world/level/biome/Biome$BiomeBuilder",
@@ -32266,321 +32478,6 @@
    "kind": "method",
    "name": "codec",
    "desc": "()Lcom/mojang/serialization/MapCodec;",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperBarsBlock",
-   "kind": "field",
-   "name": "CODEC",
-   "desc": "Lcom/mojang/serialization/MapCodec;",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperBarsBlock",
-   "kind": "method",
-   "name": "codec",
-   "desc": "()Lcom/mojang/serialization/MapCodec;",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperBarsBlock",
-   "kind": "method",
-   "name": "lambda$static$0",
-   "desc": "(Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperBarsBlock",
-   "kind": "method",
-   "name": "<clinit>",
-   "desc": "()V",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperBulbBlock",
-   "kind": "field",
-   "name": "CODEC",
-   "desc": "Lcom/mojang/serialization/MapCodec;",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperBulbBlock",
-   "kind": "method",
-   "name": "codec",
-   "desc": "()Lcom/mojang/serialization/MapCodec;",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperBulbBlock",
-   "kind": "method",
-   "name": "lambda$static$0",
-   "desc": "(Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperBulbBlock",
-   "kind": "method",
-   "name": "<clinit>",
-   "desc": "()V",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperChainBlock",
-   "kind": "field",
-   "name": "CODEC",
-   "desc": "Lcom/mojang/serialization/MapCodec;",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperChainBlock",
-   "kind": "method",
-   "name": "codec",
-   "desc": "()Lcom/mojang/serialization/MapCodec;",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperChainBlock",
-   "kind": "method",
-   "name": "lambda$static$0",
-   "desc": "(Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperChainBlock",
-   "kind": "method",
-   "name": "<clinit>",
-   "desc": "()V",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperChestBlock",
-   "kind": "field",
-   "name": "CODEC",
-   "desc": "Lcom/mojang/serialization/MapCodec;",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperChestBlock",
-   "kind": "method",
-   "name": "codec",
-   "desc": "()Lcom/mojang/serialization/MapCodec;",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperChestBlock",
-   "kind": "method",
-   "name": "lambda$static$0",
-   "desc": "(Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperChestBlock",
-   "kind": "method",
-   "name": "<clinit>",
-   "desc": "()V",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperDoorBlock",
-   "kind": "field",
-   "name": "CODEC",
-   "desc": "Lcom/mojang/serialization/MapCodec;",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperDoorBlock",
-   "kind": "method",
-   "name": "codec",
-   "desc": "()Lcom/mojang/serialization/MapCodec;",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperDoorBlock",
-   "kind": "method",
-   "name": "lambda$static$0",
-   "desc": "(Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperDoorBlock",
-   "kind": "method",
-   "name": "<clinit>",
-   "desc": "()V",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperFullBlock",
-   "kind": "field",
-   "name": "CODEC",
-   "desc": "Lcom/mojang/serialization/MapCodec;",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperFullBlock",
-   "kind": "method",
-   "name": "codec",
-   "desc": "()Lcom/mojang/serialization/MapCodec;",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperFullBlock",
-   "kind": "method",
-   "name": "lambda$static$0",
-   "desc": "(Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperFullBlock",
-   "kind": "method",
-   "name": "<clinit>",
-   "desc": "()V",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperGolemStatueBlock",
-   "kind": "field",
-   "name": "CODEC",
-   "desc": "Lcom/mojang/serialization/MapCodec;",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperGolemStatueBlock",
-   "kind": "method",
-   "name": "codec",
-   "desc": "()Lcom/mojang/serialization/MapCodec;",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperGolemStatueBlock",
-   "kind": "method",
-   "name": "lambda$static$0",
-   "desc": "(Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperGolemStatueBlock",
-   "kind": "method",
-   "name": "<clinit>",
-   "desc": "()V",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperGrateBlock",
-   "kind": "field",
-   "name": "CODEC",
-   "desc": "Lcom/mojang/serialization/MapCodec;",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperGrateBlock",
-   "kind": "method",
-   "name": "codec",
-   "desc": "()Lcom/mojang/serialization/MapCodec;",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperGrateBlock",
-   "kind": "method",
-   "name": "lambda$static$0",
-   "desc": "(Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperGrateBlock",
-   "kind": "method",
-   "name": "<clinit>",
-   "desc": "()V",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperSlabBlock",
-   "kind": "field",
-   "name": "CODEC",
-   "desc": "Lcom/mojang/serialization/MapCodec;",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperSlabBlock",
-   "kind": "method",
-   "name": "codec",
-   "desc": "()Lcom/mojang/serialization/MapCodec;",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperSlabBlock",
-   "kind": "method",
-   "name": "lambda$static$0",
-   "desc": "(Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperSlabBlock",
-   "kind": "method",
-   "name": "<clinit>",
-   "desc": "()V",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperStairBlock",
-   "kind": "field",
-   "name": "CODEC",
-   "desc": "Lcom/mojang/serialization/MapCodec;",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperStairBlock",
-   "kind": "method",
-   "name": "codec",
-   "desc": "()Lcom/mojang/serialization/MapCodec;",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperStairBlock",
-   "kind": "method",
-   "name": "lambda$static$0",
-   "desc": "(Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperStairBlock",
-   "kind": "method",
-   "name": "lambda$static$1",
-   "desc": "(Lnet/minecraft/world/level/block/WeatheringCopperStairBlock;)Lnet/minecraft/world/level/block/state/BlockState;",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperStairBlock",
-   "kind": "method",
-   "name": "<clinit>",
-   "desc": "()V",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperTrapDoorBlock",
-   "kind": "field",
-   "name": "CODEC",
-   "desc": "Lcom/mojang/serialization/MapCodec;",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperTrapDoorBlock",
-   "kind": "method",
-   "name": "codec",
-   "desc": "()Lcom/mojang/serialization/MapCodec;",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperTrapDoorBlock",
-   "kind": "method",
-   "name": "lambda$static$0",
-   "desc": "(Lcom/mojang/serialization/codecs/RecordCodecBuilder$Instance;)Lcom/mojang/datafixers/kinds/App;",
-   "why": "nothing arrived with this descriptor"
-  },
-  {
-   "owner": "net/minecraft/world/level/block/WeatheringCopperTrapDoorBlock",
-   "kind": "method",
-   "name": "<clinit>",
-   "desc": "()V",
    "why": "nothing arrived with this descriptor"
   }
  ]

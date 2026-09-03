@@ -67,8 +67,14 @@ for (const cls of args.classes.split(',').map((s) => s.trim()).filter(Boolean)) 
 
   // The workspace: decompiled source, both classpaths named, and the mission.
   const W = fs.mkdtempSync(path.join(process.env.HOME, `.foxgrade-t3-${simple}-`));
-  spawnSync('java', ['-jar', VINEFLOWER, JAR, W, `--only=${cls}`], { encoding: 'utf8', maxBuffer: 128e6, timeout: 300000 });
-  const srcPath = path.join(W, cls + '.java');
+  // vineflower's --only filter produces nothing on this build, in either name form — tested both.
+  // Whole-jar decompilation is tier2's known-good path, so it is this rung's too: once per
+  // invocation, cached across the classes of one run.
+  if (!globalThis.__vfDir) {
+    globalThis.__vfDir = fs.mkdtempSync(path.join(process.env.HOME, '.foxgrade-t3-vf-'));
+    spawnSync('java', ['-jar', VINEFLOWER, JAR, globalThis.__vfDir], { encoding: 'utf8', maxBuffer: 128e6, timeout: 600000 });
+  }
+  const srcPath = path.join(globalThis.__vfDir, cls + '.java');
   if (!fs.existsSync(srcPath)) { say('     decompile failed'); results.push([cls, 'no source']); continue; }
   fs.copyFileSync(srcPath, path.join(W, 'ORIGINAL.java'));
   fs.writeFileSync(path.join(W, 'classpath.txt'), COMPILE_CP);

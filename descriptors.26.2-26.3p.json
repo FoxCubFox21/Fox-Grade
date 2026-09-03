@@ -1,7 +1,7 @@
 {
  "schema": 1,
  "from": "26.2",
- "to": "26.3s",
+ "to": "26.3p",
  "source": "jar-diff: supertype widening",
  "widened": [
   {
@@ -223,7 +223,7 @@
    "kind": "method",
    "name": "<init>",
    "from": "(Ljava/lang/String;JLjava/util/List;Lcom/mojang/blaze3d/platform/VideoMode;II)V",
-   "to": "(Ljava/lang/String;ILjava/util/List;Lcom/mojang/blaze3d/platform/VideoMode;II)V"
+   "to": "(Ljava/lang/String;ILjava/util/List;Lcom/mojang/blaze3d/platform/VideoMode;IIII)V"
   },
   {
    "owner": "com/mojang/blaze3d/platform/Monitor",
@@ -252,6 +252,20 @@
    "name": "getMonitor",
    "from": "(J)Lcom/mojang/blaze3d/platform/Monitor;",
    "to": "(I)Lcom/mojang/blaze3d/platform/Monitor;"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/NativeImage$Format",
+   "kind": "method",
+   "name": "<init>",
+   "from": "(Ljava/lang/String;IIZZZZZIIIIIZ)V",
+   "to": "(Ljava/lang/String;IIZZZZZIIIIII)V"
+  },
+  {
+   "owner": "com/mojang/blaze3d/platform/NativeImage$WriteCallback",
+   "kind": "method",
+   "name": "invoke",
+   "from": "(JJI)V",
+   "to": "(Ljava/lang/foreign/MemorySegment;Ljava/lang/foreign/MemorySegment;Ljava/lang/foreign/MemorySegment;J)I"
   },
   {
    "owner": "com/mojang/blaze3d/platform/TextInputManager",
@@ -956,16 +970,9 @@
   {
    "owner": "com/mojang/realmsclient/RealmsMainScreen",
    "kind": "method",
-   "name": "lambda$init$6",
-   "from": "(Lnet/minecraft/client/gui/components/Button;)V",
-   "to": "(Lcom/mojang/realmsclient/RealmsAvailability$Result;)V"
-  },
-  {
-   "owner": "com/mojang/realmsclient/RealmsMainScreen",
-   "kind": "method",
    "name": "lambda$init$5",
    "from": "(Lnet/minecraft/client/gui/components/Button;)V",
-   "to": "(Lnet/minecraft/client/gui/components/CycleButton;Ljava/lang/Boolean;)V"
+   "to": "(Lcom/mojang/realmsclient/RealmsAvailability$Result;)V"
   },
   {
    "owner": "com/mojang/realmsclient/RealmsMainScreen",
@@ -1140,161 +1147,161 @@
    "kind": "method",
    "name": "lambda$new$108",
    "from": "(Ljava/lang/Integer;)V",
-   "to": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/MusicToastDisplayState;)Lnet/minecraft/network/chat/Component;"
+   "to": "(Lnet/minecraft/client/MusicToastDisplayState;)V"
   },
   {
    "owner": "net/minecraft/client/Options",
    "kind": "method",
    "name": "lambda$new$107",
    "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Integer;)Lnet/minecraft/network/chat/Component;",
-   "to": "(Lnet/minecraft/client/MusicToastDisplayState;)Lnet/minecraft/client/gui/components/Tooltip;"
+   "to": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/MusicToastDisplayState;)Lnet/minecraft/network/chat/Component;"
   },
   {
    "owner": "net/minecraft/client/Options",
    "kind": "method",
    "name": "lambda$new$106",
    "from": "(Ljava/lang/Integer;)V",
-   "to": "(Lnet/minecraft/client/sounds/MusicManager$MusicFrequency;)V"
+   "to": "(Lnet/minecraft/client/MusicToastDisplayState;)Lnet/minecraft/client/gui/components/Tooltip;"
   },
   {
    "owner": "net/minecraft/client/Options",
    "kind": "method",
    "name": "lambda$new$105",
    "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Integer;)Lnet/minecraft/network/chat/Component;",
-   "to": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/sounds/MusicManager$MusicFrequency;)Lnet/minecraft/network/chat/Component;"
+   "to": "(Lnet/minecraft/client/sounds/MusicManager$MusicFrequency;)V"
   },
   {
    "owner": "net/minecraft/client/Options",
    "kind": "method",
    "name": "lambda$new$104",
    "from": "(Lnet/minecraft/client/MusicToastDisplayState;)V",
-   "to": "(Ljava/lang/String;)V"
+   "to": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/sounds/MusicManager$MusicFrequency;)Lnet/minecraft/network/chat/Component;"
   },
   {
    "owner": "net/minecraft/client/Options",
    "kind": "method",
    "name": "lambda$new$103",
    "from": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/MusicToastDisplayState;)Lnet/minecraft/network/chat/Component;",
-   "to": "(Ljava/lang/String;)Ljava/util/Optional;"
+   "to": "(Ljava/lang/String;)V"
   },
   {
    "owner": "net/minecraft/client/Options",
    "kind": "method",
    "name": "lambda$new$102",
    "from": "(Lnet/minecraft/client/MusicToastDisplayState;)Lnet/minecraft/client/gui/components/Tooltip;",
-   "to": "()Ljava/util/List;"
+   "to": "(Ljava/lang/String;)Ljava/util/Optional;"
   },
   {
    "owner": "net/minecraft/client/Options",
    "kind": "method",
    "name": "lambda$new$101",
    "from": "(Lnet/minecraft/client/sounds/MusicManager$MusicFrequency;)V",
-   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/String;)Lnet/minecraft/network/chat/Component;"
+   "to": "()Ljava/util/List;"
   },
   {
    "owner": "net/minecraft/client/Options",
    "kind": "method",
    "name": "lambda$new$100",
    "from": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/sounds/MusicManager$MusicFrequency;)Lnet/minecraft/network/chat/Component;",
-   "to": "(Lnet/minecraft/client/NarratorStatus;)V"
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/String;)Lnet/minecraft/network/chat/Component;"
   },
   {
    "owner": "net/minecraft/client/Options",
    "kind": "method",
    "name": "lambda$new$99",
    "from": "(Ljava/lang/String;)V",
-   "to": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/NarratorStatus;)Lnet/minecraft/network/chat/Component;"
+   "to": "(Lnet/minecraft/client/NarratorStatus;)V"
   },
   {
    "owner": "net/minecraft/client/Options",
    "kind": "method",
    "name": "lambda$new$98",
    "from": "(Ljava/lang/String;)Ljava/util/Optional;",
-   "to": "(Lnet/minecraft/server/level/ParticleStatus;)V"
+   "to": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/NarratorStatus;)Lnet/minecraft/network/chat/Component;"
   },
   {
    "owner": "net/minecraft/client/Options",
    "kind": "method",
    "name": "lambda$new$97",
    "from": "()Ljava/util/List;",
-   "to": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/server/level/ParticleStatus;)Lnet/minecraft/network/chat/Component;"
+   "to": "(Lnet/minecraft/server/level/ParticleStatus;)V"
   },
   {
    "owner": "net/minecraft/client/Options",
    "kind": "method",
    "name": "lambda$new$96",
    "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/String;)Lnet/minecraft/network/chat/Component;",
-   "to": "(Ljava/lang/Integer;)V"
+   "to": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/server/level/ParticleStatus;)Lnet/minecraft/network/chat/Component;"
   },
   {
    "owner": "net/minecraft/client/Options",
    "kind": "method",
    "name": "lambda$new$95",
    "from": "(Lnet/minecraft/client/NarratorStatus;)V",
-   "to": "()I"
+   "to": "(Ljava/lang/Integer;)V"
   },
   {
    "owner": "net/minecraft/client/Options",
    "kind": "method",
    "name": "lambda$new$94",
    "from": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/NarratorStatus;)Lnet/minecraft/network/chat/Component;",
-   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Integer;)Lnet/minecraft/network/chat/Component;"
+   "to": "()I"
   },
   {
    "owner": "net/minecraft/client/Options",
    "kind": "method",
    "name": "lambda$new$93",
    "from": "(Lnet/minecraft/server/level/ParticleStatus;)V",
-   "to": "(Ljava/lang/Integer;)V"
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Integer;)Lnet/minecraft/network/chat/Component;"
   },
   {
    "owner": "net/minecraft/client/Options",
    "kind": "method",
    "name": "lambda$new$92",
    "from": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/server/level/ParticleStatus;)Lnet/minecraft/network/chat/Component;",
-   "to": "()I"
+   "to": "(Ljava/lang/Integer;)V"
   },
   {
    "owner": "net/minecraft/client/Options",
    "kind": "method",
    "name": "lambda$new$91",
    "from": "(Ljava/lang/Integer;)V",
-   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Integer;)Lnet/minecraft/network/chat/Component;"
+   "to": "()I"
   },
   {
    "owner": "net/minecraft/client/Options",
    "kind": "method",
    "name": "lambda$new$90",
    "from": "()I",
-   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Double;)Lnet/minecraft/network/chat/Component;"
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Integer;)Lnet/minecraft/network/chat/Component;"
   },
   {
    "owner": "net/minecraft/client/Options",
    "kind": "method",
    "name": "lambda$new$89",
    "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Integer;)Lnet/minecraft/network/chat/Component;",
-   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Boolean;)Lnet/minecraft/network/chat/Component;"
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Double;)Lnet/minecraft/network/chat/Component;"
   },
   {
    "owner": "net/minecraft/client/Options",
    "kind": "method",
    "name": "lambda$new$88",
    "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Double;)Lnet/minecraft/network/chat/Component;",
-   "to": "(Ljava/lang/Integer;)Ljava/lang/Double;"
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Boolean;)Lnet/minecraft/network/chat/Component;"
   },
   {
    "owner": "net/minecraft/client/Options",
    "kind": "method",
    "name": "lambda$new$87",
    "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Boolean;)Lnet/minecraft/network/chat/Component;",
-   "to": "(Ljava/lang/Double;)Ljava/lang/Integer;"
+   "to": "(Ljava/lang/Integer;)Ljava/lang/Double;"
   },
   {
    "owner": "net/minecraft/client/Options",
    "kind": "method",
    "name": "lambda$new$86",
    "from": "(Ljava/lang/Integer;)Ljava/lang/Double;",
-   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Integer;)Lnet/minecraft/network/chat/Component;"
+   "to": "(Ljava/lang/Double;)Ljava/lang/Integer;"
   },
   {
    "owner": "net/minecraft/client/Options",
@@ -1306,13 +1313,6 @@
   {
    "owner": "net/minecraft/client/Options",
    "kind": "method",
-   "name": "lambda$new$84",
-   "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Integer;)Lnet/minecraft/network/chat/Component;",
-   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Boolean;)Lnet/minecraft/network/chat/Component;"
-  },
-  {
-   "owner": "net/minecraft/client/Options",
-   "kind": "method",
    "name": "lambda$new$83",
    "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Integer;)Lnet/minecraft/network/chat/Component;",
    "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Boolean;)Lnet/minecraft/network/chat/Component;"
@@ -1320,78 +1320,8 @@
   {
    "owner": "net/minecraft/client/Options",
    "kind": "method",
-   "name": "lambda$new$80",
-   "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Boolean;)Lnet/minecraft/network/chat/Component;",
-   "to": "(Ljava/lang/Boolean;)V"
-  },
-  {
-   "owner": "net/minecraft/client/Options",
-   "kind": "method",
    "name": "lambda$new$79",
    "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Boolean;)Lnet/minecraft/network/chat/Component;",
-   "to": "(Ljava/lang/Boolean;)Lnet/minecraft/client/gui/components/Tooltip;"
-  },
-  {
-   "owner": "net/minecraft/client/Options",
-   "kind": "method",
-   "name": "lambda$new$78",
-   "from": "(Ljava/lang/Boolean;)Lnet/minecraft/client/gui/components/Tooltip;",
-   "to": "(Ljava/lang/Boolean;)V"
-  },
-  {
-   "owner": "net/minecraft/client/Options",
-   "kind": "method",
-   "name": "lambda$new$77",
-   "from": "(Ljava/lang/Boolean;)V",
-   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Boolean;)Lnet/minecraft/network/chat/Component;"
-  },
-  {
-   "owner": "net/minecraft/client/Options",
-   "kind": "method",
-   "name": "lambda$new$76",
-   "from": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Boolean;)Lnet/minecraft/network/chat/Component;",
-   "to": "(Ljava/lang/Boolean;)V"
-  },
-  {
-   "owner": "net/minecraft/client/Options",
-   "kind": "method",
-   "name": "lambda$new$75",
-   "from": "(Ljava/lang/Boolean;)V",
-   "to": "(Ljava/lang/Boolean;)Lnet/minecraft/client/gui/components/Tooltip;"
-  },
-  {
-   "owner": "net/minecraft/client/Options",
-   "kind": "method",
-   "name": "lambda$new$74",
-   "from": "(Ljava/lang/Boolean;)Lnet/minecraft/client/gui/components/Tooltip;",
-   "to": "(Lnet/minecraft/sounds/SoundSource;)Lnet/minecraft/client/OptionInstance;"
-  },
-  {
-   "owner": "net/minecraft/client/Options",
-   "kind": "method",
-   "name": "lambda$new$73",
-   "from": "(Lnet/minecraft/sounds/SoundSource;)Lnet/minecraft/client/OptionInstance;",
-   "to": "(Lnet/minecraft/client/PresenceSharing;)V"
-  },
-  {
-   "owner": "net/minecraft/client/Options",
-   "kind": "method",
-   "name": "lambda$new$72",
-   "from": "(Lnet/minecraft/client/PresenceSharing;)V",
-   "to": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/PresenceSharing;)Lnet/minecraft/network/chat/Component;"
-  },
-  {
-   "owner": "net/minecraft/client/Options",
-   "kind": "method",
-   "name": "lambda$new$71",
-   "from": "(Lnet/minecraft/network/chat/Component;Lnet/minecraft/client/PresenceSharing;)Lnet/minecraft/network/chat/Component;",
-   "to": "(Lnet/minecraft/client/PresenceSharing;)Lnet/minecraft/client/gui/components/Tooltip;"
-  },
-  {
-   "owner": "net/minecraft/client/Options",
-   "kind": "method",
-   "name": "lambda$new$70",
-   "from": "(Lnet/minecraft/client/PresenceSharing;)Lnet/minecraft/client/gui/components/Tooltip;",
    "to": "(Ljava/lang/Boolean;)V"
   },
   {
@@ -2160,9 +2090,16 @@
   {
    "owner": "net/minecraft/client/gui/screens/options/VideoSettingsScreen",
    "kind": "method",
-   "name": "displayOptions",
-   "from": "(Lnet/minecraft/client/Options;)[Lnet/minecraft/client/OptionInstance;",
-   "to": "(Lnet/minecraft/client/Options;Z)[Lnet/minecraft/client/OptionInstance;"
+   "name": "lambda$addOptions$1",
+   "from": "(Lcom/mojang/blaze3d/platform/Monitor;Lcom/mojang/blaze3d/platform/Window;Ljava/lang/Integer;)V",
+   "to": "(Lcom/mojang/blaze3d/platform/Window;Ljava/lang/Integer;)V"
+  },
+  {
+   "owner": "net/minecraft/client/gui/screens/options/VideoSettingsScreen",
+   "kind": "method",
+   "name": "lambda$addOptions$0",
+   "from": "(Lcom/mojang/blaze3d/platform/Monitor;Lnet/minecraft/network/chat/Component;Ljava/lang/Integer;)Lnet/minecraft/network/chat/Component;",
+   "to": "(Lnet/minecraft/network/chat/Component;Ljava/lang/Integer;)Lnet/minecraft/network/chat/Component;"
   },
   {
    "owner": "net/minecraft/client/gui/screens/social/PlayerSocialManager",
@@ -2482,13 +2419,6 @@
   {
    "owner": "net/minecraft/client/player/LocalPlayer",
    "kind": "method",
-   "name": "drop",
-   "from": "(Z)Z",
-   "to": "(Z)V"
-  },
-  {
-   "owner": "net/minecraft/client/player/LocalPlayer",
-   "kind": "method",
    "name": "openTextEdit",
    "from": "(Lnet/minecraft/world/level/block/entity/SignBlockEntity;Z)V",
    "to": "(Lnet/minecraft/world/level/block/entity/SignBlockEntity;Lnet/minecraft/world/level/block/entity/SignTextSlot;)V"
@@ -2664,6 +2594,13 @@
   {
    "owner": "net/minecraft/client/renderer/GameRenderer",
    "kind": "method",
+   "name": "preloadUiShader",
+   "from": "(Lnet/minecraft/server/packs/resources/ResourceProvider;)V",
+   "to": "(Lnet/minecraft/server/packs/resources/ResourceManager;)V"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/GameRenderer",
+   "kind": "method",
    "name": "renderItemInHand",
    "from": "(Lnet/minecraft/client/renderer/state/level/CameraRenderState;FLorg/joml/Matrix4fc;)V",
    "to": "(Lnet/minecraft/client/renderer/state/level/CameraRenderState;Lnet/minecraft/client/renderer/state/level/PlayerRenderState;Lcom/mojang/renderpearl/api/textures/GpuTextureView;)V"
@@ -2702,13 +2639,6 @@
    "name": "levelLightmap",
    "from": "()Lcom/mojang/blaze3d/textures/GpuTextureView;",
    "to": "()Lcom/mojang/renderpearl/api/textures/GpuTextureView;"
-  },
-  {
-   "owner": "net/minecraft/client/renderer/GameRenderer",
-   "kind": "method",
-   "name": "lambda$preloadUiShader$0",
-   "from": "(Lnet/minecraft/server/packs/resources/ResourceProvider;Lnet/minecraft/resources/Identifier;Lcom/mojang/blaze3d/shaders/ShaderType;)Ljava/lang/String;",
-   "to": "(Lnet/minecraft/server/packs/resources/ResourceProvider;Lnet/minecraft/resources/Identifier;Lcom/mojang/renderpearl/api/pipeline/ShaderType;)Ljava/lang/String;"
   },
   {
    "owner": "net/minecraft/client/renderer/GlobalSettingsUniform",
@@ -3547,6 +3477,76 @@
    "owner": "net/minecraft/client/renderer/RenderPipelines",
    "kind": "field",
    "name": "SUNRISE_SUNSET",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "STARS",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "CELESTIAL",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "GUI",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "GUI_INVERT",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "GUI_TEXT_HIGHLIGHT",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "GUI_TEXTURED",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "GUI_TEXTURED_PREMULTIPLIED_ALPHA",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "BLOCK_SCREEN_EFFECT",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "FIRE_SCREEN_EFFECT",
+   "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
+   "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
+  },
+  {
+   "owner": "net/minecraft/client/renderer/RenderPipelines",
+   "kind": "field",
+   "name": "GUI_OPAQUE_TEXTURED_BACKGROUND",
    "from": "Lcom/mojang/blaze3d/pipeline/RenderPipeline;",
    "to": "Lcom/mojang/renderpearl/api/pipeline/RenderPipeline;"
   }

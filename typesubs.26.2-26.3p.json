@@ -1,7 +1,7 @@
 {
  "schema": 1,
  "from": "26.2",
- "to": "26.3s",
+ "to": "26.3p",
  "source": "jar-diff: class renames inferred from consistent single-type substitutions in surviving signatures",
  "renames": [
   {
@@ -16,6 +16,13 @@
    "to": "net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder",
    "sightings": 76,
    "classes": 40,
+   "share": 1
+  },
+  {
+   "from": "net.minecraft.world.level.storage.loot.providers.number.NumberProvider",
+   "to": "net.minecraft.core.Holder",
+   "sightings": 55,
+   "classes": 21,
    "share": 1
   },
   {
@@ -91,20 +98,20 @@
  ],
  "rejected": [
   {
-   "from": "net.minecraft.world.level.storage.loot.providers.number.NumberProvider",
-   "to": "net.minecraft.core.Holder",
-   "sightings": 75,
-   "classes": 26,
-   "share": 1,
-   "why": "old type still exists"
-  },
-  {
    "from": "java.util.List",
    "to": "java.util.Optional",
-   "sightings": 54,
-   "classes": 36,
+   "sightings": 52,
+   "classes": 35,
    "share": 0.68,
    "why": "new type not found"
+  },
+  {
+   "from": "net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider",
+   "to": "net.minecraft.core.Holder",
+   "sightings": 46,
+   "classes": 14,
+   "share": 1,
+   "why": "old type still exists"
   },
   {
    "from": "net.minecraft.world.level.levelgen.DensityFunction",
@@ -117,10 +124,10 @@
   {
    "from": "java.util.List",
    "to": "net.minecraft.core.HolderSet",
-   "sightings": 19,
-   "classes": 11,
-   "share": 0.24,
-   "why": "only 24% of this type's changes"
+   "sightings": 18,
+   "classes": 10,
+   "share": 0.23,
+   "why": "only 23% of this type's changes"
   },
   {
    "from": "com.mojang.authlib.yggdrasil.FriendsService$ResultCode",
@@ -185,6 +192,14 @@
    "classes": 3,
    "share": 1,
    "why": "old type still exists"
+  },
+  {
+   "from": "net.minecraft.world.level.storage.loot.IntRange",
+   "to": "net.minecraft.world.level.storage.loot.IntRangePredicate",
+   "sightings": 9,
+   "classes": 4,
+   "share": 0.75,
+   "why": "only 75% of this type's changes"
   },
   {
    "from": "net.minecraft.world.level.levelgen.synth.NormalNoise$NoiseParameters",

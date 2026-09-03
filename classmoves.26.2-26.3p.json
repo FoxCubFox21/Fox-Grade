@@ -1,7 +1,7 @@
 {
  "schema": 1,
  "from": "26.2",
- "to": "26.3s",
+ "to": "26.3p",
  "source": "jar-diff: unique simple name with agreeing members",
  "moves": [
   {
@@ -229,6 +229,13 @@
    "ratio": 0.92
   },
   {
+   "from": "net.minecraft.world.level.storage.loot.providers.number.ScoreboardValue",
+   "to": "net.minecraft.world.level.storage.loot.providers.number.ints.ScoreboardValue",
+   "shared": 12,
+   "of": 18,
+   "ratio": 0.67
+  },
+  {
    "from": "net.minecraft.util.datafix.fixes.BlockRenameFix",
    "to": "net.minecraft.util.datafix.fixes.LegacyBlockRenameFix",
    "shared": 12,
@@ -341,6 +348,13 @@
    "ratio": 1
   },
   {
+   "from": "net.minecraft.world.level.storage.loot.providers.number.EnchantmentLevelProvider",
+   "to": "net.minecraft.world.level.storage.loot.providers.number.floats.EnchantmentLevelProvider",
+   "shared": 10,
+   "of": 12,
+   "ratio": 0.83
+  },
+  {
    "from": "net.minecraft.world.clock.ServerClockManager$ClockInstance",
    "to": "net.minecraft.world.clock.ServerClockManager$ServerClockInstance",
    "shared": 10,
@@ -451,6 +465,13 @@
    "shared": 8,
    "of": 8,
    "ratio": 1
+  },
+  {
+   "from": "net.minecraft.world.level.storage.loot.providers.number.BinomialDistributionGenerator",
+   "to": "net.minecraft.world.level.storage.loot.providers.number.ints.BinomialDistributionGenerator",
+   "shared": 8,
+   "of": 16,
+   "ratio": 0.5
   },
   {
    "from": "net.minecraft.util.datafix.fixes.AbstractBlockPropertyFix",
