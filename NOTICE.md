@@ -1,26 +1,29 @@
-# Fox-Grade — licence and what it means in practice
+Required Notice: Copyright © 2026 Cassius Mehlhopt (github.com/FoxCubFox21/Fox-Grade)
 
-Fox-Grade is licensed under the **GNU Affero General Public License v3.0** (see `LICENSE`).
-Copyright © 2026 Cassius Mehlhopt.
+# Fox-Grade — licence, in plain words
 
-In plain terms:
+Fox-Grade is licensed under the **PolyForm Noncommercial License 1.0.0** (see `LICENSE`).
 
-- **Use it freely**, for anything, including commercially. Port your own mods, run it in a modpack
-  workflow, whatever you like.
-- **Fork and modify it freely.** That is encouraged — the whole history is public so a fork can see
-  exactly why every rule exists.
-- **If you distribute a modified version, or run one as a network service, publish your source.**
-  That is the one obligation, and it exists so improvements come back to everyone rather than
-  becoming someone's closed product.
-- **Contributions are welcome** and are accepted under the same licence.
+**You may, freely and without asking:**
+- use it to port mods for yourself, your friends, your server, your modpack
+- read it, fork it, change it, and share your changes
+- use it in research, teaching, and in a charity or nonprofit's work
 
-## What this licence does NOT cover
+**You may not, without my written permission:**
+- use it commercially in any form — that includes running it as a paid or ad-supported service,
+  bundling it into a product you sell, or using it inside a company's operations
+
+Want to do something commercial with it? Ask. Open an issue or contact me through the repository
+and we can talk — permission is mine to grant and I am not against it in principle, I just want to
+be asked.
+
+## What the licence does not cover
 
 - **The mods you port.** A ported jar is a derivative work of that mod, owned by its author under
-  its own licence. Fox-Grade produces those files on your machine for your use; redistributing
-  them is between you and the mod's author, and most licences do not permit it. Ask them.
-- **Mojang's mappings.** Fox-Grade *uses* Mojang's published mappings and never redistributes
-  them. Only tables derived from them ship here, and Mojang's own terms permit that use while
-  forbidding redistribution of the mappings complete and unmodified.
-- **The Fox-Grade name and crest.** The code is AGPL; the identity is not a grant. Fork the tool,
-  but give your fork its own name so nobody is misled about who published what.
+  its own licence. Fox-Grade builds those files on your machine for your own use; redistributing
+  them is between you and the mod's author, and most licences do not allow it. Ask them.
+- **Mojang's mappings.** Fox-Grade *uses* Mojang's published mappings and never redistributes them.
+  Only tables derived from them ship here, which their terms permit while forbidding redistribution
+  of the mappings complete and unmodified.
+- **The Fox-Grade name and crest.** The code is licensed; the identity is not. If you publish a
+  fork, give it its own name so nobody is misled about who made what.
