@@ -1,0 +1,22 @@
+{
+  "_comment": [
+    "Mixin handler methods known to fatally crash on the target MC and unrepairable by renaming.",
+    "Format:",
+    "  { \"mixin\": \"internal/slash/name/of/MixinClass\", \"methods\": [\"handlerA\", \"handlerB\"], \"reason\": \"why\" }",
+    "If \"methods\" is omitted or empty, EVERY method on the class is stripped (whole-mixin fallback,",
+    "use sparingly). The classes remain in the jar so nothing else that references them breaks;",
+    "only the annotated handler bodies go, so Mixin skips them without ever seeing a broken selector.",
+    "",
+    "Approach borrowed from Retromod (mixin-blocklist.json). Extend this file as real failures come",
+    "in from the community \u2014 grow it the same way rules.json grows."
+  ],
+  "entries": [
+    {
+      "mixin": "com/aizistral/nochatreports/common/mixins/client/MixinChatComponent",
+      "methods": [
+        "modifyGUIMessage"
+      ],
+      "reason": "@ModifyVariable target addMessage \u2192 addPlayerMessage signature shift on 26.2; Mixin scans 0 targets despite refmap resolving \u2014 curated strip until root-caused"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "foxgrade",
+  "version": "1.0.0",
+  "name": "Fox-Grade",
+  "description": "Ports Fabric mods forward across MC versions at launch. Drop it in mods/, launch, it reports what worked and what didn't before Minecraft finishes booting.",
+  "authors": [
+    "Cassius Mehlhopt (FoxCubFox21)"
+  ],
+  "contact": {
+    "homepage": "https://github.com/FoxCubFox21/Fox-Grade",
+    "sources": "https://github.com/FoxCubFox21/Fox-Grade",
+    "issues": "https://github.com/FoxCubFox21/Fox-Grade/issues"
+  },
+  "license": "PolyForm-Noncommercial-1.0.0",
+  "icon": "assets/foxgrade/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "preLaunch": [
+      "foxgrade.FoxGradePreLaunch"
+    ],
+    "client": [
+      "foxgrade.FoxGradeClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": ">=26.1",
+    "java": ">=25",
+    "fabric-api": "*"
+  },
+  "accessWidener": "foxgrade.accesswidener"
+}

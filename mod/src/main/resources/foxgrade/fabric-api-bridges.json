@@ -1,0 +1,169 @@
+{
+  "_comment": [
+    "Third-party API bridges. When a Fabric API method is renamed between versions, add its entry",
+    "here and Fox-Grade will rewrite call sites in the ported mod's bytecode to the new name.",
+    "",
+    "Pure renames only (same signature, same return type). For argument-type or return-type changes,",
+    "a synthetic shim class is required \u2014 future work. Add such entries under a separate `shims`",
+    "key once that machinery exists.",
+    "",
+    "Format:",
+    "  renames: { \"<owner slash form>\": { \"<oldName>\": \"<newName>\" } }",
+    "",
+    "Grow this table the same way rules.json grows \u2014 from real failures observed in ported mods."
+  ],
+  "renames": {
+    "net/fabricmc/fabric/api/networking/v1/PayloadTypeRegistry": {
+      "playS2C": "clientboundPlay",
+      "playC2S": "serverboundPlay",
+      "configurationS2C": "clientboundConfiguration",
+      "configurationC2S": "serverboundConfiguration"
+    },
+    "net/minecraft/core/DefaultedRegistry": {
+      "get": "getValue"
+    },
+    "net/minecraft/class_7922": {
+      "method_10223": "getValue",
+      "get": "getValue"
+    },
+    "net/minecraft/world/level/LevelHeightAccessor": {
+      "getMinBuildHeight": "getMinY",
+      "getMaxBuildHeight": "getMaxY",
+      "getMinSection": "getMinSectionY",
+      "getMaxSection": "getMaxSectionY"
+    },
+    "net/minecraft/world/level/Level": {
+      "getMinBuildHeight": "getMinY",
+      "getMaxBuildHeight": "getMaxY",
+      "getMinSection": "getMinSectionY",
+      "getMaxSection": "getMaxSectionY"
+    },
+    "net/minecraft/client/multiplayer/ClientLevel": {
+      "getMinBuildHeight": "getMinY",
+      "getMaxBuildHeight": "getMaxY",
+      "getMinSection": "getMinSectionY",
+      "getMaxSection": "getMaxSectionY"
+    },
+    "net/minecraft/world/level/LevelReader": {
+      "getMinBuildHeight": "getMinY",
+      "getMaxBuildHeight": "getMaxY",
+      "getMinSection": "getMinSectionY",
+      "getMaxSection": "getMaxSectionY"
+    },
+    "net/minecraft/world/level/BlockGetter": {
+      "getMinBuildHeight": "getMinY",
+      "getMaxBuildHeight": "getMaxY",
+      "getMinSection": "getMinSectionY",
+      "getMaxSection": "getMaxSectionY"
+    },
+    "net/minecraft/world/level/chunk/ChunkAccess": {
+      "getMinBuildHeight": "getMinY",
+      "getMaxBuildHeight": "getMaxY",
+      "getMinSection": "getMinSectionY",
+      "getMaxSection": "getMaxSectionY"
+    }
+  },
+  "callRedirects": {
+    "me/shedaniel/autoconfig/AutoConfig": {
+      "getGuiRegistry(Ljava/lang/Class;)Lme/shedaniel/autoconfig/gui/registry/GuiRegistry;": [
+        "foxgrade/shim/AutoConfigCompat",
+        "getGuiRegistry",
+        "(Ljava/lang/Class;)Lme/shedaniel/autoconfig/gui/registry/GuiRegistry;"
+      ]
+    },
+    "net/minecraft/world/food/FoodData": {
+      "getExhaustionLevel()F": [
+        "foxgrade/shim/FoodDataCompat",
+        "getExhaustionLevel",
+        "(Lnet/minecraft/world/food/FoodData;)F"
+      ],
+      "setExhaustion(F)V": [
+        "foxgrade/shim/FoodDataCompat",
+        "setExhaustion",
+        "(Lnet/minecraft/world/food/FoodData;F)V"
+      ],
+      "getLastFoodLevel()I": [
+        "foxgrade/shim/FoodDataCompat",
+        "getLastFoodLevel",
+        "(Lnet/minecraft/world/food/FoodData;)I"
+      ]
+    },
+    "net/minecraft/client/OptionInstance": {
+      "createBoolean(Ljava/lang/String;ZLjava/util/function/Consumer;)Lnet/minecraft/client/OptionInstance;": [
+        "foxgrade/shim/OptionInstanceCompat",
+        "createBoolean",
+        "(Ljava/lang/String;ZLjava/util/function/Consumer;)Lnet/minecraft/client/OptionInstance;"
+      ]
+    },
+    "net/minecraft/client/KeyMapping": {
+      "getCategory()Ljava/lang/String;": [
+        "foxgrade/shim/CtorShims",
+        "getCategoryString",
+        "(Lnet/minecraft/client/KeyMapping;)Ljava/lang/String;"
+      ]
+    },
+    "net/fabricmc/fabric/mixin/client/keybinding/KeyBindingAccessor": {
+      "fabric_getCategoryMap()Ljava/util/Map;": [
+        "foxgrade/shim/CtorShims",
+        "fabricCategoryMap",
+        "()Ljava/util/Map;"
+      ]
+    }
+  },
+  "classRenames": {
+    "net/fabricmc/fabric/api/client/particle/v1/ParticleFactoryRegistry": "net/fabricmc/fabric/api/client/particle/v1/ParticleProviderRegistry",
+    "net/fabricmc/fabric/api/client/particle/v1/ParticleFactoryRegistry$PendingParticleFactory": "net/fabricmc/fabric/api/client/particle/v1/ParticleProviderRegistry$PendingParticleProvider",
+    "net/fabricmc/fabric/api/client/particle/v1/FabricSpriteProvider": "net/fabricmc/fabric/api/client/particle/v1/FabricSpriteSet"
+  },
+  "ctorAdapters": {
+    "net/minecraft/world/level/chunk/ChunkAccess": {
+      "(Lnet/minecraft/world/level/ChunkPos;Lnet/minecraft/world/level/chunk/UpgradeData;Lnet/minecraft/world/level/LevelHeightAccessor;Lnet/minecraft/core/Registry;J[Lnet/minecraft/world/level/chunk/LevelChunkSection;Lnet/minecraft/world/level/levelgen/blending/BlendingData;)V": {
+        "newDesc": "(Lnet/minecraft/world/level/ChunkPos;Lnet/minecraft/world/level/chunk/UpgradeData;Lnet/minecraft/world/level/LevelHeightAccessor;Lnet/minecraft/world/level/chunk/PalettedContainerFactory;J[Lnet/minecraft/world/level/chunk/LevelChunkSection;Lnet/minecraft/world/level/levelgen/blending/BlendingData;)V",
+        "transforms": [
+          {
+            "slot": 3,
+            "via": [
+              "foxgrade/shim/CtorShims",
+              "chunkFactory",
+              "(Lnet/minecraft/core/Registry;)Lnet/minecraft/world/level/chunk/PalettedContainerFactory;"
+            ]
+          }
+        ]
+      }
+    },
+    "net/minecraft/client/KeyMapping": {
+      "(Ljava/lang/String;Lcom/mojang/blaze3d/platform/InputConstants$Type;ILjava/lang/String;)V": {
+        "newDesc": "(Ljava/lang/String;Lcom/mojang/blaze3d/platform/InputConstants$Type;ILnet/minecraft/client/KeyMapping$Category;)V",
+        "transforms": [
+          {
+            "slot": 3,
+            "via": [
+              "foxgrade/shim/CtorShims",
+              "keyCategory",
+              "(Ljava/lang/String;)Lnet/minecraft/client/KeyMapping$Category;"
+            ]
+          }
+        ]
+      },
+      "(Ljava/lang/String;ILjava/lang/String;)V": {
+        "newDesc": "(Ljava/lang/String;ILnet/minecraft/client/KeyMapping$Category;)V",
+        "transforms": [
+          {
+            "slot": 2,
+            "via": [
+              "foxgrade/shim/CtorShims",
+              "keyCategory",
+              "(Ljava/lang/String;)Lnet/minecraft/client/KeyMapping$Category;"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "inheritedRenames": {
+    "getMinBuildHeight()I": "getMinY",
+    "getMaxBuildHeight()I": "getMaxY",
+    "getMinSection()I": "getMinSectionY",
+    "getMaxSection()I": "getMaxSectionY"
+  }
+}
