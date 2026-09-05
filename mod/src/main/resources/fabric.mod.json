@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "foxgrade",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "name": "Fox-Grade",
   "description": "Ports Fabric mods forward across MC versions at launch. Drop it in mods/, launch, it reports what worked and what didn't before Minecraft finishes booting.",
   "authors": [

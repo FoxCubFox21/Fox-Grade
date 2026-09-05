@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.Set;
 
 public final class FoxGradePreLaunch implements PreLaunchEntrypoint {
-  static final String VERSION = "1.0.0";
+  static final String VERSION = "1.0.1";
 
   @Override public void onPreLaunch() {
     FabricLoader loader = FabricLoader.getInstance();

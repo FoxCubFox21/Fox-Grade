@@ -559,6 +559,15 @@ public final class FoxGradePortsScreen extends Screen {
 
     private void centered(int y, Component text) {
       int w = this.font.width(text);
+      if (w > this.width - 16) {
+        // Too wide to center (long class lists from live verify): trim with an ellipsis rather
+        // than bleeding off both screen edges.
+        String flat = text.getString();
+        while (flat.length() > 8 && this.font.width(flat + "…") > this.width - 16)
+          flat = flat.substring(0, flat.length() - 4);
+        text = Component.literal("§6" + flat + "…§r");
+        w = this.font.width(text);
+      }
       addRenderableWidget(new StringWidget((this.width - w) / 2, y, w, 12, text, this.font));
     }
 
@@ -679,7 +688,7 @@ public final class FoxGradePortsScreen extends Screen {
           verifyResult = missing.isEmpty()
               ? "§2✔ live-verified: all " + total + " Minecraft classes it uses exist in this game§r"
               : "§c✘ " + missing.size() + "/" + total + " missing live: §6"
-                + missing.stream().limit(4).reduce((a, c) -> a + ", " + c).orElse("") + (missing.size() > 4 ? ", …" : "") + "§r";
+                + missing.stream().limit(3).reduce((a, c) -> a + ", " + c).orElse("") + (missing.size() > 3 ? " +" + (missing.size() - 3) + " more" : "") + "§r";
           FoxGradePreLaunch.log("panel: live verify of " + pt.origId + ": " + total + " checked, " + missing.size() + " missing"
               + (missing.isEmpty() ? "" : " — " + missing));
           if (this.minecraft.gui.screen() == this) rebuildWidgets();
