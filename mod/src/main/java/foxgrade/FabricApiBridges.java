@@ -47,18 +47,31 @@ public final class FabricApiBridges {
   // (keyPressed(int,int,int) → keyPressed(KeyEvent)). `pack` is a static shim taking the first
   // K old arguments and returning the new object; remaining old arguments follow it; `extras`
   // are int constants appended (a trailing boolean the new signature grew).
-  public record CallAdapter(String newName, String newDesc, String[] pack, int[] extras) { }
+  // `args`: full new-argument recipe (each entry a source: "oN" old arg N, "this", or a static call
+  // ["static", owner, name, desc, sources…]); when present, `pack`/`extras` are ignored.
+  public record CallAdapter(String newName, String newDesc, String[] pack, int[] extras, java.util.List<String[]> args) { }
   private final Map<String, Map<String, CallAdapter>> callAdapters;
   // A mod class OVERRIDING an old-signature callback (keyPressed(III)Z) gets the new-signature
   // method synthesised, delegating to the old one: each `unpack` entry is an accessor on the
   // first new parameter ([owner, name, desc]), a pass-through of new parameter N ("pN"), or an
   // int constant ("0"). Without this the game never calls the mod's handler again.
-  public record OverrideAdapter(String oldName, String oldDesc, String newName, String newDesc, java.util.List<String[]> unpack) { }
+  public record OverrideAdapter(String oldName, String oldDesc, String newName, String newDesc, java.util.List<String[]> unpack, java.util.List<String[]> after) { }
+  // name+desc → static hooks: synthesise the method (if absent) as super-call-then-hooks.
+  public record SuperHook(String name, String desc, java.util.List<String[]> hooks) { }
+  // name+desc → static call producing the return value; synthesised only when nothing in the
+  // class's chain implements it (an abstract declaration up the chain does not count).
+  public record Synth(String name, String desc, String[] call) { }
   private final java.util.List<OverrideAdapter> overrideAdapters;
   // name+desc → [shimOwner, shimName, shimDesc]: a static call inserted at the ENTRY of any mod
   // method with that signature, passing its first parameter. How a GUI shim learns which frame
   // is being drawn (render(GuiGraphicsExtractor,…) → GuiCompat.current(extractor)).
   private final Map<String, String[]> entryHooks;
+  private final java.util.List<SuperHook> superHooks = new java.util.ArrayList<>();
+  private final java.util.List<Synth> synths = new java.util.ArrayList<>();
+  private final Map<String, Map<String, String>> samRenames = new HashMap<>();   // interface → old SAM name → new
+  public java.util.List<SuperHook> superHooks() { return superHooks; }
+  public java.util.List<Synth> synths() { return synths; }
+  public Map<String, Map<String, String>> samRenames() { return samRenames; }
   private final Map<String, java.util.List<String[]>> inheritedRenamesByAncestor = new HashMap<>();
   public Map<String, java.util.List<String[]>> inheritedRenamesByAncestor() { return inheritedRenamesByAncestor; }
   private final Map<String, String> classRenames;    // third-party class renames (slash form)
@@ -116,14 +129,17 @@ public final class FabricApiBridges {
     java.util.List<OverrideAdapter> overrideAdapters = new java.util.ArrayList<>();
     Map<String, String[]> entryHooks = new HashMap<>();
     Map<String, java.util.List<String[]>> byAncestor = new HashMap<>();
-    Extra extra = new Extra(descWidenings, handleRedirects, callAdapters, overrideAdapters, entryHooks, byAncestor);
+    java.util.List<SuperHook> superHooksL = new java.util.ArrayList<>(); java.util.List<Synth> synthsL = new java.util.ArrayList<>(); Map<String, Map<String, String>> samL = new HashMap<>();
+    Extra extra = new Extra(descWidenings, handleRedirects, callAdapters, overrideAdapters, entryHooks, byAncestor, superHooksL, synthsL, samL);
     try (InputStream shipped = FabricApiBridges.class.getResourceAsStream("/foxgrade/fabric-api-bridges.json")) {
       if (shipped != null) merge(renames, redirects, classRenames, ctorAdapters, inheritedRenames, fieldRedirects, extra, new String(shipped.readAllBytes()));
     }
     Path user = gameDir.resolve("fox-grade.api-bridges.json");
     if (Files.exists(user)) merge(renames, redirects, classRenames, ctorAdapters, inheritedRenames, fieldRedirects, extra, Files.readString(user));
-    return new FabricApiBridges(renames, redirects, classRenames, ctorAdapters, inheritedRenames, fieldRedirects,
+    FabricApiBridges b = new FabricApiBridges(renames, redirects, classRenames, ctorAdapters, inheritedRenames, fieldRedirects,
         descWidenings, handleRedirects, callAdapters, overrideAdapters, entryHooks, byAncestor);
+    b.superHooks.addAll(superHooksL); b.synths.addAll(synthsL); b.samRenames.putAll(samL);
+    return b;
   }
 
   private static void merge(Map<String, Map<String, String>> into, Map<String, Map<String, String[]>> redirects,
@@ -172,6 +188,25 @@ public final class FabricApiBridges {
         for (var pair : e.getValue().getAsJsonArray()) { var pa = pair.getAsJsonArray(); l.add(new String[]{pa.get(0).getAsString().replace('.', '/'), pa.get(1).getAsString()}); }
       }
     }
+    if (o.has("superHooks") && o.get("superHooks").isJsonArray()) {
+      for (var e : o.getAsJsonArray("superHooks")) {
+        JsonObject a = e.getAsJsonObject(); java.util.List<String[]> hooks = new java.util.ArrayList<>();
+        for (var u : a.getAsJsonArray("hooks")) hooks.add(strs(u));
+        extra.superHooks().add(new SuperHook(a.get("name").getAsString(), a.get("desc").getAsString(), hooks));
+      }
+    }
+    if (o.has("synthesizeIfMissing") && o.get("synthesizeIfMissing").isJsonArray()) {
+      for (var e : o.getAsJsonArray("synthesizeIfMissing")) {
+        JsonObject a = e.getAsJsonObject();
+        extra.synths().add(new Synth(a.get("name").getAsString(), a.get("desc").getAsString(), strs(a.get("call"))));
+      }
+    }
+    if (o.has("samRenames") && o.get("samRenames").isJsonObject()) {
+      for (var e : o.getAsJsonObject("samRenames").entrySet()) {
+        Map<String, String> m = extra.samRenames().computeIfAbsent(e.getKey().replace('.', '/'), k -> new HashMap<>());
+        for (var x : e.getValue().getAsJsonObject().entrySet()) m.put(x.getKey(), x.getValue().getAsString());
+      }
+    }
     if (o.has("entryHooks") && o.get("entryHooks").isJsonObject()) {
       for (var e : o.getAsJsonObject("entryHooks").entrySet()) {
         var arr = e.getValue().getAsJsonArray();
@@ -195,7 +230,9 @@ public final class FabricApiBridges {
           if (a.has("pack")) { var pa = a.getAsJsonArray("pack"); pack = new String[]{pa.get(0).getAsString(), pa.get(1).getAsString(), pa.get(2).getAsString()}; }
           int[] extras = new int[0];
           if (a.has("extras")) { var ea = a.getAsJsonArray("extras"); extras = new int[ea.size()]; for (int i = 0; i < extras.length; i++) extras[i] = ea.get(i).getAsInt(); }
-          map.put(m.getKey(), new CallAdapter(a.get("newName").getAsString(), a.get("newDesc").getAsString(), pack, extras));
+          java.util.List<String[]> args = null;
+          if (a.has("args")) { args = new java.util.ArrayList<>(); for (var u : a.getAsJsonArray("args")) args.add(strs(u)); }
+          map.put(m.getKey(), new CallAdapter(a.get("newName").getAsString(), a.get("newDesc").getAsString(), pack, extras, args));
         }
       }
     }
@@ -203,12 +240,11 @@ public final class FabricApiBridges {
       for (var e : o.getAsJsonArray("overrideAdapters")) {
         JsonObject a = e.getAsJsonObject();
         java.util.List<String[]> unpack = new java.util.ArrayList<>();
-        for (var u : a.getAsJsonArray("unpack")) {
-          if (u.isJsonArray()) { var ua = u.getAsJsonArray(); String[] arr = new String[ua.size()]; for (int i = 0; i < arr.length; i++) arr[i] = ua.get(i).getAsString(); unpack.add(arr); }
-          else unpack.add(new String[]{u.getAsString()});
-        }
+        for (var u : a.getAsJsonArray("unpack")) unpack.add(strs(u));
+        java.util.List<String[]> after = new java.util.ArrayList<>();
+        if (a.has("after")) for (var u : a.getAsJsonArray("after")) after.add(strs(u));
         extra.overrideAdapters().add(new OverrideAdapter(a.get("oldName").getAsString(), a.get("oldDesc").getAsString(),
-            a.get("newName").getAsString(), a.get("newDesc").getAsString(), unpack));
+            a.get("newName").getAsString(), a.get("newDesc").getAsString(), unpack, after));
       }
     }
     if (o.has("fieldRedirects") && o.get("fieldRedirects").isJsonObject()) {
@@ -237,7 +273,13 @@ public final class FabricApiBridges {
 
   private record Extra(Map<String, Map<String, String>> descWidenings, Map<String, Map<String, String[]>> handleRedirects,
                        Map<String, Map<String, CallAdapter>> callAdapters, java.util.List<OverrideAdapter> overrideAdapters,
-                       Map<String, String[]> entryHooks, Map<String, java.util.List<String[]>> byAncestor) { }
+                       Map<String, String[]> entryHooks, Map<String, java.util.List<String[]>> byAncestor,
+                       java.util.List<SuperHook> superHooks, java.util.List<Synth> synths, Map<String, Map<String, String>> samRenames) { }
+
+  private static String[] strs(com.google.gson.JsonElement u) {
+    if (!u.isJsonArray()) return new String[]{u.getAsString()};
+    var ua = u.getAsJsonArray(); String[] arr = new String[ua.size()]; for (int i = 0; i < arr.length; i++) arr[i] = ua.get(i).getAsString(); return arr;
+  }
 
   private static void readTriples(JsonObject o, String key, Map<String, Map<String, String[]>> into) {
     if (!o.has(key) || !o.get(key).isJsonObject()) return;

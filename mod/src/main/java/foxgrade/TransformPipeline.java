@@ -147,6 +147,7 @@ public final class TransformPipeline {
       }
     } catch (Exception ignore) { }
     remapper.setSuperOf(verifier::superOf);
+    remapper.setOracles(verifier::declares, verifier::finalInChain, verifier::implementedInChain, verifier::declaredInChain);
     String[] fromMcHolder = { "" };
     Set<String> fatalMixins = new HashSet<>();          // mixin classes to deregister from configs
     java.util.List<String> strippedNames = new java.util.ArrayList<>();   // "MixinClass#handler" per strip, for the panel
@@ -350,8 +351,11 @@ public final class TransformPipeline {
       wanted.addAll(remapper.usedShims());
       java.util.ArrayDeque<String> queue = new java.util.ArrayDeque<>(wanted);
       while (!queue.isEmpty()) {
-        for (String dep : ShimGenerator.SHIM_DEPS.getOrDefault(queue.poll(), java.util.List.of())) if (wanted.add(dep)) queue.add(dep);
+        String w = queue.poll();
+        for (String dep : ShimGenerator.SHIM_DEPS.getOrDefault(w, java.util.List.of())) if (wanted.add(dep)) queue.add(dep);
+        for (String k : ShimGenerator.SHIMS.keySet()) if (k.startsWith(w + "$") && wanted.add(k)) queue.add(k);   // inner shims travel with their outer
       }
+      for (String d : remapper.droppedOverrides()) { strippedNames.add(d + " (final in 26.2)"); autoStripped++; }
       Map<String, String> shimMap = new HashMap<>();
       for (String shimCls : wanted) {
         String nsName = namespacedShim(shimCls, shimNs);

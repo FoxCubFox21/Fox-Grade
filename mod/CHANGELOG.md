@@ -62,6 +62,23 @@
   synthesised. Fabric API renames: channel events (`S2C`/`C2S` → `Clientbound`/`Serverbound`),
   entity level-change events, `ClientCommands`, `ClientTooltipComponentCallback`,
   `Screens.getWidgets`.
+- **World rendering layer.** 26.2 draws the world through a submit API (extract a render state,
+  then submit it to a collector) and deleted `MultiBufferSource`, `RenderType`'s factories,
+  `LevelRenderer`'s line helpers, `ItemRenderer` and Fabric's `WorldRenderEvents`. Fox-Grade now
+  re-creates the old buffer source as a recorder that hands each RenderType's vertices to
+  `submitCustomGeometry`; drives 1.21.x entity and block-entity renderers from synthesised
+  `extractRenderState`/`submit`/`createRenderState` methods that remember the entity behind the
+  state and re-create the old `render(...)` call; keeps 1.21.x models working (root part supplied
+  from the model's own constructor, `HierarchicalModel` re-created with keyframe animation,
+  `setupAnim` fed from the render state, overrides of now-final `renderToBuffer`/`root` dropped);
+  maps `RenderType` factories onto `RenderTypes`; re-implements the line-box and shape helpers;
+  routes world text and the global buffer source to the frame being submitted; and serves
+  Fabric's `WorldRenderEvents` from 26.2's `LevelRenderEvents`, firing every drawing phase while
+  the frame collects submits.
+- Verifier: third-party classes Fox-Grade re-creates (Fabric's events) are now checked by whether
+  the loader can read them, so their shims are injected. Shim descriptors are compared post-rename.
+- More renames: Fabric lifecycle events (`World` → `Level`), `Camera` accessors, `EntityType.Builder.build`,
+  `MobEffects.CONFUSION`, `DirectionProperty` → `EnumProperty`.
 - GUI corpus results: BetterF3, Chat Heads and Zoomify (co-ported with its YACL config library)
   boot; Mod Menu's mod list screen opens and renders end to end. Jade, WTHIT and Shulker Box
   Tooltip stay out — their remaining references are game internals (block state, tooltips, container

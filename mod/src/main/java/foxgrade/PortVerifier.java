@@ -54,8 +54,30 @@ public final class PortVerifier {
   /** Pre-declare a class of the jar being ported (names in target form), so members reached
    *  through it resolve up its chain even before its own bytes are scanned. */
   public void declareModClass(String name, String superName, String[] interfaces) {
-    if (!shapes.containsKey(name)) shapes.put(name, new Shape(superName, interfaces == null ? new String[0] : interfaces, new HashSet<>(), new HashSet<>()));
+    if (!shapes.containsKey(name)) shapes.put(name, new Shape(superName, interfaces == null ? new String[0] : interfaces, new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>()));
   }
+
+  /** Does this class itself declare the member (name+desc for methods, name:desc for fields)? */
+  public boolean declares(String cls, String key) { Shape s = shape(cls); return s != UNKNOWN && (s.methods().contains(key) || s.fields().contains(key)); }
+  /** Is the method final somewhere up the superclass chain starting AT cls? */
+  public boolean finalInChain(String cls, String key) {
+    for (String o = cls, g = ""; o != null && g.length() < 48; o = superOf(o), g += "x") { Shape s = shape(o); if (s != UNKNOWN && s.finals().contains(key)) return true; }
+    return false;
+  }
+  /** Is the method declared (abstract or not) somewhere up the superclass chain starting AT cls? */
+  public boolean declaredInChain(String cls, String key) { return chainHas(cls, key, false, 0); }
+  // Walks superclasses AND interfaces (a renderer may inherit its abstract methods from an
+  // interface such as BlockEntityRenderer). implementedOnly: abstract declarations do not count.
+  private boolean chainHas(String cls, String key, boolean implementedOnly, int depth) {
+    if (cls == null || depth > 40) return false;
+    Shape s = shape(cls);
+    if (s == UNKNOWN) return false;
+    if (s.methods().contains(key) && (!implementedOnly || !s.abstracts().contains(key))) return true;
+    for (String itf : s.interfaces()) if (chainHas(itf, key, implementedOnly, depth + 1)) return true;
+    return chainHas(s.superName(), key, implementedOnly, depth + 1);
+  }
+  /** Is the method implemented (declared non-abstract) somewhere up the superclass chain starting AT cls? */
+  public boolean implementedInChain(String cls, String key) { return chainHas(cls, key, true, 0); }
 
   /** Superclass of a class as far as this verifier can tell (mod classes seen, game classes read); null if unknown. */
   public String superOf(String cls) {
@@ -67,16 +89,22 @@ public final class PortVerifier {
     if (known.isEmpty()) return;
     ClassReader r = new ClassReader(classBytes);
     // The class's own shape: a mod class is a link in the chain for members reached through it.
-    Set<String> declF = new HashSet<>(), declM = new HashSet<>();
+    Set<String> declF = new HashSet<>(), declM = new HashSet<>(), fin = new HashSet<>(), abs = new HashSet<>();
     r.accept(new ClassVisitor(Opcodes.ASM9) {
       @Override public FieldVisitor visitField(int a, String n, String d, String sg, Object v) { declF.add(n + ":" + d); return null; }
-      @Override public MethodVisitor visitMethod(int a, String n, String d, String sg, String[] e) { declM.add(n + d); return null; }
+      @Override public MethodVisitor visitMethod(int a, String n, String d, String sg, String[] e) {
+        declM.add(n + d); if ((a & Opcodes.ACC_FINAL) != 0) fin.add(n + d); if ((a & Opcodes.ACC_ABSTRACT) != 0) abs.add(n + d); return null;
+      }
     }, ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
-    shapes.put(r.getClassName(), new Shape(r.getSuperName(), r.getInterfaces(), declF, declM));
+    shapes.put(r.getClassName(), new Shape(r.getSuperName(), r.getInterfaces(), declF, declM, fin, abs));
     settled = false;
     r.accept(new ClassRemapper(new ClassWriter(0), new Remapper() {
       @Override public String map(String internalName) {
         if (checkable(internalName) && internalName.indexOf('$') < 0 && !known.contains(internalName)) {
+          missing.add(internalName);
+        } else if (!checkable(internalName) && ShimGenerator.SHIMS.containsKey(internalName) && shape(internalName) == UNKNOWN) {
+          // A removed third-party class Fox-Grade re-creates (Fabric's WorldRenderEvents): not in
+          // the game's inventory, so its absence is judged by whether the loader can read it.
           missing.add(internalName);
         }
         return internalName;
@@ -142,8 +170,8 @@ public final class PortVerifier {
 
   // ---- member resolution against the running game's class files ----
 
-  private record Shape(String superName, String[] interfaces, Set<String> fields, Set<String> methods) { }
-  private static final Shape UNKNOWN = new Shape(null, new String[0], Set.of(), Set.of());
+  private record Shape(String superName, String[] interfaces, Set<String> fields, Set<String> methods, Set<String> finals, Set<String> abstracts) { }
+  private static final Shape UNKNOWN = new Shape(null, new String[0], Set.of(), Set.of(), Set.of(), Set.of());
   private final Map<String, Shape> shapes = new HashMap<>();
 
   private void checkMember(String owner, String name, String desc, boolean field, boolean direct) {
@@ -178,11 +206,17 @@ public final class PortVerifier {
     s = UNKNOWN;
     try (InputStream in = open(cls + ".class")) {
       if (in != null) {
-        ClassReader r = new ClassReader(in.readAllBytes());
-        Set<String> f = new HashSet<>(), m = new HashSet<>();
+        byte[] bytes = in.readAllBytes();
+        // Fox-Grade's own shims are read from its jar, whose copies still carry pre-injection names in
+        // their descriptors; apply the same renames so members compare against what the port sees.
+        if (cls.startsWith("foxgrade/shim/")) bytes = ShimGenerator.renameClasses(bytes, ShimGenerator.SHIM_RENAMES);
+        ClassReader r = new ClassReader(bytes);
+        Set<String> f = new HashSet<>(), m = new HashSet<>(), fin = new HashSet<>(), abs = new HashSet<>();
         r.accept(new ClassVisitor(Opcodes.ASM9) {
           @Override public FieldVisitor visitField(int a, String n, String d, String sg, Object v) { f.add(n + ":" + d); return null; }
-          @Override public MethodVisitor visitMethod(int a, String n, String d, String sg, String[] e) { m.add(n + d); return null; }
+          @Override public MethodVisitor visitMethod(int a, String n, String d, String sg, String[] e) {
+            m.add(n + d); if ((a & Opcodes.ACC_FINAL) != 0) fin.add(n + d); if ((a & Opcodes.ACC_ABSTRACT) != 0) abs.add(n + d); return null;
+          }
         }, ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
         String[] itfs = r.getInterfaces();
         java.util.List<String> extra = injected().get(cls);
@@ -191,7 +225,7 @@ public final class PortVerifier {
           for (int i = 0; i < extra.size(); i++) all[itfs.length + i] = extra.get(i);
           itfs = all;
         }
-        s = new Shape(r.getSuperName(), itfs, f, m);
+        s = new Shape(r.getSuperName(), itfs, f, m, fin, abs);
       }
     } catch (Throwable ignore) { }
     shapes.put(cls, s);

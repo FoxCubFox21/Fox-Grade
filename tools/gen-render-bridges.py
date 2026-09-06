@@ -272,6 +272,98 @@ for holder, typ, tdesc, colls in [("Blocks", "Block", BL, [f.split(":")[0] for f
             lines.append(f"  public static {typ} {meth}() {{ return ({typ}) {holder}.{coll}.{getter}(); }}")
             j["fieldRedirects"].setdefault(owner, {})["getstatic " + fld + ":" + tdesc] = ["foxgrade/shim/BlocksCompat", meth, "()" + tdesc]
 (MOD / "src/main/java/foxgrade/shim/BlocksCompat.java").write_text("package foxgrade.shim;\n\nimport net.minecraft.world.item.Item;\nimport net.minecraft.world.item.Items;\nimport net.minecraft.world.level.block.Block;\nimport net.minecraft.world.level.block.Blocks;\n\n/** The per-colour block and item constants 26.2 folded into DYED_* colour collections. Generated. */\npublic final class BlocksCompat {\n  private BlocksCompat() { }\n" + "\n".join(lines) + "\n}\n")
+# ======================= WORLD RENDERING (26.2 submit API) =======================
+RT = "Lnet/minecraft/client/renderer/rendertype/RenderType;"; RTO = "net/minecraft/client/renderer/rendertype/RenderType"; RTS = "net/minecraft/client/renderer/rendertype/RenderTypes"
+MBS = "Lnet/minecraft/client/renderer/MultiBufferSource;"; PS = "Lcom/mojang/blaze3d/vertex/PoseStack;"; VC = "Lcom/mojang/blaze3d/vertex/VertexConsumer;"
+ERS = "Lnet/minecraft/client/renderer/entity/state/EntityRenderState;"; LRS = "Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;"
+SNC = "Lnet/minecraft/client/renderer/SubmitNodeCollector;"; CRS = "Lnet/minecraft/client/renderer/state/level/CameraRenderState;"
+ENT = "Lnet/minecraft/world/entity/Entity;"; LIV = "Lnet/minecraft/world/entity/LivingEntity;"; MOB = "Lnet/minecraft/world/entity/Mob;"
+BE = "Lnet/minecraft/world/level/block/entity/BlockEntity;"; BERS = "Lnet/minecraft/client/renderer/blockentity/state/BlockEntityRenderState;"
+V3 = "Lnet/minecraft/world/phys/Vec3;"; CRUMB = "Lnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;"; IDF = "Lnet/minecraft/resources/Identifier;"
+ERC = "foxgrade/shim/EntityRenderCompat"; BRC = "foxgrade/shim/BlockEntityRenderCompat"; MP = "Lnet/minecraft/client/model/geom/ModelPart;"
+# RenderType statics: same name on RenderTypes, else the compat's substitute
+rts_have = set(new[RTS]["m"]); compat_have = {"solid()", "cutout()", "cutoutMipped()", "translucent()", "lineStrip()", "debugLineStrip(D)", "entityCutoutNoCull(" + IDF + ")", "entityCutoutNoCull(" + IDF + "Z)",
+    "entityTranslucentCull(" + IDF + ")", "entityNoOutline(" + IDF + ")", "entitySmoothCutout(" + IDF + ")", "eyes(" + IDF + ")", "beaconBeam(" + IDF + "Z)", "entityGlint()", "glint()", "textIntensity(" + IDF + ")", "textIntensitySeeThrough(" + IDF + ")"}
+nrt = 0
+for m in old["net.minecraft.client.renderer.RenderType"]:
+    if not m.endswith(")" + RT) or m.startswith("lambda$"): continue
+    name, rest = m.split("(", 1); key = name + "(" + ren_desc(rest.split(")")[0]) + ")" + RT
+    if key in set(new[RTO]["m"]): continue
+    if key in rts_have: cr.setdefault(RTO, {})[key] = [RTS, name, key[len(name):]]; nrt += 1
+    elif key[:-len(RT)] in compat_have: cr.setdefault(RTO, {})[key] = ["foxgrade/shim/RenderTypeCompat", name, key[len(name):]]; nrt += 1
+# LevelRenderer statics, LightTexture, ItemRenderer access
+LRC = "foxgrade/shim/LevelRendererCompat"; AABB = "Lnet/minecraft/world/phys/AABB;"; VS = "Lnet/minecraft/world/phys/shapes/VoxelShape;"; BTG = "Lnet/minecraft/world/level/BlockAndTintGetter;"; BP = "Lnet/minecraft/core/BlockPos;"; BS = "Lnet/minecraft/world/level/block/state/BlockState;"
+for k in ["renderLineBox(" + PS + VC + AABB + "FFFF)V", "renderLineBox(" + VC + "DDDDDDFFFF)V", "renderLineBox(" + PS + VC + "DDDDDDFFFF)V", "renderLineBox(" + PS + VC + "DDDDDDFFFFFFF)V",
+          "renderShape(" + PS + VC + VS + "DDDFFFF)V", "renderVoxelShape(" + PS + VC + VS + "DDDFFFFZ)V", "getLightColor(" + BTG + BP + ")I", "getLightColor(" + BTG + BS + BP + ")I"]:
+    cr.setdefault("net/minecraft/client/renderer/LevelRenderer", {})[k] = [LRC, k.split("(")[0], k[k.index("("):]]
+LCU = "net/minecraft/util/LightCoordsUtil"
+cr.setdefault("net/minecraft/client/renderer/LightTexture", {}).update({"pack(II)I": [LCU, "pack", "(II)I"], "block(I)I": [LCU, "block", "(I)I"], "sky(I)I": [LCU, "sky", "(I)I"]})
+j["fieldRedirects"].setdefault("net/minecraft/client/renderer/LightTexture", {})["getstatic FULL_BRIGHT:I"] = ["foxgrade/shim/LightTextureCompat", "fullBright", "()I"]
+cr.setdefault("net/minecraft/client/Minecraft", {})["getItemRenderer()Lnet/minecraft/client/renderer/entity/ItemRenderer;"] = ["net/minecraft/client/renderer/entity/ItemRenderer", "get", "()Lnet/minecraft/client/renderer/entity/ItemRenderer;"]
+# --- entity renderers ---
+SUBMIT = "submit(" + ERS + PS + SNC + CRS + ")V"
+for first in (ENT, LIV, MOB):
+    j["overrideAdapters"].append({"oldName": "render", "oldDesc": "(" + first + "FF" + PS + MBS + "I)V", "newName": "submit", "newDesc": "(" + ERS + PS + SNC + CRS + ")V",
+        "unpack": [["static", ERC, "entity", "(" + ERS + ")" + ENT, "p1"], ["static", ERC, "yaw", "(" + ERS + ")F", "p1"], ["static", ERC, "partial", "(" + ERS + ")F", "p1"], "p2",
+                   ["static", ERC, "begin", "(Ljava/lang/Object;" + ERS + PS + SNC + CRS + ")" + MBS, "this", "p1", "p2", "p3", "p4"], ["static", ERC, "light", "(" + ERS + ")I", "p1"]],
+        "after": [["static", ERC, "end", "(" + ERS + ")V", "p1"]]})
+    j["overrideAdapters"].append({"oldName": "getTextureLocation", "oldDesc": "(" + first + ")" + IDF, "newName": "getTextureLocation", "newDesc": "(" + LRS + ")" + IDF,
+        "unpack": [["static", ERC, "entity", "(" + ERS + ")" + ENT, "p1"]]})
+j.setdefault("superHooks", []).append({"name": "extractRenderState", "desc": "(" + ENT + ERS + "F)V", "hooks": [["static", ERC, "remember", "(Ljava/lang/Object;" + ENT + ERS + "F)V", "this", "p1", "p2", "p3"]]})
+j.setdefault("synthesizeIfMissing", []).append({"name": "createRenderState", "desc": "()" + ERS, "call": ["static", ERC, "newState", "(Ljava/lang/Object;)" + ERS, "this"]})
+for o in ["net/minecraft/client/renderer/entity/EntityRenderer", "net/minecraft/client/renderer/entity/LivingEntityRenderer", "net/minecraft/client/renderer/entity/MobRenderer"]:
+    for first in (ENT, LIV, MOB):
+        j["callAdapters"].setdefault(o, {})["render(" + first + "FF" + PS + MBS + "I)V"] = {"newName": "submit", "newDesc": "(" + ERS + PS + SNC + CRS + ")V",
+            "args": [["static", ERC, "state", "(" + ENT + ")" + ERS, "o1"], "o4", ["static", ERC, "collector", "(" + ENT + ")" + SNC, "o1"], ["static", ERC, "camera", "(" + ENT + ")" + CRS, "o1"]]}
+# --- block entity renderers ---
+j["overrideAdapters"].append({"oldName": "render", "oldDesc": "(" + BE + "F" + PS + MBS + "II)V", "newName": "submit", "newDesc": "(" + BERS + PS + SNC + CRS + ")V",
+    "unpack": [["static", BRC, "blockEntity", "(" + BERS + ")" + BE, "p1"], ["static", BRC, "partial", "(" + BERS + ")F", "p1"], "p2",
+               ["static", BRC, "begin", "(Ljava/lang/Object;" + BERS + PS + SNC + CRS + ")" + MBS, "this", "p1", "p2", "p3", "p4"], ["static", BRC, "light", "(" + BERS + ")I", "p1"], ["static", BRC, "overlay", "()I"]],
+    "after": [["static", BRC, "end", "(" + BERS + ")V", "p1"]]})
+j["superHooks"].append({"name": "extractRenderState", "desc": "(" + BE + BERS + "F" + V3 + CRUMB + ")V", "hooks": [["static", BRC, "remember", "(Ljava/lang/Object;" + BE + BERS + "F" + V3 + CRUMB + ")V", "this", "p1", "p2", "p3", "p4", "p5"]]})
+j["synthesizeIfMissing"].append({"name": "createRenderState", "desc": "()" + BERS, "call": ["static", BRC, "newState", "(Ljava/lang/Object;)" + BERS, "this"]})
+# --- models ---
+FN = "Ljava/util/function/Function;"
+for owner in ["net/minecraft/client/model/EntityModel", "net/minecraft/client/model/HierarchicalModel", "net/minecraft/client/model/Model"]:
+    j["ctorAdapters"].setdefault(owner, {}).update({
+        "()V": {"newDesc": "(" + MP + ")V", "transforms": [{"slot": -1, "via": ["p1", "", ""]}, {"slot": -1, "via": ["foxgrade/shim/ModelCompat", "emptyRoot", "()" + MP]}]},
+        "(" + FN + ")V": {"newDesc": "(" + MP + FN + ")V", "transforms": [{"slot": -1, "via": ["p1", "", ""]}, {"slot": -1, "via": ["foxgrade/shim/ModelCompat", "emptyRoot", "()" + MP]}]}})
+j["overrideAdapters"].append({"oldName": "setupAnim", "oldDesc": "(" + ENT + "FFFFF)V", "newName": "setupAnim", "newDesc": "(" + ERS + ")V",
+    "unpack": [["static", ERC, "entity", "(" + ERS + ")" + ENT, "p1"], ["field", LRS[1:-1], "walkAnimationPos", "F"], ["field", LRS[1:-1], "walkAnimationSpeed", "F"],
+               ["field", ERS[1:-1], "ageInTicks", "F"], ["field", LRS[1:-1], "yRot", "F"], ["field", LRS[1:-1], "xRot", "F"]]})
+j["classRenames"].update({"net/fabricmc/fabric/api/client/rendering/v1/EntityModelLayerRegistry": "net/fabricmc/fabric/api/client/rendering/v1/ModelLayerRegistry",
+    "net/fabricmc/fabric/api/client/rendering/v1/EntityModelLayerRegistry$TexturedModelDataProvider": "net/fabricmc/fabric/api/client/rendering/v1/ModelLayerRegistry$TexturedLayerDefinitionProvider"})
+j["samRenames"] = {"net/fabricmc/fabric/api/client/rendering/v1/ModelLayerRegistry$TexturedLayerDefinitionProvider": {"createModelData": "createLayerDefinition"}}
+j["renames"].setdefault("net/fabricmc/fabric/api/client/rendering/v1/ModelLayerRegistry$TexturedLayerDefinitionProvider", {})["createModelData"] = "createLayerDefinition"
+LC = "net/fabricmc/fabric/api/event/lifecycle/v1/"; LCC = "net/fabricmc/fabric/api/client/event/lifecycle/v1/"
+for old_n, new_n, inners in [("ServerWorldEvents", "ServerLevelEvents", ["Load", "Unload"]), ("ServerChunkEvents", "ServerChunkEvents", []), ("ServerEntityEvents", "ServerEntityEvents", [])]:
+    if old_n != new_n:
+        j["classRenames"][LC + old_n] = LC + new_n
+        for i in inners: j["classRenames"][LC + old_n + "$" + i] = LC + new_n + "$" + i
+for old_n, new_n, inners in [("ClientWorldEvents", "ClientLevelEvents", [])]:
+    j["classRenames"][LCC + old_n] = LCC + new_n
+    for i in inners: j["classRenames"][LCC + old_n + "$" + i] = LCC + new_n + "$" + i
+j["classRenames"][LCC + "ClientWorldEvents$AfterClientWorldChange"] = LCC + "ClientLevelEvents$AfterClientLevelChange"
+CTE = "net/fabricmc/fabric/api/client/event/lifecycle/v1/ClientTickEvents"; STE = "net/fabricmc/fabric/api/event/lifecycle/v1/ServerTickEvents"
+j["fieldRedirects"].setdefault(CTE, {}).update({"getstatic START_WORLD_TICK:" + EV: [FEC, "clientStartWorldTick", "()" + EV], "getstatic END_WORLD_TICK:" + EV: [FEC, "clientEndWorldTick", "()" + EV]})
+j["fieldRedirects"].setdefault(STE, {}).update({"getstatic START_WORLD_TICK:" + EV: [FEC, "serverStartWorldTick", "()" + EV], "getstatic END_WORLD_TICK:" + EV: [FEC, "serverEndWorldTick", "()" + EV]})
+for old_n, new_n in [("StartWorldTick", "StartLevelTick"), ("EndWorldTick", "EndLevelTick")]:
+    j["classRenames"][CTE + "$" + old_n] = CTE + "$" + new_n; j["classRenames"][STE + "$" + old_n] = STE + "$" + new_n
+j["samRenames"].setdefault(CTE + "$StartLevelTick", {})["onStartTick"] = "onStartTick"
+j["fieldRedirects"].setdefault("net/minecraft/world/effect/MobEffects", {})["getstatic CONFUSION:Lnet/minecraft/core/Holder;"] = ["foxgrade/shim/EffectsCompat", "confusion", "()Lnet/minecraft/core/Holder;"]
+ETB = "Lnet/minecraft/world/entity/EntityType$Builder;"; ET = "Lnet/minecraft/world/entity/EntityType;"
+cr.setdefault("net/minecraft/world/entity/EntityType$Builder", {})["build(Ljava/lang/String;)" + ET] = ["foxgrade/shim/EntityTypeCompat", "build", "(" + ETB + "Ljava/lang/String;)" + ET]
+j["renames"].setdefault("net/minecraft/client/Camera", {}).update({"getXRot": "xRot", "getYRot": "yRot", "getPosition": "position"})
+j["descWidenings"].setdefault("net/minecraft/world/level/Level", {})["playSound(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/core/BlockPos;Lnet/minecraft/sounds/SoundEvent;Lnet/minecraft/sounds/SoundSource;FF)V"] = "(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/core/BlockPos;Lnet/minecraft/sounds/SoundEvent;Lnet/minecraft/sounds/SoundSource;FF)V"
+j["classRenames"]["net/minecraft/world/level/block/state/properties/DirectionProperty"] = "net/minecraft/world/level/block/state/properties/EnumProperty"
+RB = "Lnet/minecraft/client/renderer/RenderBuffers;"; BSRC = "Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;"
+cr.setdefault("net/minecraft/client/Minecraft", {})["renderBuffers()" + RB] = ["foxgrade/shim/FrameCompat", "renderBuffers", "(Lnet/minecraft/client/Minecraft;)" + RB]
+cr.setdefault("net/minecraft/client/renderer/RenderBuffers", {})["bufferSource()" + BSRC] = ["foxgrade/shim/FrameCompat", "bufferSource", "(" + RB + ")" + BSRC]
+FONT = "Lnet/minecraft/client/gui/Font;"; DM = "Lnet/minecraft/client/gui/Font$DisplayMode;"; M4 = "Lorg/joml/Matrix4f;"; FCS = "Lnet/minecraft/util/FormattedCharSequence;"; CMP = "Lnet/minecraft/network/chat/Component;"
+for t, extra in [("Ljava/lang/String;", ""), ("Ljava/lang/String;", "Z"), (CMP, ""), (FCS, "")]:
+    key = "drawInBatch(" + t + "FFIZ" + M4 + MBS + DM + "II" + extra + ")I"
+    cr.setdefault("net/minecraft/client/gui/Font", {})[key] = ["foxgrade/shim/FrameCompat", "drawInBatch", "(" + FONT + t + "FFIZ" + M4 + MBS + DM + "II" + extra + ")I"]
+print(f"world: {nrt} RenderType factories bridged, entity/block-entity/model adapters in")
 print(f"phase 1: {len(owners)} input owners, {len(getters)} shader getters, {len(j['entryHooks'])} entry hooks, {nren} render->extract renames, {len(lines)} dyed constants")
 # ---------- phase 2 ----------
 def javap_statics(cls):

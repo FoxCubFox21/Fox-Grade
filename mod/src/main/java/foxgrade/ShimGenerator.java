@@ -50,6 +50,37 @@ public final class ShimGenerator implements Opcodes {
       Map.entry("foxgrade/shim/FabricEventsCompat", () -> fromResource("foxgrade/shim/FabricEventsCompat.class")),
       Map.entry("foxgrade/shim/OptionsCompat", () -> fromResource("foxgrade/shim/OptionsCompat.class")),
       Map.entry("foxgrade/shim/PlayerCompat", () -> fromResource("foxgrade/shim/PlayerCompat.class")),
+      // --- world rendering (26.2 submit API) ---
+      Map.entry("foxgrade/shim/RecordingBufferSource", () -> fromResource("foxgrade/shim/RecordingBufferSource.class")),
+      Map.entry("foxgrade/shim/RecordingConsumer", () -> fromResource("foxgrade/shim/RecordingConsumer.class")),
+      Map.entry("foxgrade/shim/RenderTypeCompat", () -> fromResource("foxgrade/shim/RenderTypeCompat.class")),
+      Map.entry("foxgrade/shim/LevelRendererCompat", () -> fromResource("foxgrade/shim/LevelRendererCompat.class")),
+      Map.entry("foxgrade/shim/LightTextureCompat", () -> fromResource("foxgrade/shim/LightTextureCompat.class")),
+      Map.entry("foxgrade/shim/ModelCompat", () -> fromResource("foxgrade/shim/ModelCompat.class")),
+      Map.entry("foxgrade/shim/EntityRenderCompat", () -> fromResource("foxgrade/shim/EntityRenderCompat.class")),
+      Map.entry("foxgrade/shim/BlockEntityRenderCompat", () -> fromResource("foxgrade/shim/BlockEntityRenderCompat.class")),
+      Map.entry("foxgrade/shim/WorldRenderContextImpl", () -> fromResource("foxgrade/shim/WorldRenderContextImpl.class")),
+      Map.entry("foxgrade/shim/WorldRenderContextImpl$1", () -> fromResource("foxgrade/shim/WorldRenderContextImpl$1.class")),
+      Map.entry("foxgrade/shim/EntityTypeCompat", () -> fromResource("foxgrade/shim/EntityTypeCompat.class")),
+      Map.entry("foxgrade/shim/FrameCompat", () -> fromResource("foxgrade/shim/FrameCompat.class")),
+      Map.entry("foxgrade/shim/EffectsCompat", () -> fromResource("foxgrade/shim/EffectsCompat.class")),
+      Map.entry("net/minecraft/client/renderer/MultiBufferSource", () -> fromResource("foxgrade/shim/MultiBufferSourceShim.class")),
+      Map.entry("net/minecraft/client/renderer/MultiBufferSource$BufferSource", () -> fromResource("foxgrade/shim/BufferSourceShim.class")),
+      Map.entry("net/minecraft/client/model/HierarchicalModel", () -> fromResource("foxgrade/shim/HierarchicalModelShim.class")),
+      Map.entry("net/minecraft/client/renderer/entity/ItemRenderer", () -> fromResource("foxgrade/shim/ItemRendererShim.class")),
+      Map.entry("net/fabricmc/fabric/api/client/rendering/v1/WorldRenderEvents", () -> fromResource("foxgrade/shim/WorldRenderEventsShim.class")),
+      Map.entry("net/fabricmc/fabric/api/client/rendering/v1/WorldRenderContext", () -> fromResource("foxgrade/shim/WorldRenderContextShim.class")),
+      Map.entry("net/fabricmc/fabric/api/client/rendering/v1/WorldRenderEvents$Start", () -> fromResource("foxgrade/shim/WorldRenderEventsShim$Start.class")),
+      Map.entry("net/fabricmc/fabric/api/client/rendering/v1/WorldRenderEvents$AfterSetup", () -> fromResource("foxgrade/shim/WorldRenderEventsShim$AfterSetup.class")),
+      Map.entry("net/fabricmc/fabric/api/client/rendering/v1/WorldRenderEvents$BeforeEntities", () -> fromResource("foxgrade/shim/WorldRenderEventsShim$BeforeEntities.class")),
+      Map.entry("net/fabricmc/fabric/api/client/rendering/v1/WorldRenderEvents$AfterEntities", () -> fromResource("foxgrade/shim/WorldRenderEventsShim$AfterEntities.class")),
+      Map.entry("net/fabricmc/fabric/api/client/rendering/v1/WorldRenderEvents$BeforeBlockOutline", () -> fromResource("foxgrade/shim/WorldRenderEventsShim$BeforeBlockOutline.class")),
+      Map.entry("net/fabricmc/fabric/api/client/rendering/v1/WorldRenderEvents$BlockOutline", () -> fromResource("foxgrade/shim/WorldRenderEventsShim$BlockOutline.class")),
+      Map.entry("net/fabricmc/fabric/api/client/rendering/v1/WorldRenderEvents$DebugRender", () -> fromResource("foxgrade/shim/WorldRenderEventsShim$DebugRender.class")),
+      Map.entry("net/fabricmc/fabric/api/client/rendering/v1/WorldRenderEvents$AfterTranslucent", () -> fromResource("foxgrade/shim/WorldRenderEventsShim$AfterTranslucent.class")),
+      Map.entry("net/fabricmc/fabric/api/client/rendering/v1/WorldRenderEvents$Last", () -> fromResource("foxgrade/shim/WorldRenderEventsShim$Last.class")),
+      Map.entry("net/fabricmc/fabric/api/client/rendering/v1/WorldRenderEvents$End", () -> fromResource("foxgrade/shim/WorldRenderEventsShim$End.class")),
+      Map.entry("net/fabricmc/fabric/api/client/rendering/v1/WorldRenderContext$BlockOutlineContext", () -> fromResource("foxgrade/shim/WorldRenderContextShim$BlockOutlineContextShim.class")),
       Map.entry("foxgrade/shim/NbtCompat", () -> fromResource("foxgrade/shim/NbtCompat.class")),
       Map.entry("foxgrade/shim/InteractionCompat", () -> fromResource("foxgrade/shim/InteractionCompat.class")),
       Map.entry("foxgrade/shim/SoundCompat", () -> fromResource("foxgrade/shim/SoundCompat.class")),
@@ -71,22 +102,45 @@ public final class ShimGenerator implements Opcodes {
   );
 
   // Shims compiled under a foxgrade.shim name that must land under a Minecraft name.
-  static final Map<String, String> SHIM_RENAMES = Map.of(
-      "foxgrade/shim/TesselatorShim", "com/mojang/blaze3d/vertex/Tesselator",
-      "foxgrade/shim/BufferUploaderShim", "com/mojang/blaze3d/vertex/BufferUploader",
-      "foxgrade/shim/VertexFormatModeShim", "com/mojang/blaze3d/vertex/VertexFormat$Mode");
+  static final Map<String, String> SHIM_RENAMES = renames();
+  private static Map<String, String> renames() {
+    Map<String, String> m = new java.util.HashMap<>();
+    m.put("foxgrade/shim/TesselatorShim", "com/mojang/blaze3d/vertex/Tesselator");
+    m.put("foxgrade/shim/BufferUploaderShim", "com/mojang/blaze3d/vertex/BufferUploader");
+    m.put("foxgrade/shim/VertexFormatModeShim", "com/mojang/blaze3d/vertex/VertexFormat$Mode");
+    m.put("foxgrade/shim/MultiBufferSourceShim", "net/minecraft/client/renderer/MultiBufferSource");
+    m.put("foxgrade/shim/BufferSourceShim", "net/minecraft/client/renderer/MultiBufferSource$BufferSource");
+    m.put("foxgrade/shim/HierarchicalModelShim", "net/minecraft/client/model/HierarchicalModel");
+    m.put("foxgrade/shim/ItemRendererShim", "net/minecraft/client/renderer/entity/ItemRenderer");
+    String fr = "net/fabricmc/fabric/api/client/rendering/v1/";
+    m.put("foxgrade/shim/WorldRenderEventsShim", fr + "WorldRenderEvents");
+    for (String n : new String[]{"Start", "AfterSetup", "BeforeEntities", "AfterEntities", "BeforeBlockOutline", "BlockOutline", "DebugRender", "AfterTranslucent", "Last", "End"})
+      m.put("foxgrade/shim/WorldRenderEventsShim$" + n, fr + "WorldRenderEvents$" + n);
+    m.put("foxgrade/shim/WorldRenderContextShim", fr + "WorldRenderContext");
+    m.put("foxgrade/shim/WorldRenderContextShim$BlockOutlineContextShim", fr + "WorldRenderContext$BlockOutlineContext");
+    return Map.copyOf(m);
+  }
 
   // Shims that reference other shims; the pipeline injects the closure.
-  static final Map<String, java.util.List<String>> SHIM_DEPS = Map.of(
-      "foxgrade/shim/GuiCompat", java.util.List.of("foxgrade/shim/GuiPoseStack"),
-      "foxgrade/shim/RenderSystemCompat", java.util.List.of("foxgrade/shim/GuiCompat", "com/mojang/blaze3d/vertex/Tesselator", "foxgrade/shim/SourceFactorShim", "foxgrade/shim/DestFactorShim"),
-      "foxgrade/shim/HudRenderCallback", java.util.List.of("foxgrade/shim/GuiCompat"),
-      "foxgrade/shim/TooltipCompat", java.util.List.of("foxgrade/shim/GuiCompat"),
-      "foxgrade/shim/ScreenCompat", java.util.List.of("foxgrade/shim/GuiCompat"),
-      "foxgrade/shim/ListCompat", java.util.List.of("foxgrade/shim/ListFieldCompat"),
-      "com/mojang/blaze3d/vertex/Tesselator", java.util.List.of("com/mojang/blaze3d/vertex/VertexFormat$Mode"),
-      "com/mojang/blaze3d/vertex/BufferUploader", java.util.List.of("foxgrade/shim/GuiCompat", "foxgrade/shim/RenderSystemCompat",
-          "foxgrade/shim/GuiQuadElement", "com/mojang/blaze3d/vertex/Tesselator", "com/mojang/blaze3d/vertex/VertexFormat$Mode"));
+  static final Map<String, java.util.List<String>> SHIM_DEPS = Map.ofEntries(
+      Map.entry("foxgrade/shim/GuiCompat", java.util.List.of("foxgrade/shim/GuiPoseStack")),
+      Map.entry("foxgrade/shim/RenderSystemCompat", java.util.List.of("foxgrade/shim/GuiCompat", "com/mojang/blaze3d/vertex/Tesselator", "foxgrade/shim/SourceFactorShim", "foxgrade/shim/DestFactorShim")),
+      Map.entry("foxgrade/shim/HudRenderCallback", java.util.List.of("foxgrade/shim/GuiCompat")),
+      Map.entry("foxgrade/shim/TooltipCompat", java.util.List.of("foxgrade/shim/GuiCompat")),
+      Map.entry("foxgrade/shim/ScreenCompat", java.util.List.of("foxgrade/shim/GuiCompat")),
+      Map.entry("foxgrade/shim/ListCompat", java.util.List.of("foxgrade/shim/ListFieldCompat")),
+      Map.entry("com/mojang/blaze3d/vertex/Tesselator", java.util.List.of("com/mojang/blaze3d/vertex/VertexFormat$Mode")),
+      Map.entry("com/mojang/blaze3d/vertex/BufferUploader", java.util.List.of("foxgrade/shim/GuiCompat", "foxgrade/shim/RenderSystemCompat",
+          "foxgrade/shim/GuiQuadElement", "com/mojang/blaze3d/vertex/Tesselator", "com/mojang/blaze3d/vertex/VertexFormat$Mode")),
+      Map.entry("foxgrade/shim/RecordingBufferSource", java.util.List.of("foxgrade/shim/RecordingConsumer", "net/minecraft/client/renderer/MultiBufferSource")),
+      Map.entry("net/minecraft/client/renderer/MultiBufferSource", java.util.List.of("foxgrade/shim/RecordingBufferSource")),
+      Map.entry("foxgrade/shim/EntityRenderCompat", java.util.List.of("foxgrade/shim/RecordingBufferSource")),
+      Map.entry("foxgrade/shim/FrameCompat", java.util.List.of("foxgrade/shim/RecordingBufferSource")),
+      Map.entry("foxgrade/shim/BlockEntityRenderCompat", java.util.List.of("foxgrade/shim/RecordingBufferSource")),
+      Map.entry("net/minecraft/client/renderer/entity/ItemRenderer", java.util.List.of("foxgrade/shim/RecordingBufferSource")),
+      Map.entry("net/minecraft/client/model/HierarchicalModel", java.util.List.of("foxgrade/shim/ModelCompat")),
+      Map.entry("foxgrade/shim/WorldRenderContextImpl", java.util.List.of("foxgrade/shim/WorldRenderContextImpl$1", "foxgrade/shim/RecordingBufferSource", "net/fabricmc/fabric/api/client/rendering/v1/WorldRenderContext")),
+      Map.entry("net/fabricmc/fabric/api/client/rendering/v1/WorldRenderEvents", java.util.List.of("foxgrade/shim/WorldRenderContextImpl", "net/fabricmc/fabric/api/client/rendering/v1/WorldRenderContext")));
 
   static byte[] renameClasses(byte[] bytes, Map<String, String> map) {
     org.objectweb.asm.ClassReader r = new org.objectweb.asm.ClassReader(bytes);

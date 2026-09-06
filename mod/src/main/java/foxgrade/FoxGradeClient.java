@@ -23,6 +23,7 @@ public final class FoxGradeClient implements ClientModInitializer {
   private boolean autotestOnce = false;   // panel-armed boot test: fire once, record, disarm
   private String autotestPose = "panel";
   private String autotestScreen = null;   // FQCN of a Screen to open before the shot (GUI-port test)
+  private java.util.List<String> autotestCommands = java.util.List.of();   // server commands run before the shot (spawn a ported entity)
   private net.minecraft.client.gui.screens.Screen posedScreen = null;
   private int counted = 0;
   private boolean done = false;
@@ -37,6 +38,7 @@ public final class FoxGradeClient implements ClientModInitializer {
         if (o != null && o.has("autotestPose")) autotestPose = o.get("autotestPose").getAsString();
         if (o != null && o.has("autotestOnce")) autotestOnce = o.get("autotestOnce").getAsBoolean();
         if (o != null && o.has("autotestScreen")) autotestScreen = o.get("autotestScreen").getAsString();
+        if (o != null && o.has("autotestCommands")) { var l = new java.util.ArrayList<String>(); for (var e : o.getAsJsonArray("autotestCommands")) l.add(e.getAsString()); autotestCommands = l; }
       }
     } catch (Exception ignored) { }
     // The "Fox-Grade" button on the title and pause screens — the discoverable path to the
@@ -133,6 +135,17 @@ public final class FoxGradeClient implements ClientModInitializer {
       if (autotestTicks <= 0 || done || mc.level == null || mc.player == null) return;
       counted++;
       // Autotest can pose the panel for the screenshot — how a remote verification run "sees" UI.
+      if (!autotestCommands.isEmpty() && counted == Math.max(1, autotestTicks - 60)) {
+        // Run commands on the integrated server (no permission gate): the way a ported entity or
+        // block gets into view for the screenshot.
+        try {
+          var server = mc.getSingleplayerServer();
+          if (server != null) for (String cmd : autotestCommands) {
+            server.getCommands().performPrefixedCommand(server.createCommandSourceStack().withSuppressedOutput(), cmd);
+            FoxGradePreLaunch.log("autotest: ran /" + cmd);
+          }
+        } catch (Throwable t) { FoxGradePreLaunch.log("autotest: command failed: " + t); }
+      }
       if (autotestScreen != null && counted == Math.max(1, autotestTicks - 30)) {
         // Open a ported mod's own screen: the way a GUI port is proven, since rendering bugs
         // only show when the screen actually draws. Constructor (Screen parent) or no-arg.
