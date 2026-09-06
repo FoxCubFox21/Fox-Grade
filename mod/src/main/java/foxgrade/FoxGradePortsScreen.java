@@ -621,11 +621,17 @@ public final class FoxGradePortsScreen extends Screen {
         // The version STRING is the author's own label (often "2.0.7+26.1" even for a build that
         // supports 26.2), so showing it on the button reads like the wrong version is on offer.
         // Modrinth already filtered by the running game version — say so plainly, details in the tooltip.
-        Button get = Button.builder(Component.literal("§b⬇ Install the author's official build §7(retires this port)§r"), (b) -> {
+        var getLabel = Component.literal("§b⬇ Install the author's official build §7— retires this port§r");
+        Button get = Button.builder(getLabel, (b) -> {
           b.active = false;
           b.setMessage(Component.literal("§7downloading…§r"));
           installOfficial(pt, off, b);
-        }).bounds(this.width / 2 - 130, this.height - 52, 260, 20).build();
+        }).bounds(0, 0, 20, 20).build();
+        // Size the button to its own text: a fixed width clipped the label on some phrasings.
+        int getW = Math.min(this.width - 20, this.font.width(getLabel) + 24);
+        get.setWidth(getW);
+        get.setX((this.width - getW) / 2);
+        get.setY(this.height - 52);
         get.setTooltip(Tooltip.create(Component.literal(off.version() + " — a real " + pt.targetMc + " build from the author.\nDownloads " + off.filename() + " from Modrinth, verifies its\nchecksum, and retires Fox-Grade's port.\nThe author's build always beats a port.")));
         addRenderableWidget(get);
       }
