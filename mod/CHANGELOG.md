@@ -79,6 +79,12 @@
   the loader can read them, so their shims are injected. Shim descriptors are compared post-rename.
 - More renames: Fabric lifecycle events (`World` → `Level`), `Camera` accessors, `EntityType.Builder.build`,
   `MobEffects.CONFUSION`, `DirectionProperty` → `EnumProperty`.
+- World corpus results: Lighty, Better Chunk Borders and Highlight Mobs boot; Light Level Overlay's
+  own port is clean but its Architectury library, and every 1.21.x creature mod tried (Naturalist,
+  Friends and Foes, the duck mod with GeckoLib), fail before rendering on the entity/item/block API
+  rewrite — `ArmorItem`, `InteractionResultHolder`, `FlyingAnimal`, save data through
+  `ValueInput`/`ValueOutput`, AI and combat methods that gained a `ServerLevel`. That layer is
+  mapped but not built.
 - GUI corpus results: BetterF3, Chat Heads and Zoomify (co-ported with its YACL config library)
   boot; Mod Menu's mod list screen opens and renders end to end. Jade, WTHIT and Shulker Box
   Tooltip stay out — their remaining references are game internals (block state, tooltips, container
