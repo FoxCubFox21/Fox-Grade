@@ -2,9 +2,9 @@
 
 **That mod you love that died two versions ago? Drop its jar in a folder and launch the game.**
 
-Fox-Grade rewrites old Fabric mods to run on the Minecraft version you're playing — at launch,
-automatically, on your machine. It translates names across mapping eras (intermediary → Mojang),
-rewrites access wideners and mixin refmaps, verifies every mixin target against the real game,
+Fox-Grade rewrites old Fabric mods to run on Minecraft 26.2 — at launch, automatically, on your
+own machine. It translates names across mapping eras (intermediary → Mojang),
+rewrites access wideners and mixin refmaps, checks every mixin target still exists,
 and disables — surgically, with a plain-English report — only what can't be made safe.
 
 ⭐ **The panel** (F8, or the button on the title/pause screen)
