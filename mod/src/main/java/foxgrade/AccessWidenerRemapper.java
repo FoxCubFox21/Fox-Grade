@@ -21,7 +21,15 @@ public final class AccessWidenerRemapper {
     Result(String t, int o, int d) { text = t; owners = o; descriptors = d; }
   }
 
-  public static Result rewrite(String text, Map<String, String> slashTable) {
+  /** Member-name translation, keyed the way the bytecode remapper is (original owner, name, descriptor). */
+  public interface Names {
+    String method(String owner, String name, String desc);
+    String field(String owner, String name, String desc);
+  }
+
+  public static Result rewrite(String text, Map<String, String> slashTable) { return rewrite(text, slashTable, null); }
+
+  public static Result rewrite(String text, Map<String, String> slashTable, Names names) {
     if (slashTable.isEmpty()) return new Result(text, 0, 0);
     StringBuilder out = new StringBuilder(text.length());
     int owners = 0, descriptors = 0;
@@ -36,7 +44,7 @@ public final class AccessWidenerRemapper {
       // For obfuscated builds, "intermediary" or "named" show up here. After Fox-Grade's remap
       // the class references are in the official (real) 26.2 names, so rewrite the header
       // namespace to match — otherwise Fabric refuses the widener with a namespace-mismatch.
-      if (stripped.startsWith("accessWidener")) {
+      if (stripped.startsWith("accessWidener") || stripped.startsWith("classTweaker")) {
         String[] parts = stripped.split("\\s+");
         if (parts.length >= 3) parts[2] = "official";
         out.append(String.join(" ", parts));
@@ -52,6 +60,15 @@ public final class AccessWidenerRemapper {
       // tokens: [access, target, owner, (name)?, (desc)?]
       int ownerIdx = tokenIdx.get(2);
       String owner = parts.get(ownerIdx);
+      // Member NAME first, against the original owner and descriptor — an intermediary
+      // method_NNNN must become the target's real name or the widening silently misses.
+      if (names != null && tokenIdx.size() >= 4) {
+        String target = parts.get(tokenIdx.get(1));
+        String name = parts.get(tokenIdx.get(3));
+        String desc = tokenIdx.size() >= 5 ? parts.get(tokenIdx.get(4)) : "";
+        String to = target.equals("method") ? names.method(owner, name, desc) : target.equals("field") ? names.field(owner, name, desc) : null;
+        if (to != null && !to.equals(name)) parts.set(tokenIdx.get(3), to);
+      }
       String toOwner = slashTable.get(owner);
       if (toOwner != null) { parts.set(ownerIdx, toOwner); owners++; }
       for (int t = 3; t < tokenIdx.size(); t++) {

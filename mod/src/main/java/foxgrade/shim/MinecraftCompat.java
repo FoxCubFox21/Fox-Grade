@@ -19,4 +19,7 @@ public final class MinecraftCompat {
   public static Screen screen(Minecraft mc) { return mc.gui.screen(); }
   public static void setScreenField(Minecraft mc, Screen s) { mc.gui.setScreen(s); }
   public static void setScreen(Minecraft mc, Screen s) { mc.setScreenAndShow(s); }
+
+  // Toasts moved behind Gui as well.
+  public static net.minecraft.client.gui.components.toasts.ToastManager getToasts(Minecraft mc) { return mc.gui.toastManager(); }
 }

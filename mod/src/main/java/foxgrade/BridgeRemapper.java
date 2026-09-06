@@ -16,6 +16,18 @@ import java.util.Map;
 
 public final class BridgeRemapper extends Remapper {
   private final Map<String, String> inheritedRenames;
+  // name+desc → [[ancestorClass, newName], …]: an inherited rename that depends on what the
+  // declaring class extends (renderWidget is extractContents under AbstractButton, whose own
+  // extractWidgetRenderState is final, and extractWidgetRenderState elsewhere).
+  private Map<String, java.util.List<String[]>> inheritedRenamesByAncestor = Map.of();
+  private java.util.function.UnaryOperator<String> superOf = (c) -> null;
+  public void setSuperOf(java.util.function.UnaryOperator<String> f) { this.superOf = f; }
+  public void setInheritedRenamesByAncestor(Map<String, java.util.List<String[]>> m) { this.inheritedRenamesByAncestor = m; }
+  private boolean descendsFrom(String cls, String ancestor) {
+    String o = cls;
+    for (int guard = 0; o != null && guard < 48; guard++) { if (o.equals(ancestor)) return true; o = superOf.apply(o); }
+    return false;
+  }
   private final Map<String, String> classes;
   private final Map<String, Map<String, String>> methods;
   private final Map<String, Map<String, String>> fields;
@@ -84,6 +96,12 @@ public final class BridgeRemapper extends Remapper {
     Map<String, String> api = apiRenames.get(owner);
     if (api == null && !mappedOwner.equals(owner)) api = apiRenames.get(mappedOwner);
     if (api != null) { String to = api.get(name); if (to != null) return to; }
+    // Curated renames apply to subclasses too, nearest ancestor first, the way the JVM resolves
+    // the member (Button.renderWidget is AbstractWidget's method).
+    for (String anc = superOf.apply(mappedOwner), g0 = ""; anc != null && g0.length() < 48; anc = superOf.apply(anc), g0 += "x") {
+      Map<String, String> a = apiRenames.get(anc);
+      if (a != null) { String to = a.get(name); if (to != null) return to; }
+    }
     Map<String, String> m = methods.get(owner);
     if (m != null) { String to = m.get(name); if (to != null) return apiChain(mappedOwner, to); }
     int dollar = owner.indexOf('$');
@@ -116,7 +134,11 @@ public final class BridgeRemapper extends Remapper {
   // signatures (no class names in the desc), so pre/post-remap descriptor form is identical.
   private String finishInherited(String owner, String resolved, String descriptor) {
     if (!isMinecraftOwner(owner)) {
+      String mapped = mapMethodDesc(descriptor);
+      java.util.List<String[]> byAnc = inheritedRenamesByAncestor.get(resolved + mapped);
+      if (byAnc != null) for (String[] a : byAnc) if (descendsFrom(map(owner), a[0])) return a[1];
       String ir = inheritedRenames.get(resolved + descriptor);
+      if (ir == null) ir = inheritedRenames.get(resolved + mapped);   // keys written in target names
       if (ir != null) return ir;
     }
     return resolved;

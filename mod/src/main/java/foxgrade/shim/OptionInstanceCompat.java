@@ -14,4 +14,7 @@ public final class OptionInstanceCompat {
   public static OptionInstance<Boolean> createBoolean(String key, boolean initial, Consumer<Boolean> onChange) {
     return OptionInstance.createBoolean(key, initial, onChange::accept);
   }
+
+  /** The Consumer a 1.21.x constructor took, as the listener interface 26.2's takes. */
+  public static <T> OptionInstance.ValueUpdateListener<T> listener(Consumer<T> c) { return c::accept; }
 }

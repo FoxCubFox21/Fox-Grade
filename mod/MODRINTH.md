@@ -22,11 +22,12 @@ automatically at next launch. **The author's build always beats a port.**
 ⭐ **Nothing is ever deleted.** Originals are kept, ports are reversible, and every launch writes
 a report of what happened.
 
-**Tested, and honest about the result.** Batch-tested against 25 mods from 1.21.x and 26.1: 17 port
-and boot into a world (six also verified on a dedicated server), 4 cannot be ported because 26.2
-removed the rendering APIs they are built on or they ship native code, and 4 were correctly held
-back because a library they needed was not provided. The report lists every class, field and
-constructor a port still references that the game no longer has.
+**Tested, and honest about the result.** Batch-tested against 31 mods from 1.21.x and 26.1: 20 port
+and boot into a world (six also verified on a dedicated server; Mod Menu's mod list opens and
+renders through the GUI bridges), 6 cannot be ported because 26.2 rewrote the internals they are
+built on or they ship native code, and 5 were correctly held back because a library they needed was
+not provided. The report lists every class, member and constructor a port still references that
+the game no longer has.
 
 **Minecraft 26.2 only.** The translation tables are built for a single version. On any other
 version Fox-Grade refuses to run rather than produce a port it cannot verify.

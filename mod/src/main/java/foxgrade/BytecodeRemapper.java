@@ -32,6 +32,28 @@ public final class BytecodeRemapper {
   private final BridgeRemapper remapper;
   private final Map<String, Map<String, String[]>> callRedirects;
   private final Map<String, Map<String, String[]>> fieldRedirects;
+  private final Map<String, Map<String, String>> descWidenings;
+  private final Map<String, Map<String, String[]>> handleRedirects;
+  private final Map<String, Map<String, FabricApiBridges.CallAdapter>> callAdapters;
+  private final java.util.List<FabricApiBridges.OverrideAdapter> overrideAdapters;
+  private final Map<String, String[]> entryHooks;
+  // Superclass oracle (mod classes from the jar being ported, Minecraft classes from the game):
+  // a call whose owner is a SUBCLASS of the class a table names still gets the rewrite, the way
+  // the JVM itself resolves the member upward. Constructors excluded — they are not inherited.
+  private java.util.function.UnaryOperator<String> superOf = (c) -> null;
+  public void setSuperOf(java.util.function.UnaryOperator<String> f) { this.superOf = f; remapper.setSuperOf(f); }
+  public String mapClass(String internalName) { return remapper.map(internalName); }
+  public String mapMethodName(String owner, String name, String desc) { return remapper.mapMethodName(owner, name, desc); }
+  public String mapFieldName(String owner, String name, String desc) { return remapper.mapFieldName(owner, name, desc); }
+  private <T> T lookup(Map<String, Map<String, T>> table, String owner, String key) {
+    String o = owner;
+    for (int guard = 0; o != null && guard < 48; guard++) {
+      Map<String, T> m = table.get(o);
+      if (m != null) { T v = m.get(key); if (v != null) return v; }
+      o = superOf.apply(o);
+    }
+    return null;
+  }
   private final Map<String, Map<String, FabricApiBridges.CtorAdapter>> ctorAdapters;
   // Shim classes actually needed by redirects that fired — the pipeline injects these.
   private final Set<String> usedShims = new HashSet<>();
@@ -52,6 +74,12 @@ public final class BytecodeRemapper {
         bridge.yarnMethodTable(), bridge.yarnFieldTable(), apiBridges.inheritedRenames());
     this.callRedirects = apiBridges.callRedirects();
     this.fieldRedirects = apiBridges.fieldRedirects();
+    this.descWidenings = apiBridges.descWidenings();
+    this.handleRedirects = apiBridges.handleRedirects();
+    this.callAdapters = apiBridges.callAdapters();
+    this.overrideAdapters = apiBridges.overrideAdapters();
+    this.entryHooks = apiBridges.entryHooks();
+    this.remapper.setInheritedRenamesByAncestor(apiBridges.inheritedRenamesByAncestor());
     this.ctorAdapters = apiBridges.ctorAdapters();
   }
 
@@ -64,17 +92,93 @@ public final class BytecodeRemapper {
     // (owner, name+desc) match a redirect entry are rewritten to the replacement target — a
     // Fox-Grade shim reimplementing an API that no longer exists.
     ClassVisitor redirect = new ClassVisitor(Opcodes.ASM9, writer) {
+      String className; int classAccess;
+      final Set<String> declared = new HashSet<>();
+      @Override public void visit(int version, int access, String name, String sig, String superName, String[] itfs) {
+        className = name; classAccess = access;
+        super.visit(version, access, name, sig, superName, itfs);
+      }
+      @Override public void visitEnd() {
+        // Override adapters: the mod overrides an old-signature callback; synthesise the
+        // new-signature one so the game keeps calling into it (see FabricApiBridges).
+        if ((classAccess & Opcodes.ACC_INTERFACE) == 0) {
+          for (var oa : overrideAdapters) {
+            if (!declared.contains(oa.oldName() + oa.oldDesc()) || declared.contains(oa.newName() + oa.newDesc())) continue;
+            org.objectweb.asm.Type[] newArgs = org.objectweb.asm.Type.getArgumentTypes(oa.newDesc());
+            org.objectweb.asm.Type[] oldArgs = org.objectweb.asm.Type.getArgumentTypes(oa.oldDesc());
+            int[] slot = new int[newArgs.length + 1]; slot[0] = 1;
+            for (int i = 0; i < newArgs.length; i++) slot[i + 1] = slot[i] + newArgs[i].getSize();
+            MethodVisitor mv = super.visitMethod(Opcodes.ACC_PUBLIC, oa.newName(), oa.newDesc(), null, null);
+            mv.visitCode();
+            mv.visitVarInsn(Opcodes.ALOAD, 0);
+            for (int i = 0; i < oa.unpack().size() && i < oldArgs.length; i++) {
+              String[] u = oa.unpack().get(i);
+              if (u.length == 4) {
+                mv.visitMethodInsn(Opcodes.INVOKESTATIC, u[1], u[2], u[3], false);
+              } else if (u.length == 3 && u[0].equals("this")) {
+                mv.visitVarInsn(Opcodes.ALOAD, 0);
+                mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, className, u[1], u[2], false);
+              } else if (u.length == 3) {
+                mv.visitVarInsn(Opcodes.ALOAD, slot[0]);
+                mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, u[0], u[1], u[2], false);
+                if (oldArgs[i].getSort() == org.objectweb.asm.Type.CHAR
+                    && org.objectweb.asm.Type.getReturnType(u[2]).getSort() == org.objectweb.asm.Type.INT) mv.visitInsn(Opcodes.I2C);
+              } else if (u[0].startsWith("p")) {
+                int pi = Integer.parseInt(u[0].substring(1)) - 1;
+                mv.visitVarInsn(newArgs[pi].getOpcode(Opcodes.ILOAD), slot[pi]);
+              } else {
+                mv.visitLdcInsn(Integer.parseInt(u[0]));
+              }
+            }
+            mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, className, oa.oldName(), oa.oldDesc(), false);
+            mv.visitInsn(org.objectweb.asm.Type.getReturnType(oa.newDesc()).getOpcode(Opcodes.IRETURN));
+            mv.visitMaxs(0, 0); mv.visitEnd();
+          }
+        }
+        super.visitEnd();
+      }
       @Override public MethodVisitor visitMethod(int access, String name, String desc, String sig, String[] ex) {
+        if ((access & (Opcodes.ACC_STATIC | Opcodes.ACC_PRIVATE)) == 0) declared.add(name + desc);
         MethodVisitor down = super.visitMethod(access, name, desc, sig, ex);
+        final String[] hook = (access & Opcodes.ACC_STATIC) == 0 ? entryHooks.get(name + desc) : null;
         return new MethodVisitor(Opcodes.ASM9, down) {
+          @Override public void visitCode() {
+            super.visitCode();
+            if (hook != null) {
+              usedShims.add(hook[0]);
+              super.visitVarInsn(Opcodes.ALOAD, 1);
+              super.visitMethodInsn(Opcodes.INVOKESTATIC, hook[0], hook[1], hook[2], false);
+            }
+          }
           @Override public void visitMethodInsn(int opcode, String owner, String mname, String mdesc, boolean itf) {
-            Map<String, String[]> byOwner = callRedirects.get(owner);
-            String[] to = byOwner != null ? byOwner.get(mname + mdesc) : null;
+            String[] to = mname.equals("<init>") ? null : lookup(callRedirects, owner, mname + mdesc);
             if (to != null) {
               usedShims.add(to[0]);
               super.visitMethodInsn(Opcodes.INVOKESTATIC, to[0], to[1], to[2], false);
               return;
             }
+            FabricApiBridges.CallAdapter ca = mname.equals("<init>") ? null : lookup(callAdapters, owner, mname + mdesc);
+            if (ca != null) {
+              // Repack arguments: spill them all, rebuild the list with the first K folded into
+              // an object by the pack shim, the rest reloaded, then the new signature is called.
+              org.objectweb.asm.Type[] args = org.objectweb.asm.Type.getArgumentTypes(mdesc);
+              int base = 400, idx = base; int[] slotAt = new int[args.length];
+              for (int i = 0; i < args.length; i++) { slotAt[i] = idx; idx += args[i].getSize(); }
+              for (int i = args.length - 1; i >= 0; i--) super.visitVarInsn(args[i].getOpcode(Opcodes.ISTORE), slotAt[i]);
+              int k = 0;
+              if (ca.pack() != null) {
+                k = org.objectweb.asm.Type.getArgumentTypes(ca.pack()[2]).length;
+                for (int i = 0; i < k; i++) super.visitVarInsn(args[i].getOpcode(Opcodes.ILOAD), slotAt[i]);
+                usedShims.add(ca.pack()[0]);
+                super.visitMethodInsn(Opcodes.INVOKESTATIC, ca.pack()[0], ca.pack()[1], ca.pack()[2], false);
+              }
+              for (int i = k; i < args.length; i++) super.visitVarInsn(args[i].getOpcode(Opcodes.ILOAD), slotAt[i]);
+              for (int c : ca.extras()) super.visitLdcInsn(c);
+              super.visitMethodInsn(opcode, owner, ca.newName(), ca.newDesc(), itf);
+              return;
+            }
+            String wide = lookup(descWidenings, owner, mname + mdesc);
+            if (wide != null) { super.visitMethodInsn(opcode, owner, mname, wide, itf); return; }
             // Constructor-signature adapter: an INVOKESPECIAL <init> whose (owner, desc) match a
             // table entry is rewritten to the target version's descriptor. Arguments sit on the
             // stack above the uninitialized ref — an uninitialized object can't be passed to any
@@ -93,6 +197,11 @@ public final class BytecodeRemapper {
                 for (int i = args.length - 1; i >= 0; i--) {
                   super.visitVarInsn(args[i].getOpcode(Opcodes.ISTORE), slotAt[i]);
                 }
+                // slot -1: a NEW leading argument the constructor grew (DynamicTexture's name
+                // supplier), produced by a no-arg shim; slot -2: the same, trailing.
+                for (var t : ad.transforms()) {
+                  if (t.slot() == -1) { usedShims.add(t.viaOwner()); super.visitMethodInsn(Opcodes.INVOKESTATIC, t.viaOwner(), t.viaName(), t.viaDesc(), false); }
+                }
                 for (int i = 0; i < args.length; i++) {
                   super.visitVarInsn(args[i].getOpcode(Opcodes.ILOAD), slotAt[i]);
                   for (var t : ad.transforms()) {
@@ -101,6 +210,9 @@ public final class BytecodeRemapper {
                       super.visitMethodInsn(Opcodes.INVOKESTATIC, t.viaOwner(), t.viaName(), t.viaDesc(), false);
                     }
                   }
+                }
+                for (var t : ad.transforms()) {
+                  if (t.slot() == -2) { usedShims.add(t.viaOwner()); super.visitMethodInsn(Opcodes.INVOKESTATIC, t.viaOwner(), t.viaName(), t.viaDesc(), false); }
                 }
                 super.visitMethodInsn(Opcodes.INVOKESPECIAL, owner, "<init>", ad.newDesc(), false);
                 return;
@@ -118,13 +230,26 @@ public final class BytecodeRemapper {
             Object[] out = bsmArgs.clone();
             for (int i = 0; i < out.length; i++) {
               if (!(out[i] instanceof org.objectweb.asm.Handle h)) continue;
-              Map<String, String[]> byOwner = callRedirects.get(h.getOwner());
-              String[] to = byOwner != null ? byOwner.get(h.getName() + h.getDesc()) : null;
+              String[] to = h.getName().equals("<init>") ? null : lookup(callRedirects, h.getOwner(), h.getName() + h.getDesc());
               if (to != null) {
                 usedShims.add(to[0]);
                 out[i] = new org.objectweb.asm.Handle(Opcodes.H_INVOKESTATIC, to[0], to[1], to[2], false);
                 continue;
               }
+              String[] toH = lookup(handleRedirects, h.getOwner(), h.getName() + h.getDesc());
+              if (toH != null) {
+                usedShims.add(toH[0]);
+                out[i] = new org.objectweb.asm.Handle(Opcodes.H_INVOKESTATIC, toH[0], toH[1], toH[2], false);
+                // The lambda's instantiated type still names the dead return type; align it with
+                // the shim so LambdaMetafactory never resolves it.
+                if (out.length > 2 && out[2] instanceof org.objectweb.asm.Type t && t.getSort() == org.objectweb.asm.Type.METHOD
+                    && t.getArgumentTypes().length == org.objectweb.asm.Type.getArgumentTypes(toH[2]).length) {
+                  out[2] = org.objectweb.asm.Type.getMethodType(toH[2]);
+                }
+                continue;
+              }
+              String wideH = lookup(descWidenings, h.getOwner(), h.getName() + h.getDesc());
+              if (wideH != null) { out[i] = new org.objectweb.asm.Handle(h.getTag(), h.getOwner(), h.getName(), wideH, h.isInterface()); continue; }
               if (h.getTag() == Opcodes.H_NEWINVOKESPECIAL) {
                 Map<String, FabricApiBridges.CtorAdapter> byCtor = ctorAdapters.get(h.getOwner());
                 FabricApiBridges.CtorAdapter ad = byCtor != null ? byCtor.get(h.getDesc()) : null;
@@ -139,11 +264,10 @@ public final class BytecodeRemapper {
           // GETFIELD leaves the receiver on the stack and PUTFIELD the receiver then the value —
           // exactly the argument lists the shim's getter and setter take, so nothing is shuffled.
           @Override public void visitFieldInsn(int opcode, String owner, String fname, String fdesc) {
-            Map<String, String[]> byOwner = fieldRedirects.get(owner);
-            if (byOwner != null) {
+            {
               String kind = opcode == Opcodes.GETFIELD ? "get " : opcode == Opcodes.PUTFIELD ? "put "
                   : opcode == Opcodes.GETSTATIC ? "getstatic " : "putstatic ";
-              String[] to = byOwner.get(kind + fname + ":" + fdesc);
+              String[] to = lookup(fieldRedirects, owner, kind + fname + ":" + fdesc);
               if (to != null) {
                 usedShims.add(to[0]);
                 super.visitMethodInsn(Opcodes.INVOKESTATIC, to[0], to[1], to[2], false);

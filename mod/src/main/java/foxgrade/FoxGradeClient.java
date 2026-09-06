@@ -22,6 +22,7 @@ public final class FoxGradeClient implements ClientModInitializer {
   private boolean autotestPanel = false;
   private boolean autotestOnce = false;   // panel-armed boot test: fire once, record, disarm
   private String autotestPose = "panel";
+  private String autotestScreen = null;   // FQCN of a Screen to open before the shot (GUI-port test)
   private net.minecraft.client.gui.screens.Screen posedScreen = null;
   private int counted = 0;
   private boolean done = false;
@@ -35,6 +36,7 @@ public final class FoxGradeClient implements ClientModInitializer {
         if (o != null && o.has("autotestPanel")) autotestPanel = o.get("autotestPanel").getAsBoolean();
         if (o != null && o.has("autotestPose")) autotestPose = o.get("autotestPose").getAsString();
         if (o != null && o.has("autotestOnce")) autotestOnce = o.get("autotestOnce").getAsBoolean();
+        if (o != null && o.has("autotestScreen")) autotestScreen = o.get("autotestScreen").getAsString();
       }
     } catch (Exception ignored) { }
     // The "Fox-Grade" button on the title and pause screens — the discoverable path to the
@@ -131,6 +133,25 @@ public final class FoxGradeClient implements ClientModInitializer {
       if (autotestTicks <= 0 || done || mc.level == null || mc.player == null) return;
       counted++;
       // Autotest can pose the panel for the screenshot — how a remote verification run "sees" UI.
+      if (autotestScreen != null && counted == Math.max(1, autotestTicks - 30)) {
+        // Open a ported mod's own screen: the way a GUI port is proven, since rendering bugs
+        // only show when the screen actually draws. Constructor (Screen parent) or no-arg.
+        try {
+          Class<?> c = Class.forName(autotestScreen, true, FoxGradeClient.class.getClassLoader());
+          Object s;
+          try { s = c.getConstructor(net.minecraft.client.gui.screens.Screen.class).newInstance((Object) null); }
+          catch (NoSuchMethodException e) { s = c.getConstructor().newInstance(); }
+          mc.setScreenAndShow((net.minecraft.client.gui.screens.Screen) s);
+          FoxGradePreLaunch.log("autotest: opened screen " + autotestScreen);
+        } catch (Throwable t) {
+          StringBuilder sb = new StringBuilder("autotest: could not open screen " + autotestScreen + ": " + t);
+          Throwable c = t;
+          while (c.getCause() != null && c.getCause() != c) { c = c.getCause(); sb.append("\n    caused by: ").append(c); }
+          StackTraceElement[] st = c.getStackTrace();
+          for (int i = 0; i < Math.min(4, st.length); i++) sb.append("\n      at ").append(st[i]);
+          FoxGradePreLaunch.log(sb.toString());
+        }
+      }
       if (autotestPanel && counted == Math.max(1, autotestTicks - 30)) {
         panelOpen = true;
         posedScreen = switch (autotestPose) {
@@ -161,7 +182,8 @@ public final class FoxGradeClient implements ClientModInitializer {
         done = true;
         try {
           Screenshot.grab(mc, false);
-          FoxGradePreLaunch.log("autotest screenshot taken at tick " + counted);
+          FoxGradePreLaunch.log("autotest screenshot taken at tick " + counted + " — screen at shot: "
+              + (mc.gui.screen() == null ? "none" : mc.gui.screen().getClass().getName()));
         } catch (Throwable t) {
           FoxGradePreLaunch.log("autotest screenshot FAILED: " + t);
         }

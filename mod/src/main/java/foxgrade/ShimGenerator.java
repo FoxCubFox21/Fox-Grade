@@ -29,15 +29,78 @@ public final class ShimGenerator implements Opcodes {
       Map.entry("net/minecraft/util/OptionEnum", ShimGenerator::optionEnum),
       Map.entry("net/minecraft/util/LazyLoadedValue", ShimGenerator::lazyLoadedValue),
       Map.entry("foxgrade/shim/MinecraftCompat", () -> fromResource("foxgrade/shim/MinecraftCompat.class")),
-      Map.entry("foxgrade/shim/UtilCompat", ShimGenerator::utilCompat)
+      Map.entry("foxgrade/shim/UtilCompat", ShimGenerator::utilCompat),
+      // --- GUI rendering bridges (26.2 GuiGraphicsExtractor / render pipelines) ---
+      Map.entry("foxgrade/shim/GuiCompat", () -> fromResource("foxgrade/shim/GuiCompat.class")),
+      Map.entry("foxgrade/shim/GuiPoseStack", () -> fromResource("foxgrade/shim/GuiPoseStack.class")),
+      Map.entry("foxgrade/shim/GuiQuadElement", () -> fromResource("foxgrade/shim/GuiQuadElement.class")),
+      Map.entry("foxgrade/shim/RenderSystemCompat", () -> fromResource("foxgrade/shim/RenderSystemCompat.class")),
+      Map.entry("foxgrade/shim/ShaderCompat", () -> fromResource("foxgrade/shim/ShaderCompat.class")),
+      Map.entry("foxgrade/shim/InputCompat", () -> fromResource("foxgrade/shim/InputCompat.class")),
+      Map.entry("foxgrade/shim/FontCompat", () -> fromResource("foxgrade/shim/FontCompat.class")),
+      Map.entry("foxgrade/shim/I18nCompat", () -> fromResource("foxgrade/shim/I18nCompat.class")),
+      Map.entry("foxgrade/shim/ChatFormattingCompat", () -> fromResource("foxgrade/shim/ChatFormattingCompat.class")),
+      Map.entry("foxgrade/shim/WindowCompat", () -> fromResource("foxgrade/shim/WindowCompat.class")),
+      Map.entry("foxgrade/shim/SourceFactorShim", () -> fromResource("foxgrade/shim/SourceFactorShim.class")),
+      Map.entry("foxgrade/shim/DestFactorShim", () -> fromResource("foxgrade/shim/DestFactorShim.class")),
+      Map.entry("foxgrade/shim/CameraCompat", () -> fromResource("foxgrade/shim/CameraCompat.class")),
+      Map.entry("foxgrade/shim/ListFieldCompat", () -> fromResource("foxgrade/shim/ListFieldCompat.class")),
+      Map.entry("foxgrade/shim/ScreenCompat", () -> fromResource("foxgrade/shim/ScreenCompat.class")),
+      Map.entry("foxgrade/shim/SkinCompat", () -> fromResource("foxgrade/shim/SkinCompat.class")),
+      Map.entry("foxgrade/shim/FabricEventsCompat", () -> fromResource("foxgrade/shim/FabricEventsCompat.class")),
+      Map.entry("foxgrade/shim/OptionsCompat", () -> fromResource("foxgrade/shim/OptionsCompat.class")),
+      Map.entry("foxgrade/shim/PlayerCompat", () -> fromResource("foxgrade/shim/PlayerCompat.class")),
+      Map.entry("foxgrade/shim/NbtCompat", () -> fromResource("foxgrade/shim/NbtCompat.class")),
+      Map.entry("foxgrade/shim/InteractionCompat", () -> fromResource("foxgrade/shim/InteractionCompat.class")),
+      Map.entry("foxgrade/shim/SoundCompat", () -> fromResource("foxgrade/shim/SoundCompat.class")),
+      Map.entry("foxgrade/shim/ImageCompat", () -> fromResource("foxgrade/shim/ImageCompat.class")),
+      Map.entry("foxgrade/shim/TextureCompat", () -> fromResource("foxgrade/shim/TextureCompat.class")),
+      Map.entry("foxgrade/shim/ItemCompat", () -> fromResource("foxgrade/shim/ItemCompat.class")),
+      Map.entry("foxgrade/shim/LevelCompat", () -> fromResource("foxgrade/shim/LevelCompat.class")),
+      Map.entry("foxgrade/shim/ToastCompat", () -> fromResource("foxgrade/shim/ToastCompat.class")),
+      Map.entry("foxgrade/shim/TooltipCompat", () -> fromResource("foxgrade/shim/TooltipCompat.class")),
+      Map.entry("foxgrade/shim/WidgetCompat", () -> fromResource("foxgrade/shim/WidgetCompat.class")),
+      Map.entry("foxgrade/shim/ListCompat", ShimGenerator::listCompat),
+      Map.entry("foxgrade/shim/BlocksCompat", () -> fromResource("foxgrade/shim/BlocksCompat.class")),
+      // Removed Minecraft classes re-created at their own names: written as ordinary Java under
+      // foxgrade.shim and renamed on the way in, so Fox-Grade's own jar never carries a class in
+      // a Mojang package.
+      Map.entry("com/mojang/blaze3d/vertex/Tesselator", () -> fromResource("foxgrade/shim/TesselatorShim.class")),
+      Map.entry("com/mojang/blaze3d/vertex/BufferUploader", () -> fromResource("foxgrade/shim/BufferUploaderShim.class")),
+      Map.entry("com/mojang/blaze3d/vertex/VertexFormat$Mode", () -> fromResource("foxgrade/shim/VertexFormatModeShim.class"))
   );
+
+  // Shims compiled under a foxgrade.shim name that must land under a Minecraft name.
+  static final Map<String, String> SHIM_RENAMES = Map.of(
+      "foxgrade/shim/TesselatorShim", "com/mojang/blaze3d/vertex/Tesselator",
+      "foxgrade/shim/BufferUploaderShim", "com/mojang/blaze3d/vertex/BufferUploader",
+      "foxgrade/shim/VertexFormatModeShim", "com/mojang/blaze3d/vertex/VertexFormat$Mode");
+
+  // Shims that reference other shims; the pipeline injects the closure.
+  static final Map<String, java.util.List<String>> SHIM_DEPS = Map.of(
+      "foxgrade/shim/GuiCompat", java.util.List.of("foxgrade/shim/GuiPoseStack"),
+      "foxgrade/shim/RenderSystemCompat", java.util.List.of("foxgrade/shim/GuiCompat", "com/mojang/blaze3d/vertex/Tesselator", "foxgrade/shim/SourceFactorShim", "foxgrade/shim/DestFactorShim"),
+      "foxgrade/shim/HudRenderCallback", java.util.List.of("foxgrade/shim/GuiCompat"),
+      "foxgrade/shim/TooltipCompat", java.util.List.of("foxgrade/shim/GuiCompat"),
+      "foxgrade/shim/ScreenCompat", java.util.List.of("foxgrade/shim/GuiCompat"),
+      "foxgrade/shim/ListCompat", java.util.List.of("foxgrade/shim/ListFieldCompat"),
+      "com/mojang/blaze3d/vertex/Tesselator", java.util.List.of("com/mojang/blaze3d/vertex/VertexFormat$Mode"),
+      "com/mojang/blaze3d/vertex/BufferUploader", java.util.List.of("foxgrade/shim/GuiCompat", "foxgrade/shim/RenderSystemCompat",
+          "foxgrade/shim/GuiQuadElement", "com/mojang/blaze3d/vertex/Tesselator", "com/mojang/blaze3d/vertex/VertexFormat$Mode"));
+
+  static byte[] renameClasses(byte[] bytes, Map<String, String> map) {
+    org.objectweb.asm.ClassReader r = new org.objectweb.asm.ClassReader(bytes);
+    ClassWriter w = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+    r.accept(new org.objectweb.asm.commons.ClassRemapper(w, new org.objectweb.asm.commons.SimpleRemapper(map)), 0);
+    return w.toByteArray();
+  }
 
   // Shims with real logic are written as normal Java inside Fox-Grade and copied into the ported
   // jar from Fox-Grade's own class resources — no hand-rolled ASM for anything non-trivial.
   private static byte[] fromResource(String path) {
     try (var in = ShimGenerator.class.getResourceAsStream("/" + path)) {
       if (in == null) throw new IllegalStateException("missing shim resource " + path);
-      return in.readAllBytes();
+      return renameClasses(in.readAllBytes(), SHIM_RENAMES);
     } catch (java.io.IOException e) { throw new RuntimeException(e); }
   }
 
@@ -123,6 +186,35 @@ public final class ShimGenerator implements Opcodes {
     mv.visitFieldInsn(GETFIELD, name, "value", "Ljava/lang/Object;");
     mv.visitInsn(ARETURN);
     mv.visitMaxs(0, 0); mv.visitEnd();
+    cw.visitEnd();
+    return cw.toByteArray();
+  }
+
+  // List helpers 1.21.x mods called on their own AbstractSelectionList subclasses. Written in
+  // bytecode because Entry is a protected nested class javac will not let a shim name; the JVM
+  // resolves it by its class file, which is public.
+  private static byte[] listCompat() {
+    String name = "foxgrade/shim/ListCompat", list = "net/minecraft/client/gui/components/AbstractSelectionList";
+    String entry = "L" + list + "$Entry;", asl = "L" + list + ";";
+    ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
+    cw.visit(V17, ACC_PUBLIC | ACC_FINAL | ACC_SUPER, name, null, "java/lang/Object", null);
+    MethodVisitor mv = cw.visitMethod(ACC_PUBLIC | ACC_STATIC, "getEntry", "(" + asl + "I)" + entry, null, null);
+    mv.visitCode(); mv.visitVarInsn(ALOAD, 0);
+    mv.visitMethodInsn(INVOKESTATIC, "foxgrade/shim/ListFieldCompat", "children", "(" + asl + ")Ljava/util/List;", false);
+    mv.visitVarInsn(ILOAD, 1); mv.visitMethodInsn(INVOKEINTERFACE, "java/util/List", "get", "(I)Ljava/lang/Object;", true);
+    mv.visitTypeInsn(CHECKCAST, list + "$Entry"); mv.visitInsn(ARETURN); mv.visitMaxs(0, 0); mv.visitEnd();
+    mv = cw.visitMethod(ACC_PUBLIC | ACC_STATIC, "remove", "(" + asl + "I)" + entry, null, null);
+    mv.visitCode(); mv.visitVarInsn(ALOAD, 0);
+    mv.visitMethodInsn(INVOKESTATIC, "foxgrade/shim/ListFieldCompat", "children", "(" + asl + ")Ljava/util/List;", false);
+    mv.visitVarInsn(ILOAD, 1); mv.visitMethodInsn(INVOKEINTERFACE, "java/util/List", "remove", "(I)Ljava/lang/Object;", true);
+    mv.visitTypeInsn(CHECKCAST, list + "$Entry"); mv.visitInsn(ARETURN); mv.visitMaxs(0, 0); mv.visitEnd();
+    mv = cw.visitMethod(ACC_PUBLIC | ACC_STATIC, "removeEntry", "(" + asl + entry + ")Z", null, null);
+    mv.visitCode(); mv.visitVarInsn(ALOAD, 0);
+    mv.visitMethodInsn(INVOKESTATIC, "foxgrade/shim/ListFieldCompat", "children", "(" + asl + ")Ljava/util/List;", false);
+    mv.visitVarInsn(ALOAD, 1); mv.visitMethodInsn(INVOKEINTERFACE, "java/util/List", "remove", "(Ljava/lang/Object;)Z", true);
+    mv.visitInsn(IRETURN); mv.visitMaxs(0, 0); mv.visitEnd();
+    mv = cw.visitMethod(ACC_PUBLIC | ACC_STATIC, "updateScrollingState", "(" + asl + "DDI)V", null, null);
+    mv.visitCode(); mv.visitInsn(RETURN); mv.visitMaxs(0, 0); mv.visitEnd();
     cw.visitEnd();
     return cw.toByteArray();
   }

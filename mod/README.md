@@ -35,11 +35,12 @@ Fox-Grade's port, because **the author's official build always beats a port**.
 
 ## How well does it work?
 
-Batch-tested against 25 mods from 1.21.x and 26.1: **17 port and boot into a world** (six of them
-also verified on a dedicated server), 4 cannot be ported — 26.2 removed the rendering APIs three of
-them are built on, and one ships a native profiler — and 4 were correctly held back because a
+Batch-tested against 31 mods from 1.21.x and 26.1: **20 port and boot into a world** (six of them
+also verified on a dedicated server, and Mod Menu's mod list opens and renders through the GUI
+bridges), 6 cannot be ported — game internals 26.2 rewrote outright, from world rendering to
+container serialisation, plus one native profiler — and 5 were correctly held back because a
 library they depend on was not provided. Ports that cannot be completed fail safely, with a report
-listing every class, field and constructor the game no longer has.
+listing every class, member and constructor the game no longer has.
 
 Fox-Grade requires **Minecraft 26.2 exactly**. Its translation tables are built for a single
 version; on anything else it refuses to run rather than produce a port it cannot verify.

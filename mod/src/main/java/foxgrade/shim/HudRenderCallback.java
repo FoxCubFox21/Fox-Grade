@@ -23,7 +23,7 @@ public interface HudRenderCallback {
 
   private static Event<HudRenderCallback> create() {
     Event<HudRenderCallback> ev = EventFactory.createArrayBacked(HudRenderCallback.class,
-        listeners -> (g, t) -> { for (HudRenderCallback l : listeners) l.onHudRender(g, t); });
+        listeners -> (g, t) -> { GuiCompat.current(g); for (HudRenderCallback l : listeners) l.onHudRender(g, t); });
     HudElementRegistry.addLast(Identifier.fromNamespaceAndPath("foxgrade", "hud_render_callback"),
         (g, t) -> ev.invoker().onHudRender(g, t));
     return ev;

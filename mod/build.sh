@@ -16,7 +16,7 @@ FA_TMP=$(mktemp -d)
 if [[ -n ${FA_JAR:-} ]]; then
   (cd "$FA_TMP" && unzip -o -q "$FA_JAR" 'META-INF/jars/fabric-lifecycle-events-v1-*.jar' \
       'META-INF/jars/fabric-api-base-*.jar' 'META-INF/jars/fabric-screen-api-v1-*.jar' \
-      'META-INF/jars/fabric-rendering-v1-*.jar')
+      'META-INF/jars/fabric-rendering-v1-*.jar' 'META-INF/jars/fabric-entity-events-v1-*.jar')
 fi
 
 CP="$MC_JAR"
@@ -27,6 +27,10 @@ for f in "$LIB"/net/fabricmc/fabric-loader/*/fabric-loader-*.jar \
          "$LIB"/org/ow2/asm/asm-commons/*/asm-commons-*.jar \
          "$LIB"/com/mojang/brigadier/*/brigadier-*.jar \
          "$LIB"/org/lwjgl/lwjgl-glfw/*/lwjgl-glfw-*.jar \
+         "$LIB"/org/joml/joml/*/joml-*.jar \
+         "$LIB"/org/jspecify/jspecify/*/jspecify-*.jar \
+         "$LIB"/it/unimi/dsi/fastutil/*/fastutil-*.jar \
+         "$LIB"/com/mojang/datafixerupper/*/datafixerupper-*.jar \
          "$FA_TMP"/META-INF/jars/*.jar; do
   [[ -f $f ]] && CP="$CP:$f"
 done

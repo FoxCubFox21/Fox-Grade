@@ -131,6 +131,22 @@ public final class TransformPipeline {
     }
     int metaFixed = 0, awFiles = 0, awOwners = 0, awDescs = 0, refmapFiles = 0, refmapHits = 0, classesRemapped = 0, mixinsStripped = 0;
     PortVerifier verifier = new PortVerifier(auto);
+    // Every class of the jar, with its superclass in target names, so both the verifier and the
+    // call rewrites can resolve members up a mod class's chain into the game's classes.
+    try (ZipFile pre = new ZipFile(src.toFile())) {
+      var en = pre.entries();
+      while (en.hasMoreElements()) {
+        ZipEntry e = en.nextElement();
+        if (!e.getName().endsWith(".class") || e.getName().startsWith("META-INF/")) continue;
+        try {
+          org.objectweb.asm.ClassReader cr = new org.objectweb.asm.ClassReader(readAll(pre, e));
+          String[] itfs = cr.getInterfaces();
+          for (int i = 0; i < itfs.length; i++) itfs[i] = remapper.mapClass(itfs[i]);
+          verifier.declareModClass(cr.getClassName(), cr.getSuperName() == null ? null : remapper.mapClass(cr.getSuperName()), itfs);
+        } catch (Exception ignore) { }
+      }
+    } catch (Exception ignore) { }
+    remapper.setSuperOf(verifier::superOf);
     String[] fromMcHolder = { "" };
     Set<String> fatalMixins = new HashSet<>();          // mixin classes to deregister from configs
     java.util.List<String> strippedNames = new java.util.ArrayList<>();   // "MixinClass#handler" per strip, for the panel
@@ -202,9 +218,13 @@ public final class TransformPipeline {
             emit = (GSON.toJson(meta) + "\n").getBytes(StandardCharsets.UTF_8);
             if (touched) metaFixed++;
           } catch (Exception ex) { /* leave the meta alone if malformed */ }
-        } else if (name.toLowerCase().endsWith(".accesswidener") && !mergedClasses.isEmpty()) {
+        } else if ((name.toLowerCase().endsWith(".accesswidener") || name.toLowerCase().endsWith(".ct") || name.toLowerCase().endsWith(".classtweaker")) && !mergedClasses.isEmpty()) {
           try {
-            AccessWidenerRemapper.Result r = AccessWidenerRemapper.rewrite(new String(raw, StandardCharsets.UTF_8), mergedClasses);
+            AccessWidenerRemapper.Names names = new AccessWidenerRemapper.Names() {
+              @Override public String method(String o, String n, String d) { return remapper.mapMethodName(o, n, d); }
+              @Override public String field(String o, String n, String d) { return remapper.mapFieldName(o, n, d); }
+            };
+            AccessWidenerRemapper.Result r = AccessWidenerRemapper.rewrite(new String(raw, StandardCharsets.UTF_8), mergedClasses, names);
             if (r.owners > 0 || r.descriptors > 0) { emit = r.text.getBytes(StandardCharsets.UTF_8); awFiles++; awOwners += r.owners; awDescs += r.descriptors; }
           } catch (Exception ex) { /* leave AW alone if we can't parse it */ }
         } else if (name.endsWith(".json") && REFMAP.matcher(name).find() && !mergedClasses.isEmpty()) {
@@ -317,48 +337,44 @@ public final class TransformPipeline {
           } catch (Exception ignore) { /* not a mixin config */ }
         }
       }
-      // Shim injection: unresolved refs with a reviewed shim get a synthetic class inside the
-      // ported jar. The classloader then resolves the missing name locally.
+      // Shim injection. Two ways in: (a) an unresolved reference with a reviewed shim keyed on
+      // the Minecraft name (Tuple, Tesselator) is injected AT that name; (b) a redirect fired and
+      // named a foxgrade/shim class, injected under the per-port namespace so two ports never
+      // share one copy. Shims may depend on other shims (ShimGenerator.SHIM_DEPS); the closure
+      // is injected, and every injected class is rewritten with the full rename map so
+      // shim-to-shim references point at the namespaced copies as well.
+      java.util.LinkedHashSet<String> wanted = new java.util.LinkedHashSet<>();
       for (String missing : new java.util.ArrayList<>(verifier.missing())) {
-        var shim = ShimGenerator.SHIMS.get(missing);
-        if (shim == null) continue;
-        String entryName = missing + ".class";
-        if (!buffered.containsKey(entryName)) buffered.put(entryName, shim.get());
-        verifier.missing().remove(missing);
+        if (ShimGenerator.SHIMS.containsKey(missing)) { wanted.add(missing); verifier.missing().remove(missing); }
       }
-      // Redirect shims: classes referenced by rewritten call sites (see BytecodeRemapper).
-      // Each lands under the per-port namespace; the call sites were rewritten to match by the
-      // second remap pass below.
-      for (String shimCls : remapper.usedShims()) {
+      wanted.addAll(remapper.usedShims());
+      java.util.ArrayDeque<String> queue = new java.util.ArrayDeque<>(wanted);
+      while (!queue.isEmpty()) {
+        for (String dep : ShimGenerator.SHIM_DEPS.getOrDefault(queue.poll(), java.util.List.of())) if (wanted.add(dep)) queue.add(dep);
+      }
+      Map<String, String> shimMap = new HashMap<>();
+      for (String shimCls : wanted) {
+        String nsName = namespacedShim(shimCls, shimNs);
+        if (!nsName.equals(shimCls)) shimMap.put(shimCls, nsName);
+      }
+      for (String shimCls : wanted) {
         var shim = ShimGenerator.SHIMS.get(shimCls);
         if (shim == null) continue;
-        String nsName = namespacedShim(shimCls, shimNs);
-        String entryName = nsName + ".class";
-        if (!buffered.containsKey(entryName)) {
-          byte[] bytes = shim.get();
-          if (!nsName.equals(shimCls)) bytes = renameClass(bytes, shimCls, nsName);
-          buffered.put(entryName, bytes);
-        }
+        String entryName = shimMap.getOrDefault(shimCls, shimCls) + ".class";
+        if (buffered.containsKey(entryName)) continue;
+        byte[] bytes = shim.get();
+        if (!shimMap.isEmpty()) bytes = ShimGenerator.renameClasses(bytes, shimMap);
+        buffered.put(entryName, bytes);
       }
-      // Second pass over classes: point call sites at the namespaced shim names.
-      if (!remapper.usedShims().isEmpty()) {
-        Map<String, String> shimMap = new HashMap<>();
-        for (String shimCls : remapper.usedShims()) {
-          String nsName = namespacedShim(shimCls, shimNs);
-          if (!nsName.equals(shimCls)) shimMap.put(shimCls, nsName);
-        }
-        if (!shimMap.isEmpty()) {
-          for (var entry : buffered.entrySet()) {
-            if (!entry.getKey().endsWith(".class") || entry.getKey().startsWith("foxgrade/shim/")) continue;
-            byte[] b = entry.getValue();
-            boolean touches = false;
-            for (String k : shimMap.keySet()) if (new String(b, java.nio.charset.StandardCharsets.ISO_8859_1).contains(k)) { touches = true; break; }
-            if (!touches) continue;
-            org.objectweb.asm.ClassReader r = new org.objectweb.asm.ClassReader(b);
-            org.objectweb.asm.ClassWriter w = new org.objectweb.asm.ClassWriter(org.objectweb.asm.ClassWriter.COMPUTE_MAXS);
-            r.accept(new org.objectweb.asm.commons.ClassRemapper(w, new org.objectweb.asm.commons.SimpleRemapper(shimMap)), 0);
-            entry.setValue(w.toByteArray());
-          }
+      // Second pass over the mod's classes: point call sites at the namespaced shim names.
+      if (!shimMap.isEmpty()) {
+        for (var entry : buffered.entrySet()) {
+          if (!entry.getKey().endsWith(".class") || entry.getKey().startsWith("foxgrade/shim/")) continue;
+          byte[] b = entry.getValue();
+          boolean touches = false;
+          for (String k : shimMap.keySet()) if (new String(b, java.nio.charset.StandardCharsets.ISO_8859_1).contains(k)) { touches = true; break; }
+          if (!touches) continue;
+          entry.setValue(ShimGenerator.renameClasses(b, shimMap));
         }
       }
       // Final marker enrichment: the panel in-game shows per-port stats, which only exist now
@@ -374,7 +390,7 @@ public final class TransformPipeline {
           fg.addProperty("summary", String.format("%d classes remapped, %d handler(s) stripped, %d unresolved ref(s)",
               classesRemapped, mixinsStripped + autoStripped, verifier.missing().size()));
           com.google.gson.JsonArray un = new com.google.gson.JsonArray();
-          verifier.missing().stream().limit(5).forEach((c) -> un.add(c.substring(c.lastIndexOf('/') + 1)));
+          verifier.missing().stream().limit(400).forEach((c) -> un.add(c.substring(c.lastIndexOf('/') + 1)));
           fg.add("unresolved", un);
           com.google.gson.JsonArray sh = new com.google.gson.JsonArray();
           strippedNames.stream().limit(40).forEach(sh::add);
@@ -406,13 +422,6 @@ public final class TransformPipeline {
     return "foxgrade/shim/" + ns + "/" + shimCls.substring("foxgrade/shim/".length());
   }
 
-  private static byte[] renameClass(byte[] bytes, String from, String to) {
-    org.objectweb.asm.ClassReader r = new org.objectweb.asm.ClassReader(bytes);
-    org.objectweb.asm.ClassWriter w = new org.objectweb.asm.ClassWriter(org.objectweb.asm.ClassWriter.COMPUTE_MAXS);
-    r.accept(new org.objectweb.asm.commons.ClassRemapper(w,
-        new org.objectweb.asm.commons.SimpleRemapper(Map.of(from, to))), 0);
-    return w.toByteArray();
-  }
 
   private static byte[] readAll(ZipFile z, ZipEntry e) throws IOException {
     try (InputStream is = z.getInputStream(e)) { return is.readAllBytes(); }

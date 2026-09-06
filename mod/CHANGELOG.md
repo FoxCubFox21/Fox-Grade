@@ -29,6 +29,43 @@
 - **`Minecraft` field compat.** `cameraEntity` and `screen` became methods in 26.2; reads and
   writes of the old fields are routed to them, and `setScreen` to `setScreenAndShow`.
 - `LazyLoadedValue` is regenerated for ports that still use it.
+- **GUI rendering layer.** 26.2 replaced immediate-mode GUI drawing with an extract-then-render
+  design; 1.21.x mods draw through APIs that no longer exist. Fox-Grade now bridges that layer:
+  `GuiGraphics` calls map onto `GuiGraphicsExtractor` (text, fill, blit, sprites, items, tooltips,
+  a forwarded `pose()`), `RenderSystem` state calls become no-ops because pipelines own that state
+  (the shader colour survives as a tint, the shader texture feeds replay), `Tesselator` /
+  `BufferUploader` / `VertexFormat.Mode` are re-created so quads a mod builds itself are captured
+  and submitted as GUI elements, and the shader getters reachable only through method references
+  are erased. Raw GL calls stay unresolved on purpose.
+- **Input events.** Handlers moved from `(int,int,int)` / `(double,double,int)` arguments to
+  `KeyEvent` / `MouseButtonEvent` objects. Calls into the game are repacked, and a mod class that
+  overrides the old signature gets the new one synthesised so the game still reaches it.
+- **Verifier covers instance methods** (with loaded mods' injected interfaces honoured) and inner
+  classes, and the port metadata keeps the whole unresolved list instead of five entries.
+- New mechanisms behind the above: descriptor widening (joml `Matrix4f` → `Matrix4fc`),
+  invokedynamic-only redirects, call adapters, override adapters, method-entry hooks, shim
+  dependencies with per-port namespacing, and shims re-created at Minecraft class names.
+- Smaller bridges: `I18n.exists/getOrDefault`, `ChatFormatting` colour/name queries,
+  `Window.getGuiScale`, `Camera.getLookVector`, `Minecraft.getToasts`, selection-list renames,
+  `Screen.hasShiftDown/isCopy/…`, `InputConstants.isKeyDown/getKey`, `KeyMapping.matches`.
+- The build now compiles against the fabric-rendering-v1 module plus joml, jspecify and fastutil.
+- **Widener fixes.** Access wideners now translate member names too (an intermediary
+  `method_NNNN` was left untouched before, so the widening silently missed), and Fabric's newer
+  class-tweaker format (`.ct`) is rewritten the same way; YACL ships one.
+- Renames follow the class chain: a curated rename filed under `AbstractWidget` applies to a call
+  on `Button`, and an inherited rename can depend on ancestry (`renderWidget` becomes
+  `extractContents` under `AbstractButton`, whose own hook is final).
+- Lists: 26.2's `children()` hands out a read-only view; 1.21.x list code that mutates it now
+  reaches the live list, and the removed list fields/hooks (`headerHeight`, `itemHeight`,
+  `clickedHeader`) are carried per list.
+- Resource reload listeners implementing the 1.21.x `reload(...)` signature get the 26.2 one
+  synthesised. Fabric API renames: channel events (`S2C`/`C2S` → `Clientbound`/`Serverbound`),
+  entity level-change events, `ClientCommands`, `ClientTooltipComponentCallback`,
+  `Screens.getWidgets`.
+- GUI corpus results: BetterF3, Chat Heads and Zoomify (co-ported with its YACL config library)
+  boot; Mod Menu's mod list screen opens and renders end to end. Jade, WTHIT and Shulker Box
+  Tooltip stay out — their remaining references are game internals (block state, tooltips, container
+  serialisation), not rendering.
 
 ## 1.0.0
 First public release.
