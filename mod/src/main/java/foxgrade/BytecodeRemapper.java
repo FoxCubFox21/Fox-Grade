@@ -31,6 +31,7 @@ import java.util.Set;
 public final class BytecodeRemapper {
   private final BridgeRemapper remapper;
   private final Map<String, Map<String, String[]>> callRedirects;
+  private final Map<String, Map<String, String[]>> fieldRedirects;
   private final Map<String, Map<String, FabricApiBridges.CtorAdapter>> ctorAdapters;
   // Shim classes actually needed by redirects that fired — the pipeline injects these.
   private final Set<String> usedShims = new HashSet<>();
@@ -50,6 +51,7 @@ public final class BytecodeRemapper {
         bridge.mojangMethodTable(), bridge.mojangMethodGlobalTable(),
         bridge.yarnMethodTable(), bridge.yarnFieldTable(), apiBridges.inheritedRenames());
     this.callRedirects = apiBridges.callRedirects();
+    this.fieldRedirects = apiBridges.fieldRedirects();
     this.ctorAdapters = apiBridges.ctorAdapters();
   }
 
@@ -105,6 +107,50 @@ public final class BytecodeRemapper {
               }
             }
             super.visitMethodInsn(opcode, owner, mname, mdesc, itf);
+          }
+          // Method-reference forms of the same two rewrites. `Vec3::new` or `Helper::method`
+          // compiles to an invokedynamic whose bootstrap arguments carry a method handle rather
+          // than a call instruction, so the handle itself is retargeted. A constructor handle can
+          // only be widened when the adapter has no per-slot transforms — there is no call site
+          // at which to spill and reroute arguments — which is exactly the descriptor-only case
+          // (Vec3(Vector3f) -> Vec3(Vector3fc)); LambdaMetafactory accepts the reference widening.
+          @Override public void visitInvokeDynamicInsn(String iname, String idesc, org.objectweb.asm.Handle bsm, Object... bsmArgs) {
+            Object[] out = bsmArgs.clone();
+            for (int i = 0; i < out.length; i++) {
+              if (!(out[i] instanceof org.objectweb.asm.Handle h)) continue;
+              Map<String, String[]> byOwner = callRedirects.get(h.getOwner());
+              String[] to = byOwner != null ? byOwner.get(h.getName() + h.getDesc()) : null;
+              if (to != null) {
+                usedShims.add(to[0]);
+                out[i] = new org.objectweb.asm.Handle(Opcodes.H_INVOKESTATIC, to[0], to[1], to[2], false);
+                continue;
+              }
+              if (h.getTag() == Opcodes.H_NEWINVOKESPECIAL) {
+                Map<String, FabricApiBridges.CtorAdapter> byCtor = ctorAdapters.get(h.getOwner());
+                FabricApiBridges.CtorAdapter ad = byCtor != null ? byCtor.get(h.getDesc()) : null;
+                if (ad != null && ad.transforms().isEmpty()) {
+                  out[i] = new org.objectweb.asm.Handle(h.getTag(), h.getOwner(), "<init>", ad.newDesc(), false);
+                }
+              }
+            }
+            super.visitInvokeDynamicInsn(iname, idesc, bsm, out);
+          }
+          // Field redirects: a field that stopped existing becomes a static call on a shim.
+          // GETFIELD leaves the receiver on the stack and PUTFIELD the receiver then the value —
+          // exactly the argument lists the shim's getter and setter take, so nothing is shuffled.
+          @Override public void visitFieldInsn(int opcode, String owner, String fname, String fdesc) {
+            Map<String, String[]> byOwner = fieldRedirects.get(owner);
+            if (byOwner != null) {
+              String kind = opcode == Opcodes.GETFIELD ? "get " : opcode == Opcodes.PUTFIELD ? "put "
+                  : opcode == Opcodes.GETSTATIC ? "getstatic " : "putstatic ";
+              String[] to = byOwner.get(kind + fname + ":" + fdesc);
+              if (to != null) {
+                usedShims.add(to[0]);
+                super.visitMethodInsn(Opcodes.INVOKESTATIC, to[0], to[1], to[2], false);
+                return;
+              }
+            }
+            super.visitFieldInsn(opcode, owner, fname, fdesc);
           }
         };
       }

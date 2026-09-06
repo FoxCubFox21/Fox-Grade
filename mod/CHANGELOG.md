@@ -8,6 +8,27 @@
   the code that used them goes through plain reflection.
 - Verified on a real 26.2 Fabric server: three mods ported and loaded, two correctly held for
   missing libraries, server reached `Done` clean. Client behaviour unchanged and re-tested.
+- **Inbox moved to `mods/fox-grade-inbox/`.** One folder to know about instead of two; the old
+  `fox-grade-inbox/` next to `mods/` is still read, so nothing already there is stranded.
+- Constructor adapters and call redirects now also apply to method references (`Vec3::new`,
+  `Helper::method`), which compile to an invokedynamic handle rather than a call instruction.
+- Translation tables now cover `MinecraftServer` and five other classes whose names never
+  changed but whose members did; mods touching the server directly (spark, carpet) resolve.
+- New bridges: `WorldVersion` accessors, `Vec3(Vector3f)` -> `Vec3(Vector3fc)`,
+  `Util.backgroundExecutor()`, and the `KeyBindingHelper` -> `KeyMappingHelper` move.
+- **Field redirects.** A field that stopped existing can now be routed to a shim getter/setter
+  the same way removed methods are; first use is `Entity.noCulling`, which 26.2 keeps only on
+  `Display`.
+- **`HudRenderCallback` bridge.** Fabric API removed it after 1.21.5; every 1.21.1-era HUD mod
+  registers with it. Fox-Grade now supplies a real one, backed by `HudElementRegistry`, so those
+  overlays render instead of crashing at init.
+- **Member-level verification.** The port report now lists missing fields, static methods and
+  constructors, not just missing classes, resolved through the game's real class hierarchy so an
+  inherited member is never a false alarm. Instance methods stay out on purpose: Fabric's
+  interface injection adds those at runtime. Previously each removed field cost one launch to find.
+- **`Minecraft` field compat.** `cameraEntity` and `screen` became methods in 26.2; reads and
+  writes of the old fields are routed to them, and `setScreen` to `setScreenAndShow`.
+- `LazyLoadedValue` is regenerated for ports that still use it.
 
 ## 1.0.0
 First public release.

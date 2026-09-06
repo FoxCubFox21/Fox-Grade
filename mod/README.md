@@ -9,7 +9,7 @@ to update abandoned mods.
 ## How to use it
 
 1. Put `foxgrade-x.y.z.jar` in `mods/` (needs Fabric API).
-2. Drop any older mod's jar into `<game folder>/fox-grade-inbox/`.
+2. Drop any older mod's jar into `mods/fox-grade-inbox/` (Fox-Grade creates the folder on first launch).
 3. Launch. Fox-Grade ports it, installs the result, and restarts the game itself.
    The mod comes up running — same click.
 
@@ -30,15 +30,16 @@ Fox-Grade's port, because **the author's official build always beats a port**.
   disabled) instead of crashing your game.
 - A verification pass walks the ported bytecode and reports every reference that could not be
   resolved, so you know the risk before you play.
-- Nothing is ever deleted: originals go to `fox-grade-inbox/processed/`, retired ports to
+- Nothing is ever deleted: originals go to `mods/fox-grade-inbox/processed/`, retired ports to
   `mods-backup/`.
 
 ## How well does it work?
 
-Batch-tested against 14 mods from 1.21.x and 26.1: **11 port and boot into a world**, 2 cannot be
-ported because 26.2 removed the APIs they are built on (they fail safely, with a report saying so),
-and 1 was correctly held back because a library it depends on was missing. Two further libraries
-were co-ported alongside the mods that needed them.
+Batch-tested against 25 mods from 1.21.x and 26.1: **17 port and boot into a world** (six of them
+also verified on a dedicated server), 4 cannot be ported — 26.2 removed the rendering APIs three of
+them are built on, and one ships a native profiler — and 4 were correctly held back because a
+library they depend on was not provided. Ports that cannot be completed fail safely, with a report
+listing every class, field and constructor the game no longer has.
 
 Fox-Grade requires **Minecraft 26.2 exactly**. Its translation tables are built for a single
 version; on anything else it refuses to run rather than produce a port it cannot verify.

@@ -30,6 +30,9 @@ public final class FabricApiBridges {
   // that were REMOVED rather than renamed. The new owner is usually a Fox-Grade shim class
   // injected into the ported jar (see ShimGenerator).
   private final Map<String, Map<String, String[]>> callRedirects;
+  // owner → ("get "|"put "|"getstatic "|"putstatic ") + name:desc → [shimOwner, method, desc]: a field
+  // that stopped existing becomes a static getter/setter call on a shim (Entity.noCulling).
+  private final Map<String, Map<String, String[]>> fieldRedirects;
   private final Map<String, String> classRenames;    // third-party class renames (slash form)
   // owner → oldCtorDesc → adapter: same-arity constructor signature changes, adapted per-slot.
   public record CtorTransform(int slot, String viaOwner, String viaName, String viaDesc) { }
@@ -41,9 +44,9 @@ public final class FabricApiBridges {
 
   private FabricApiBridges(Map<String, Map<String, String>> renames, Map<String, Map<String, String[]>> callRedirects,
                            Map<String, String> classRenames, Map<String, Map<String, CtorAdapter>> ctorAdapters,
-                           Map<String, String> inheritedRenames) {
+                           Map<String, String> inheritedRenames, Map<String, Map<String, String[]>> fieldRedirects) {
     this.renames = renames; this.callRedirects = callRedirects; this.classRenames = classRenames;
-    this.ctorAdapters = ctorAdapters; this.inheritedRenames = inheritedRenames;
+    this.ctorAdapters = ctorAdapters; this.inheritedRenames = inheritedRenames; this.fieldRedirects = fieldRedirects;
   }
 
   public Map<String, Map<String, CtorAdapter>> ctorAdapters() { return ctorAdapters; }
@@ -51,6 +54,7 @@ public final class FabricApiBridges {
 
   public Map<String, Map<String, String>> renames() { return renames; }
   public Map<String, Map<String, String[]>> callRedirects() { return callRedirects; }
+  public Map<String, Map<String, String[]>> fieldRedirects() { return fieldRedirects; }
   public Map<String, String> classRenames() { return classRenames; }
   public int size() {
     int n = 0;
@@ -66,17 +70,18 @@ public final class FabricApiBridges {
     Map<String, String> classRenames = new HashMap<>();
     Map<String, Map<String, CtorAdapter>> ctorAdapters = new HashMap<>();
     Map<String, String> inheritedRenames = new HashMap<>();
+    Map<String, Map<String, String[]>> fieldRedirects = new HashMap<>();
     try (InputStream shipped = FabricApiBridges.class.getResourceAsStream("/foxgrade/fabric-api-bridges.json")) {
-      if (shipped != null) merge(renames, redirects, classRenames, ctorAdapters, inheritedRenames, new String(shipped.readAllBytes()));
+      if (shipped != null) merge(renames, redirects, classRenames, ctorAdapters, inheritedRenames, fieldRedirects, new String(shipped.readAllBytes()));
     }
     Path user = gameDir.resolve("fox-grade.api-bridges.json");
-    if (Files.exists(user)) merge(renames, redirects, classRenames, ctorAdapters, inheritedRenames, Files.readString(user));
-    return new FabricApiBridges(renames, redirects, classRenames, ctorAdapters, inheritedRenames);
+    if (Files.exists(user)) merge(renames, redirects, classRenames, ctorAdapters, inheritedRenames, fieldRedirects, Files.readString(user));
+    return new FabricApiBridges(renames, redirects, classRenames, ctorAdapters, inheritedRenames, fieldRedirects);
   }
 
   private static void merge(Map<String, Map<String, String>> into, Map<String, Map<String, String[]>> redirects,
                             Map<String, String> classRenames, Map<String, Map<String, CtorAdapter>> ctorAdapters,
-                            Map<String, String> inheritedRenames, String json) {
+                            Map<String, String> inheritedRenames, Map<String, Map<String, String[]>> fieldRedirects, String json) {
     JsonObject o = new Gson().fromJson(json, JsonObject.class);
     if (o == null) return;
     if (o.has("renames") && o.get("renames").isJsonObject()) {
@@ -110,6 +115,17 @@ public final class FabricApiBridges {
                 via.get(0).getAsString(), via.get(1).getAsString(), via.get(2).getAsString()));
           }
           map.put(m.getKey(), new CtorAdapter(a.get("newDesc").getAsString(), ts));
+        }
+      }
+    }
+    if (o.has("fieldRedirects") && o.get("fieldRedirects").isJsonObject()) {
+      for (var ownerEntry : o.getAsJsonObject("fieldRedirects").entrySet()) {
+        String owner = ownerEntry.getKey().replace('.', '/');
+        if (!ownerEntry.getValue().isJsonObject()) continue;
+        Map<String, String[]> map = fieldRedirects.computeIfAbsent(owner, k -> new HashMap<>());
+        for (var m : ownerEntry.getValue().getAsJsonObject().entrySet()) {
+          var arr = m.getValue().getAsJsonArray();
+          map.put(m.getKey(), new String[]{arr.get(0).getAsString(), arr.get(1).getAsString(), arr.get(2).getAsString()});
         }
       }
     }

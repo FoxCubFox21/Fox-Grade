@@ -61,6 +61,15 @@
       "getMaxBuildHeight": "getMaxY",
       "getMinSection": "getMinSectionY",
       "getMaxSection": "getMaxSectionY"
+    },
+    "net/minecraft/WorldVersion": {
+      "getName": "name",
+      "getId": "id",
+      "getProtocolVersion": "protocolVersion",
+      "isStable": "stable"
+    },
+    "net/fabricmc/fabric/api/client/keymapping/v1/KeyMappingHelper": {
+      "registerKeyBinding": "registerKeyMapping"
     }
   },
   "callRedirects": {
@@ -108,12 +117,28 @@
         "fabricCategoryMap",
         "()Ljava/util/Map;"
       ]
+    },
+    "net/minecraft/util/Util": {
+      "backgroundExecutor()Ljava/util/concurrent/ExecutorService;": [
+        "foxgrade/shim/UtilCompat",
+        "backgroundExecutor",
+        "()Ljava/util/concurrent/ExecutorService;"
+      ]
+    },
+    "net/minecraft/client/Minecraft": {
+      "setScreen(Lnet/minecraft/client/gui/screens/Screen;)V": [
+        "foxgrade/shim/MinecraftCompat",
+        "setScreen",
+        "(Lnet/minecraft/client/Minecraft;Lnet/minecraft/client/gui/screens/Screen;)V"
+      ]
     }
   },
   "classRenames": {
     "net/fabricmc/fabric/api/client/particle/v1/ParticleFactoryRegistry": "net/fabricmc/fabric/api/client/particle/v1/ParticleProviderRegistry",
     "net/fabricmc/fabric/api/client/particle/v1/ParticleFactoryRegistry$PendingParticleFactory": "net/fabricmc/fabric/api/client/particle/v1/ParticleProviderRegistry$PendingParticleProvider",
-    "net/fabricmc/fabric/api/client/particle/v1/FabricSpriteProvider": "net/fabricmc/fabric/api/client/particle/v1/FabricSpriteSet"
+    "net/fabricmc/fabric/api/client/particle/v1/FabricSpriteProvider": "net/fabricmc/fabric/api/client/particle/v1/FabricSpriteSet",
+    "net/fabricmc/fabric/api/client/keybinding/v1/KeyBindingHelper": "net/fabricmc/fabric/api/client/keymapping/v1/KeyMappingHelper",
+    "net/fabricmc/fabric/api/client/rendering/v1/HudRenderCallback": "foxgrade/shim/HudRenderCallback"
   },
   "ctorAdapters": {
     "net/minecraft/world/level/chunk/ChunkAccess": {
@@ -158,6 +183,12 @@
           }
         ]
       }
+    },
+    "net/minecraft/world/phys/Vec3": {
+      "(Lorg/joml/Vector3f;)V": {
+        "newDesc": "(Lorg/joml/Vector3fc;)V",
+        "transforms": []
+      }
     }
   },
   "inheritedRenames": {
@@ -165,5 +196,41 @@
     "getMaxBuildHeight()I": "getMaxY",
     "getMinSection()I": "getMinSectionY",
     "getMaxSection()I": "getMaxSectionY"
+  },
+  "fieldRedirects": {
+    "net/minecraft/world/entity/Entity": {
+      "get noCulling:Z": [
+        "foxgrade/shim/EntityCompat",
+        "noCulling",
+        "(Lnet/minecraft/world/entity/Entity;)Z"
+      ],
+      "put noCulling:Z": [
+        "foxgrade/shim/EntityCompat",
+        "setNoCulling",
+        "(Lnet/minecraft/world/entity/Entity;Z)V"
+      ]
+    },
+    "net/minecraft/client/Minecraft": {
+      "get cameraEntity:Lnet/minecraft/world/entity/Entity;": [
+        "foxgrade/shim/MinecraftCompat",
+        "cameraEntity",
+        "(Lnet/minecraft/client/Minecraft;)Lnet/minecraft/world/entity/Entity;"
+      ],
+      "put cameraEntity:Lnet/minecraft/world/entity/Entity;": [
+        "foxgrade/shim/MinecraftCompat",
+        "setCameraEntity",
+        "(Lnet/minecraft/client/Minecraft;Lnet/minecraft/world/entity/Entity;)V"
+      ],
+      "get screen:Lnet/minecraft/client/gui/screens/Screen;": [
+        "foxgrade/shim/MinecraftCompat",
+        "screen",
+        "(Lnet/minecraft/client/Minecraft;)Lnet/minecraft/client/gui/screens/Screen;"
+      ],
+      "put screen:Lnet/minecraft/client/gui/screens/Screen;": [
+        "foxgrade/shim/MinecraftCompat",
+        "setScreenField",
+        "(Lnet/minecraft/client/Minecraft;Lnet/minecraft/client/gui/screens/Screen;)V"
+      ]
+    }
   }
 }

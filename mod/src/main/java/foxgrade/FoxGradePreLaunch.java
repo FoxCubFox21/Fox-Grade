@@ -96,7 +96,11 @@ public final class FoxGradePreLaunch implements PreLaunchEntrypoint {
     // before Fox-Grade exists. Jars in the inbox are invisible to Fabric; placing one there IS
     // the opt-in. Each gets the full pipeline, the ported jar lands in mods/, the original moves
     // to fox-grade-inbox/processed/, and the game restarts itself with the result.
-    Path inbox = gameDir.resolve("fox-grade-inbox");
+    // The inbox sits INSIDE mods/ — the folder people already open to install things — as a
+    // subfolder Fabric never scans (it only reads top-level jars). The 1.0.x location next to
+    // mods/ is still honoured so nobody who followed the old docs is stranded.
+    Path inbox = modsDir.resolve("fox-grade-inbox");
+    Path legacyInbox = gameDir.resolve("fox-grade-inbox");
     int inboxPorted = 0;
     try {
       if (!Files.isDirectory(inbox)) {
@@ -106,9 +110,12 @@ public final class FoxGradePreLaunch implements PreLaunchEntrypoint {
             "On the next launch Fox-Grade ports them, installs the result into mods/,\n" +
             "moves the original into processed/, and restarts the game automatically.\n");
       }
-      java.util.List<Path> inboxJars;
-      try (var st = Files.list(inbox)) {
-        inboxJars = st.filter((f) -> f.getFileName().toString().endsWith(".jar")).sorted().toList();
+      java.util.List<Path> inboxJars = new java.util.ArrayList<>();
+      for (Path dir : java.util.List.of(inbox, legacyInbox)) {
+        if (!Files.isDirectory(dir)) continue;
+        try (var st = Files.list(dir)) {
+          inboxJars.addAll(st.filter((f) -> f.getFileName().toString().endsWith(".jar")).sorted().toList());
+        }
       }
       // Dependency pre-check: a ported jar whose hard deps can't resolve doesn't crash THIS
       // launch — it bricks the NEXT one into Fabric's error screen, before Fox-Grade can even

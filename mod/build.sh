@@ -10,12 +10,13 @@ MC_DIR="${MC_DIR:-$HOME/Library/Application Support/minecraft}"
 LIB="$MC_DIR/libraries"
 MC_JAR="$MC_DIR/versions/26.2/26.2.jar"
 
-# Fabric API ships its modules nested inside the fat jar; extract the three we compile against.
+# Fabric API ships its modules nested inside the fat jar; extract the four we compile against.
 FA_JAR=$(ls "$MC_DIR/mods"/fabric-api-*.jar 2>/dev/null | head -1 || true)
 FA_TMP=$(mktemp -d)
 if [[ -n ${FA_JAR:-} ]]; then
   (cd "$FA_TMP" && unzip -o -q "$FA_JAR" 'META-INF/jars/fabric-lifecycle-events-v1-*.jar' \
-      'META-INF/jars/fabric-api-base-*.jar' 'META-INF/jars/fabric-screen-api-v1-*.jar')
+      'META-INF/jars/fabric-api-base-*.jar' 'META-INF/jars/fabric-screen-api-v1-*.jar' \
+      'META-INF/jars/fabric-rendering-v1-*.jar')
 fi
 
 CP="$MC_JAR"

@@ -103,7 +103,7 @@ public final class FoxGradePortsScreen extends Screen {
       y += 12;
       centered(y, Component.literal("§7No ported mods yet§r"));
       y += 14;
-      centered(y, Component.literal("§7Drop old jars in §ffox-grade-inbox/§7 — ported on next launch§r"));
+      centered(y, Component.literal("§7Drop old jars in §fmods/fox-grade-inbox/§7 — ported on next launch§r"));
     }
 
     int rowLeft = this.width / 2 - 172;
@@ -179,7 +179,7 @@ public final class FoxGradePortsScreen extends Screen {
     } else {
       String testLine = lastTestLine(gameDir);
       if (testLine != null) centered(this.height - 66, Component.literal(testLine));
-      else centered(this.height - 66, Component.literal("§8Drop old jars in §7fox-grade-inbox/§8 — ported on next launch · F8 opens this panel§r"));
+      else centered(this.height - 66, Component.literal("§8Drop old jars in §7mods/fox-grade-inbox/§8 — ported on next launch · F8 opens this panel§r"));
     }
     if (pendingRestart) {
       centered(this.height - 54, Component.literal("§e⟳ Changes pending — restart to apply§r"));
@@ -323,9 +323,13 @@ public final class FoxGradePortsScreen extends Screen {
   // ==== data collection ====
 
   static List<Path> listInbox(Path gameDir) {
-    try (var st = Files.list(gameDir.resolve("fox-grade-inbox"))) {
-      return st.filter((f) -> f.getFileName().toString().endsWith(".jar")).sorted().toList();
-    } catch (Exception e) { return List.of(); }
+    List<Path> out = new ArrayList<>();
+    for (Path dir : List.of(gameDir.resolve("mods").resolve("fox-grade-inbox"), gameDir.resolve("fox-grade-inbox"))) {
+      try (var st = Files.list(dir)) {
+        out.addAll(st.filter((f) -> f.getFileName().toString().endsWith(".jar")).sorted().toList());
+      } catch (Exception ignored) { }
+    }
+    return out;
   }
 
   static String lastTestLine(Path gameDir) {
@@ -713,7 +717,8 @@ public final class FoxGradePortsScreen extends Screen {
       try {
         Path gameDir = FabricLoader.getInstance().getGameDir();
         Path found = null;
-        for (Path dir : List.of(gameDir.resolve("fox-grade-inbox").resolve("processed"), gameDir.resolve("mods-backup"))) {
+        for (Path dir : List.of(gameDir.resolve("mods").resolve("fox-grade-inbox").resolve("processed"),
+                                gameDir.resolve("fox-grade-inbox").resolve("processed"), gameDir.resolve("mods-backup"))) {
           if (!Files.isDirectory(dir)) continue;
           try (var st = Files.list(dir)) {
             for (Path f : st.toList()) {
@@ -732,7 +737,7 @@ public final class FoxGradePortsScreen extends Screen {
           if (found != null) break;
         }
         if (found == null) { b.setMessage(Component.literal("§cno original found§r")); b.active = false; return; }
-        Path inbox = gameDir.resolve("fox-grade-inbox");
+        Path inbox = gameDir.resolve("mods").resolve("fox-grade-inbox");
         Files.createDirectories(inbox);
         Files.copy(found, inbox.resolve(found.getFileName()), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
         if (pt.jar != null && Files.exists(pt.jar)) {

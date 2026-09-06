@@ -18,13 +18,18 @@ import java.util.function.Supplier;
 
 public final class ShimGenerator implements Opcodes {
 
-  public static final Map<String, Supplier<byte[]>> SHIMS = Map.of(
-      "net/minecraft/util/Tuple", ShimGenerator::tuple,
-      "foxgrade/shim/AutoConfigCompat", ShimGenerator::autoConfigCompat,
-      "foxgrade/shim/FoodDataCompat", () -> fromResource("foxgrade/shim/FoodDataCompat.class"),
-      "foxgrade/shim/OptionInstanceCompat", () -> fromResource("foxgrade/shim/OptionInstanceCompat.class"),
-      "foxgrade/shim/CtorShims", () -> fromResource("foxgrade/shim/CtorShims.class"),
-      "net/minecraft/util/OptionEnum", ShimGenerator::optionEnum
+  public static final Map<String, Supplier<byte[]>> SHIMS = Map.ofEntries(
+      Map.entry("net/minecraft/util/Tuple", ShimGenerator::tuple),
+      Map.entry("foxgrade/shim/AutoConfigCompat", ShimGenerator::autoConfigCompat),
+      Map.entry("foxgrade/shim/FoodDataCompat", () -> fromResource("foxgrade/shim/FoodDataCompat.class")),
+      Map.entry("foxgrade/shim/OptionInstanceCompat", () -> fromResource("foxgrade/shim/OptionInstanceCompat.class")),
+      Map.entry("foxgrade/shim/CtorShims", () -> fromResource("foxgrade/shim/CtorShims.class")),
+      Map.entry("foxgrade/shim/HudRenderCallback", () -> fromResource("foxgrade/shim/HudRenderCallback.class")),
+      Map.entry("foxgrade/shim/EntityCompat", () -> fromResource("foxgrade/shim/EntityCompat.class")),
+      Map.entry("net/minecraft/util/OptionEnum", ShimGenerator::optionEnum),
+      Map.entry("net/minecraft/util/LazyLoadedValue", ShimGenerator::lazyLoadedValue),
+      Map.entry("foxgrade/shim/MinecraftCompat", () -> fromResource("foxgrade/shim/MinecraftCompat.class")),
+      Map.entry("foxgrade/shim/UtilCompat", ShimGenerator::utilCompat)
   );
 
   // Shims with real logic are written as normal Java inside Fox-Grade and copied into the ported
@@ -57,10 +62,71 @@ public final class ShimGenerator implements Opcodes {
     return cw.toByteArray();
   }
 
+  // Util.backgroundExecutor() kept its name but now returns TracingExecutor instead of
+  // ExecutorService; TracingExecutor.service() hands back exactly what pre-26.x callers expect.
+  // Generated as bytecode rather than written in Java because javac 25 silently refuses to read
+  // 26.2's Util.class (it reports "cannot find symbol" with no further diagnostic, while javap
+  // and the running game are both fine with it). ASM has no such opinion.
+  private static byte[] utilCompat() {
+    String name = "foxgrade/shim/UtilCompat";
+    ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
+    cw.visit(V17, ACC_PUBLIC | ACC_FINAL | ACC_SUPER, name, null, "java/lang/Object", null);
+    MethodVisitor mv = cw.visitMethod(ACC_PUBLIC | ACC_STATIC, "backgroundExecutor",
+        "()Ljava/util/concurrent/ExecutorService;", null, null);
+    mv.visitCode();
+    mv.visitMethodInsn(INVOKESTATIC, "net/minecraft/util/Util", "backgroundExecutor",
+        "()Lnet/minecraft/TracingExecutor;", false);
+    mv.visitMethodInsn(INVOKEVIRTUAL, "net/minecraft/TracingExecutor", "service",
+        "()Ljava/util/concurrent/ExecutorService;", false);
+    mv.visitInsn(ARETURN);
+    mv.visitMaxs(0, 0); mv.visitEnd();
+    cw.visitEnd();
+    return cw.toByteArray();
+  }
+
   // net.minecraft.util.OptionEnum, removed in 26.x: a pure data contract (numeric id +
   // translation key) that mod enums implement for cycle-button options. Nothing in current MC
   // consumes it, so a faithful interface — including the original's default getCaption() —
   // restores every use the mod itself makes.
+  // net.minecraft.util.LazyLoadedValue<T>: a memoising Supplier wrapper Mojang dropped from the
+  // 26.x utilities. Semantics preserved exactly: the factory runs once, on first get(), then is
+  // released.
+  private static byte[] lazyLoadedValue() {
+    String name = "net/minecraft/util/LazyLoadedValue";
+    ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
+    cw.visit(V17, ACC_PUBLIC | ACC_SUPER, name, "<T:Ljava/lang/Object;>Ljava/lang/Object;", "java/lang/Object", null);
+    cw.visitField(ACC_PRIVATE, "factory", "Ljava/util/function/Supplier;", "Ljava/util/function/Supplier<TT;>;", null).visitEnd();
+    cw.visitField(ACC_PRIVATE, "value", "Ljava/lang/Object;", "TT;", null).visitEnd();
+    MethodVisitor mv = cw.visitMethod(ACC_PUBLIC, "<init>", "(Ljava/util/function/Supplier;)V", "(Ljava/util/function/Supplier<TT;>;)V", null);
+    mv.visitCode();
+    mv.visitVarInsn(ALOAD, 0);
+    mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
+    mv.visitVarInsn(ALOAD, 0); mv.visitVarInsn(ALOAD, 1);
+    mv.visitFieldInsn(PUTFIELD, name, "factory", "Ljava/util/function/Supplier;");
+    mv.visitInsn(RETURN);
+    mv.visitMaxs(0, 0); mv.visitEnd();
+    mv = cw.visitMethod(ACC_PUBLIC, "get", "()Ljava/lang/Object;", "()TT;", null);
+    mv.visitCode();
+    org.objectweb.asm.Label done = new org.objectweb.asm.Label();
+    mv.visitVarInsn(ALOAD, 0);
+    mv.visitFieldInsn(GETFIELD, name, "factory", "Ljava/util/function/Supplier;");
+    mv.visitVarInsn(ASTORE, 1);
+    mv.visitVarInsn(ALOAD, 1);
+    mv.visitJumpInsn(IFNULL, done);
+    mv.visitVarInsn(ALOAD, 0); mv.visitVarInsn(ALOAD, 1);
+    mv.visitMethodInsn(INVOKEINTERFACE, "java/util/function/Supplier", "get", "()Ljava/lang/Object;", true);
+    mv.visitFieldInsn(PUTFIELD, name, "value", "Ljava/lang/Object;");
+    mv.visitVarInsn(ALOAD, 0); mv.visitInsn(ACONST_NULL);
+    mv.visitFieldInsn(PUTFIELD, name, "factory", "Ljava/util/function/Supplier;");
+    mv.visitLabel(done);
+    mv.visitVarInsn(ALOAD, 0);
+    mv.visitFieldInsn(GETFIELD, name, "value", "Ljava/lang/Object;");
+    mv.visitInsn(ARETURN);
+    mv.visitMaxs(0, 0); mv.visitEnd();
+    cw.visitEnd();
+    return cw.toByteArray();
+  }
+
   private static byte[] optionEnum() {
     String name = "net/minecraft/util/OptionEnum";
     ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
