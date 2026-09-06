@@ -22,6 +22,13 @@ automatically at next launch. **The author's build always beats a port.**
 ⭐ **Nothing is ever deleted.** Originals are kept, ports are reversible, and every launch writes
 a report of what happened.
 
+**Tested, and honest about the result.** Batch-tested against 14 mods from 1.21.x and 26.1: 11 port
+and boot into a world, 2 cannot be ported because 26.2 removed the APIs they are built on, and 1 was
+correctly held back because a library it needed was missing.
+
+**Minecraft 26.2 only.** The translation tables are built for a single version. On any other
+version Fox-Grade refuses to run rather than produce a port it cannot verify.
+
 **Client-side only.** Fox-Grade won't load on a dedicated server: its restart-to-apply step would
 fork and exit a server process, and parts of it touch client-only classes. Server support is
 possible but is not built or tested yet, so it isn't claimed.

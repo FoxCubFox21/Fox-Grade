@@ -13,4 +13,8 @@ First public release.
 - Modrinth watcher: spots official builds for your MC version, one-click install
   (SHA-1 verified) that retires the port — the author's build always wins
 - Yield-to-official at launch: if you install the real mod yourself, the port retires itself
-- Batch-tested against 16+ real mods from 1.21.1 and 26.1 (see repo for the ledger)
+- Batch-tested against 14 mods from 1.21.x and 26.1: 11 port and boot into a world, 2 cannot be
+  ported because 26.2 removed the APIs they are built on, and 1 was correctly held back because a
+  library it depends on was not present. Two further libraries were co-ported alongside their mods.
+- Requires Minecraft 26.2 exactly. The bundled translation tables are built for one version, so
+  running on any other is refused outright rather than producing an untranslated port.

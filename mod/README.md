@@ -33,6 +33,16 @@ Fox-Grade's port, because **the author's official build always beats a port**.
 - Nothing is ever deleted: originals go to `fox-grade-inbox/processed/`, retired ports to
   `mods-backup/`.
 
+## How well does it work?
+
+Batch-tested against 14 mods from 1.21.x and 26.1: **11 port and boot into a world**, 2 cannot be
+ported because 26.2 removed the APIs they are built on (they fail safely, with a report saying so),
+and 1 was correctly held back because a library it depends on was missing. Two further libraries
+were co-ported alongside the mods that needed them.
+
+Fox-Grade requires **Minecraft 26.2 exactly**. Its translation tables are built for a single
+version; on anything else it refuses to run rather than produce a port it cannot verify.
+
 ## Client-side only
 
 Fox-Grade declares `environment: client`, so Fabric will not load it on a dedicated server. The

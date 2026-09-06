@@ -59,6 +59,19 @@ public final class FoxGradePreLaunch implements PreLaunchEntrypoint {
       try { bridge = IntermediaryBridge.load(""); } catch (IOException ignored) { return; }
     }
     log("  loaded " + bridge.size() + " intermediary→mojang class + " + bridge.memberCount() + " member rename(s) for " + mc);
+    // The bundled tables are built for ONE target version, and they load EMPTY rather than
+    // failing on any other. Without this guard Fox-Grade would "port" a mod without translating
+    // a single name, skip mixin verification entirely (the class inventory is missing too), and
+    // still stamp the jar as compatible — producing something guaranteed to crash. Do nothing
+    // instead, and say why.
+    if (bridge.size() == 0) {
+      log("");
+      log("  This build of Fox-Grade carries translation tables for one Minecraft version, and");
+      log("  none of them are for " + mc + ". Nothing has been ported and nothing was changed.");
+      log("  Install the Fox-Grade build made for " + mc + " and your mods will be ported then.");
+      log("");
+      return;
+    }
 
     FabricApiBridges apiBridges;
     try { apiBridges = FabricApiBridges.load(gameDir); }
