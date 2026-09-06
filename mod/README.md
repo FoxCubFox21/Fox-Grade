@@ -43,13 +43,22 @@ were co-ported alongside the mods that needed them.
 Fox-Grade requires **Minecraft 26.2 exactly**. Its translation tables are built for a single
 version; on anything else it refuses to run rather than produce a port it cannot verify.
 
-## Client-side only
+## Client and dedicated server
 
-Fox-Grade declares `environment: client`, so Fabric will not load it on a dedicated server. The
-porting engine itself is environment-agnostic, but three things are not server-ready yet: the
-self-relaunch would fork and exit a server process managed by systemd or a hosting panel, the
-access widener touches client-only classes, and two compatibility shims reach into client code.
-Server support is a real possibility, not a present claim.
+Fox-Grade runs on both. The porting engine never cared which side it was on; what needed fixing was
+the restart-to-apply step.
+
+On a **client** it ports and relaunches the game itself, so a dropped jar is live on the same click.
+On a **dedicated server** it ports at startup and then asks the operator to restart, because a
+server process is owned by systemd, a hosting panel or a screen session — forking a replacement
+would orphan the child or kill the server. It detects the environment and never forks there.
+
+The in-game panel is client-only, for the obvious reason. Everything else — porting, the dependency
+pre-check, the crash guard, the reports — works on both.
+
+Verified on a real 26.2 Fabric dedicated server: three mods ported from the inbox and loaded
+(including `alternate-current`, a redstone engine that mixins into server tick logic), two more
+correctly held back for missing libraries, server reached `Done` with no errors.
 
 ## What it is not
 

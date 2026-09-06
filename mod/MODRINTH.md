@@ -29,9 +29,11 @@ correctly held back because a library it needed was missing.
 **Minecraft 26.2 only.** The translation tables are built for a single version. On any other
 version Fox-Grade refuses to run rather than produce a port it cannot verify.
 
-**Client-side only.** Fox-Grade won't load on a dedicated server: its restart-to-apply step would
-fork and exit a server process, and parts of it touch client-only classes. Server support is
-possible but is not built or tested yet, so it isn't claimed.
+**Client and dedicated server.** On a client, Fox-Grade ports and restarts the game itself, so a
+dropped jar is live on the same click. On a dedicated server it ports at startup and asks the
+operator to restart instead — a server process is owned by systemd or a hosting panel, and forking
+a replacement would kill it. The in-game panel is client-only; porting, the dependency pre-check
+and the crash guard work on both.
 
 **Honesty section:** a port is not a guarantee. Features whose APIs no longer exist get disabled
 (the panel tells you exactly which), and heavyweight rendering mods are out of scope. Ported mods

@@ -3,8 +3,3 @@ accessWidener v2 official
 # during record-ization; re-widening restores the old contract for every port at once.
 accessible field net/minecraft/world/level/ChunkPos x I
 accessible field net/minecraft/world/level/ChunkPos z I
-accessible field net/minecraft/client/MouseHandler xpos D
-mutable field net/minecraft/client/MouseHandler xpos D
-accessible field net/minecraft/client/MouseHandler ypos D
-mutable field net/minecraft/client/MouseHandler ypos D
-accessible field net/minecraft/client/Minecraft mouseHandler Lnet/minecraft/client/MouseHandler;

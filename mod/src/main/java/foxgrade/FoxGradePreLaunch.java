@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.Set;
 
 public final class FoxGradePreLaunch implements PreLaunchEntrypoint {
-  static final String VERSION = "1.0.1";
+  static final String VERSION = "1.1.0";
 
   @Override public void onPreLaunch() {
     FabricLoader loader = FabricLoader.getInstance();
@@ -152,7 +152,7 @@ public final class FoxGradePreLaunch implements PreLaunchEntrypoint {
       log("");
       log("  " + inboxPorted + " mod(s) ported from the inbox.");
       if (relaunchSelf()) log("  Restarting the game automatically — they will be live in a moment.");
-      else log("  Please LAUNCH AGAIN to load them.");
+      else log("  " + restartHint());
       log("");
       System.exit(0);
     }
@@ -211,7 +211,7 @@ public final class FoxGradePreLaunch implements PreLaunchEntrypoint {
             // Force the relaunch even when this process was itself a relaunch child: every guard
             // pass retires at least one jar, so the chain is bounded by the number of ports.
             if (relaunchSelf(true, java.util.List.of())) log("  Restarting clean…");
-            else log("  Please LAUNCH AGAIN for a clean start.");
+            else log("  " + (isDedicatedServer() ? "Restart the server for a clean start." : "Please LAUNCH AGAIN for a clean start."));
             log("");
             System.exit(0);
           }
@@ -246,7 +246,7 @@ public final class FoxGradePreLaunch implements PreLaunchEntrypoint {
       if (relaunchSelf()) {
         log("  Restarting the game automatically with the clean mod set…");
       } else {
-        log("  Fabric already loaded both for THIS launch — please LAUNCH AGAIN.");
+        log("  Both were loaded for THIS run — " + (isDedicatedServer() ? "restart the server." : "please LAUNCH AGAIN."));
       }
       log("");
       System.exit(0);
@@ -280,7 +280,7 @@ public final class FoxGradePreLaunch implements PreLaunchEntrypoint {
       if (relaunchSelf()) {
         log("  Restarting the game automatically — the ported mods will be live in a moment.");
       } else {
-        log("  Please LAUNCH AGAIN — the ports are saved and will load cleanly on the next start.");
+        log("  " + (isDedicatedServer() ? "Restart the server" : "Please LAUNCH AGAIN") + " — the ports are saved and will load cleanly next start.");
       }
       log("");
       System.exit(0);
@@ -324,6 +324,19 @@ public final class FoxGradePreLaunch implements PreLaunchEntrypoint {
   // process that scans the now-ported jars from scratch. The child inherits stdio so its log
   // lands in the same launcher console; FOXGRADE_RELAUNCHED guards against loops (if the child
   // somehow ports again, it falls back to the old restart message instead of forking forever).
+  // A dedicated server's process is owned by systemd, a hosting panel or a screen session.
+  // Forking a replacement and exiting would orphan the child or kill the server outright, so the
+  // restart-to-apply step never runs there — the operator restarts it the way their setup expects.
+  static boolean isDedicatedServer() {
+    try {
+      return net.fabricmc.loader.api.FabricLoader.getInstance().getEnvironmentType() == net.fabricmc.api.EnvType.SERVER;
+    } catch (Throwable t) { return false; }
+  }
+
+  private static String restartHint() {
+    return isDedicatedServer() ? "Restart the server to load them." : "Please LAUNCH AGAIN to load them.";
+  }
+
   private static boolean relaunchSelf() { return relaunchSelf(false, java.util.List.of()); }
 
   // force=true is the panel's user-initiated restart: it must work even inside a process that
@@ -332,6 +345,7 @@ public final class FoxGradePreLaunch implements PreLaunchEntrypoint {
   // --quickPlaySingleplayer pair is stripped first so a test-run world doesn't stack with one
   // from the current launch.
   public static boolean relaunchSelf(boolean force, java.util.List<String> extraArgs) {
+    if (isDedicatedServer()) return false;   // see isDedicatedServer(): never fork a server process
     if (!force && System.getenv("FOXGRADE_RELAUNCHED") != null) return false;
     try {
       var info = ProcessHandle.current().info();

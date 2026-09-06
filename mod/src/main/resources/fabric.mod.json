@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "foxgrade",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "name": "Fox-Grade",
   "description": "Ports Fabric mods forward across MC versions at launch. Drop it in mods/, launch, it reports what worked and what didn't before Minecraft finishes booting.",
   "authors": [
@@ -14,7 +14,7 @@
   },
   "license": "PolyForm-Noncommercial-1.0.0",
   "icon": "assets/foxgrade/icon.png",
-  "environment": "client",
+  "environment": "*",
   "entrypoints": {
     "preLaunch": [
       "foxgrade.FoxGradePreLaunch"

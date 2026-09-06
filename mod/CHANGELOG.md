@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.1.0 (unreleased)
+- **Dedicated server support.** The restart-to-apply step now detects a dedicated server and asks
+  the operator to restart rather than forking the process, which on systemd or a hosting panel
+  would have orphaned the child or killed the server outright.
+- Removed the client-only access widener entries; they were redundant even on the client, because
+  the code that used them goes through plain reflection.
+- Verified on a real 26.2 Fabric server: three mods ported and loaded, two correctly held for
+  missing libraries, server reached `Done` clean. Client behaviour unchanged and re-tested.
+
 ## 1.0.0
 First public release.
 - One-click inbox porting with automatic self-relaunch (no double launch)
