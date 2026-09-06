@@ -1,6 +1,29 @@
 # Changelog
 
 ## 1.1.0 (unreleased)
+- **Auto-inbox.** `mods/` is swept at launch: any jar whose declared Minecraft range excludes the
+  running version, or that still references pre-26 intermediary names, is moved to the inbox and
+  ported before Fabric loads the mod set. Dropping an old mod into `mods/` is enough — unless it
+  ships an access widener, which Fabric Loader parses before any mod code runs (an old one aborts
+  the launch); those still go in the inbox.
+- **Standalone checker.** `foxgrade-check.sh mod.jar` runs the full pipeline without the game and
+  prints every unresolved class, member and constructor; `--out DIR` writes the port.
+- **Entity/item/block API layer.** Value-IO save data, `ServerLevel`-taking AI/hurt/pick-up/drop
+  signatures, spawn eggs (constructor → factory), tool tiers (`Tier`/`SwordItem`/`DiggerItem`),
+  targeting selectors, game rules, path types, holder-wrapped and moved constants, retyped
+  constants, block `updateShape`/`fallOn`/`getCloneItemStack`/`useItemOn` overrides, item
+  tooltips, reload listeners, brain activities, and the renderer super-calls
+  (`getShadowRadius`/`shouldShowName`/`setupRotations`). Two creature mods went from ~190
+  unresolved references to ~40, all in model/render internals.
+- **Curated renames now walk the class chain after intermediary translation** — `Mob.moveTo` is
+  renamed to `snapTo` because the rule is recorded on `Entity`; previously only direct owners
+  matched, and the verifier reported the miss.
+- **1.20.1 input.** The intermediary table now carries the 1.20.1 era (5,456 members, 714
+  classes), so 1.20.1 jars translate to readable Mojang names and port through the same layers.
+- **Compatibility page.** `docs/compat.md` is generated from the harness ledgers: verdict,
+  unresolved count, server result, Retromod result and screenshot per mod.
+- Fixed: constructor adapters used 1-based slots in two entries and produced a `VerifyError`;
+  inner-class shims (`VillagerTrades$ItemListing`, `GameRules$Key`) were never injected.
 - **Dedicated server support.** The restart-to-apply step now detects a dedicated server and asks
   the operator to restart rather than forking the process, which on systemd or a hosting panel
   would have orphaned the child or killed the server outright.

@@ -1,6 +1,6 @@
 # Fox-Grade — the mod that ports your mods
 
-**That mod you love that died two versions ago? Drop its jar in `mods/fox-grade-inbox/` and launch the game.**
+**That mod you love that died two versions ago? Drop its jar in `mods/` (or `mods/fox-grade-inbox/` if it ships an access widener) and launch the game.**
 
 Fox-Grade rewrites old Fabric mods to run on Minecraft 26.2 — at launch, automatically, on your
 own machine. It translates names across mapping eras (intermediary → Mojang),
@@ -19,16 +19,26 @@ it ported. The moment the author ships a real update: one click downloads it (ch
 installs it, and retires the port. If you install the official build yourself, the port retires
 automatically at next launch. **The author's build always beats a port.**
 
+⭐ **It re-creates what 26.2 removed.** The 1.21.x GUI drawing API, Fabric's world-render events,
+and the entity/item/block API surface (save data, AI and damage signatures, spawn eggs, tool tiers,
+game rules, moved and holder-wrapped constants, reload listeners…) are bridged onto the new game and
+verified against its real class inventory. Block/item *model* rendering and the low-level texture
+pipeline are not — those get reported, not guessed. The per-mod results table lives in the
+repository (`docs/compat.md`).
+
+⭐ **Check before you launch.** `foxgrade-check.sh` (in the repository) runs the real porting
+pipeline on a jar without starting the game and lists exactly what the port would still miss.
+
 ⭐ **Nothing is ever deleted.** Originals are kept, ports are reversible, and every launch writes
 a report of what happened.
 
-**Tested, and honest about the result.** Batch-tested against 39 mods from 1.21.x and 26.1: 23 port
+**Tested, and honest about the result.** Batch-tested against 37 mods from 1.21.x and 26.1: 26 port
 and boot into a world (six also verified on a dedicated server; Mod Menu's mod list opens and
-renders through the GUI bridges; world-drawing mods run on the re-created render events), 11 cannot
-be ported because 26.2 rewrote the internals they are built on — above all the entity, item and
-block APIs behind every 1.21.x creature mod — or they ship native code, and 5 were correctly held
-back because a library they needed was not provided. The report lists every class, member and
-constructor a port still references that the game no longer has.
+renders through the GUI bridges; world-drawing mods run on the re-created render events) and 11
+crash on internals 26.2 rewrote that are not bridged yet — block/item model rendering, the
+low-level texture pipeline, a bundled animation engine, native code, and the last hierarchy changes
+behind the two creature mods. The report lists every class, member and constructor a port still
+references that the game no longer has; the per-mod table lives in the repository.
 
 **Minecraft 26.2 only.** The translation tables are built for a single version. On any other
 version Fox-Grade refuses to run rather than produce a port it cannot verify.

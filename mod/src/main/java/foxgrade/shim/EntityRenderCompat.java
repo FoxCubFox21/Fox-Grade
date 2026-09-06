@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 
 /**
  * Drives a 1.21.x entity renderer from 26.2's two-phase design. Extraction remembers the entity
@@ -46,4 +47,12 @@ public final class EntityRenderCompat {
   public static CameraRenderState camera(Entity e) { Frame f = FRAMES.get(e); return f == null ? null : f.camera(); }
 
   public static EntityRenderState newState(Object renderer) { return renderer instanceof LivingEntityRenderer ? new LivingEntityRenderState() : new EntityRenderState(); }
+
+  // ---- batch 3: super-calls from 1.21.x renderer overrides need a render state for the entity
+  public static EntityRenderState stateOf(Entity e, Object renderer) { EntityRenderState s = state(e); return s != null ? s : newState(renderer); }
+  public static LivingEntityRenderState livingState(Entity e) { EntityRenderState s = state(e); return s instanceof LivingEntityRenderState l ? l : new LivingEntityRenderState(); }
+  public static double distSq(Entity e) { return net.minecraft.client.Minecraft.getInstance().getEntityRenderDispatcher().distanceToSqr(e); }
+  public static float age(EntityRenderState s) { return s == null ? 0f : s.ageInTicks; }
+  public static LivingEntity living(EntityRenderState s) { Entity e = entity(s); return e instanceof LivingEntity l ? l : null; }
+  public static LivingEntityRenderState livingStateOf(Entity e, Object renderer) { EntityRenderState s = stateOf(e, renderer); return s instanceof LivingEntityRenderState l ? l : new LivingEntityRenderState(); }
 }

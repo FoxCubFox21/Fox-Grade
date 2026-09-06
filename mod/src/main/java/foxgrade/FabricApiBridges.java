@@ -49,13 +49,15 @@ public final class FabricApiBridges {
   // are int constants appended (a trailing boolean the new signature grew).
   // `args`: full new-argument recipe (each entry a source: "oN" old arg N, "this", or a static call
   // ["static", owner, name, desc, sources…]); when present, `pack`/`extras` are ignored.
-  public record CallAdapter(String newName, String newDesc, String[] pack, int[] extras, java.util.List<String[]> args) { }
+  public record CallAdapter(String newName, String newDesc, String[] pack, int[] extras, java.util.List<String[]> args, String[] convert) { }
   private final Map<String, Map<String, CallAdapter>> callAdapters;
   // A mod class OVERRIDING an old-signature callback (keyPressed(III)Z) gets the new-signature
   // method synthesised, delegating to the old one: each `unpack` entry is an accessor on the
   // first new parameter ([owner, name, desc]), a pass-through of new parameter N ("pN"), or an
   // int constant ("0"). Without this the game never calls the mod's handler again.
-  public record OverrideAdapter(String oldName, String oldDesc, String newName, String newDesc, java.util.List<String[]> unpack, java.util.List<String[]> after) { }
+  // `convert`: a static call applied to the old method's return value to produce the new return type
+  // (Item.use returning InteractionResultHolder → InteractionResult).
+  public record OverrideAdapter(String oldName, String oldDesc, String newName, String newDesc, java.util.List<String[]> unpack, java.util.List<String[]> after, String[] convert) { }
   // name+desc → static hooks: synthesise the method (if absent) as super-call-then-hooks.
   public record SuperHook(String name, String desc, java.util.List<String[]> hooks) { }
   // name+desc → static call producing the return value; synthesised only when nothing in the
@@ -77,7 +79,10 @@ public final class FabricApiBridges {
   private final Map<String, String> classRenames;    // third-party class renames (slash form)
   // owner → oldCtorDesc → adapter: same-arity constructor signature changes, adapted per-slot.
   public record CtorTransform(int slot, String viaOwner, String viaName, String viaDesc) { }
-  public record CtorAdapter(String newDesc, java.util.List<CtorTransform> transforms) { }
+  // args: full argument recipes ("oN" / ["static",o,n,d,src…] / ["conv",src,op] / ["cast",src,type]) replacing the
+  // per-slot transforms; factory: [owner,name,desc] of a static method that REPLACES the constructor
+  // (new ResourceLocation(s) → Identifier.parse(s)) — the uninitialised refs are popped.
+  public record CtorAdapter(String newDesc, java.util.List<CtorTransform> transforms, java.util.List<String[]> args, String[] factory) { }
   private final Map<String, Map<String, CtorAdapter>> ctorAdapters;
   // name+desc → newName, applied to MOD-owned classes: a mod class overriding a renamed MC
   // method must have its DECLARATION renamed too, or the JVM sees an abstract method un-overridden.
@@ -171,13 +176,16 @@ public final class FabricApiBridges {
         for (var m : ownerEntry.getValue().getAsJsonObject().entrySet()) {
           JsonObject a = m.getValue().getAsJsonObject();
           java.util.List<CtorTransform> ts = new java.util.ArrayList<>();
-          for (var t : a.getAsJsonArray("transforms")) {
+          if (a.has("transforms")) for (var t : a.getAsJsonArray("transforms")) {
             JsonObject to = t.getAsJsonObject();
             var via = to.getAsJsonArray("via");
             ts.add(new CtorTransform(to.get("slot").getAsInt(),
                 via.get(0).getAsString(), via.get(1).getAsString(), via.get(2).getAsString()));
           }
-          map.put(m.getKey(), new CtorAdapter(a.get("newDesc").getAsString(), ts));
+          java.util.List<String[]> cargs = null;
+          if (a.has("args")) { cargs = new java.util.ArrayList<>(); for (var u : a.getAsJsonArray("args")) cargs.add(strs(u)); }
+          String[] factory = a.has("factory") ? strs(a.get("factory")) : null;
+          map.put(m.getKey(), new CtorAdapter(a.has("newDesc") ? a.get("newDesc").getAsString() : (factory != null ? factory[2] : m.getKey()), ts, cargs, factory));
         }
       }
     }
@@ -232,7 +240,7 @@ public final class FabricApiBridges {
           if (a.has("extras")) { var ea = a.getAsJsonArray("extras"); extras = new int[ea.size()]; for (int i = 0; i < extras.length; i++) extras[i] = ea.get(i).getAsInt(); }
           java.util.List<String[]> args = null;
           if (a.has("args")) { args = new java.util.ArrayList<>(); for (var u : a.getAsJsonArray("args")) args.add(strs(u)); }
-          map.put(m.getKey(), new CallAdapter(a.get("newName").getAsString(), a.get("newDesc").getAsString(), pack, extras, args));
+          map.put(m.getKey(), new CallAdapter(a.get("newName").getAsString(), a.get("newDesc").getAsString(), pack, extras, args, a.has("convert") ? strs(a.get("convert")) : null));
         }
       }
     }
@@ -244,7 +252,7 @@ public final class FabricApiBridges {
         java.util.List<String[]> after = new java.util.ArrayList<>();
         if (a.has("after")) for (var u : a.getAsJsonArray("after")) after.add(strs(u));
         extra.overrideAdapters().add(new OverrideAdapter(a.get("oldName").getAsString(), a.get("oldDesc").getAsString(),
-            a.get("newName").getAsString(), a.get("newDesc").getAsString(), unpack, after));
+            a.get("newName").getAsString(), a.get("newDesc").getAsString(), unpack, after, a.has("convert") ? strs(a.get("convert")) : null));
       }
     }
     if (o.has("fieldRedirects") && o.get("fieldRedirects").isJsonObject()) {
@@ -254,7 +262,7 @@ public final class FabricApiBridges {
         Map<String, String[]> map = fieldRedirects.computeIfAbsent(owner, k -> new HashMap<>());
         for (var m : ownerEntry.getValue().getAsJsonObject().entrySet()) {
           var arr = m.getValue().getAsJsonArray();
-          map.put(m.getKey(), new String[]{arr.get(0).getAsString(), arr.get(1).getAsString(), arr.get(2).getAsString()});
+          map.put(m.getKey(), strs(arr));   // [shimOwner,name,desc] or ["holder", newFieldDesc, convOwner, convName, convDesc(, castType)]
         }
       }
     }

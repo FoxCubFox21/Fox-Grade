@@ -262,15 +262,27 @@ for old_n, new_n in [("S2CPlayChannelEvents", "ClientboundPlayChannelEvents"), (
 COLORS = [("WHITE", "white"), ("ORANGE", "orange"), ("MAGENTA", "magenta"), ("LIGHT_BLUE", "lightBlue"), ("YELLOW", "yellow"), ("LIME", "lime"), ("PINK", "pink"), ("GRAY", "gray"),
           ("LIGHT_GRAY", "lightGray"), ("CYAN", "cyan"), ("PURPLE", "purple"), ("BLUE", "blue"), ("BROWN", "brown"), ("GREEN", "green"), ("RED", "red"), ("BLACK", "black")]
 lines = []; BL = "Lnet/minecraft/world/level/block/Block;"; IT = "Lnet/minecraft/world/item/Item;"
-for holder, typ, tdesc, colls in [("Blocks", "Block", BL, [f.split(":")[0] for f in new["net/minecraft/world/level/block/Blocks"]["f"] if f.startswith("DYED_")]),
-                                  ("Items", "Item", IT, [f.split(":")[0] for f in new["net/minecraft/world/item/Items"]["f"] if f.startswith("DYED_")])]:
+CC = ":Lnet/minecraft/world/level/block/ColorCollection;"; WCC = ":Lnet/minecraft/world/level/block/WeatheringCopperCollection;"
+for holder, typ, tdesc, colls in [("Blocks", "Block", BL, [f.split(":")[0] for f in new["net/minecraft/world/level/block/Blocks"]["f"] if f.endswith(CC)]),
+                                  ("Items", "Item", IT, [f.split(":")[0] for f in new["net/minecraft/world/item/Items"]["f"] if f.endswith(CC)])]:
     owner = "net/minecraft/world/level/block/Blocks" if holder == "Blocks" else "net/minecraft/world/item/Items"
     for coll in colls:
-        suffix = coll[len("DYED_"):]
+        suffix = coll[len("DYED_"):] if coll.startswith("DYED_") else coll
         for up, getter in COLORS:
             fld = up + "_" + suffix; meth = holder + "_" + fld
             lines.append(f"  public static {typ} {meth}() {{ return ({typ}) {holder}.{coll}.{getter}(); }}")
             j["fieldRedirects"].setdefault(owner, {})["getstatic " + fld + ":" + tdesc] = ["foxgrade/shim/BlocksCompat", meth, "()" + tdesc]
+STATES = [("", "unaffected"), ("EXPOSED_", "exposed"), ("WEATHERED_", "weathered"), ("OXIDIZED_", "oxidized")]
+for holder, typ, tdesc in [("Blocks", "Block", BL), ("Items", "Item", IT)]:
+    owner = "net/minecraft/world/level/block/Blocks" if holder == "Blocks" else "net/minecraft/world/item/Items"
+    for coll in [f.split(":")[0] for f in new[owner]["f"] if f.endswith(WCC)]:
+        for waxed, group in [("", "weathering"), ("WAXED_", "waxed")]:
+            for pre, getter in STATES:
+                # COPPER_BLOCK's family is irregular: EXPOSED_COPPER, not EXPOSED_COPPER_BLOCK
+                base = "COPPER" if coll == "COPPER_BLOCK" and pre else coll
+                fld = waxed + pre + base; meth = holder + "_" + fld
+                lines.append(f"  public static {typ} {meth}() {{ return ({typ}) {holder}.{coll}.{group}().{getter}(); }}")
+                j["fieldRedirects"].setdefault(owner, {})["getstatic " + fld + ":" + tdesc] = ["foxgrade/shim/BlocksCompat", meth, "()" + tdesc]
 (MOD / "src/main/java/foxgrade/shim/BlocksCompat.java").write_text("package foxgrade.shim;\n\nimport net.minecraft.world.item.Item;\nimport net.minecraft.world.item.Items;\nimport net.minecraft.world.level.block.Block;\nimport net.minecraft.world.level.block.Blocks;\n\n/** The per-colour block and item constants 26.2 folded into DYED_* colour collections. Generated. */\npublic final class BlocksCompat {\n  private BlocksCompat() { }\n" + "\n".join(lines) + "\n}\n")
 # ======================= WORLD RENDERING (26.2 submit API) =======================
 RT = "Lnet/minecraft/client/renderer/rendertype/RenderType;"; RTO = "net/minecraft/client/renderer/rendertype/RenderType"; RTS = "net/minecraft/client/renderer/rendertype/RenderTypes"
@@ -363,6 +375,384 @@ FONT = "Lnet/minecraft/client/gui/Font;"; DM = "Lnet/minecraft/client/gui/Font$D
 for t, extra in [("Ljava/lang/String;", ""), ("Ljava/lang/String;", "Z"), (CMP, ""), (FCS, "")]:
     key = "drawInBatch(" + t + "FFIZ" + M4 + MBS + DM + "II" + extra + ")I"
     cr.setdefault("net/minecraft/client/gui/Font", {})[key] = ["foxgrade/shim/FrameCompat", "drawInBatch", "(" + FONT + t + "FFIZ" + M4 + MBS + DM + "II" + extra + ")I"]
+# ---- class moves the tables missed: a 1.21.1 class absent from 26.2 whose simple name exists in
+# exactly one other place is a package move (Slime → monster/cubemob/Slime, GameRules → level/gamerules).
+by_simple = {}
+for k in new:
+    if "$" in k: continue
+    by_simple.setdefault(k.rsplit("/", 1)[-1], []).append(k)
+moves = 0
+for oc in old:
+    if "$" in oc: continue
+    slash = oc.replace(".", "/")
+    if not slash.startswith("net/minecraft/") or slash in new or slash in REN: continue
+    cands = by_simple.get(slash.rsplit("/", 1)[-1], [])
+    if len(cands) == 1:
+        j["classRenames"][slash] = cands[0]; moves += 1
+        # inner classes move with their outer
+        for k in new:
+            if k.startswith(cands[0] + "$"): j["classRenames"].setdefault(slash + k[len(cands[0]):], k)
+print(f"class moves by unique simple name: {moves}")
+# ======================= ENTITY / ITEM API (1.21.2 – 26.x rewrite) =======================
+SL = "Lnet/minecraft/server/level/ServerLevel;"; VO = "Lnet/minecraft/world/level/storage/ValueOutput;"; VI = "Lnet/minecraft/world/level/storage/ValueInput;"
+DS = "Lnet/minecraft/world/damagesource/DamageSource;"; IE = "Lnet/minecraft/world/entity/item/ItemEntity;"; NB = "foxgrade/shim/NbtBridge"; EAC = "foxgrade/shim/EntityApiCompat"
+IRH = "Lnet/minecraft/world/InteractionResultHolder;"; LVL = "Lnet/minecraft/world/level/Level;"; PL = "Lnet/minecraft/world/entity/player/Player;"; IH = "Lnet/minecraft/world/InteractionHand;"
+ER = "Lnet/minecraft/world/entity/EntityReference;"; UU = "Ljava/util/UUID;"; NM = "Lnet/minecraft/world/entity/NeutralMob;"
+SLV = ["static", EAC, "serverLevel", "(Ljava/lang/Object;)" + SL, "this"]
+# overrides: the mod implements the 1.21.x signature; synthesise the 26.2 one
+j["overrideAdapters"] += [
+    {"oldName": "addAdditionalSaveData", "oldDesc": "(" + CT + ")V", "newName": "addAdditionalSaveData", "newDesc": "(" + VO + ")V",
+     "unpack": [["static", NB, "tagForOutput", "(" + VO + ")" + CT, "p1"]], "after": [["static", NB, "flushOutput", "(" + VO + ")V", "p1"]]},
+    {"oldName": "readAdditionalSaveData", "oldDesc": "(" + CT + ")V", "newName": "readAdditionalSaveData", "newDesc": "(" + VI + ")V",
+     "unpack": [["static", NB, "tagOfInput", "(" + VI + ")" + CT, "p1"]]},
+    {"oldName": "customServerAiStep", "oldDesc": "()V", "newName": "customServerAiStep", "newDesc": "(" + SL + ")V", "unpack": []},
+    {"oldName": "doHurtTarget", "oldDesc": "(" + ENT + ")Z", "newName": "doHurtTarget", "newDesc": "(" + SL + ENT + ")Z", "unpack": ["p2"]},
+    {"oldName": "hurt", "oldDesc": "(" + DS + "F)Z", "newName": "hurtServer", "newDesc": "(" + SL + DS + "F)Z", "unpack": ["p2", "p3"]},
+    {"oldName": "pickUpItem", "oldDesc": "(" + IE + ")V", "newName": "pickUpItem", "newDesc": "(" + SL + IE + ")V", "unpack": ["p2"]},
+    {"oldName": "actuallyHurt", "oldDesc": "(" + DS + "F)V", "newName": "actuallyHurt", "newDesc": "(" + SL + DS + "F)V", "unpack": ["p2", "p3"]},
+    {"oldName": "use", "oldDesc": "(" + LVL + PL + IH + ")" + IRH, "newName": "use", "newDesc": "(" + LVL + PL + IH + ")" + IR,
+     "unpack": ["p1", "p2", "p3"], "convert": ["static", "foxgrade/shim/InteractionCompat", "fromHolder", "(" + IRH + ")" + IR]},
+    {"oldName": "getOwnerUUID", "oldDesc": "()" + UU, "newName": "getOwnerReference", "newDesc": "()" + ER, "unpack": [], "convert": ["static", EAC, "ownerReference", "(" + UU + ")" + ER]},
+]
+# super-calls into the game from those overrides
+for o in ["net/minecraft/world/entity/Entity", "net/minecraft/world/entity/LivingEntity", "net/minecraft/world/entity/Mob", "net/minecraft/world/entity/PathfinderMob", "net/minecraft/world/entity/AgeableMob",
+          "net/minecraft/world/entity/animal/Animal", "net/minecraft/world/entity/TamableAnimal", "net/minecraft/world/entity/animal/AbstractGolem", "net/minecraft/world/entity/monster/Monster",
+          "net/minecraft/world/entity/animal/AbstractFish", "net/minecraft/world/entity/animal/AbstractSchoolingFish", "net/minecraft/world/entity/animal/WaterAnimal", "net/minecraft/world/entity/animal/AbstractCow",
+          "net/minecraft/world/entity/animal/AbstractHorse", "net/minecraft/world/entity/animal/AbstractChestedHorse", "net/minecraft/world/entity/FlyingMob", "net/minecraft/world/entity/ambient/AmbientCreature",
+          "net/minecraft/world/entity/animal/ShoulderRidingEntity", "net/minecraft/world/entity/projectile/Projectile", "net/minecraft/world/entity/projectile/ThrowableProjectile", "net/minecraft/world/entity/projectile/ThrowableItemProjectile",
+          "net/minecraft/world/entity/projectile/AbstractArrow", "net/minecraft/world/entity/vehicle/VehicleEntity", "net/minecraft/world/entity/monster/Zombie", "net/minecraft/world/entity/monster/Skeleton", "net/minecraft/world/entity/animal/Chicken",
+          "net/minecraft/world/entity/animal/Cow", "net/minecraft/world/entity/animal/Pig", "net/minecraft/world/entity/animal/Sheep", "net/minecraft/world/entity/animal/Wolf", "net/minecraft/world/entity/animal/Cat", "net/minecraft/world/entity/animal/Fox"]:
+    if o not in new: continue
+    j["callAdapters"].setdefault(o, {}).update({
+        "addAdditionalSaveData(" + CT + ")V": {"newName": "addAdditionalSaveData", "newDesc": "(" + VO + ")V", "args": [["static", NB, "outputFor", "(" + CT + ")" + VO, "o1"]]},
+        "readAdditionalSaveData(" + CT + ")V": {"newName": "readAdditionalSaveData", "newDesc": "(" + VI + ")V", "args": [["static", NB, "inputFor", "(" + CT + ")" + VI, "o1"]]},
+        "customServerAiStep()V": {"newName": "customServerAiStep", "newDesc": "(" + SL + ")V", "args": [SLV]},
+        "doHurtTarget(" + ENT + ")Z": {"newName": "doHurtTarget", "newDesc": "(" + SL + ENT + ")Z", "args": [SLV, "o1"]},
+        "hurt(" + DS + "F)Z": {"newName": "hurtServer", "newDesc": "(" + SL + DS + "F)Z", "args": [SLV, "o1", "o2"]},
+        "pickUpItem(" + IE + ")V": {"newName": "pickUpItem", "newDesc": "(" + SL + IE + ")V", "args": [SLV, "o1"]},
+        "actuallyHurt(" + DS + "F)V": {"newName": "actuallyHurt", "newDesc": "(" + SL + DS + "F)V", "args": [SLV, "o1", "o2"]}})
+# renames with a same-shape twin
+j["renames"].setdefault("net/minecraft/world/entity/Entity", {}).update({"moveTo": "snapTo", "absMoveTo": "absSnapTo"})
+j["inheritedRenames"].update({"moveTo(DDDFF)V": "snapTo", "moveTo(DDD)V": "snapTo", "absMoveTo(DDDFF)V": "absSnapTo"})
+j["classRenames"].update({"net/minecraft/world/entity/MobSpawnType": "net/minecraft/world/entity/EntitySpawnReason", "net/minecraft/world/item/ArmorItem$Type": "net/minecraft/world/item/equipment/ArmorType"})
+BLG = "Lnet/minecraft/world/level/BlockAndLightGetter;"; BTGc = "Lnet/minecraft/client/renderer/block/BlockAndTintGetter;"
+j["descWidenings"].setdefault("net/minecraft/world/entity/animal/Animal", {})["isBrightEnoughToSpawn(" + BTGc + BP + ")Z"] = "(" + BLG + BP + ")Z"
+j["descWidenings"].setdefault("net/minecraft/world/level/Level", {}).update({
+    "playSound(" + PL + "DDDLnet/minecraft/sounds/SoundEvent;Lnet/minecraft/sounds/SoundSource;FF)V": "(" + ENT + "DDDLnet/minecraft/sounds/SoundEvent;Lnet/minecraft/sounds/SoundSource;FF)V",
+    "playSound(" + PL + ENT + "Lnet/minecraft/sounds/SoundEvent;Lnet/minecraft/sounds/SoundSource;FF)V": "(" + ENT + ENT + "Lnet/minecraft/sounds/SoundEvent;Lnet/minecraft/sounds/SoundSource;FF)V"})
+LE = "Lnet/minecraft/world/entity/LivingEntity;"; OE = "Lnet/minecraft/world/entity/OwnableEntity;"; TA = "Lnet/minecraft/world/entity/TamableAnimal;"
+cr.setdefault("net/minecraft/world/entity/LivingEntity", {})["knockback(DDD)V"] = [EAC, "knockback", "(" + LE + "DDD)V"]
+for o in ["net/minecraft/world/entity/OwnableEntity", "net/minecraft/world/entity/TamableAnimal", "net/minecraft/world/entity/animal/AbstractHorse"]:
+    cr.setdefault(o, {})["getOwnerUUID()" + UU] = [EAC, "getOwnerUUID", "(" + OE + ")" + UU]
+cr.setdefault("net/minecraft/world/entity/TamableAnimal", {})["setOwnerUUID(" + UU + ")V"] = [EAC, "setOwnerUUID", "(" + TA + UU + ")V"]
+cr.setdefault("net/minecraft/world/entity/NeutralMob", {}).update({"addPersistentAngerSaveData(" + CT + ")V": [EAC, "addPersistentAngerSaveData", "(" + NM + CT + ")V"],
+    "readPersistentAngerSaveData(" + LVL + CT + ")V": [EAC, "readPersistentAngerSaveData", "(" + NM + LVL + CT + ")V"]})
+cr["net/minecraft/nbt/CompoundTag"].update({"getUUID(" + S + ")" + UU: [NB.replace("NbtBridge", "NbtCompat"), "getUUID", "(" + CT + S + ")" + UU], "hasUUID(" + S + ")Z": [NB.replace("NbtBridge", "NbtCompat"), "hasUUID", "(" + CT + S + ")Z"], "putUUID(" + S + UU + ")V": [NB.replace("NbtBridge", "NbtCompat"), "putUUID", "(" + CT + S + UU + ")V"]})
+cr.setdefault("net/minecraft/world/InteractionResult", {})["sidedSuccess(Z)" + IR] = ["foxgrade/shim/InteractionCompat", "sidedSuccess", "(Z)" + IR]
+
+# ---- constants that became Holders (SoundEvents.PIG_STEP: SoundEvent → Holder.Reference): read the
+# field with its new type and unwrap, keyed on the old static-field shape.
+oldF = {}; curc = None
+for ln in open(pathlib.Path.home() / "foxgrade-work/mappings-1.21.1-client.txt"):
+    if not ln.startswith("    ") and " -> " in ln: curc = ln.split(" -> ")[0].strip(); oldF[curc] = {}
+    elif curc and "(" not in ln and " -> " in ln:
+        parts = ln.strip().split(" -> ")[0].split(" ")
+        if len(parts) == 2: oldF[curc][parts[1]] = jdesc(parts[0])
+HOLDERS = {"Lnet/minecraft/core/Holder;", "Lnet/minecraft/core/Holder$Reference;"}
+nholder = 0
+for oc, flds in oldF.items():
+    slash = oc.replace(".", "/"); nc = j["classRenames"].get(slash, REN.get(slash, slash))
+    if nc not in new: continue
+    newf = {x.split(":", 1)[0]: x.split(":", 1)[1] for x in new[nc].get("f", []) if ":" in x}
+    for fname, odesc in flds.items():
+        nd = newf.get(fname)
+        if nd in HOLDERS and odesc.startswith("L") and odesc not in HOLDERS:
+            j.setdefault("fieldRedirects", {}).setdefault(nc, {})["getstatic " + fname + ":" + odesc] = ["holder", nd, "foxgrade/shim/HolderCompat", "value", "(Lnet/minecraft/core/Holder;)Ljava/lang/Object;", odesc[1:-1]]
+            nholder += 1
+print(f"holder-wrapped constants bridged: {nholder}")
+# ---- batch 2: the deltas the creature mods (naturalist, friends-and-foes) hit after batch 1
+ELC = "foxgrade/shim/EntityLegacyCompat"; LC = "foxgrade/shim/LevelCompat"; GOC = "foxgrade/shim/GoalCompat"; ITC = "foxgrade/shim/ItemCompat"
+ERS = "Lnet/minecraft/client/renderer/entity/state/EntityRenderState;"; BS2 = "Lnet/minecraft/world/level/block/state/BlockState;"
+DIRN = "Lnet/minecraft/core/Direction;"; LA = "Lnet/minecraft/world/level/LevelAccessor;"; LR = "Lnet/minecraft/world/level/LevelReader;"
+STA = "Lnet/minecraft/world/level/ScheduledTickAccess;"; RS = "Lnet/minecraft/util/RandomSource;"; BHR = "Lnet/minecraft/world/phys/BlockHitResult;"
+IIR = "Lnet/minecraft/world/ItemInteractionResult;"; ISK = "Lnet/minecraft/world/item/ItemStack;"; IL = "Lnet/minecraft/world/level/ItemLike;"
+SE = "Lnet/minecraft/sounds/SoundEvent;"; MOB = "Lnet/minecraft/world/entity/Mob;"; PN = "Lnet/minecraft/world/entity/ai/navigation/PathNavigation;"
+TC = "Lnet/minecraft/world/entity/ai/targeting/TargetingConditions;"; TCS = "Lnet/minecraft/world/entity/ai/targeting/TargetingConditions$Selector;"
+PRED = "Ljava/util/function/Predicate;"; TK = "Lnet/minecraft/tags/TagKey;"; PF = "Lnet/minecraft/util/profiling/ProfilerFiller;"
+ITEM = "Lnet/minecraft/world/item/Item;"; PT = "Lnet/minecraft/core/particles/ParticleType;"; CLS = "Ljava/lang/Class;"
+# Entity members that lost a same-shape twin: static shims take the receiver as arg 0 (lookup walks the chain)
+cr.setdefault("net/minecraft/world/entity/Entity", {}).update({
+    "spawnAtLocation(" + IL + ")" + IE: [ELC, "spawnAtLocation", "(" + ENT + IL + ")" + IE],
+    "spawnAtLocation(" + ISK + ")" + IE: [ELC, "spawnAtLocation", "(" + ENT + ISK + ")" + IE],
+    "spawnAtLocation(" + ISK + "F)" + IE: [ELC, "spawnAtLocation", "(" + ENT + ISK + "F)" + IE],
+    "isInvulnerableTo(" + DS + ")Z": [ELC, "isInvulnerableTo", "(" + ENT + DS + ")Z"],
+    "isInWaterOrBubble()Z": [ELC, "isInWaterOrBubble", "(" + ENT + ")Z"],
+    "isControlledByLocalInstance()Z": [ELC, "isControlledByLocalInstance", "(" + ENT + ")Z"],
+    "tryCheckInsideBlocks()V": [ELC, "tryCheckInsideBlocks", "(" + ENT + ")V"],
+    "killedEntity(" + SL + LE + ")Z": [ELC, "killedEntity", "(" + ENT + SL + LE + ")Z"]})
+cr.setdefault("net/minecraft/world/entity/Mob", {})["wantsToPickUp(" + ISK + ")Z"] = [ELC, "wantsToPickUp", "(" + MOB + ISK + ")Z"]
+cr.setdefault("net/minecraft/world/entity/LivingEntity", {})["getEatingSound(" + ISK + ")" + SE] = [ELC, "getEatingSound", "(" + LE + ISK + ")" + SE]
+fr = j.setdefault("fieldRedirects", {})
+fr.setdefault("net/minecraft/world/entity/Entity", {}).update({
+    "get walkDist:F": [ELC, "walkDist", "(" + ENT + ")F"], "put walkDist:F": [ELC, "setWalkDist", "(" + ENT + "F)V"],
+    "get walkDistO:F": [ELC, "walkDistO", "(" + ENT + ")F"], "put walkDistO:F": [ELC, "setWalkDistO", "(" + ENT + "F)V"],
+    "get hasImpulse:Z": [ELC, "hasImpulse", "(" + ENT + ")Z"], "put hasImpulse:Z": [ELC, "setHasImpulse", "(" + ENT + "Z)V"]})
+fr.setdefault("net/minecraft/world/entity/Mob", {}).update({
+    "get handDropChances:[F": [ELC, "handDropChances", "(" + MOB + ")[F"], "put handDropChances:[F": [ELC, "setHandDropChances", "(" + MOB + "[F)V"]})
+# Level / Mth / navigation / targeting / items
+j["renames"].setdefault("net/minecraft/world/level/Level", {}).update({"isDay": "isBrightOutside", "isNight": "isDarkOutside"})
+cr.setdefault("net/minecraft/world/level/Level", {}).update({"getTimeOfDay(F)F": [LC, "getTimeOfDay", "(" + LVL + "F)F"], "getProfiler()" + PF: [LC, "getProfiler", "(" + LVL + ")" + PF]})
+cr.setdefault("net/minecraft/util/Mth", {}).update({"cos(F)F": ["foxgrade/shim/MathCompat", "cos", "(F)F"], "sin(F)F": ["foxgrade/shim/MathCompat", "sin", "(F)F"]})
+cr.setdefault("net/minecraft/world/entity/ai/navigation/PathNavigation", {})["setCanPassDoors(Z)V"] = [ELC, "setCanPassDoors", "(" + PN + "Z)V"]
+cr.setdefault("net/minecraft/world/entity/ai/targeting/TargetingConditions", {})["selector(" + PRED + ")" + TC] = [GOC, "selector", "(" + TC + PRED + ")" + TC]
+cr.setdefault("net/minecraft/world/item/ItemStack", {})["is(" + TK + ")Z"] = [ITC, "is", "(" + ISK + TK + ")Z"]
+for o in ["net/minecraft/world/entity/animal/Sheep", "net/minecraft/world/entity/animal/sheep/Sheep"]:
+    j["renames"].setdefault(o, {})["getDyeColor"] = "getColor"
+j["ctorAdapters"].setdefault("net/minecraft/world/entity/ai/goal/target/NearestAttackableTargetGoal", {}).update({
+    "(" + MOB + CLS + "IZZ" + PRED + ")V": {"newDesc": "(" + MOB + CLS + "IZZ" + TCS + ")V", "transforms": [{"slot": 5, "via": [GOC, "selector", "(" + PRED + ")" + TCS]}]},
+    "(" + MOB + CLS + "Z" + PRED + ")V": {"newDesc": "(" + MOB + CLS + "Z" + TCS + ")V", "transforms": [{"slot": 3, "via": [GOC, "selector", "(" + PRED + ")" + TCS]}]}})
+j["ctorAdapters"].setdefault("net/minecraft/core/particles/ItemParticleOption", {})["(" + PT + ISK + ")V"] = {"newDesc": "(" + PT + ITEM + ")V", "transforms": [{"slot": 1, "via": [ITC, "itemOf", "(" + ISK + ")" + ITEM]}]}
+# overrides whose 26.2 shape changed
+US_OLD = "(" + BS2 + DIRN + BS2 + LA + BP + BP + ")" + BS2; US_NEW = "(" + BS2 + LR + STA + BP + DIRN + BP + BS2 + RS + ")" + BS2
+FO_OLD = "(" + LVL + BS2 + BP + ENT + "F)V"; FO_NEW = "(" + LVL + BS2 + BP + ENT + "D)V"
+UI = ISK + BS2 + LVL + BP + PL + IH + BHR
+j["overrideAdapters"] += [
+    {"oldName": "updateShape", "oldDesc": US_OLD, "newName": "updateShape", "newDesc": US_NEW, "unpack": ["p1", "p5", "p7", ["cast", "p2", "net/minecraft/world/level/LevelAccessor"], "p4", "p6"]},
+    {"oldName": "fallOn", "oldDesc": FO_OLD, "newName": "fallOn", "newDesc": FO_NEW, "unpack": ["p1", "p2", "p3", "p4", ["conv", "p5", "D2F"]]},
+    {"oldName": "useItemOn", "oldDesc": "(" + UI + ")" + IIR, "newName": "useItemOn", "newDesc": "(" + UI + ")" + IR, "unpack": ["p1", "p2", "p3", "p4", "p5", "p6", "p7"],
+     "convert": ["static", "net/minecraft/world/ItemInteractionResult", "toInteractionResult", "(" + IIR + ")" + IR]},
+    {"oldName": "checkExtraContent", "oldDesc": "(" + PL + LVL + ISK + BP + ")V", "newName": "checkExtraContent", "newDesc": "(" + LE + LVL + ISK + BP + ")V", "unpack": [["cast", "p1", "net/minecraft/world/entity/player/Player"], "p2", "p3", "p4"]},
+    {"oldName": "playEmptySound", "oldDesc": "(" + PL + LA + BP + ")V", "newName": "playEmptySound", "newDesc": "(" + LE + LA + BP + ")V", "unpack": [["cast", "p1", "net/minecraft/world/entity/player/Player"], "p2", "p3"]},
+    {"oldName": "getShadowRadius", "oldDesc": "(" + ENT + ")F", "newName": "getShadowRadius", "newDesc": "(" + ERS + ")F", "unpack": [["static", "foxgrade/shim/EntityRenderCompat", "entity", "(" + ERS + ")" + ENT, "p1"]]},
+    {"oldName": "shouldShowName", "oldDesc": "(" + ENT + ")Z", "newName": "shouldShowName", "newDesc": "(" + ENT + "D)Z", "unpack": ["p1"]},
+]
+for o in ["net/minecraft/world/level/block/Block", "net/minecraft/world/level/block/state/BlockBehaviour", "net/minecraft/world/level/block/HorizontalDirectionalBlock", "net/minecraft/world/level/block/BaseEntityBlock",
+          "net/minecraft/world/level/block/CropBlock", "net/minecraft/world/level/block/BushBlock", "net/minecraft/world/level/block/VegetationBlock", "net/minecraft/world/level/block/DoorBlock", "net/minecraft/world/level/block/FenceBlock",
+          "net/minecraft/world/level/block/SlabBlock", "net/minecraft/world/level/block/StairBlock", "net/minecraft/world/level/block/WallBlock", "net/minecraft/world/level/block/LeavesBlock", "net/minecraft/world/level/block/FlowerBlock",
+          "net/minecraft/world/level/block/SaplingBlock", "net/minecraft/world/level/block/FallingBlock", "net/minecraft/world/level/block/RotatedPillarBlock", "net/minecraft/world/level/block/DirectionalBlock", "net/minecraft/world/level/block/TrapDoorBlock"]:
+    if o not in new: continue
+    j["callAdapters"].setdefault(o, {}).update({
+        "updateShape" + US_OLD: {"newName": "updateShape", "newDesc": US_NEW, "args": ["o1", ["cast", "o4", "net/minecraft/world/level/LevelReader"], ["cast", "o4", "net/minecraft/world/level/ScheduledTickAccess"], "o5", "o2", "o6", "o3", ["static", LC, "randomOf", "(" + LA + ")" + RS, "o4"]]},
+        "fallOn" + FO_OLD: {"newName": "fallOn", "newDesc": FO_NEW, "args": ["o1", "o2", "o3", "o4", ["conv", "o5", "F2D"]]}})
+j["descWidenings"].setdefault("net/minecraft/world/item/BucketItem", {}).update({
+    "playEmptySound(" + PL + LA + BP + ")V": "(" + LE + LA + BP + ")V", "checkExtraContent(" + PL + LVL + ISK + BP + ")V": "(" + LE + LVL + ISK + BP + ")V"})
+for old_c, new_c in {"net/minecraft/world/level/storage/loot/parameters/LootContextParam": "net/minecraft/util/context/ContextKey",
+                     "net/minecraft/world/level/storage/loot/parameters/LootContextParamSet": "net/minecraft/util/context/ContextKeySet"}.items():
+    if new_c in new: j["classRenames"][old_c] = new_c
+print("entity/item batch 2: in")
+
+# ---- moved constants: a static field gone from its 1.21.1 owner that now lives on <Owner>s (EntityType.FOX → EntityTypes.FOX)
+nmoved = 0
+for oc, flds in oldF.items():
+    slash = oc.replace(".", "/"); nc = j["classRenames"].get(slash, REN.get(slash, slash))
+    if nc not in new or (nc + "s") not in new: continue
+    newf = {x.split(":", 1)[0] for x in new[nc].get("f", [])}
+    holder = {x.split(":", 1)[0]: x.split(":", 1)[1] for x in new[nc + "s"].get("f", [])}
+    for fname, odesc in flds.items():
+        if fname in newf or fname not in holder or holder[fname] != odesc: continue
+        j["fieldRedirects"].setdefault(nc, {}).setdefault("getstatic " + fname + ":" + odesc, ["move", nc + "s", odesc]); nmoved += 1
+print(f"moved constants bridged: {nmoved}")
+# ---- batch 3: what naturalist / friends-and-foes still hit after batch 2
+ET = "Lnet/minecraft/world/entity/EntityType;"; ESR = "Lnet/minecraft/world/entity/EntitySpawnReason;"; HOLD = "Lnet/minecraft/core/Holder;"; PTY = "Lnet/minecraft/world/level/pathfinder/PathType;"
+GR = "Lnet/minecraft/world/level/gamerules/GameRules;"; GRK = "Lnet/minecraft/world/level/GameRules$Key;"; CMP = "Lnet/minecraft/network/chat/Component;"; AABB = "Lnet/minecraft/world/phys/AABB;"
+RM = "Lnet/minecraft/world/item/crafting/RecipeManager;"; RT = "Lnet/minecraft/world/item/crafting/RecipeType;"; ING = "Lnet/minecraft/world/item/crafting/Ingredient;"; ICD = "Lnet/minecraft/world/item/ItemCooldowns;"
+DYE = "Lnet/minecraft/world/item/DyeItem;"; DC = "Lnet/minecraft/world/item/DyeColor;"; VEC = "Lnet/minecraft/world/phys/Vec3;"; ES = "Lnet/minecraft/world/entity/EquipmentSlot;"; V3F = "Lorg/joml/Vector3f;"
+DPO = "Lnet/minecraft/core/particles/DustParticleOptions;"; ANS = "Lnet/minecraft/world/entity/AnimationState;"; MP = "Lnet/minecraft/client/model/geom/ModelPart;"; ERD = "Lnet/minecraft/client/renderer/entity/EntityRenderDispatcher;"
+QF = "Lorg/joml/Quaternionf;"; LERS = "Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;"; PS = "Lcom/mojang/blaze3d/vertex/PoseStack;"; TTC = "Lnet/minecraft/world/item/Item$TooltipContext;"
+TTD = "Lnet/minecraft/world/item/component/TooltipDisplay;"; TTF = "Lnet/minecraft/world/item/TooltipFlag;"; LST = "Ljava/util/List;"; CONS = "Ljava/util/function/Consumer;"; OPT = "Ljava/util/Optional;"; STRM = "Ljava/util/stream/Stream;"
+ACT = "Lnet/minecraft/world/entity/schedule/Activity;"; IML = "Lcom/google/common/collect/ImmutableList;"; SET = "Ljava/util/Set;"; MMT = "Lnet/minecraft/world/entity/ai/memory/MemoryModuleType;"
+LPB = "Lnet/minecraft/world/level/storage/loot/LootPool$Builder;"; LIC = "Lnet/minecraft/world/level/storage/loot/predicates/LootItemCondition;"; FPB = "Lnet/minecraft/world/food/FoodProperties$Builder;"; MEI = "Lnet/minecraft/world/effect/MobEffectInstance;"
+HLP = "Lnet/minecraft/core/HolderLookup$Provider;"; TAG = "Lnet/minecraft/nbt/Tag;"; NNL = "Lnet/minecraft/core/NonNullList;"; CU = "Lnet/minecraft/world/entity/ContainerUser;"; WAS = "Lnet/minecraft/world/entity/WalkAnimationState;"
+CA = "Lnet/minecraft/world/level/chunk/ChunkAccess;"; PRT = "Lnet/minecraft/client/particle/ParticleRenderType;"; PLS = "Lnet/minecraft/world/entity/player/PlayerSkin;"; ID = "Lnet/minecraft/resources/Identifier;"
+ANM = "Lnet/minecraft/world/entity/animal/Animal;"; PFM = "Lnet/minecraft/world/entity/PathfinderMob;"; HM = "Lnet/minecraft/client/model/HierarchicalModel;"; AD = "Lnet/minecraft/client/animation/AnimationDefinition;"
+RTY = "Lnet/minecraft/client/renderer/rendertype/RenderType;"; SEI = "Lnet/minecraft/world/item/SpawnEggItem;"; IPR = "Lnet/minecraft/world/item/Item$Properties;"; TA2 = "Lnet/minecraft/world/entity/TamableAnimal;"; SEL = TCS; RS2 = "Lnet/minecraft/client/renderer/entity/state/EntityRenderState;"
+GRC = "foxgrade/shim/GameRulesCompat"; PC = "foxgrade/shim/PathCompat"; PAC = "foxgrade/shim/ParticleCompat"; MCC = "foxgrade/shim/MinecraftCompat"; ANC = "foxgrade/shim/AnimationCompat"; RC = "foxgrade/shim/RecipeCompat"
+BAC = "foxgrade/shim/BlockApiCompat"; ERC = "foxgrade/shim/EntityRenderCompat"; EFC = "foxgrade/shim/EffectsCompat"; NC = "foxgrade/shim/NbtCompat"; SKC = "foxgrade/shim/SkinCompat"; PLC = "foxgrade/shim/PlayerCompat"; MOC = "foxgrade/shim/ModelCompat"
+# static constants that moved or changed shape
+fr = j["fieldRedirects"]
+fr.setdefault("net/minecraft/world/entity/EntitySpawnReason", {})["getstatic SPAWN_EGG:" + ESR] = [ELC, "spawnEggReason", "()" + ESR]
+fr.setdefault("net/minecraft/world/effect/MobEffects", {}).update({"getstatic HARM:" + HOLD: [EFC, "harm", "()" + HOLD], "getstatic HEAL:" + HOLD: [EFC, "heal", "()" + HOLD],
+    "getstatic MOVEMENT_SPEED:" + HOLD: [EFC, "movementSpeed", "()" + HOLD], "getstatic MOVEMENT_SLOWDOWN:" + HOLD: [EFC, "movementSlowdown", "()" + HOLD]})
+fr.setdefault("net/minecraft/world/level/pathfinder/PathType", {}).update({"getstatic DAMAGE_FIRE:" + PTY: [PC, "damageFire", "()" + PTY], "getstatic DANGER_FIRE:" + PTY: [PC, "dangerFire", "()" + PTY],
+    "getstatic DAMAGE_OTHER:" + PTY: [PC, "damageOther", "()" + PTY], "getstatic DANGER_OTHER:" + PTY: [PC, "dangerOther", "()" + PTY], "getstatic DANGER_POWDER_SNOW:" + PTY: [PC, "dangerPowderSnow", "()" + PTY]})
+fr.setdefault("net/minecraft/client/particle/ParticleRenderType", {})["getstatic PARTICLE_SHEET_TRANSLUCENT:" + PRT] = [PAC, "sheetTranslucent", "()" + PRT]
+fr.setdefault("net/minecraft/world/level/gamerules/GameRules", {}).update({"getstatic RULE_MOBGRIEFING:" + GRK: [GRC, "ruleMobGriefing", "()" + GRK], "getstatic RULE_DOMOBLOOT:" + GRK: [GRC, "ruleDoMobLoot", "()" + GRK],
+    "getstatic RULE_DOMOBSPAWNING:" + GRK: [GRC, "ruleDoMobSpawning", "()" + GRK], "getstatic RULE_DOTILEDROPS:" + GRK: [GRC, "ruleDoTileDrops", "()" + GRK], "getstatic RULE_DOENTITYDROPS:" + GRK: [GRC, "ruleDoEntityDrops", "()" + GRK],
+    "getstatic RULE_KEEPINVENTORY:" + GRK: [GRC, "ruleKeepInventory", "()" + GRK]})
+fr.setdefault("net/minecraft/world/entity/Entity", {}).update({"get fallDistance:F": [ELC, "fallDistance", "(" + ENT + ")F"], "put fallDistance:F": [ELC, "setFallDistance", "(" + ENT + "F)V"]})
+fr.setdefault("net/minecraft/world/entity/player/Player", {}).update({"get bob:F": [PLC, "bob", "(" + PL + ")F"], "get oBob:F": [PLC, "oBob", "(" + PL + ")F"], "put bob:F": [PLC, "setBob", "(" + PL + "F)V"], "put oBob:F": [PLC, "setOBob", "(" + PL + "F)V"]})
+for c in ["xCloak", "yCloak", "zCloak", "xCloakO", "yCloakO", "zCloakO"]:
+    fr["net/minecraft/world/entity/player/Player"].update({"get " + c + ":D": [PLC, "cloak", "(" + PL + ")D"], "put " + c + ":D": [PLC, "setCloak", "(" + PL + "D)V"]})
+fr.setdefault("net/minecraft/client/Minecraft", {})["getstatic ON_OSX:Z"] = [MCC, "onOsx", "()Z"]
+# renames with a same-shape twin
+j["renames"].setdefault("net/minecraft/core/Registry", {}).update({"getHolder": "getOptional", "getHolderOrThrow": "getOrThrow", "holders": "listElements"})
+j["renames"].setdefault("net/minecraft/core/RegistryAccess", {})["registry"] = "lookup"
+j["renames"].setdefault("net/minecraft/world/item/component/CustomData", {})["getUnsafe"] = "copyTag"
+# widenings
+j["descWidenings"].setdefault("net/minecraft/world/entity/EntityType", {})["spawn(" + SL + ISK + PL + BP + ESR + "ZZ)" + ENT] = "(" + SL + ISK + LE + BP + ESR + "ZZ)" + ENT
+j["descWidenings"].setdefault("net/minecraft/world/level/Level", {}).update({"mayInteract(" + PL + BP + ")Z": "(" + ENT + BP + ")Z", "levelEvent(" + PL + "I" + BP + "I)V": "(" + ENT + "I" + BP + "I)V"})
+j["descWidenings"].setdefault("net/minecraft/world/level/LevelAccessor", {}).update({"playSound(" + PL + BP + "Lnet/minecraft/sounds/SoundEvent;Lnet/minecraft/sounds/SoundSource;FF)V": "(" + ENT + BP + "Lnet/minecraft/sounds/SoundEvent;Lnet/minecraft/sounds/SoundSource;FF)V",
+    "levelEvent(" + PL + "I" + BP + "I)V": "(" + ENT + "I" + BP + "I)V"})
+j["descWidenings"].setdefault("net/minecraft/world/Container", {}).update({"startOpen(" + PL + ")V": "(" + CU + ")V", "stopOpen(" + PL + ")V": "(" + CU + ")V"})
+j["descWidenings"].setdefault("net/minecraft/client/animation/Keyframe", {})["<init>(F" + V3F + "Lnet/minecraft/client/animation/AnimationChannel$Interpolation;)V"] = "(FLorg/joml/Vector3fc;Lnet/minecraft/client/animation/AnimationChannel$Interpolation;)V"
+# constructors
+j["ctorAdapters"].setdefault("net/minecraft/world/item/SpawnEggItem", {})["(" + ET + "II" + IPR + ")V"] = {"factory": [ITC, "spawnEgg", "(" + ET + "II" + IPR + ")" + SEI]}
+j["ctorAdapters"].setdefault("net/minecraft/core/particles/DustParticleOptions", {})["(" + V3F + "F)V"] = {"factory": [PAC, "dust", "(" + V3F + "F)" + DPO]}
+j["ctorAdapters"].setdefault("net/minecraft/world/item/alchemy/Potion", {})["([" + MEI + ")V"] = {"newDesc": "(Ljava/lang/String;[" + MEI + ")V", "transforms": [{"slot": -1, "via": [ITC, "potionName", "()Ljava/lang/String;"]}]}
+TIP = "net/minecraft/world/entity/projectile/throwableitemprojectile/ThrowableItemProjectile"
+j["ctorAdapters"].setdefault(TIP, {}).update({"(" + ET + "DDD" + LVL + ")V": {"newDesc": "(" + ET + "DDD" + LVL + ISK + ")V", "transforms": [{"slot": -2, "via": [ELC, "emptyStack", "()" + ISK]}]},
+    "(" + ET + LE + LVL + ")V": {"newDesc": "(" + ET + LE + LVL + ISK + ")V", "transforms": [{"slot": -2, "via": [ELC, "emptyStack", "()" + ISK]}]}})
+j["ctorAdapters"].setdefault("net/minecraft/world/entity/ai/goal/target/NonTameRandomTargetGoal", {})["(" + TA2 + CLS + "Z" + PRED + ")V"] = {"newDesc": "(" + TA2 + CLS + "Z" + SEL + ")V", "transforms": [{"slot": 3, "via": [GOC, "selector", "(" + PRED + ")" + SEL]}]}
+# call redirects (receiver → arg 0)
+cr.setdefault("net/minecraft/world/entity/LivingEntity", {}).update({"isDamageSourceBlocked(" + DS + ")Z": [ELC, "isDamageSourceBlocked", "(" + LE + DS + ")Z"], "getSlotForHand(" + IH + ")" + ES: [ELC, "getSlotForHand", "(" + LE + IH + ")" + ES]})
+cr.setdefault("net/minecraft/world/entity/PathfinderMob", {})["clearRestriction()V"] = [ELC, "clearRestriction", "(" + PFM + ")V"]
+cr.setdefault("net/minecraft/world/entity/animal/Animal", {})["getAttackBoundingBox()" + AABB] = [ELC, "getAttackBoundingBox", "(" + ANM + ")" + AABB]
+cr.setdefault("net/minecraft/world/entity/player/Player", {}).update({"displayClientMessage(" + CMP + "Z)V": [ELC, "displayClientMessage", "(" + PL + CMP + "Z)V"],
+    "getShoulderEntityLeft()" + CT: [ELC, "shoulderEntity", "(" + PL + ")" + CT], "getShoulderEntityRight()" + CT: [ELC, "shoulderEntity", "(" + PL + ")" + CT]})
+cr.setdefault("net/minecraft/world/entity/EntityType", {}).update({"create(" + LVL + ")" + ENT: [ELC, "create", "(" + ET + LVL + ")" + ENT], "byString(Ljava/lang/String;)" + OPT: [ELC, "byString", "(Ljava/lang/String;)" + OPT], "is(" + TK + ")Z": [ELC, "isType", "(" + ET + TK + ")Z"]})
+cr["net/minecraft/world/entity/Entity"]["save(" + CT + ")Z"] = [ELC, "save", "(" + ENT + CT + ")Z"]
+cr.setdefault("net/minecraft/world/level/Level", {}).update({"getNearestPlayer(" + TC + LE + ")" + PL: [LC, "getNearestPlayer", "(" + LVL + TC + LE + ")" + PL], "getNearbyPlayers(" + TC + LE + AABB + ")" + LST: [LC, "getNearbyPlayers", "(" + LVL + TC + LE + AABB + ")" + LST],
+    "getNearbyEntities(" + CLS + TC + LE + AABB + ")" + LST: [LC, "getNearbyEntities", "(" + LVL + CLS + TC + LE + AABB + ")" + LST], "getNearestEntity(" + CLS + TC + LE + "DDD" + AABB + ")" + LE: [LC, "getNearestEntity", "(" + LVL + CLS + TC + LE + "DDD" + AABB + ")" + LE],
+    "getGameRules()" + GR: [GRC, "getGameRules", "(" + LVL + ")" + GR], "getRecipeManager()" + RM: [RC, "getRecipeManager", "(" + LVL + ")" + RM]})
+cr.setdefault("net/minecraft/world/level/gamerules/GameRules", {})["getBoolean(" + GRK + ")Z"] = [GRC, "getBoolean", "(" + GR + GRK + ")Z"]
+cr.setdefault("net/minecraft/world/item/crafting/RecipeManager", {})["getAllRecipesFor(" + RT + ")" + LST] = [RC, "getAllRecipesFor", "(" + RM + RT + ")" + LST]
+cr.setdefault("net/minecraft/world/item/crafting/Ingredient", {})["of(" + TK + ")" + ING] = [ITC, "ingredientOf", "(" + TK + ")" + ING]
+cr.setdefault("net/minecraft/world/item/ItemCooldowns", {}).update({"addCooldown(" + ITEM + "I)V": [ITC, "addCooldown", "(" + ICD + ITEM + "I)V"], "isOnCooldown(" + ITEM + ")Z": [ITC, "isOnCooldown", "(" + ICD + ITEM + ")Z"]})
+cr.setdefault("net/minecraft/world/item/DyeItem", {})["getDyeColor()" + DC] = [ITC, "dyeColor", "(" + DYE + ")" + DC]
+cr["net/minecraft/world/item/ItemStack"].update({"save(" + HLP + ")" + TAG: [ITC, "stackSave", "(" + ISK + HLP + ")" + TAG], "parse(" + HLP + TAG + ")" + OPT: [ITC, "stackParse", "(" + HLP + TAG + ")" + OPT]})
+cr.setdefault("net/minecraft/world/ContainerHelper", {}).update({"loadAllItems(" + CT + NNL + HLP + ")V": [NC, "loadAllItems", "(" + CT + NNL + HLP + ")V"], "saveAllItems(" + CT + NNL + HLP + ")" + CT: [NC, "saveAllItems", "(" + CT + NNL + HLP + ")" + CT]})
+cr.setdefault("net/minecraft/client/model/geom/ModelPart", {})["getAllParts()" + STRM] = [MOC, "getAllParts", "(" + MP + ")" + STRM]
+cr.setdefault("net/minecraft/client/renderer/entity/EntityRenderDispatcher", {})["cameraOrientation()" + QF] = [MCC, "cameraOrientation", "(" + ERD + ")" + QF]
+cr.setdefault("net/minecraft/world/entity/AnimationState", {})["getAccumulatedTime()J"] = [ANC, "getAccumulatedTime", "(" + ANS + ")J"]
+cr.setdefault("net/minecraft/client/animation/KeyframeAnimations", {})["animate(" + HM + AD + "JF" + V3F + ")V"] = [ANC, "animate", "(" + HM + AD + "JF" + V3F + ")V"]
+cr.setdefault("net/minecraft/world/level/storage/loot/LootPool$Builder", {})["conditionally(" + LIC + ")" + LPB] = [RC, "conditionally", "(" + LPB + LIC + ")" + LPB]
+cr.setdefault("net/minecraft/world/food/FoodProperties$Builder", {})["effect(" + MEI + "F)" + FPB] = [RC, "effect", "(" + FPB + MEI + "F)" + FPB]
+cr.setdefault("net/minecraft/world/level/block/BeehiveBlock", {})["dropHoneycomb(" + LVL + BP + ")V"] = [BAC, "dropHoneycomb", "(" + LVL + BP + ")V"]
+cr.setdefault("net/minecraft/world/entity/player/PlayerSkin", {})["capeTexture()" + ID] = [SKC, "capeTexture", "(" + PLS + ")" + ID]
+cr.setdefault("net/minecraft/client/renderer/rendertype/RenderType", {})["entityGlintDirect()" + RTY] = ["net/minecraft/client/renderer/rendertype/RenderTypes", "entityGlint", "()" + RTY]
+# call adapters: super-calls and re-shaped arguments
+EO = ["net/minecraft/world/entity/Entity", "net/minecraft/world/entity/LivingEntity", "net/minecraft/world/entity/Mob", "net/minecraft/world/entity/PathfinderMob", "net/minecraft/world/entity/AgeableMob", "net/minecraft/world/entity/animal/Animal",
+      "net/minecraft/world/entity/TamableAnimal", "net/minecraft/world/entity/animal/AbstractGolem", "net/minecraft/world/entity/monster/Monster", "net/minecraft/world/entity/animal/WaterAnimal", "net/minecraft/world/entity/animal/AbstractFish", "net/minecraft/world/entity/animal/AbstractSchoolingFish",
+      "net/minecraft/world/entity/FlyingMob", "net/minecraft/world/entity/ambient/AmbientCreature", "net/minecraft/world/entity/animal/ShoulderRidingEntity", "net/minecraft/world/entity/monster/Zombie", "net/minecraft/world/entity/animal/AbstractHorse"]
+for o in EO:
+    if o not in new: continue
+    j["callAdapters"].setdefault(o, {}).update({"dropEquipment()V": {"newName": "dropEquipment", "newDesc": "(" + SL + ")V", "args": [SLV]},
+        "interact(" + PL + IH + ")" + IR: {"newName": "interact", "newDesc": "(" + PL + IH + VEC + ")" + IR, "args": ["o1", "o2", ["static", ELC, "zeroVec", "()" + VEC]]}})
+j["overrideAdapters"] += [
+    {"oldName": "dropEquipment", "oldDesc": "()V", "newName": "dropEquipment", "newDesc": "(" + SL + ")V", "unpack": []},
+    {"oldName": "saveAdditional", "oldDesc": "(" + CT + HLP + ")V", "newName": "saveAdditional", "newDesc": "(" + VO + ")V", "unpack": [["static", NB, "tagForOutput", "(" + VO + ")" + CT, "p1"], ["static", NB, "providerOf", "(Ljava/lang/Object;)" + HLP, "this"]], "after": [["static", NB, "flushOutput", "(" + VO + ")V", "p1"]]},
+    {"oldName": "loadAdditional", "oldDesc": "(" + CT + HLP + ")V", "newName": "loadAdditional", "newDesc": "(" + VI + ")V", "unpack": [["static", NB, "tagOfInput", "(" + VI + ")" + CT, "p1"], ["static", NB, "providerOf", "(Ljava/lang/Object;)" + HLP, "this"]]},
+    {"oldName": "appendHoverText", "oldDesc": "(" + ISK + TTC + LST + TTF + ")V", "newName": "appendHoverText", "newDesc": "(" + ISK + TTC + TTD + CONS + TTF + ")V", "unpack": ["p1", "p2", ["static", ITC, "tooltipList", "(" + CONS + ")" + LST, "p4"], "p5"]},
+    {"oldName": "setupRotations", "oldDesc": "(" + LE + PS + "FFFF)V", "newName": "setupRotations", "newDesc": "(" + LERS + PS + "FF)V", "unpack": [["static", ERC, "living", "(" + RS2 + ")" + LE, "p1"], "p2", ["static", ERC, "age", "(" + RS2 + ")F", "p1"], "p3", ["static", ERC, "partial", "(" + RS2 + ")F", "p1"], "p4"]},
+]
+for o in ["net/minecraft/world/level/block/entity/BlockEntity", "net/minecraft/world/level/block/entity/BaseContainerBlockEntity", "net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity"]:
+    if o not in new: continue
+    j["callAdapters"].setdefault(o, {}).update({"saveAdditional(" + CT + HLP + ")V": {"newName": "saveAdditional", "newDesc": "(" + VO + ")V", "args": [["static", NB, "outputFor", "(" + CT + ")" + VO, "o1"]]},
+        "loadAdditional(" + CT + HLP + ")V": {"newName": "loadAdditional", "newDesc": "(" + VI + ")V", "args": [["static", NB, "inputFor", "(" + CT + ")" + VI, "o1"]]}})
+j["callAdapters"].setdefault("net/minecraft/world/item/Item", {})["appendHoverText(" + ISK + TTC + LST + TTF + ")V"] = {"newName": "appendHoverText", "newDesc": "(" + ISK + TTC + TTD + CONS + TTF + ")V", "args": ["o1", "o2", ["static", ITC, "tooltipDisplay", "()" + TTD], ["static", ITC, "tooltipConsumer", "(" + LST + ")" + CONS, "o3"], "o4"]}
+STATE_OF = ["static", ERC, "stateOf", "(" + ENT + "Ljava/lang/Object;)" + RS2, "o1", "this"]
+for o in ["net/minecraft/client/renderer/entity/EntityRenderer", "net/minecraft/client/renderer/entity/LivingEntityRenderer", "net/minecraft/client/renderer/entity/MobRenderer", "net/minecraft/client/renderer/entity/AgeableMobRenderer",
+          "net/minecraft/client/renderer/entity/IllagerRenderer", "net/minecraft/client/renderer/entity/HumanoidMobRenderer", "net/minecraft/client/renderer/entity/AbstractZombieRenderer", "net/minecraft/client/renderer/entity/ArthropodRenderer"]:
+    if o not in new: continue
+    ca = j["callAdapters"].setdefault(o, {})
+    for od in [ENT, LE, MOB]:
+        ca["getShadowRadius(" + od + ")F"] = {"newName": "getShadowRadius", "newDesc": "(" + RS2 + ")F", "args": [STATE_OF]}
+        ca["shouldShowName(" + od + ")Z"] = {"newName": "shouldShowName", "newDesc": "(" + ENT + "D)Z", "args": ["o1", ["static", ERC, "distSq", "(" + ENT + ")D", "o1"]]}
+    ca["setupRotations(" + LE + PS + "FFFF)V"] = {"newName": "setupRotations", "newDesc": "(" + LERS + PS + "FF)V", "args": [["static", ERC, "livingStateOf", "(" + ENT + "Ljava/lang/Object;)" + LERS, "o1", "this"], "o2", "o4", "o6"]}
+    ca["getOverlayCoords(" + LE + "F)I"] = {"newName": "getOverlayCoords", "newDesc": "(" + LERS + "F)I", "args": [["static", ERC, "livingState", "(" + ENT + ")" + LERS, "o1"], "o2"]}
+j["callAdapters"].setdefault("net/minecraft/world/entity/WalkAnimationState", {})["update(FF)V"] = {"newName": "update", "newDesc": "(FFF)V", "args": ["o1", "o2", ["static", ELC, "one", "()F"]]}
+j["callAdapters"].setdefault("net/minecraft/world/level/chunk/ChunkAccess", {})["setBlockState(" + BP + BS2 + "Z)" + BS2] = {"newName": "setBlockState", "newDesc": "(" + BP + BS2 + "I)" + BS2, "args": ["o1", "o2", ["static", BAC, "moveFlags", "(Z)I", "o3"]]}
+EMPTY = ["static", ELC, "emptySet", "()" + SET]
+j["callAdapters"].setdefault("net/minecraft/world/entity/ai/Brain", {}).update({
+    "addActivity(" + ACT + IML + ")V": {"newName": "addActivity", "newDesc": "(" + ACT + IML + SET + SET + ")V", "args": ["o1", "o2", EMPTY, EMPTY]},
+    "addActivity(" + ACT + "I" + IML + ")V": {"newName": "addActivity", "newDesc": "(" + ACT + IML + SET + SET + ")V", "args": ["o1", "o3", EMPTY, EMPTY]},
+    "addActivityWithConditions(" + ACT + IML + SET + ")V": {"newName": "addActivity", "newDesc": "(" + ACT + IML + SET + SET + ")V", "args": ["o1", "o2", "o3", EMPTY]},
+    "addActivityAndRemoveMemoryWhenStopped(" + ACT + "I" + IML + MMT + ")V": {"newName": "addActivity", "newDesc": "(" + ACT + IML + SET + SET + ")V", "args": ["o1", "o3", EMPTY, ["static", ELC, "setOf", "(Ljava/lang/Object;)" + SET, "o4"]]}})
+j["callAdapters"].setdefault("net/minecraft/world/entity/ai/targeting/TargetingConditions", {})["test(" + LE + LE + ")Z"] = {"newName": "test", "newDesc": "(" + SL + LE + LE + ")Z", "args": [["static", EAC, "serverLevel", "(Ljava/lang/Object;)" + SL, "o1"], "o1", "o2"]}
+print("entity/item batch 3: in")
+# ---- retyped constants: same field, wider declared type in 26.2 (ParticleTypes.DRAGON_BREATH: SimpleParticleType → ParticleType)
+nretype = 0
+for oc, flds in oldF.items():
+    slash = oc.replace(".", "/"); nc = j["classRenames"].get(slash, REN.get(slash, slash))
+    if nc not in new: continue
+    newf = {x.split(":", 1)[0]: x.split(":", 1)[1] for x in new[nc].get("f", []) if ":" in x}
+    for fname, odesc in flds.items():
+        nd = newf.get(fname)
+        if nd is None or nd == odesc or not odesc.startswith("L") or not nd.startswith("L") or nd in HOLDERS or odesc in HOLDERS: continue
+        oldcls = odesc[1:-1]
+        if oldcls not in new: continue
+        key = "getstatic " + fname + ":" + odesc
+        if key in j["fieldRedirects"].get(nc, {}): continue
+        j["fieldRedirects"].setdefault(nc, {})[key] = ["retype", nd, oldcls]; nretype += 1
+print(f"retyped constants bridged: {nretype}")
+# ---- batch 3b: block stragglers
+cr.setdefault("net/minecraft/world/level/block/state/BlockState", {})["is(Lnet/minecraft/world/level/block/Block;)Z"] = [BAC, "is", "(" + BS2 + "Lnet/minecraft/world/level/block/Block;)Z"]
+GC_OLD = "(" + LR + BP + BS2 + ")" + ISK; GC_NEW = "(" + LR + BP + BS2 + "Z)" + ISK
+j["overrideAdapters"].append({"oldName": "getCloneItemStack", "oldDesc": GC_OLD, "newName": "getCloneItemStack", "newDesc": GC_NEW, "unpack": ["p1", "p2", "p3"]})
+for o in ["net/minecraft/world/level/block/Block", "net/minecraft/world/level/block/state/BlockBehaviour", "net/minecraft/world/level/block/TurtleEggBlock", "net/minecraft/world/level/block/BaseEntityBlock", "net/minecraft/world/level/block/HorizontalDirectionalBlock"]:
+    if o in new: j["callAdapters"].setdefault(o, {})["getCloneItemStack" + GC_OLD] = {"newName": "getCloneItemStack", "newDesc": GC_NEW, "args": ["o1", "o2", "o3", ["static", BAC, "falseValue", "()Z"]]}
+j["descWidenings"].setdefault("net/minecraft/world/item/DispensibleContainerItem", {}).update({
+    "checkExtraContent(" + PL + LVL + ISK + BP + ")V": "(" + LE + LVL + ISK + BP + ")V", "emptyContents(" + PL + LVL + BP + BHR + ")Z": "(" + LE + LVL + BP + BHR + ")Z"})
+print("batch 3b: in")
+# ---- reload listeners: 1.21.x (barrier, manager, profiler, profiler, executor, executor) → 26.2 (sharedState, executor, barrier, executor)
+RLC = "foxgrade/shim/ReloadCompat"; PRB = "Lnet/minecraft/server/packs/resources/PreparableReloadListener$PreparationBarrier;"; SST = "Lnet/minecraft/server/packs/resources/PreparableReloadListener$SharedState;"
+RSM = "Lnet/minecraft/server/packs/resources/ResourceManager;"; EXE = "Ljava/util/concurrent/Executor;"; CF = "Ljava/util/concurrent/CompletableFuture;"; CODEC = "Lcom/mojang/serialization/Codec;"; F2I = "Lnet/minecraft/resources/FileToIdConverter;"
+RL_OLD = "(" + PRB + RSM + PF + PF + EXE + EXE + ")" + CF; RL_NEW = "(" + SST + EXE + PRB + EXE + ")" + CF
+j["overrideAdapters"].append({"oldName": "reload", "oldDesc": RL_OLD, "newName": "reload", "newDesc": RL_NEW,
+    "unpack": ["p3", ["static", RLC, "resourceManager", "(" + SST + ")" + RSM, "p1"], ["static", RLC, "profiler", "()" + PF], ["static", RLC, "profiler", "()" + PF], "p2", "p4"]})
+for o in ["net/minecraft/server/packs/resources/PreparableReloadListener", "net/minecraft/server/packs/resources/SimplePreparableReloadListener", "net/minecraft/server/packs/resources/SimpleJsonResourceReloadListener"]:
+    if o in new: j["callAdapters"].setdefault(o, {})["reload" + RL_OLD] = {"newName": "reload", "newDesc": RL_NEW, "args": [["static", RLC, "sharedState", "(" + RSM + ")" + SST, "o2"], "o5", "o1", "o6"]}
+j["ctorAdapters"].setdefault("net/minecraft/server/packs/resources/SimpleJsonResourceReloadListener", {})["(Lcom/google/gson/Gson;Ljava/lang/String;)V"] = {"newDesc": "(" + CODEC + F2I + ")V",
+    "args": [["static", RLC, "jsonCodec", "()" + CODEC], ["static", RLC, "jsonConverter", "(Ljava/lang/String;)" + F2I, "o2"]]}
+j["descWidenings"].setdefault("net/minecraft/world/level/block/Block", {})["getDrops(" + BS2 + SL + BP + "Lnet/minecraft/world/level/block/entity/BlockEntity;" + ENT + ISK + ")" + LST] = "(" + BS2 + SL + BP + "Lnet/minecraft/world/level/block/entity/BlockEntity;" + ENT + "Lnet/minecraft/world/item/ItemInstance;)" + LST
+print("reload listeners: in")
+# ======================= 1.20.1-era shapes (first batch; the immediate-mode drawing layer is not here yet) =======================
+MEF = "Lnet/minecraft/world/effect/MobEffect;"; FOOD = "Lnet/minecraft/world/food/FoodProperties;"; OPTS = "Lnet/minecraft/client/Options;"; GUI = "Lnet/minecraft/client/gui/Gui;"; TMG = "Lnet/minecraft/client/renderer/texture/TextureManager;"
+CPOS = "Lnet/minecraft/world/level/ChunkPos;"
+j["ctorAdapters"].setdefault("net/minecraft/resources/Identifier", {})["(Ljava/lang/String;)V"] = {"factory": ["net/minecraft/resources/Identifier", "parse", "(Ljava/lang/String;)" + ID]}
+j["ctorAdapters"].setdefault("net/minecraft/world/level/ChunkPos", {})["(" + BP + ")V"] = {"factory": ["net/minecraft/world/level/ChunkPos", "containing", "(" + BP + ")" + CPOS]}
+for x in new["net/minecraft/world/effect/MobEffects"]["f"]:
+    fname, nd = x.split(":", 1)
+    if nd in HOLDERS and fname.isupper(): j["fieldRedirects"].setdefault("net/minecraft/world/effect/MobEffects", {})["getstatic " + fname + ":" + MEF] = ["holder", nd, "foxgrade/shim/HolderCompat", "value", "(Lnet/minecraft/core/Holder;)Ljava/lang/Object;", "net/minecraft/world/effect/MobEffect"]
+cr.setdefault("net/minecraft/world/effect/MobEffectInstance", {})["getEffect()" + MEF] = [EFC, "effectOf", "(" + MEI + ")" + MEF]
+cr["net/minecraft/world/entity/LivingEntity"].update({"hasEffect(" + MEF + ")Z": [EFC, "hasEffect", "(" + LE + MEF + ")Z"], "getEffect(" + MEF + ")" + MEI: [EFC, "getEffect", "(" + LE + MEF + ")" + MEI]})
+j["renames"].setdefault("net/minecraft/world/entity/Entity", {})["getCommandSenderWorld"] = "level"
+j["renames"].setdefault("net/minecraft/world/food/FoodProperties", {}).update({"getNutrition": "nutrition", "getSaturationModifier": "saturation"})
+cr.setdefault("net/minecraft/world/food/FoodProperties", {})["getEffects()" + LST] = [ITC, "foodEffects", "(" + FOOD + ")" + LST]
+cr.setdefault("net/minecraft/world/item/Item", {}).update({"getFoodProperties()" + FOOD: [ITC, "getFoodProperties", "(" + ITEM + ")" + FOOD], "isEdible()Z": [ITC, "isEdible", "(" + ITEM + ")Z"]})
+j["fieldRedirects"].setdefault("net/minecraft/network/chat/ComponentContents", {})["getstatic EMPTY:Lnet/minecraft/network/chat/ComponentContents;"] = ["move", "net/minecraft/network/chat/contents/PlainTextContents", "Lnet/minecraft/network/chat/contents/PlainTextContents;"]
+cr.setdefault("net/minecraft/client/renderer/texture/TextureManager", {})["bindForSetup(" + ID + ")V"] = [MCC, "bindForSetup", "(" + TMG + ID + ")V"]
+cr.setdefault("net/minecraft/client/gui/Gui", {})["getGuiTicks()I"] = [MCC, "getGuiTicks", "(" + GUI + ")I"]
+j["fieldRedirects"].setdefault("net/minecraft/client/Options", {}).update({"get renderDebug:Z": [MCC, "renderDebug", "(" + OPTS + ")Z"], "put renderDebug:Z": [MCC, "setRenderDebug", "(" + OPTS + "Z)V"],
+    "get renderDebugCharts:Z": [MCC, "renderDebugCharts", "(" + OPTS + ")Z"], "get renderFpsChart:Z": [MCC, "renderFpsChart", "(" + OPTS + ")Z"]})
+print("1.20.1 batch 1: in")
+# ======================= registration: 26.2 wants registry ids before construction =======================
+RK = "Lnet/minecraft/resources/ResourceKey;"; RGC = "foxgrade/shim/RegistryCompat"; REG = "Lnet/minecraft/core/Registry;"; HREF = "Lnet/minecraft/core/Holder$Reference;"; BBP = "Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;"; BBH = "Lnet/minecraft/world/level/block/state/BlockBehaviour;"
+AMAT = "Lnet/minecraft/world/item/equipment/ArmorMaterial;"; SUP = "Ljava/util/function/Supplier;"; MAP = "Ljava/util/Map;"
+j["ctorAdapters"].setdefault("net/minecraft/world/item/Item$Properties", {})["()V"] = {"factory": [ITC, "properties", "()" + IPR]}
+cr.setdefault("net/minecraft/world/level/block/state/BlockBehaviour$Properties", {}).update({"of()" + BBP: [BAC, "blockProperties", "()" + BBP], "ofFullCopy(" + BBH + ")" + BBP: [BAC, "ofFullCopy", "(" + BBH + ")" + BBP], "ofLegacyCopy(" + BBH + ")" + BBP: [BAC, "ofLegacyCopy", "(" + BBH + ")" + BBP]})
+cr.setdefault("net/minecraft/core/Registry", {}).update({
+    "register(" + REG + "Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;": [RGC, "register", "(" + REG + "Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;"],
+    "register(" + REG + ID + "Ljava/lang/Object;)Ljava/lang/Object;": [RGC, "register", "(" + REG + ID + "Ljava/lang/Object;)Ljava/lang/Object;"],
+    "register(" + REG + RK + "Ljava/lang/Object;)Ljava/lang/Object;": [RGC, "register", "(" + REG + RK + "Ljava/lang/Object;)Ljava/lang/Object;"],
+    "registerForHolder(" + REG + ID + "Ljava/lang/Object;)" + HREF: [RGC, "registerForHolder", "(" + REG + ID + "Ljava/lang/Object;)" + HREF],
+    "registerForHolder(" + REG + RK + "Ljava/lang/Object;)" + HREF: [RGC, "registerForHolder", "(" + REG + RK + "Ljava/lang/Object;)" + HREF]})
+j["fieldRedirects"].setdefault("net/minecraft/core/registries/BuiltInRegistries", {})["getstatic ARMOR_MATERIAL:" + REG] = [RGC, "armorMaterialRegistry", "()" + REG]
+j["ctorAdapters"].setdefault("net/minecraft/world/item/equipment/ArmorMaterial", {})["(" + MAP + "I" + HOLD + SUP + LST + "FF)V"] = {"factory": [RGC, "armorMaterial", "(" + MAP + "I" + HOLD + SUP + LST + "FF)" + AMAT]}
+print("registration: in")
+SDB = "Lnet/minecraft/world/level/block/state/StateDefinition$Builder;"; PROP = "[Lnet/minecraft/world/level/block/state/properties/Property;"
+cr.setdefault("net/minecraft/world/level/block/state/StateDefinition$Builder", {})["add(" + PROP + ")" + SDB] = [BAC, "add", "(" + SDB + PROP + ")" + SDB]
+print("state builder: in")
+VP = "Lnet/minecraft/world/entity/npc/villager/VillagerProfession;"; IMS = "Lcom/google/common/collect/ImmutableSet;"; SE2 = "Lnet/minecraft/sounds/SoundEvent;"
+j["ctorAdapters"].setdefault("net/minecraft/world/entity/npc/villager/VillagerProfession", {})["(Ljava/lang/String;" + PRED + PRED + IMS + IMS + SE2 + ")V"] = {"factory": ["foxgrade/shim/VillagerCompat", "profession", "(Ljava/lang/String;" + PRED + PRED + IMS + IMS + SE2 + ")" + VP]}
+print("villager profession: in")
+
+
+
+
+
+
+print("entity/item: adapters in")
 print(f"world: {nrt} RenderType factories bridged, entity/block-entity/model adapters in")
 print(f"phase 1: {len(owners)} input owners, {len(getters)} shader getters, {len(j['entryHooks'])} entry hooks, {nren} render->extract renames, {len(lines)} dyed constants")
 # ---------- phase 2 ----------

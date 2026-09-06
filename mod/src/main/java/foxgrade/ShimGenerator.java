@@ -64,6 +64,38 @@ public final class ShimGenerator implements Opcodes {
       Map.entry("foxgrade/shim/EntityTypeCompat", () -> fromResource("foxgrade/shim/EntityTypeCompat.class")),
       Map.entry("foxgrade/shim/FrameCompat", () -> fromResource("foxgrade/shim/FrameCompat.class")),
       Map.entry("foxgrade/shim/EffectsCompat", () -> fromResource("foxgrade/shim/EffectsCompat.class")),
+      // --- entity / item API (1.21.2 – 26.x rewrite) ---
+      Map.entry("foxgrade/shim/NbtBridge", () -> fromResource("foxgrade/shim/NbtBridge.class")),
+      Map.entry("foxgrade/shim/EntityApiCompat", () -> fromResource("foxgrade/shim/EntityApiCompat.class")),
+      Map.entry("foxgrade/shim/EntityLegacyCompat", () -> fromResource("foxgrade/shim/EntityLegacyCompat.class")),
+      Map.entry("foxgrade/shim/HolderCompat", () -> fromResource("foxgrade/shim/HolderCompat.class")),
+      Map.entry("foxgrade/shim/PathCompat", () -> fromResource("foxgrade/shim/PathCompat.class")),
+      Map.entry("foxgrade/shim/ReloadCompat", () -> fromResource("foxgrade/shim/ReloadCompat.class")),
+      Map.entry("foxgrade/shim/RegistryCompat", () -> fromResource("foxgrade/shim/RegistryCompat.class")),
+      Map.entry("foxgrade/shim/VillagerCompat", () -> fromResource("foxgrade/shim/VillagerCompat.class")),
+      Map.entry("net/minecraft/world/item/ArmorMaterial$Layer", () -> fromResource("foxgrade/shim/ArmorMaterialLayerShim.class")),
+      Map.entry("foxgrade/shim/GameRulesCompat", () -> fromResource("foxgrade/shim/GameRulesCompat.class")),
+      Map.entry("foxgrade/shim/ParticleCompat", () -> fromResource("foxgrade/shim/ParticleCompat.class")),
+      Map.entry("foxgrade/shim/AnimationCompat", () -> fromResource("foxgrade/shim/AnimationCompat.class")),
+      Map.entry("foxgrade/shim/RecipeCompat", () -> fromResource("foxgrade/shim/RecipeCompat.class")),
+      Map.entry("foxgrade/shim/BlockApiCompat", () -> fromResource("foxgrade/shim/BlockApiCompat.class")),
+      Map.entry("foxgrade/shim/TooltipListShim", () -> fromResource("foxgrade/shim/TooltipListShim.class")),
+      Map.entry("net/minecraft/world/level/GameRules$Key", () -> fromResource("foxgrade/shim/GameRulesKeyShim.class")),
+      Map.entry("net/minecraft/world/item/Tier", () -> fromResource("foxgrade/shim/TierShim.class")),
+      Map.entry("net/minecraft/world/item/SwordItem", () -> fromResource("foxgrade/shim/SwordItemShim.class")),
+      Map.entry("net/minecraft/world/item/DiggerItem", () -> fromResource("foxgrade/shim/DiggerItemShim.class")),
+      Map.entry("net/minecraft/world/item/ItemNameBlockItem", () -> fromResource("foxgrade/shim/ItemNameBlockItemShim.class")),
+      Map.entry("foxgrade/shim/MathCompat", () -> fromResource("foxgrade/shim/MathCompat.class")),
+      Map.entry("foxgrade/shim/GoalCompat", () -> fromResource("foxgrade/shim/GoalCompat.class")),
+      Map.entry("foxgrade/shim/ItemCompat", () -> fromResource("foxgrade/shim/ItemCompat.class")),
+      Map.entry("net/minecraft/world/entity/Saddleable", () -> fromResource("foxgrade/shim/SaddleableShim.class")),
+      Map.entry("net/minecraft/world/entity/npc/VillagerTrades$ItemListing", () -> fromResource("foxgrade/shim/ItemListingShim.class")),
+      Map.entry("net/minecraft/world/effect/InstantenousMobEffect", () -> fromResource("foxgrade/shim/InstantenousMobEffectShim.class")),
+      Map.entry("net/minecraft/world/ItemInteractionResult", () -> fromResource("foxgrade/shim/ItemInteractionResultShim.class")),
+      Map.entry("net/minecraft/world/level/block/entity/BlockEntityType$Builder", () -> fromResource("foxgrade/shim/BlockEntityTypeBuilderShim.class")),
+      Map.entry("net/minecraft/world/InteractionResultHolder", () -> fromResource("foxgrade/shim/InteractionResultHolderShim.class")),
+      Map.entry("net/minecraft/world/item/ArmorItem", () -> fromResource("foxgrade/shim/ArmorItemShim.class")),
+      Map.entry("net/minecraft/world/entity/animal/FlyingAnimal", () -> fromResource("foxgrade/shim/FlyingAnimalShim.class")),
       Map.entry("net/minecraft/client/renderer/MultiBufferSource", () -> fromResource("foxgrade/shim/MultiBufferSourceShim.class")),
       Map.entry("net/minecraft/client/renderer/MultiBufferSource$BufferSource", () -> fromResource("foxgrade/shim/BufferSourceShim.class")),
       Map.entry("net/minecraft/client/model/HierarchicalModel", () -> fromResource("foxgrade/shim/HierarchicalModelShim.class")),
@@ -86,7 +118,6 @@ public final class ShimGenerator implements Opcodes {
       Map.entry("foxgrade/shim/SoundCompat", () -> fromResource("foxgrade/shim/SoundCompat.class")),
       Map.entry("foxgrade/shim/ImageCompat", () -> fromResource("foxgrade/shim/ImageCompat.class")),
       Map.entry("foxgrade/shim/TextureCompat", () -> fromResource("foxgrade/shim/TextureCompat.class")),
-      Map.entry("foxgrade/shim/ItemCompat", () -> fromResource("foxgrade/shim/ItemCompat.class")),
       Map.entry("foxgrade/shim/LevelCompat", () -> fromResource("foxgrade/shim/LevelCompat.class")),
       Map.entry("foxgrade/shim/ToastCompat", () -> fromResource("foxgrade/shim/ToastCompat.class")),
       Map.entry("foxgrade/shim/TooltipCompat", () -> fromResource("foxgrade/shim/TooltipCompat.class")),
@@ -112,6 +143,20 @@ public final class ShimGenerator implements Opcodes {
     m.put("foxgrade/shim/BufferSourceShim", "net/minecraft/client/renderer/MultiBufferSource$BufferSource");
     m.put("foxgrade/shim/HierarchicalModelShim", "net/minecraft/client/model/HierarchicalModel");
     m.put("foxgrade/shim/ItemRendererShim", "net/minecraft/client/renderer/entity/ItemRenderer");
+    m.put("foxgrade/shim/InteractionResultHolderShim", "net/minecraft/world/InteractionResultHolder");
+    m.put("foxgrade/shim/ArmorItemShim", "net/minecraft/world/item/ArmorItem");
+    m.put("foxgrade/shim/FlyingAnimalShim", "net/minecraft/world/entity/animal/FlyingAnimal");
+    m.put("foxgrade/shim/SaddleableShim", "net/minecraft/world/entity/Saddleable");
+    m.put("foxgrade/shim/ItemListingShim", "net/minecraft/world/entity/npc/VillagerTrades$ItemListing");
+    m.put("foxgrade/shim/InstantenousMobEffectShim", "net/minecraft/world/effect/InstantenousMobEffect");
+    m.put("foxgrade/shim/ItemInteractionResultShim", "net/minecraft/world/ItemInteractionResult");
+    m.put("foxgrade/shim/BlockEntityTypeBuilderShim", "net/minecraft/world/level/block/entity/BlockEntityType$Builder");
+    m.put("foxgrade/shim/ArmorMaterialLayerShim", "net/minecraft/world/item/ArmorMaterial$Layer");
+    m.put("foxgrade/shim/GameRulesKeyShim", "net/minecraft/world/level/GameRules$Key");
+    m.put("foxgrade/shim/TierShim", "net/minecraft/world/item/Tier");
+    m.put("foxgrade/shim/SwordItemShim", "net/minecraft/world/item/SwordItem");
+    m.put("foxgrade/shim/DiggerItemShim", "net/minecraft/world/item/DiggerItem");
+    m.put("foxgrade/shim/ItemNameBlockItemShim", "net/minecraft/world/item/ItemNameBlockItem");
     String fr = "net/fabricmc/fabric/api/client/rendering/v1/";
     m.put("foxgrade/shim/WorldRenderEventsShim", fr + "WorldRenderEvents");
     for (String n : new String[]{"Start", "AfterSetup", "BeforeEntities", "AfterEntities", "BeforeBlockOutline", "BlockOutline", "DebugRender", "AfterTranslucent", "Last", "End"})
@@ -136,6 +181,16 @@ public final class ShimGenerator implements Opcodes {
       Map.entry("net/minecraft/client/renderer/MultiBufferSource", java.util.List.of("foxgrade/shim/RecordingBufferSource")),
       Map.entry("foxgrade/shim/EntityRenderCompat", java.util.List.of("foxgrade/shim/RecordingBufferSource")),
       Map.entry("foxgrade/shim/FrameCompat", java.util.List.of("foxgrade/shim/RecordingBufferSource")),
+      Map.entry("foxgrade/shim/EntityApiCompat", java.util.List.of("foxgrade/shim/NbtBridge")),
+      Map.entry("foxgrade/shim/GameRulesCompat", java.util.List.of("net/minecraft/world/level/GameRules$Key")),
+      Map.entry("foxgrade/shim/ItemCompat", java.util.List.of("foxgrade/shim/TooltipListShim", "foxgrade/shim/RegistryCompat")),
+      Map.entry("foxgrade/shim/BlockApiCompat", java.util.List.of("foxgrade/shim/RegistryCompat")),
+      Map.entry("foxgrade/shim/RegistryCompat", java.util.List.of("net/minecraft/world/item/ArmorMaterial$Layer")),
+      Map.entry("net/minecraft/world/item/SwordItem", java.util.List.of("net/minecraft/world/item/Tier")),
+      Map.entry("net/minecraft/world/item/DiggerItem", java.util.List.of("net/minecraft/world/item/Tier")),
+      Map.entry("foxgrade/shim/AnimationCompat", java.util.List.of("net/minecraft/client/model/HierarchicalModel")),
+      Map.entry("foxgrade/shim/NbtBridge", java.util.List.of("foxgrade/shim/PlayerCompat")),
+      Map.entry("foxgrade/shim/InteractionCompat", java.util.List.of("net/minecraft/world/InteractionResultHolder")),
       Map.entry("foxgrade/shim/BlockEntityRenderCompat", java.util.List.of("foxgrade/shim/RecordingBufferSource")),
       Map.entry("net/minecraft/client/renderer/entity/ItemRenderer", java.util.List.of("foxgrade/shim/RecordingBufferSource")),
       Map.entry("net/minecraft/client/model/HierarchicalModel", java.util.List.of("foxgrade/shim/ModelCompat")),

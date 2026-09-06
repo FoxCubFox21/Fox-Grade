@@ -42,4 +42,7 @@ public abstract class HierarchicalModelShim extends EntityModel<EntityRenderStat
   public Optional<ModelPart> getAnyDescendantWithName(String name) {
     return root().getAllParts().stream().filter(p -> p.hasChild(name)).findFirst().map(p -> p.getChild(name));
   }
+
+  /** 1.21.x {@code KeyframeAnimations.animate(model, def, millis, scale, vec)} entry. */
+  public void animateMillis(AnimationDefinition def, long accumulatedMillis, float scale) { bake(def).apply(accumulatedMillis, scale); }
 }

@@ -41,7 +41,16 @@ public final class BytecodeRemapper {
   // a call whose owner is a SUBCLASS of the class a table names still gets the rewrite, the way
   // the JVM itself resolves the member upward. Constructors excluded — they are not inherited.
   private java.util.function.UnaryOperator<String> superOf = (c) -> null;
+  private java.util.function.Function<String, String[]> interfacesOf = (c) -> new String[0];
   public void setSuperOf(java.util.function.UnaryOperator<String> f) { this.superOf = f; remapper.setSuperOf(f); }
+  public void setInterfacesOf(java.util.function.Function<String, String[]> f) { this.interfacesOf = f; remapper.setInterfacesOf(f); }
+  private java.util.function.Function<String, Boolean> isInterface = (c) -> null;
+  private java.util.function.Predicate<String> isFinalClass = (c) -> false;
+  public void setIsFinalClass(java.util.function.Predicate<String> f) { this.isFinalClass = f; }
+  public void setIsInterface(java.util.function.Function<String, Boolean> f) { this.isInterface = f; }
+  private final java.util.List<String> flips = new java.util.ArrayList<>();
+  /** Interfaces that became classes (or the reverse) in the target, per class rewritten. */
+  public java.util.List<String> flips() { return flips; }
   // Chain oracles from the verifier: does a class declare a member; is a method final / implemented /
   // declared somewhere up a chain. They keep chain lookups honest (a subclass's own declaration
   // shadows an ancestor's rewrite) and drive override dropping and method synthesis.
@@ -61,18 +70,36 @@ public final class BytecodeRemapper {
   public String mapFieldName(String owner, String name, String desc) { return remapper.mapFieldName(owner, name, desc); }
   private <T> T lookup(Map<String, Map<String, T>> table, String owner, String key) {
     String shapeKey = key.replaceFirst("^(getstatic|putstatic|get|put) ", "");
+    // JVM resolution order, roughly: the class, its superclasses, then the interfaces of each;
+    // a class that declares the member itself ends the search (an ancestor's rewrite does not apply).
+    java.util.Set<String> seen = new HashSet<>();
     String o = owner;
     for (int guard = 0; o != null && guard < 48; guard++) {
       Map<String, T> m = table.get(o);
       if (m != null) { T v = m.get(key); if (v != null) return v; }
-      if (declares.test(o, shapeKey)) return null;   // resolves here; an ancestor's rewrite does not apply
+      if (declares.test(o, shapeKey)) return null;
+      seen.add(o);
       o = superOf.apply(o);
+    }
+    java.util.ArrayDeque<String> itfs = new java.util.ArrayDeque<>();
+    for (String c : seen) for (String i : interfacesOf.apply(c)) itfs.add(i);
+    for (int guard = 0; !itfs.isEmpty() && guard < 200; guard++) {
+      String i = itfs.poll();
+      if (!seen.add(i)) continue;
+      Map<String, T> m = table.get(i);
+      if (m != null) { T v = m.get(key); if (v != null) return v; }
+      for (String j : interfacesOf.apply(i)) itfs.add(j);
     }
     return null;
   }
   // Pushes one value described by a recipe entry, in a synthesized method whose new parameters
   // start at `slot`: "pN" a parameter, "this", an int literal, or ["static", owner, name, desc, sources…].
+  private static int convOpcode(String name) {
+    return switch (name) { case "F2D" -> Opcodes.F2D; case "D2F" -> Opcodes.D2F; case "I2L" -> Opcodes.I2L; case "L2I" -> Opcodes.L2I; case "I2F" -> Opcodes.I2F; case "F2I" -> Opcodes.F2I; case "I2D" -> Opcodes.I2D; case "D2I" -> Opcodes.D2I; case "I2C" -> Opcodes.I2C; default -> throw new IllegalArgumentException(name); };
+  }
   private void pushSource(MethodVisitor mv, String[] u, org.objectweb.asm.Type[] args, int[] slot, String className) {
+    if (u.length == 3 && u[0].equals("conv")) { pushSource(mv, new String[]{u[1]}, args, slot, className); mv.visitInsn(convOpcode(u[2])); return; }
+    if (u.length == 3 && u[0].equals("cast")) { pushSource(mv, new String[]{u[1]}, args, slot, className); mv.visitTypeInsn(Opcodes.CHECKCAST, u[2]); return; }
     if (u.length >= 4 && u[0].equals("static")) {
       for (int k = 4; k < u.length; k++) pushSource(mv, new String[]{u[k]}, args, slot, className);
       usedShims.add(u[1]);
@@ -93,7 +120,11 @@ public final class BytecodeRemapper {
   }
   // Same as pushSource, but for call-site recipes: "oN" is the N-th OLD argument (spilled to
   // locals), "this" the receiver's caller instance, static entries may nest these.
+  private int recvSlot = -1;   // set by a call adapter that spilled the receiver ("recv" source)
   private void pushOldSource(MethodVisitor mv, String[] u, org.objectweb.asm.Type[] oldArgs, int[] slotAt) {
+    if (u.length == 3 && u[0].equals("conv")) { pushOldSource(mv, new String[]{u[1]}, oldArgs, slotAt); mv.visitInsn(convOpcode(u[2])); return; }
+    if (u.length == 3 && u[0].equals("cast")) { pushOldSource(mv, new String[]{u[1]}, oldArgs, slotAt); mv.visitTypeInsn(Opcodes.CHECKCAST, u[2]); return; }
+    if (u.length == 1 && u[0].equals("recv")) { mv.visitVarInsn(Opcodes.ALOAD, recvSlot); return; }
     if (u.length >= 4 && u[0].equals("static")) {
       for (int k = 4; k < u.length; k++) pushOldSource(mv, new String[]{u[k]}, oldArgs, slotAt);
       usedShims.add(u[1]);
@@ -125,6 +156,7 @@ public final class BytecodeRemapper {
     // intermediary-named mods. Rewriting each value through the rules table closes the chain
     // (class_1920 → world/level/BlockAndTintGetter → client/renderer/block/BlockAndTintGetter).
     mergedClasses.replaceAll((k, v) -> rulesClassTable.getOrDefault(v, v));
+    mergedClasses.replaceAll((k, v) -> apiBridges.classRenames().getOrDefault(v, v));   // curated moves too
     this.remapper = new BridgeRemapper(mergedClasses, bridge.methodTable(), bridge.fieldTable(),
         bridge.globalMethodTable(), bridge.globalFieldTable(), apiBridges.renames(),
         bridge.mojangMethodTable(), bridge.mojangMethodGlobalTable(),
@@ -153,6 +185,20 @@ public final class BytecodeRemapper {
       String className; int classAccess;
       final Set<String> declared = new HashSet<>();
       @Override public void visit(int version, int access, String name, String sig, String superName, String[] itfs) {
+        // 26.2 turned some interfaces into classes (RecipeSerializer). A mod class implementing one
+        // must extend it instead — possible when it has no other superclass.
+        if (itfs != null && itfs.length > 0 && (access & Opcodes.ACC_INTERFACE) == 0) {
+          java.util.List<String> keep = new java.util.ArrayList<>();
+          for (String i : itfs) {
+            Boolean isI = isInterface.apply(i);
+            if (isI != null && !isI) {
+              if (isFinalClass.test(i)) { flips.add(name + "#implements " + i.substring(i.lastIndexOf('/') + 1) + " (a final class in the target; cannot be implemented or extended)"); }
+              else if (superName == null || superName.equals("java/lang/Object")) { superName = i; flips.add(name + ": implements " + i + " → extends (it is a class in the target)"); }
+              else { flips.add(name + ": implements " + i + " dropped (a class in the target; this class already extends " + superName + ")"); }
+            } else keep.add(i);
+          }
+          itfs = keep.toArray(new String[0]);
+        }
         className = name; classAccess = access; this.superName = superName;
         super.visit(version, access, name, sig, superName, itfs);
       }
@@ -176,6 +222,7 @@ public final class BytecodeRemapper {
                   && org.objectweb.asm.Type.getReturnType(u[2]).getSort() == org.objectweb.asm.Type.INT) mv.visitInsn(Opcodes.I2C);
             }
             mv.visitMethodInsn(Opcodes.INVOKEVIRTUAL, className, oa.oldName(), oa.oldDesc(), false);
+            if (oa.convert() != null) { usedShims.add(oa.convert()[1]); mv.visitMethodInsn(Opcodes.INVOKESTATIC, oa.convert()[1], oa.convert()[2], oa.convert()[3], false); }
             for (String[] h : oa.after()) pushSource(mv, h, newArgs, slot, className);
             mv.visitInsn(org.objectweb.asm.Type.getReturnType(oa.newDesc()).getOpcode(Opcodes.IRETURN));
             mv.visitMaxs(0, 0); mv.visitEnd();
@@ -236,6 +283,15 @@ public final class BytecodeRemapper {
             }
           }
           @Override public void visitMethodInsn(int opcode, String owner, String mname, String mdesc, boolean itf) {
+            // Call kind follows the target's class-vs-interface truth (INVOKEINTERFACE on a class is a link error).
+            if (opcode == Opcodes.INVOKEINTERFACE || opcode == Opcodes.INVOKEVIRTUAL) {
+              Boolean isI = isInterface.apply(owner);
+              if (isI != null && isI && opcode == Opcodes.INVOKEVIRTUAL) { opcode = Opcodes.INVOKEINTERFACE; itf = true; }
+              else if (isI != null && !isI && opcode == Opcodes.INVOKEINTERFACE) { opcode = Opcodes.INVOKEVIRTUAL; itf = false; }
+            } else if (opcode == Opcodes.INVOKESTATIC) {
+              Boolean isI = isInterface.apply(owner);
+              if (isI != null) itf = isI;
+            }
             String[] to = mname.equals("<init>") ? null : lookup(callRedirects, owner, mname + mdesc);
             if (to != null) {
               usedShims.add(to[0]);
@@ -252,6 +308,11 @@ public final class BytecodeRemapper {
               for (int i = 0; i < args.length; i++) { slotAt[i] = idx; idx += args[i].getSize(); }
               for (int i = args.length - 1; i >= 0; i--) super.visitVarInsn(args[i].getOpcode(Opcodes.ISTORE), slotAt[i]);
               if (ca.args() != null) {
+                // A recipe may need the receiver (the entity whose level supplies a ServerLevel):
+                // spill it too and put it back before the new arguments.
+                boolean needsRecv = false;
+                for (String[] u : ca.args()) for (String x : u) if (x.equals("recv")) needsRecv = true;
+                if (needsRecv && opcode != Opcodes.INVOKESTATIC) { recvSlot = idx; idx++; super.visitVarInsn(Opcodes.ASTORE, recvSlot); super.visitVarInsn(Opcodes.ALOAD, recvSlot); }
                 for (String[] u : ca.args()) pushOldSource(this, u, args, slotAt);
               } else {
                 int k = 0;
@@ -265,6 +326,7 @@ public final class BytecodeRemapper {
                 for (int c : ca.extras()) super.visitLdcInsn(c);
               }
               super.visitMethodInsn(opcode, owner, ca.newName(), ca.newDesc(), itf);
+              if (ca.convert() != null) { usedShims.add(ca.convert()[1]); super.visitMethodInsn(Opcodes.INVOKESTATIC, ca.convert()[1], ca.convert()[2], ca.convert()[3], false); }
               return;
             }
             String wide = lookup(descWidenings, owner, mname + mdesc);
@@ -286,6 +348,21 @@ public final class BytecodeRemapper {
                 for (int i = 0; i < args.length; i++) { slotAt[i] = idx; idx += args[i].getSize(); }
                 for (int i = args.length - 1; i >= 0; i--) {
                   super.visitVarInsn(args[i].getOpcode(Opcodes.ISTORE), slotAt[i]);
+                }
+                if (ad.factory() != null) {
+                  // The constructor is gone: drop the two uninitialised refs NEW+DUP left and call
+                  // the static factory that builds the replacement value.
+                  super.visitInsn(Opcodes.POP); super.visitInsn(Opcodes.POP);
+                  if (ad.args() != null) for (String[] u : ad.args()) pushOldSource(this, u, args, slotAt);
+                  else for (int i = 0; i < args.length; i++) super.visitVarInsn(args[i].getOpcode(Opcodes.ILOAD), slotAt[i]);
+                  usedShims.add(ad.factory()[0]);
+                  super.visitMethodInsn(Opcodes.INVOKESTATIC, ad.factory()[0], ad.factory()[1], ad.factory()[2], false);
+                  return;
+                }
+                if (ad.args() != null) {
+                  for (String[] u : ad.args()) pushOldSource(this, u, args, slotAt);
+                  super.visitMethodInsn(Opcodes.INVOKESPECIAL, owner, "<init>", ad.newDesc(), false);
+                  return;
                 }
                 // slot -1: a NEW leading argument the constructor grew (DynamicTexture's name
                 // supplier), produced by a no-arg shim; slot -2: the same, trailing.
@@ -361,7 +438,13 @@ public final class BytecodeRemapper {
               if (h.getTag() == Opcodes.H_NEWINVOKESPECIAL) {
                 Map<String, FabricApiBridges.CtorAdapter> byCtor = ctorAdapters.get(h.getOwner());
                 FabricApiBridges.CtorAdapter ad = byCtor != null ? byCtor.get(h.getDesc()) : null;
-                if (ad != null && ad.transforms().isEmpty()) {
+                if (ad != null && ad.factory() != null) {
+                  // Item.Properties::new — the constructor reference becomes a reference to the factory
+                  usedShims.add(ad.factory()[0]);
+                  out[i] = new org.objectweb.asm.Handle(Opcodes.H_INVOKESTATIC, ad.factory()[0], ad.factory()[1], ad.factory()[2], false);
+                  continue;
+                }
+                if (ad != null && ad.transforms().isEmpty() && ad.args() == null && ad.factory() == null) {
                   out[i] = new org.objectweb.asm.Handle(h.getTag(), h.getOwner(), "<init>", ad.newDesc(), false);
                 }
               }
@@ -376,6 +459,26 @@ public final class BytecodeRemapper {
               String kind = opcode == Opcodes.GETFIELD ? "get " : opcode == Opcodes.PUTFIELD ? "put "
                   : opcode == Opcodes.GETSTATIC ? "getstatic " : "putstatic ";
               String[] to = lookup(fieldRedirects, owner, kind + fname + ":" + fdesc);
+              if (to != null && to[0].equals("retype")) {
+                // The field's declared type widened (SimpleParticleType → ParticleType): read with the
+                // new type and cast back to what the 1.21.x code expects.
+                super.visitFieldInsn(opcode, owner, fname, to[1]);
+                super.visitTypeInsn(Opcodes.CHECKCAST, to[2]);
+                return;
+              }
+              if (to != null && to[0].equals("move")) {
+                // The constant moved to a holder class (EntityType.FOX → EntityTypes.FOX).
+                super.visitFieldInsn(opcode, to[1], fname, to[2]);
+                return;
+              }
+              if (to != null && to[0].equals("holder")) {
+                // The field still exists but became a Holder: read it with its new type, unwrap.
+                super.visitFieldInsn(opcode, owner, fname, to[1]);
+                usedShims.add(to[2]);
+                super.visitMethodInsn(Opcodes.INVOKESTATIC, to[2], to[3], to[4], false);
+                if (to.length > 5) super.visitTypeInsn(Opcodes.CHECKCAST, to[5]);
+                return;
+              }
               if (to != null) {
                 usedShims.add(to[0]);
                 super.visitMethodInsn(Opcodes.INVOKESTATIC, to[0], to[1], to[2], false);

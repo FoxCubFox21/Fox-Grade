@@ -11,4 +11,7 @@ public final class InteractionCompat {
   public static InteractionResult CONSUME_PARTIAL() { return InteractionResult.CONSUME; }
   public static InteractionResult PASS() { return InteractionResult.PASS; }
   public static InteractionResult FAIL() { return InteractionResult.FAIL; }
+  public static InteractionResult sidedSuccess(boolean clientSide) { return InteractionResult.SUCCESS; }
+  /** Item.use(...) returned a holder around the result; 26.2 returns the result itself. */
+  public static InteractionResult fromHolder(InteractionResultHolderShim<?> h) { return h == null ? InteractionResult.PASS : h.getResult(); }
 }

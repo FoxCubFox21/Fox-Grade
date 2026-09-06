@@ -35,6 +35,10 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public final class PortVerifier {
+  private static java.util.Collection<net.fabricmc.loader.api.ModContainer> loadedMods() {
+    try { return net.fabricmc.loader.api.FabricLoader.getInstance().getAllMods(); } catch (Throwable standalone) { return java.util.List.of(); }
+  }
+
   private final Set<String> known;
   private final Set<String> missing = new TreeSet<>();
 
@@ -54,7 +58,7 @@ public final class PortVerifier {
   /** Pre-declare a class of the jar being ported (names in target form), so members reached
    *  through it resolve up its chain even before its own bytes are scanned. */
   public void declareModClass(String name, String superName, String[] interfaces) {
-    if (!shapes.containsKey(name)) shapes.put(name, new Shape(superName, interfaces == null ? new String[0] : interfaces, new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>()));
+    if (!shapes.containsKey(name)) shapes.put(name, new Shape(superName, interfaces == null ? new String[0] : interfaces, new HashSet<>(), new HashSet<>(), new HashSet<>(), new HashSet<>(), false, false));
   }
 
   /** Does this class itself declare the member (name+desc for methods, name:desc for fields)? */
@@ -79,7 +83,13 @@ public final class PortVerifier {
   /** Is the method implemented (declared non-abstract) somewhere up the superclass chain starting AT cls? */
   public boolean implementedInChain(String cls, String key) { return chainHas(cls, key, true, 0); }
 
+  /** Direct interfaces of a class as far as this verifier can tell; empty if unknown. */
+  public String[] interfacesOf(String cls) { Shape s = shape(cls); return s == UNKNOWN ? new String[0] : s.interfaces(); }
+
   /** Superclass of a class as far as this verifier can tell (mod classes seen, game classes read); null if unknown. */
+  /** True/false when the target game has the class; null when it is unknown (a mod class, a missing class). */
+  public boolean isFinalClass(String cls) { if (!checkable(cls) || !known.contains(cls)) return false; Shape s = shape(cls); return s != UNKNOWN && s.finalClass(); }
+  public Boolean isInterface(String cls) { if (!checkable(cls) || !known.contains(cls)) return null; Shape s = shape(cls); return s == UNKNOWN ? null : s.isInterface(); }
   public String superOf(String cls) {
     Shape s = shape(cls);
     return s == UNKNOWN ? null : s.superName();
@@ -96,11 +106,16 @@ public final class PortVerifier {
         declM.add(n + d); if ((a & Opcodes.ACC_FINAL) != 0) fin.add(n + d); if ((a & Opcodes.ACC_ABSTRACT) != 0) abs.add(n + d); return null;
       }
     }, ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
-    shapes.put(r.getClassName(), new Shape(r.getSuperName(), r.getInterfaces(), declF, declM, fin, abs));
+    shapes.put(r.getClassName(), new Shape(r.getSuperName(), r.getInterfaces(), declF, declM, fin, abs, (r.getAccess() & Opcodes.ACC_INTERFACE) != 0, (r.getAccess() & Opcodes.ACC_FINAL) != 0));
     settled = false;
     r.accept(new ClassRemapper(new ClassWriter(0), new Remapper() {
       @Override public String map(String internalName) {
-        if (checkable(internalName) && internalName.indexOf('$') < 0 && !known.contains(internalName)) {
+        int dollar = internalName.indexOf('$');
+        // A missing inner class counts when its outer is a real game class (ArmorMaterial$Layer vanished
+        // while ArmorMaterial stayed); anonymous/synthetic inner refs of unknown outers stay noise.
+        boolean innerOfKnown = dollar > 0 && known.contains(internalName.substring(0, dollar)) && !internalName.substring(dollar + 1).chars().allMatch(Character::isDigit);
+        if (checkable(internalName) && (dollar < 0 || innerOfKnown || ShimGenerator.SHIMS.containsKey(internalName)) && !known.contains(internalName)) {
+          // inner classes are skipped as noise, except the ones Fox-Grade re-creates (VillagerTrades$ItemListing, GameRules$Key)
           missing.add(internalName);
         } else if (!checkable(internalName) && ShimGenerator.SHIMS.containsKey(internalName) && shape(internalName) == UNKNOWN) {
           // A removed third-party class Fox-Grade re-creates (Fabric's WorldRenderEvents): not in
@@ -170,8 +185,8 @@ public final class PortVerifier {
 
   // ---- member resolution against the running game's class files ----
 
-  private record Shape(String superName, String[] interfaces, Set<String> fields, Set<String> methods, Set<String> finals, Set<String> abstracts) { }
-  private static final Shape UNKNOWN = new Shape(null, new String[0], Set.of(), Set.of(), Set.of(), Set.of());
+  private record Shape(String superName, String[] interfaces, Set<String> fields, Set<String> methods, Set<String> finals, Set<String> abstracts, boolean isInterface, boolean finalClass) { }
+  private static final Shape UNKNOWN = new Shape(null, new String[0], Set.of(), Set.of(), Set.of(), Set.of(), false, false);
   private final Map<String, Shape> shapes = new HashMap<>();
 
   private void checkMember(String owner, String name, String desc, boolean field, boolean direct) {
@@ -204,12 +219,17 @@ public final class PortVerifier {
     Shape s = shapes.get(cls);
     if (s != null) return s;
     s = UNKNOWN;
-    try (InputStream in = open(cls + ".class")) {
+    // A class Fox-Grade re-creates under a game name (BlockEntityType$Builder, ArmorItem) lives in the
+    // jar as foxgrade/shim/<Shim>.class: read that, with the injection renames applied, so member
+    // checks judge the shim's real signatures instead of skipping them.
+    String resource = cls;
+    for (var e : ShimGenerator.SHIM_RENAMES.entrySet()) if (e.getValue().equals(cls)) { resource = e.getKey(); break; }
+    try (InputStream in = open(resource + ".class")) {
       if (in != null) {
         byte[] bytes = in.readAllBytes();
         // Fox-Grade's own shims are read from its jar, whose copies still carry pre-injection names in
         // their descriptors; apply the same renames so members compare against what the port sees.
-        if (cls.startsWith("foxgrade/shim/")) bytes = ShimGenerator.renameClasses(bytes, ShimGenerator.SHIM_RENAMES);
+        if (resource.startsWith("foxgrade/shim/")) bytes = ShimGenerator.renameClasses(bytes, ShimGenerator.SHIM_RENAMES);
         ClassReader r = new ClassReader(bytes);
         Set<String> f = new HashSet<>(), m = new HashSet<>(), fin = new HashSet<>(), abs = new HashSet<>();
         r.accept(new ClassVisitor(Opcodes.ASM9) {
@@ -225,7 +245,7 @@ public final class PortVerifier {
           for (int i = 0; i < extra.size(); i++) all[itfs.length + i] = extra.get(i);
           itfs = all;
         }
-        s = new Shape(r.getSuperName(), itfs, f, m, fin, abs);
+        s = new Shape(r.getSuperName(), itfs, f, m, fin, abs, (r.getAccess() & Opcodes.ACC_INTERFACE) != 0, (r.getAccess() & Opcodes.ACC_FINAL) != 0);
       }
     } catch (Throwable ignore) { }
     shapes.put(cls, s);
@@ -240,7 +260,7 @@ public final class PortVerifier {
     if (injected != null) return injected;
     Map<String, java.util.List<String>> m = new HashMap<>();
     try {
-      for (var mod : net.fabricmc.loader.api.FabricLoader.getInstance().getAllMods()) {
+      for (var mod : loadedMods()) {
         var cv = mod.getMetadata().getCustomValue("loom:injected_interfaces");
         if (cv == null || cv.getType() != net.fabricmc.loader.api.metadata.CustomValue.CvType.OBJECT) continue;
         for (var e : cv.getAsObject()) {

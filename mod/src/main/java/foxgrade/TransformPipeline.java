@@ -148,6 +148,9 @@ public final class TransformPipeline {
     } catch (Exception ignore) { }
     remapper.setSuperOf(verifier::superOf);
     remapper.setOracles(verifier::declares, verifier::finalInChain, verifier::implementedInChain, verifier::declaredInChain);
+    remapper.setInterfacesOf(verifier::interfacesOf);
+    remapper.setIsInterface(verifier::isInterface);
+    remapper.setIsFinalClass(verifier::isFinalClass);
     String[] fromMcHolder = { "" };
     Set<String> fatalMixins = new HashSet<>();          // mixin classes to deregister from configs
     java.util.List<String> strippedNames = new java.util.ArrayList<>();   // "MixinClass#handler" per strip, for the panel
@@ -413,6 +416,7 @@ public final class TransformPipeline {
         out.closeEntry();
       }
     }
+    for (String flip : remapper.flips()) if (flip.contains("cannot be")) verifier.missing().add(flip.substring(0, flip.indexOf(" (")));
     Outcome o = new Outcome(sink.toByteArray(), metaFixed, awFiles, awOwners, awDescs, refmapFiles, refmapHits, classesRemapped, mixinsStripped, autoStripped, verifier.missing());
     o.deregisteredMixins.addAll(fatalMixins);
     return o;

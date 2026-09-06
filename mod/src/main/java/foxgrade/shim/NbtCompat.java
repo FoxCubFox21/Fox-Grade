@@ -23,9 +23,21 @@ public final class NbtCompat {
   public static long[] getLongArray(CompoundTag t, String k) { return t.getLongArray(k).orElse(new long[0]); }
   public static byte[] getByteArray(CompoundTag t, String k) { return t.getByteArray(k).orElse(new byte[0]); }
   public static boolean contains(CompoundTag t, String k, int type) { return t.contains(k); }
+  public static java.util.UUID getUUID(CompoundTag t, String k) { return t.read(k, net.minecraft.core.UUIDUtil.CODEC).orElse(null); }
+  public static boolean hasUUID(CompoundTag t, String k) { return t.read(k, net.minecraft.core.UUIDUtil.CODEC).isPresent(); }
+  public static void putUUID(CompoundTag t, String k, java.util.UUID id) { t.store(k, net.minecraft.core.UUIDUtil.CODEC, id); }
   public static CompoundTag getCompound(ListTag l, int i) { return l.getCompoundOrEmpty(i); }
   public static String getString(ListTag l, int i) { return l.getStringOr(i, ""); }
   public static int getInt(ListTag l, int i) { return l.getIntOr(i, 0); }
   public static float getFloat(ListTag l, int i) { return l.getFloatOr(i, 0f); }
   public static double getDouble(ListTag l, int i) { return l.getDoubleOr(i, 0d); }
+
+  // ---- batch 3: container item lists (1.21.x CompoundTag + registry provider → 26.2 value IO)
+  public static void loadAllItems(net.minecraft.nbt.CompoundTag tag, net.minecraft.core.NonNullList<net.minecraft.world.item.ItemStack> items, net.minecraft.core.HolderLookup.Provider provider) {
+    net.minecraft.world.ContainerHelper.loadAllItems(net.minecraft.world.level.storage.TagValueInput.create(net.minecraft.util.ProblemReporter.DISCARDING, provider, tag), items);
+  }
+  public static net.minecraft.nbt.CompoundTag saveAllItems(net.minecraft.nbt.CompoundTag tag, net.minecraft.core.NonNullList<net.minecraft.world.item.ItemStack> items, net.minecraft.core.HolderLookup.Provider provider) {
+    net.minecraft.world.level.storage.TagValueOutput out = net.minecraft.world.level.storage.TagValueOutput.createWithoutContext(net.minecraft.util.ProblemReporter.DISCARDING);
+    net.minecraft.world.ContainerHelper.saveAllItems(out, items); tag.merge(out.buildResult()); return tag;
+  }
 }

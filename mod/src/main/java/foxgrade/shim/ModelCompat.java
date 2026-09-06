@@ -8,4 +8,6 @@ public final class ModelCompat {
   private ModelCompat() { }
   /** A root for models 26.2 insists be constructed with one; children may be attached later. */
   public static ModelPart emptyRoot() { return new ModelPart(List.of(), new HashMap<>()); }
+
+  public static java.util.stream.Stream<net.minecraft.client.model.geom.ModelPart> getAllParts(net.minecraft.client.model.geom.ModelPart part) { return part.getAllParts().stream(); }
 }

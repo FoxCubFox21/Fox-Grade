@@ -20,6 +20,7 @@ public final class BridgeRemapper extends Remapper {
   // declaring class extends (renderWidget is extractContents under AbstractButton, whose own
   // extractWidgetRenderState is final, and extractWidgetRenderState elsewhere).
   private Map<String, java.util.List<String[]>> inheritedRenamesByAncestor = Map.of();
+  private static final String TRACE = System.getenv("FOXGRADE_TRACE");
   private java.util.function.UnaryOperator<String> superOf = (c) -> null;
   public void setSuperOf(java.util.function.UnaryOperator<String> f) { this.superOf = f; }
   public void setInheritedRenamesByAncestor(Map<String, java.util.List<String[]>> m) { this.inheritedRenamesByAncestor = m; }
@@ -98,6 +99,7 @@ public final class BridgeRemapper extends Remapper {
     if (api != null) { String to = api.get(name); if (to != null) return to; }
     // Curated renames apply to subclasses too, nearest ancestor first, the way the JVM resolves
     // the member (Button.renderWidget is AbstractWidget's method).
+    if (TRACE != null && name.equals(TRACE)) System.err.println("[trace] " + owner + " -> " + mappedOwner + " super=" + superOf.apply(mappedOwner) + " api=" + (api != null));
     for (String anc = superOf.apply(mappedOwner), g0 = ""; anc != null && g0.length() < 48; anc = superOf.apply(anc), g0 += "x") {
       Map<String, String> a = apiRenames.get(anc);
       if (a != null) { String to = a.get(name); if (to != null) return to; }
@@ -144,9 +146,26 @@ public final class BridgeRemapper extends Remapper {
     return resolved;
   }
 
+  // Curated renames on the TRANSLATED name, nearest owner first, then up the superclass chain and
+  // across the interfaces: a Fabric mod calls Mob.method_5808, which translates to Mob.moveTo, whose
+  // rename to snapTo is recorded on Entity.
+  private java.util.function.Function<String, String[]> interfacesOf = (c) -> new String[0];
+  public void setInterfacesOf(java.util.function.Function<String, String[]> f) { this.interfacesOf = f; }
   private String apiChain(String mappedOwner, String resolved) {
-    Map<String, String> api = apiRenames.get(mappedOwner);
-    if (api != null) { String to = api.get(resolved); if (to != null) return to; }
+    java.util.Set<String> seen = new java.util.LinkedHashSet<>();
+    for (String o = mappedOwner, g = ""; o != null && g.length() < 48; o = superOf.apply(o), g += "x") {
+      seen.add(o);
+      Map<String, String> api = apiRenames.get(o);
+      if (api != null) { String to = api.get(resolved); if (to != null) return to; }
+    }
+    java.util.ArrayDeque<String> itfs = new java.util.ArrayDeque<>();
+    for (String c : seen) for (String i : interfacesOf.apply(c)) itfs.add(i);
+    for (int guard = 0; !itfs.isEmpty() && guard < 200; guard++) {
+      String i = itfs.poll(); if (!seen.add(i)) continue;
+      Map<String, String> api = apiRenames.get(i);
+      if (api != null) { String to = api.get(resolved); if (to != null) return to; }
+      for (String j : interfacesOf.apply(i)) itfs.add(j);
+    }
     return resolved;
   }
 

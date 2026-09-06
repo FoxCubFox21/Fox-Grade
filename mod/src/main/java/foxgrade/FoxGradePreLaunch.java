@@ -110,6 +110,8 @@ public final class FoxGradePreLaunch implements PreLaunchEntrypoint {
             "On the next launch Fox-Grade ports them, installs the result into mods/,\n" +
             "moves the original into processed/, and restarts the game automatically.\n");
       }
+      // Zero-configuration path: an old mod dropped straight into mods/ is moved to the inbox now.
+      for (Path movedIn : AutoInbox.sweep(modsDir, inbox, mc, FoxGradePreLaunch::log)) { /* logged by the sweep */ }
       java.util.List<Path> inboxJars = new java.util.ArrayList<>();
       for (Path dir : java.util.List.of(inbox, legacyInbox)) {
         if (!Files.isDirectory(dir)) continue;
