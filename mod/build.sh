@@ -21,7 +21,7 @@ fi
 
 CP="$MC_JAR"
 for f in "$LIB"/net/fabricmc/fabric-loader/*/fabric-loader-*.jar \
-         "$LIB"/com/google/code/gson/gson/*/gson-*.jar "$LIB"/com/google/guava/guava/*/guava-*.jar \
+         "$LIB"/com/google/code/gson/gson/*/gson-*.jar "$LIB"/com/google/guava/guava/*/guava-*.jar "$LIB"/com/mojang/authlib/*/authlib-*.jar "$LIB"/io/netty/netty-buffer/4.2.15.Final/netty-buffer-*.jar "$LIB"/io/netty/netty-common/4.2.15.Final/netty-common-*.jar \
          "$LIB"/org/ow2/asm/asm/*/asm-*.jar \
          "$LIB"/org/ow2/asm/asm-tree/*/asm-tree-*.jar \
          "$LIB"/org/ow2/asm/asm-commons/*/asm-commons-*.jar \

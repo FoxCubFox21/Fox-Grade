@@ -38,4 +38,7 @@ public final class ChatCompat {
     return null;
   }
   public static Style withFont(Style style, Identifier font) { return style.withFont(new FontDescription.Resource(font)); }
+
+  /** 1.21.x {@code new HoverEvent.ItemStackInfo(stack)} → 26.2 {@code HoverEvent.ShowItem(template)}. */
+  public static HoverEvent.ShowItem showItem(net.minecraft.world.item.ItemStack stack) { return new HoverEvent.ShowItem(new net.minecraft.world.item.ItemStackTemplate(stack.getItem(), stack.getCount())); }
 }

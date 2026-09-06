@@ -25,8 +25,17 @@ public final class BridgeRemapper extends Remapper {
   public void setSuperOf(java.util.function.UnaryOperator<String> f) { this.superOf = f; }
   public void setInheritedRenamesByAncestor(Map<String, java.util.List<String[]>> m) { this.inheritedRenamesByAncestor = m; }
   private boolean descendsFrom(String cls, String ancestor) {
+    java.util.Set<String> seen = new java.util.LinkedHashSet<>();
     String o = cls;
-    for (int guard = 0; o != null && guard < 48; guard++) { if (o.equals(ancestor)) return true; o = superOf.apply(o); }
+    for (int guard = 0; o != null && guard < 48; guard++) { if (o.equals(ancestor)) return true; seen.add(o); o = superOf.apply(o); }
+    // interfaces count as ancestors too: a class implementing Fabric's ModelLoadingPlugin inherits its renamed callback
+    java.util.ArrayDeque<String> itfs = new java.util.ArrayDeque<>();
+    for (String c : seen) for (String i : interfacesOf.apply(c)) itfs.add(i);
+    for (int guard = 0; !itfs.isEmpty() && guard < 200; guard++) {
+      String i = itfs.poll(); if (!seen.add(i)) continue;
+      if (i.equals(ancestor)) return true;
+      for (String k : interfacesOf.apply(i)) itfs.add(k);
+    }
     return false;
   }
   private final Map<String, String> classes;
@@ -89,6 +98,11 @@ public final class BridgeRemapper extends Remapper {
   }
 
   @Override public String mapMethodName(String owner, String name, String descriptor) {
+    String to = mapMethodName0(owner, name, descriptor);
+    // A rename can never land on a constructor or class initialiser; a table that says so is wrong (ListTag.clear → <init>).
+    return (to.equals("<init>") || to.equals("<clinit>")) && !name.equals(to) ? name : to;
+  }
+  private String mapMethodName0(String owner, String name, String descriptor) {
     // Curated API bridge FIRST — its entries are hand-verified overrides for cases the mined
     // tables get wrong (cross-class inheritance renames like Registry.get → DefaultedRegistry.
     // getValue). It's keyed by mojang OR intermediary owner; try both the raw owner and its

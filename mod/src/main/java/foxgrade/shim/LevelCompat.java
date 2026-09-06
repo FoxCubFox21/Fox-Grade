@@ -47,4 +47,32 @@ public final class LevelCompat {
     for (Object o : getNearbyEntities(level, cls, tc, from, box)) { net.minecraft.world.entity.LivingEntity e = (net.minecraft.world.entity.LivingEntity) o; double d = e.distanceToSqr(x, y, z); if (d < bestD) { best = e; bestD = d; } }
     return best;
   }
+  /** 1.21's {@code new ChunkPos(long packed)}: 26.2 only keeps the (x, z) constructor. */
+  public static net.minecraft.world.level.ChunkPos chunkPos(long packed) { return new net.minecraft.world.level.ChunkPos((int) packed, (int) (packed >> 32)); }
+  /** 1.21's {@code TicketType.create(name, comparator[, timeout])}: 26.2 ticket types are (timeout, flags) records without
+   *  names; a mod-created ticket loads chunks, like the vanilla ones mods copied. */
+  public static net.minecraft.server.level.TicketType ticketType(String name, java.util.Comparator<?> comparator, int timeout) {
+    return new net.minecraft.server.level.TicketType((long) timeout, net.minecraft.server.level.TicketType.FLAG_LOADING);
+  }
+  public static net.minecraft.server.level.TicketType ticketType(String name, java.util.Comparator<?> comparator) { return ticketType(name, comparator, 0); }
+  /** 1.21's {@code Biome.coldEnoughToSnow(pos)} / {@code warmEnoughToRain(pos)} / {@code getTemperature(pos)} take the
+   *  sea level in 26.2; the overworld default is what every 1.21 caller implicitly used. */
+  private static final int SEA_LEVEL = 63;
+  public static boolean coldEnoughToSnow(net.minecraft.world.level.biome.Biome biome, net.minecraft.core.BlockPos pos) { return biome.coldEnoughToSnow(pos, SEA_LEVEL); }
+  public static boolean warmEnoughToRain(net.minecraft.world.level.biome.Biome biome, net.minecraft.core.BlockPos pos) { return biome.warmEnoughToRain(pos, SEA_LEVEL); }
+  private static java.lang.reflect.Method biomeTemperature;
+  public static float biomeTemperature(net.minecraft.world.level.biome.Biome biome, net.minecraft.core.BlockPos pos) {
+    try {   // private in 26.2 (was a public, deprecated accessor in 1.21)
+      if (biomeTemperature == null) { biomeTemperature = net.minecraft.world.level.biome.Biome.class.getDeclaredMethod("getTemperature", net.minecraft.core.BlockPos.class, int.class); biomeTemperature.setAccessible(true); }
+      return (Float) biomeTemperature.invoke(biome, pos, SEA_LEVEL);
+    } catch (ReflectiveOperationException e) { return biome.getBaseTemperature(); }
+  }
+  /** 1.21's {@code Level.getSunAngle(partialTick)} / {@code getTimeOfDay(partialTick)}: 26.2 dropped them with the clock rework.
+   *  Same curve vanilla used (DimensionType.timeOfDay), driven by the default clock. */
+  public static float timeOfDay(net.minecraft.world.level.Level level, float partialTick) {
+    double d = net.minecraft.util.Mth.frac((double) level.getDefaultClockTime() / 24000.0 - 0.25);
+    double e = 0.5 - Math.cos(d * Math.PI) / 2.0;
+    return (float) (d * 2.0 + e) / 3.0f;
+  }
+  public static float sunAngle(net.minecraft.world.level.Level level, float partialTick) { return timeOfDay(level, partialTick) * ((float) Math.PI * 2f); }
 }

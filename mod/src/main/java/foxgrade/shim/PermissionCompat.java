@@ -19,4 +19,11 @@ public final class PermissionCompat {
     }
     return source.permissions().hasPermission(Permissions.COMMANDS_ADMIN);
   }
+  /** 1.21.x {@code MinecraftServer.getProfilePermissions(GameProfile)}: the numeric level of the profile's permission set. */
+  public static int getProfilePermissions(net.minecraft.server.MinecraftServer server, com.mojang.authlib.GameProfile profile) {
+    try { return server.getProfilePermissions(new net.minecraft.server.players.NameAndId(profile)).level().ordinal(); } catch (RuntimeException e) { return 0; }
+  }
+  public static boolean isSingleplayerOwner(net.minecraft.server.MinecraftServer server, com.mojang.authlib.GameProfile profile) {
+    try { return server.isSingleplayerOwner(new net.minecraft.server.players.NameAndId(profile)); } catch (RuntimeException e) { return false; }
+  }
 }

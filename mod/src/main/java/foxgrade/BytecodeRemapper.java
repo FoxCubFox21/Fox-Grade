@@ -49,6 +49,8 @@ public final class BytecodeRemapper {
   public void setIsFinalClass(java.util.function.Predicate<String> f) { this.isFinalClass = f; }
   public void setIsInterface(java.util.function.Function<String, Boolean> f) { this.isInterface = f; }
   private final java.util.List<String> flips = new java.util.ArrayList<>();
+  /** Final classes Fox-Grade's access widener makes extendable, with the constructor a flipped subclass must call. */
+  static final Map<String, String> EXTENDABLE = Map.of("net/minecraft/world/item/crafting/RecipeSerializer", "(Lcom/mojang/serialization/MapCodec;Lnet/minecraft/network/codec/StreamCodec;)V");
   /** Interfaces that became classes (or the reverse) in the target, per class rewritten. */
   public java.util.List<String> flips() { return flips; }
   // Chain oracles from the verifier: does a class declare a member; is a method final / implemented /
@@ -173,11 +175,37 @@ public final class BytecodeRemapper {
     this.ctorAdapters = apiBridges.ctorAdapters();
   }
 
+  /** Rebuild every StackMapTable from scratch. The verifier's frames must match the rewritten stack shapes, and the
+   *  frames copied from the input describe the pre-rewrite ones. Common-superclass lookups go through the hierarchy
+   *  oracles (no classloading); unknown pairs fall back to Object, which the verifier accepts for reference merges. */
+  private byte[] recomputeFrames(byte[] bytes) {
+    ClassReader r = new ClassReader(bytes);
+    ClassWriter w = new ClassWriter(ClassWriter.COMPUTE_FRAMES) {
+      @Override protected String getCommonSuperClass(String a, String b) {
+        if (a.equals(b)) return a;
+        Boolean ai = isInterface.apply(a), bi = isInterface.apply(b);
+        if ((ai != null && ai) || (bi != null && bi)) return "java/lang/Object";
+        java.util.List<String> ca = superChain(a);
+        for (String x : superChain(b)) if (ca.contains(x)) return x;
+        return "java/lang/Object";
+      }
+    };
+    r.accept(w, ClassReader.SKIP_FRAMES);
+    return w.toByteArray();
+  }
+  private java.util.List<String> superChain(String c) {
+    java.util.List<String> l = new java.util.ArrayList<>();
+    for (int g = 0; c != null && g < 48 && !l.contains(c); g++) { l.add(c); c = superOf.apply(c); }
+    if (!l.contains("java/lang/Object")) l.add("java/lang/Object");
+    return l;
+  }
+
   public Set<String> usedShims() { return usedShims; }
 
   public byte[] remap(byte[] classBytes) {
     ClassReader reader = new ClassReader(classBytes);
     ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+    boolean[] frameDirty = {false};   // set when a rewrite changes the operand-stack shape across a branch (withheld NEW/DUP)
     // Redirect stage runs INSIDE the chain, before the remapper stage writes: call sites whose
     // (owner, name+desc) match a redirect entry are rewritten to the replacement target — a
     // Fox-Grade shim reimplementing an API that no longer exists.
@@ -192,17 +220,25 @@ public final class BytecodeRemapper {
           for (String i : itfs) {
             Boolean isI = isInterface.apply(i);
             if (isI != null && !isI) {
-              if (isFinalClass.test(i)) { flips.add(name + "#implements " + i.substring(i.lastIndexOf('/') + 1) + " (a final class in the target; cannot be implemented or extended)"); keep.add(i); }   // kept: dropping it breaks every field typed with it
+              if (isFinalClass.test(i) && !EXTENDABLE.containsKey(i)) { flips.add(name + "#implements " + i.substring(i.lastIndexOf('/') + 1) + " (a final class in the target; cannot be implemented or extended)"); keep.add(i); }   // kept: dropping it breaks every field typed with it
               else if (superName == null || superName.equals("java/lang/Object")) { superName = i; flips.add(name + ": implements " + i + " → extends (it is a class in the target)"); }
               else { flips.add(name + ": implements " + i + " dropped (a class in the target; this class already extends " + superName + ")"); }
             } else keep.add(i);
           }
           itfs = keep.toArray(new String[0]);
         }
+        // 26.2 turned some abstract classes into interfaces (StructureProcessor): 'extends X' must become 'implements X'.
+        Boolean superIsItf = superName == null ? null : isInterface.apply(superName);
+        if (superIsItf != null && superIsItf && (access & Opcodes.ACC_INTERFACE) == 0) {
+          java.util.List<String> l = new java.util.ArrayList<>(itfs == null ? java.util.List.of() : java.util.Arrays.asList(itfs)); l.add(superName);
+          flips.add(name + ": extends " + superName + " → implements (it is an interface in the target)");
+          demotedSuper = superName; superName = "java/lang/Object"; itfs = l.toArray(new String[0]);
+        }
+        flippedSuper = EXTENDABLE.containsKey(superName == null ? "" : superName) && (itfs == null || java.util.Arrays.asList(itfs).stream().noneMatch(superName::equals)) ? superName : null;
         className = name; classAccess = access; this.superName = superName;
         super.visit(version, access, name, sig, superName, itfs);
       }
-      String superName;
+      String superName; String flippedSuper; String demotedSuper;   // demotedSuper: old superclass that is an interface now   // set when 'implements X' became 'extends X' for an EXTENDABLE record
       @Override public void visitEnd() {
         if ((classAccess & Opcodes.ACC_INTERFACE) == 0) {
           // Override adapters: the mod overrides an old-signature callback; synthesise the
@@ -285,7 +321,44 @@ public final class BytecodeRemapper {
               super.visitMethodInsn(Opcodes.INVOKESTATIC, hook[0], hook[1], hook[2], false);
             }
           }
+          // `new X(...)` where X became an interface (ClickEvent) or a record with a factory: the NEW+DUP pair is
+          // withheld (a NEW of an interface throws before the factory can run) and the factory call replaces
+          // the constructor call outright.
+          String pendingNew; boolean withheld;
+          private boolean factoryOnly(String type) {
+            Map<String, FabricApiBridges.CtorAdapter> byCtor = ctorAdapters.get(type);
+            if (byCtor == null || byCtor.isEmpty()) return false;
+            for (var ad : byCtor.values()) if (ad.factory() == null) return false;
+            Boolean isI = isInterface.apply(type);
+            return isI != null && isI;
+          }
+          @Override public void visitTypeInsn(int opcode, String type) {
+            if (opcode == Opcodes.NEW && factoryOnly(type)) { pendingNew = type; return; }
+            super.visitTypeInsn(opcode, type);
+          }
+          @Override public void visitInsn(int opcode) {
+            if (pendingNew != null && opcode == Opcodes.DUP) { withheld = true; frameDirty[0] = true; pendingNew = null; return; }
+            if (pendingNew != null) { super.visitTypeInsn(Opcodes.NEW, pendingNew); pendingNew = null; }
+            super.visitInsn(opcode);
+          }
           @Override public void visitMethodInsn(int opcode, String owner, String mname, String mdesc, boolean itf) {
+            if (demotedSuper != null && name.equals("<init>") && opcode == Opcodes.INVOKESPECIAL && owner.equals(demotedSuper) && mname.equals("<init>")) {
+              // super(...) of a demoted class: drop its arguments and call Object's constructor
+              for (org.objectweb.asm.Type at : org.objectweb.asm.Type.getArgumentTypes(mdesc)) super.visitInsn(at.getSize() == 2 ? Opcodes.POP2 : Opcodes.POP);
+              super.visitMethodInsn(Opcodes.INVOKESPECIAL, "java/lang/Object", "<init>", "()V", false);
+              return;
+            }
+            // A class that now extends an EXTENDABLE record must call that record's constructor instead of Object's.
+            // The record's fields stay null; the game reaches the values through the mod's own accessor overrides.
+            if (flippedSuper != null && name.equals("<init>") && opcode == Opcodes.INVOKESPECIAL && owner.equals("java/lang/Object") && mname.equals("<init>")) {
+              String ctor = EXTENDABLE.get(flippedSuper);
+              for (org.objectweb.asm.Type at : org.objectweb.asm.Type.getArgumentTypes(ctor)) {
+                switch (at.getSort()) { case org.objectweb.asm.Type.LONG -> super.visitInsn(Opcodes.LCONST_0); case org.objectweb.asm.Type.DOUBLE -> super.visitInsn(Opcodes.DCONST_0); case org.objectweb.asm.Type.FLOAT -> super.visitInsn(Opcodes.FCONST_0);
+                  case org.objectweb.asm.Type.OBJECT, org.objectweb.asm.Type.ARRAY -> super.visitInsn(Opcodes.ACONST_NULL); default -> super.visitInsn(Opcodes.ICONST_0); }
+              }
+              super.visitMethodInsn(Opcodes.INVOKESPECIAL, flippedSuper, "<init>", ctor, false);
+              return;
+            }
             // Call kind follows the target's class-vs-interface truth (INVOKEINTERFACE on a class is a link error).
             if (opcode == Opcodes.INVOKEINTERFACE || opcode == Opcodes.INVOKEVIRTUAL) {
               Boolean isI = isInterface.apply(owner);
@@ -328,6 +401,7 @@ public final class BytecodeRemapper {
                 for (int i = k; i < args.length; i++) super.visitVarInsn(args[i].getOpcode(Opcodes.ILOAD), slotAt[i]);
                 for (int c : ca.extras()) super.visitLdcInsn(c);
               }
+              frameDirty[0] = true;   // argument recipes and conversions reshape the stack at this call
               super.visitMethodInsn(opcode, owner, ca.newName(), ca.newDesc(), itf);
               if (ca.convert() != null) { usedShims.add(ca.convert()[1]); super.visitMethodInsn(Opcodes.INVOKESTATIC, ca.convert()[1], ca.convert()[2], ca.convert()[3], false); }
               return;
@@ -344,6 +418,7 @@ public final class BytecodeRemapper {
               Map<String, FabricApiBridges.CtorAdapter> byCtor = ctorAdapters.get(owner);
               FabricApiBridges.CtorAdapter ad = byCtor != null ? byCtor.get(mdesc) : null;
               if (ad != null) {
+                frameDirty[0] = true;   // arguments re-routed through locals, or NEW/DUP dropped for a factory
                 org.objectweb.asm.Type[] args = org.objectweb.asm.Type.getArgumentTypes(mdesc);
                 int base = 400;   // far above any real method's locals; COMPUTE_MAXS sizes the frame
                 int[] slotAt = new int[args.length];
@@ -355,7 +430,7 @@ public final class BytecodeRemapper {
                 if (ad.factory() != null) {
                   // The constructor is gone: drop the two uninitialised refs NEW+DUP left and call
                   // the static factory that builds the replacement value.
-                  super.visitInsn(Opcodes.POP); super.visitInsn(Opcodes.POP);
+                  if (withheld) withheld = false; else { super.visitInsn(Opcodes.POP); super.visitInsn(Opcodes.POP); }
                   if (ad.args() != null) for (String[] u : ad.args()) pushOldSource(this, u, args, slotAt);
                   else for (int i = 0; i < args.length; i++) super.visitVarInsn(args[i].getOpcode(Opcodes.ILOAD), slotAt[i]);
                   usedShims.add(ad.factory()[0]);
@@ -463,6 +538,7 @@ public final class BytecodeRemapper {
                   : opcode == Opcodes.GETSTATIC ? "getstatic " : "putstatic ";
               String[] to = lookup(fieldRedirects, owner, kind + fname + ":" + fdesc);
               if (to != null && to[0].equals("retype")) {
+                frameDirty[0] = true;
                 // The field's declared type widened (SimpleParticleType → ParticleType): read with the
                 // new type and cast back to what the 1.21.x code expects.
                 super.visitFieldInsn(opcode, owner, fname, to[1]);
@@ -475,6 +551,7 @@ public final class BytecodeRemapper {
                 return;
               }
               if (to != null && to[0].equals("holder")) {
+                frameDirty[0] = true;
                 // The field still exists but became a Holder: read it with its new type, unwrap.
                 super.visitFieldInsn(opcode, owner, fname, to[1]);
                 usedShims.add(to[2]);
@@ -496,6 +573,7 @@ public final class BytecodeRemapper {
     ClassRemapper visitor = new ClassRemapper(redirect, remapper);
     reader.accept(visitor, 0);
     byte[] out = writer.toByteArray();
+    if (frameDirty[0]) out = recomputeFrames(out);   // the copied StackMapTable still describes the old NEW+DUP stack
     // Same-bytes identity check keeps a spuriously-rewritten class from bloating the output jar
     // when the remapper had nothing to change.
     if (out.length == classBytes.length) {

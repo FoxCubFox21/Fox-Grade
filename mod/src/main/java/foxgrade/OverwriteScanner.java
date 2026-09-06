@@ -153,7 +153,10 @@ public final class OverwriteScanner {
         }
         if (targetMethodNames.contains(sel)) { anyResolvable = true; break; }
       }
-      if (!anyResolvable) r.strippableMethods.add(new Broken(mn.name, mn.desc));
+      if (!anyResolvable) {
+        if (System.getenv("FOXGRADE_DEBUG_STRIP") != null) System.err.println("[strip-debug] " + cn.name + "#" + mn.name + " selectors=" + methodSelectors + " targets=" + targets + " known=" + anyTargetKnown + " sample=" + targetMethodNames.stream().filter(x -> x.startsWith("<init>")).limit(3).toList());
+        r.strippableMethods.add(new Broken(mn.name, mn.desc));
+      }
     }
     return r;
   }

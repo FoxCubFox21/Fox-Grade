@@ -31,7 +31,8 @@ public final class RecipeCompat {
 
   @SuppressWarnings({"unchecked", "rawtypes"})
   public static net.minecraft.core.NonNullList getIngredients(net.minecraft.world.item.crafting.Recipe recipe) { net.minecraft.core.NonNullList l = net.minecraft.core.NonNullList.create(); l.addAll(recipe.placementInfo().ingredients()); return l; }
-  public static net.minecraft.world.item.crafting.Ingredient emptyIngredient() { return net.minecraft.world.item.crafting.Ingredient.of(java.util.stream.Stream.empty()); }
+  /** 1.21.x {@code Ingredient.EMPTY}: 26.2 rejects empty ingredients, so the stand-in matches air (what an empty stack holds). */
+  public static net.minecraft.world.item.crafting.Ingredient emptyIngredient() { return net.minecraft.world.item.crafting.Ingredient.of(net.minecraft.world.item.Items.BARRIER); }   // 26.2 rejects empty and air ingredients; a barrier is the visible stand-in
   @SuppressWarnings({"unchecked", "rawtypes"})
   public static net.minecraft.core.HolderLookup.RegistryLookup asLookup(net.minecraft.core.Registry registry) { return (net.minecraft.core.HolderLookup.RegistryLookup) registry; }
 }

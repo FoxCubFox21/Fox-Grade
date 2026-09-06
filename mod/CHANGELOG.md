@@ -1,6 +1,34 @@
 # Changelog
 
 ## 1.1.0 (unreleased)
+- **Mixin surgery, round two (from the 100-mod head-to-head).** Every injector is made non-required
+  (`require = 0`, config `defaultRequire = 0`), so an injection that cannot apply logs instead of
+  taking the game down. Handlers whose target still exists but changed its parameters are stripped
+  (arity-aware, per injector kind); so are bare-name injectors (`method = "actuallyHurt"`) whose
+  mirrored parameters match no 26.2 overload. Stripping is transitive: callers of a removed shadow
+  or helper go with it, across mixin classes and through `this::method` references. Mixins whose
+  target became an interface are neutralised like missing-target ones. Refmap-less mixins
+  (intermediary selectors Fabric remaps at runtime) get their selectors translated and rewritten
+  to 26.2 names; previously they were judged against Mojang names and working handlers were lost.
+- **Removed Fabric API callback types are synthesised** into the port (interface + dead `EVENT`
+  built from the mod's own lambda signature), and reads of removed `Event` constants on surviving
+  classes go to the same dead event — registration is a no-op instead of a crash.
+- **Loader-level fixes.** A pinned `java` dependency is dropped; a dependency on a Fabric API
+  module 26.2 no longer ships (`fabric-key-binding-api-v1`, `fabric-item-group-api-v1`,
+  `fabric-screen-handler-api-v1`, …) becomes `fabric-api`; header-only access wideners get their
+  namespace rewritten too.
+- **Stack-map frames are recomputed** for every class whose rewrite reshaped the operand stack
+  (withheld constructors, argument recipes, holder/retype constants) — the copied frames no
+  longer described the code.
+- **More bridges.** `Minecraft.getGuiSprites` (atlas manager stand-in), `Tickable`,
+  `ItemSubPredicate`, Codec→MapCodec constants, `Registries.*` keys of removed registries,
+  early `ItemStack` construction before component binding, `ChunkPos(long)`,
+  `TicketType.create`, biome sea-level methods, `BlockState.isSolidRender`, `Level.getSunAngle`,
+  `Entity.createCommandSourceStack`, `FriendlyByteBuf.writeDate/readDate`,
+  `WorldVersion.getPackVersion`, `PreparableModelLoadingPlugin.register`, ScreenEvents
+  Before/AfterRender implementors, `TagsProvider.TagAppender`, `ItemParser.ItemResult`, lead
+  sound names, and three narrowed vanilla fields widened (`Inventory.selected`,
+  `ServerPlayer.server`, `Screen.children`).
 - **Auto-inbox.** `mods/` is swept at launch: any jar whose declared Minecraft range excludes the
   running version, or that still references pre-26 intermediary names, is moved to the inbox and
   ported before Fabric loads the mod set. Dropping an old mod into `mods/` is enough — unless it
@@ -22,7 +50,7 @@
   classes), so 1.20.1 jars translate to readable Mojang names and port through the same layers.
 - **Compatibility page.** `docs/compat.md` is generated from the harness ledgers: verdict,
   unresolved count, server result, Retromod result and screenshot per mod.
-- **Head-to-head with Retromod on 15 mods: Fox-Grade 12, Retromod 4** (`docs/compat.md`, runner in
+- **Head-to-head with Retromod on 100 mods: Fox-Grade 64, Retromod 38** (28 boot only under Fox-Grade) (`docs/compat.md`, runner in
   `tools/run-h2h.sh`). The fresh ten added chat-event records, numeric permission levels, NbtUtils
   and optional item-stack codecs, recipe ingredients, screen extract events, `super.use` holder
   conversion, Fabric's creative-tab / menu API renames, and inactive-but-accepted shims for the

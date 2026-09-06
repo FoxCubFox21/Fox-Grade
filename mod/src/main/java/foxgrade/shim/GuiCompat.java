@@ -183,4 +183,7 @@ public final class GuiCompat {
       return (ScreenRectangle) peek.invoke(stack);
     } catch (Throwable t) { return null; }
   }
+
+  /** 1.21.x {@code GuiGraphics.bufferSource()}: the frame's recording buffer source (replayed through the extractor). */
+  public static BufferSourceShim bufferSource(net.minecraft.client.gui.GuiGraphicsExtractor g) { return FrameCompat.bufferSource(null); }
 }

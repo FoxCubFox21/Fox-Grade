@@ -242,6 +242,36 @@ cr.setdefault("net/minecraft/client/renderer/texture/DynamicTexture", {})["setFi
 cr.setdefault("net/minecraft/world/item/ItemStack", {})["is(Lnet/minecraft/world/item/Item;)Z"] = ["foxgrade/shim/ItemCompat", "is", "(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/Item;)Z"]
 cr.setdefault("net/minecraft/world/item/Item", {})["getDescription()Lnet/minecraft/network/chat/Component;"] = ["foxgrade/shim/ItemCompat", "getDescription", "(Lnet/minecraft/world/item/Item;)Lnet/minecraft/network/chat/Component;"]
 cr.setdefault("net/minecraft/world/level/Level", {})["getDayTime()J"] = ["foxgrade/shim/LevelCompat", "getDayTime", "(Lnet/minecraft/world/level/Level;)J"]
+for _o in ("net/minecraft/world/level/block/state/BlockState", "net/minecraft/world/level/block/state/BlockBehaviour$BlockStateBase"):
+    cr.setdefault(_o, {})["isSolidRender(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Z"] = ["foxgrade/shim/BlockApiCompat", "isSolidRender", "(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Z"]
+PMLP = "net/fabricmc/fabric/api/client/model/loading/v1/PreparableModelLoadingPlugin"
+j["renames"].setdefault(PMLP, {})["onInitializeModelLoader"] = "initialize"
+j.setdefault("samRenames", {}).setdefault(PMLP, {})["onInitializeModelLoader"] = "initialize"
+j.setdefault("inheritedRenamesByAncestor", {})["onInitializeModelLoader(Ljava/lang/Object;Lnet/fabricmc/fabric/api/client/model/loading/v1/ModelLoadingPlugin$Context;)V"] = [[PMLP, "initialize"]]
+cr.setdefault(PMLP, {})["register(L" + PMLP + "$DataLoader;L" + PMLP + ";)V"] = ["foxgrade/shim/ModelCompat", "registerPreparable", "(Ljava/lang/Object;Ljava/lang/Object;)V"]
+BIO = "Lnet/minecraft/world/level/biome/Biome;"; BP = "Lnet/minecraft/core/BlockPos;"
+cr.setdefault("net/minecraft/world/level/biome/Biome", {}).update({
+    "coldEnoughToSnow(" + BP + ")Z": ["foxgrade/shim/LevelCompat", "coldEnoughToSnow", "(" + BIO + BP + ")Z"],
+    "warmEnoughToRain(" + BP + ")Z": ["foxgrade/shim/LevelCompat", "warmEnoughToRain", "(" + BIO + BP + ")Z"],
+    "getTemperature(" + BP + ")F": ["foxgrade/shim/LevelCompat", "biomeTemperature", "(" + BIO + BP + ")F"]})
+# a CLASS implementing ScreenEvents.BeforeRender/AfterRender declares beforeRender(...): rename the declaration itself
+SCR = "Lnet/minecraft/client/gui/screens/Screen;"
+GGO = "Lnet/minecraft/client/gui/GuiGraphics;"
+for _d in (GGE, GGO): j["inheritedRenames"].update({"beforeRender(" + SCR + _d + "IIF)V": "beforeExtract", "afterRender(" + SCR + _d + "IIF)V": "afterExtract"})
+j["classRenames"]["net/minecraft/data/tags/TagsProvider$TagAppender"] = "net/minecraft/data/tags/TagAppender"
+j["classRenames"]["net/minecraft/commands/arguments/item/ItemParser$ItemResult"] = "net/minecraft/commands/arguments/item/ItemInput"
+j["classRenames"]["net/minecraft/client/player/Input"] = "net/minecraft/client/player/ClientInput"   # freecam   # same item()/components() accessors (carry-on)   # data-gen appender became top-level (puzzleslib touches it at runtime)
+FBB = "Lnet/minecraft/network/FriendlyByteBuf;"
+cr.setdefault("net/minecraft/network/FriendlyByteBuf", {}).update({"writeDate(Ljava/util/Date;)" + FBB: ["foxgrade/shim/BufCompat", "writeDate", "(" + FBB + "Ljava/util/Date;)" + FBB], "readDate()Ljava/util/Date;": ["foxgrade/shim/BufCompat", "readDate", "(" + FBB + ")Ljava/util/Date;"]})
+LVL = "Lnet/minecraft/world/level/Level;"
+cr.setdefault("net/minecraft/world/level/Level", {}).update({"getSunAngle(F)F": ["foxgrade/shim/LevelCompat", "sunAngle", "(" + LVL + "F)F"], "getTimeOfDay(F)F": ["foxgrade/shim/LevelCompat", "timeOfDay", "(" + LVL + "F)F"]})
+CSS = "Lnet/minecraft/commands/CommandSourceStack;"
+cr.setdefault("net/minecraft/world/entity/Entity", {})["createCommandSourceStack()" + CSS] = ["foxgrade/shim/EntityLegacyCompat", "commandSourceStack", "(Lnet/minecraft/world/entity/Entity;)" + CSS]
+SEV_ = "Lnet/minecraft/sounds/SoundEvent;"
+for _o, _n in (("LEASH_KNOT_BREAK", "LEAD_BREAK"), ("LEASH_KNOT_PLACE", "LEAD_TIED")):   # 26.2 renamed leash knots to leads
+    j["fieldRedirects"].setdefault("net/minecraft/sounds/SoundEvents", {})["getstatic " + _o + ":" + SEV_] = ["move", "net/minecraft/sounds/SoundEvents", SEV_, _n]
+cr.setdefault("net/minecraft/WorldVersion", {})["getPackVersion(Lnet/minecraft/server/packs/PackType;)I"] = ["foxgrade/shim/VersionCompat", "packVersion", "(Lnet/minecraft/WorldVersion;Lnet/minecraft/server/packs/PackType;)I"]
+cr.setdefault("net/minecraft/client/Minecraft", {})["getGuiSprites()Lnet/minecraft/client/gui/GuiSpriteManager;"] = ["net/minecraft/client/gui/GuiSpriteManager", "of", "(Lnet/minecraft/client/Minecraft;)Lnet/minecraft/client/gui/GuiSpriteManager;"]  # 26.2: GUI sprites live in AtlasManager; shim stands in
 ST = "Lnet/minecraft/client/gui/components/toasts/SystemToast;"; STID = "Lnet/minecraft/client/gui/components/toasts/SystemToast$SystemToastId;"; CO = "Lnet/minecraft/network/chat/Component;"
 cr.setdefault("net/minecraft/client/gui/components/toasts/SystemToast", {})["multiline(Lnet/minecraft/client/Minecraft;" + STID + CO + CO + ")" + ST] = ["foxgrade/shim/ToastCompat", "multiline", "(Lnet/minecraft/client/Minecraft;" + STID + CO + CO + ")" + ST]
 cr.setdefault("net/minecraft/client/gui/screens/inventory/tooltip/TooltipRenderUtil", {})["renderTooltipBackground(" + GGE + "IIIII)V"] = ["foxgrade/shim/TooltipCompat", "renderTooltipBackground", "(" + GGE + "IIIII)V"]
@@ -552,6 +582,18 @@ for oc, flds in oldF.items():
         if fname in newf or fname not in holder or holder[fname] != odesc: continue
         j["fieldRedirects"].setdefault(nc, {}).setdefault("getstatic " + fname + ":" + odesc, ["move", nc + "s", odesc]); nmoved += 1
 print(f"moved constants bridged: {nmoved}")
+# ---- retyped constants: a static Codec that became a MapCodec (SpawnerData.CODEC) — read it and unwrap with .codec()
+CODEC, MAPCODEC = "Lcom/mojang/serialization/Codec;", "Lcom/mojang/serialization/MapCodec;"
+nretyped = 0
+for oc, flds in oldF.items():
+    slash = oc.replace(".", "/"); nc = j["classRenames"].get(slash, REN.get(slash, slash))
+    if nc not in new: continue
+    newf = {x.split(":", 1)[0]: x.split(":", 1)[1] for x in new[nc].get("f", [])}
+    for fname, odesc in flds.items():
+        if odesc != CODEC or newf.get(fname) != MAPCODEC: continue
+        j["fieldRedirects"].setdefault(nc, {}).setdefault("getstatic " + fname + ":" + CODEC,
+            ["holder", MAPCODEC, "foxgrade/shim/CodecCompat", "toCodec", "(" + MAPCODEC + ")" + CODEC, "com/mojang/serialization/Codec"]); nretyped += 1
+print(f"Codec→MapCodec constants bridged: {nretyped}")
 # ---- batch 3: what naturalist / friends-and-foes still hit after batch 2
 ET = "Lnet/minecraft/world/entity/EntityType;"; ESR = "Lnet/minecraft/world/entity/EntitySpawnReason;"; HOLD = "Lnet/minecraft/core/Holder;"; PTY = "Lnet/minecraft/world/level/pathfinder/PathType;"
 GR = "Lnet/minecraft/world/level/gamerules/GameRules;"; GRK = "Lnet/minecraft/world/level/GameRules$Key;"; CMP = "Lnet/minecraft/network/chat/Component;"; AABB = "Lnet/minecraft/world/phys/AABB;"
@@ -597,6 +639,18 @@ j["descWidenings"].setdefault("net/minecraft/world/Container", {}).update({"star
 j["descWidenings"].setdefault("net/minecraft/client/animation/Keyframe", {})["<init>(F" + V3F + "Lnet/minecraft/client/animation/AnimationChannel$Interpolation;)V"] = "(FLorg/joml/Vector3fc;Lnet/minecraft/client/animation/AnimationChannel$Interpolation;)V"
 # constructors
 j["ctorAdapters"].setdefault("net/minecraft/world/item/SpawnEggItem", {})["(" + ET + "II" + IPR + ")V"] = {"factory": [ITC, "spawnEgg", "(" + ET + "II" + IPR + ")" + SEI]}
+IST = "Lnet/minecraft/world/item/ItemStack;"; ILK = "Lnet/minecraft/world/level/ItemLike;"
+j["ctorAdapters"].setdefault("net/minecraft/world/item/ItemStack", {}).update({"(" + ILK + ")V": {"factory": [ITC, "stack", "(" + ILK + ")" + IST]}, "(" + ILK + "I)V": {"factory": [ITC, "stack", "(" + ILK + "I)" + IST]}})
+j["ctorAdapters"].setdefault("net/minecraft/world/level/ChunkPos", {})["(J)V"] = {"factory": ["foxgrade/shim/LevelCompat", "chunkPos", "(J)Lnet/minecraft/world/level/ChunkPos;"]}
+TT = "Lnet/minecraft/server/level/TicketType;"
+cr.setdefault("net/minecraft/server/level/TicketType", {}).update({
+    "create(Ljava/lang/String;Ljava/util/Comparator;I)" + TT: ["foxgrade/shim/LevelCompat", "ticketType", "(Ljava/lang/String;Ljava/util/Comparator;I)" + TT],
+    "create(Ljava/lang/String;Ljava/util/Comparator;)" + TT: ["foxgrade/shim/LevelCompat", "ticketType", "(Ljava/lang/String;Ljava/util/Comparator;)" + TT]})
+BBP = "Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;"; SND = "Lnet/minecraft/sounds/SoundEvent;"; BAC_ = "foxgrade/shim/BlockApiCompat"
+j["ctorAdapters"].setdefault("net/minecraft/world/level/block/LeavesBlock", {})["(" + BBP + ")V"] = {"newDesc": "(F" + BBP + ")V", "transforms": [{"slot": -1, "via": [BAC_, "leafParticleChance", "()F"]}]}
+j["ctorAdapters"].setdefault("net/minecraft/world/level/block/ChestBlock", {})["(" + BBP + "Ljava/util/function/Supplier;)V"] = {"newDesc": "(Ljava/util/function/Supplier;" + SND + SND + BBP + ")V",
+    "args": [["o1"], ["static", BAC_, "chestOpenSound", "()" + SND], ["static", BAC_, "chestCloseSound", "()" + SND], ["o0"]]}
+j["overrideAdapters"].append({"oldName": "element", "oldDesc": "(Lnet/minecraft/resources/Identifier;)Ljava/lang/Object;", "newName": "element", "newDesc": "(Lnet/minecraft/resources/Identifier;Z)Ljava/lang/Object;", "unpack": ["p0"]})   # TagEntry.Lookup
 j["ctorAdapters"].setdefault("net/minecraft/core/particles/DustParticleOptions", {})["(" + V3F + "F)V"] = {"factory": [PAC, "dust", "(" + V3F + "F)" + DPO]}
 j["ctorAdapters"].setdefault("net/minecraft/world/item/alchemy/Potion", {})["([" + MEI + ")V"] = {"newDesc": "(Ljava/lang/String;[" + MEI + ")V", "transforms": [{"slot": -1, "via": [ITC, "potionName", "()Ljava/lang/String;"]}]}
 TIP = "net/minecraft/world/entity/projectile/throwableitemprojectile/ThrowableItemProjectile"
@@ -739,6 +793,21 @@ cr.setdefault("net/minecraft/core/Registry", {}).update({
     "registerForHolder(" + REG + RK + "Ljava/lang/Object;)" + HREF: [RGC, "registerForHolder", "(" + REG + RK + "Ljava/lang/Object;)" + HREF]})
 j["fieldRedirects"].setdefault("net/minecraft/core/registries/BuiltInRegistries", {})["getstatic ARMOR_MATERIAL:" + REG] = [RGC, "armorMaterialRegistry", "()" + REG]
 j["ctorAdapters"].setdefault("net/minecraft/world/item/equipment/ArmorMaterial", {})["(" + MAP + "I" + HOLD + SUP + LST + "FF)V"] = {"factory": [RGC, "armorMaterial", "(" + MAP + "I" + HOLD + SUP + LST + "FF)" + AMAT]}
+# ---- built-in registries 26.2 removed (ARMOR_MATERIAL, SCHEDULE, INSTRUMENT, …): mods register into them at init;
+# an empty in-memory registry keeps that working (the values then drive nothing, which is what 26.2 does with them).
+newf_bir = {x.split(":")[0] for x in new["net/minecraft/core/registries/BuiltInRegistries"]["f"]}
+old_bir = sorted(n for n, d in oldF.get("net.minecraft.core.registries.BuiltInRegistries", {}).items() if n.isupper() and d == "Lnet/minecraft/core/Registry;" and n not in newf_bir)
+rlines = []
+for n in old_bir:
+    meth = "reg_" + n.lower()
+    rlines.append(f'  private static net.minecraft.core.MappedRegistry<Object> {n};\n  @SuppressWarnings({{"unchecked", "rawtypes"}})\n  public static synchronized net.minecraft.core.Registry<?> {meth}() {{ if ({n} == null) {n} = new net.minecraft.core.MappedRegistry(net.minecraft.resources.ResourceKey.createRegistryKey(net.minecraft.resources.Identifier.fromNamespaceAndPath("foxgrade", "{n.lower()}")), com.mojang.serialization.Lifecycle.stable()); return {n}; }}')
+    j["fieldRedirects"].setdefault("net/minecraft/core/registries/BuiltInRegistries", {})["getstatic " + n + ":" + REG] = ["foxgrade/shim/RegistriesCompat", meth, "()" + REG]
+    # the matching Registries.<N> ResourceKey constant (bookshelf reads Registries.ITEM_SUB_PREDICATE_TYPE)
+    if n not in {x.split(":")[0] for x in new["net/minecraft/core/registries/Registries"]["f"]}:
+        rlines.append(f'  public static net.minecraft.resources.ResourceKey<?> key_{n.lower()}() {{ return {meth}().key(); }}\n')
+        j["fieldRedirects"].setdefault("net/minecraft/core/registries/Registries", {})["getstatic " + n + ":Lnet/minecraft/resources/ResourceKey;"] = ["foxgrade/shim/RegistriesCompat", "key_" + n.lower(), "()Lnet/minecraft/resources/ResourceKey;"]
+(MOD / "src/main/java/foxgrade/shim/RegistriesCompat.java").write_text("package foxgrade.shim;\n\n/** Built-in registries 1.21.x mods write into that 26.2 no longer has; generated by gen-render-bridges.py. */\npublic final class RegistriesCompat {\n  private RegistriesCompat() {}\n" + "\n".join(rlines) + "\n}\n")
+print(f"removed built-in registries shimmed: {old_bir}")
 print("registration: in")
 SDB = "Lnet/minecraft/world/level/block/state/StateDefinition$Builder;"; PROP = "[Lnet/minecraft/world/level/block/state/properties/Property;"
 cr.setdefault("net/minecraft/world/level/block/state/StateDefinition$Builder", {})["add(" + PROP + ")" + SDB] = [BAC, "add", "(" + SDB + PROP + ")" + SDB]
@@ -793,6 +862,10 @@ SEV = "net/fabricmc/fabric/api/client/screen/v1/ScreenEvents"
 j["renames"].setdefault(SEV, {}).update({"beforeRender": "beforeExtract", "afterRender": "afterExtract"})
 j["classRenames"].update({SEV + "$BeforeRender": SEV + "$BeforeExtract", SEV + "$AfterRender": SEV + "$AfterExtract"})
 j.setdefault("samRenames", {}).update({SEV + "$BeforeExtract": {"beforeRender": "beforeExtract"}, SEV + "$AfterExtract": {"afterRender": "afterExtract"}})
+# a CLASS implementing the callback (not a lambda) declares beforeRender(...) — rename the declaration through the
+# interface it implements, looked up under the old name (what the class file says) and the new one (post-rename)
+for _i in ("$BeforeRender", "$BeforeExtract"): j["renames"].setdefault(SEV + _i, {})["beforeRender"] = "beforeExtract"
+for _i in ("$AfterRender", "$AfterExtract"): j["renames"].setdefault(SEV + _i, {})["afterRender"] = "afterExtract"
 j["fieldRedirects"].setdefault("net/minecraft/world/item/ItemStack", {})["getstatic STRICT_CODEC:Lcom/mojang/serialization/Codec;"] = ["move", "net/minecraft/world/item/ItemStack", "Lcom/mojang/serialization/Codec;", "CODEC"]
 
 # ---- Fabric API renames 1.21.x → 26.2 modules (item groups → creative tabs, screen handlers → menus)
@@ -818,6 +891,53 @@ j["classRenames"][FAPI + "biome/v1/BiomeModificationContext$SpawnSettingsContext
 cr.setdefault("net/minecraft/world/item/ItemStack", {})["getRecipeRemainder()" + ISK] = [ITC, "getRecipeRemainder", "(" + ISK + ")" + ISK]
 MLC = FAPI + "client/model/loading/v1/ModelLoadingPlugin$Context"
 cr.setdefault(MLC, {}).update({"addModels(Ljava/util/Collection;)V": [MOC, "addModels", "(Ljava/lang/Object;Ljava/util/Collection;)V"], "addModels([" + ID + ")V": [MOC, "addModels", "(Ljava/lang/Object;[" + ID + ")V"]})
+BET = "Lnet/minecraft/world/level/block/entity/BlockEntityType;"; ARMP = "Lnet/minecraft/client/model/HumanoidModel$ArmPose;"
+j["fieldRedirects"].setdefault("net/minecraft/world/level/block/entity/BlockEntityType", {})["getstatic BED:" + BET] = [BAC, "bedBlockEntityType", "()" + BET]
+j["fieldRedirects"].setdefault("net/minecraft/client/model/HumanoidModel$ArmPose", {})["getstatic THROW_SPEAR:" + ARMP] = ["move", "net/minecraft/client/model/HumanoidModel$ArmPose", ARMP, "THROW_TRIDENT"]
+MLP = FAPI + "client/model/loading/v1/ModelLoadingPlugin"
+j["samRenames"].setdefault(MLP, {})["onInitializeModelLoader"] = "initialize"
+j["renames"].setdefault(MLP, {})["onInitializeModelLoader"] = "initialize"
+RMD = "Lnet/minecraft/server/packs/resources/ResourceMetadata;"; MSS = "Lnet/minecraft/server/packs/metadata/MetadataSectionSerializer;"
+cr.setdefault("net/minecraft/server/packs/resources/ResourceMetadata", {})["getSection(" + MSS + ")" + OPT] = ["foxgrade/shim/ResourceMetadataCompat", "getSection", "(" + RMD + MSS + ")" + OPT]
+cr.setdefault("net/minecraft/server/MinecraftServer", {})["getProfilePermissions(Lcom/mojang/authlib/GameProfile;)I"] = [PMC, "getProfilePermissions", "(" + MSV + "Lcom/mojang/authlib/GameProfile;)I"]
+j["inheritedRenamesByAncestor"].setdefault("onInitializeModelLoader(L" + MLP + "$Context;)V", []).append([MLP, "initialize"])
+SDS = "Lnet/minecraft/world/level/storage/SavedDataStorage;"; SDF = "Lnet/minecraft/world/level/saveddata/SavedData$Factory;"; SDD = "Lnet/minecraft/world/level/saveddata/SavedData;"; SDC = "foxgrade/shim/SavedDataCompat"
+j["classRenames"]["net/minecraft/world/level/storage/DimensionDataStorage"] = "net/minecraft/world/level/storage/SavedDataStorage"
+cr.setdefault("net/minecraft/world/level/storage/SavedDataStorage", {}).update({"computeIfAbsent(" + SDF + "Ljava/lang/String;)" + SDD: [SDC, "computeIfAbsent", "(" + SDS + SDF + "Ljava/lang/String;)" + SDD],
+    "get(" + SDF + "Ljava/lang/String;)" + SDD: [SDC, "get", "(" + SDS + SDF + "Ljava/lang/String;)" + SDD], "set(Ljava/lang/String;" + SDD + ")V": [SDC, "set", "(" + SDS + "Ljava/lang/String;" + SDD + ")V"]})
+cr["net/minecraft/server/MinecraftServer"]["isSingleplayerOwner(Lcom/mojang/authlib/GameProfile;)Z"] = [PMC, "isSingleplayerOwner", "(" + MSV + "Lcom/mojang/authlib/GameProfile;)Z"]
+j["classRenames"]["net/minecraft/client/resources/PlayerSkin$Model"] = "net/minecraft/world/entity/player/PlayerModelType"
+# Fabric lifecycle callbacks renamed World → Level (1.21.x → 26.2); implementors (lambdas and classes) must follow
+LCE = FAPI + "event/lifecycle/v1/"; CLE = FAPI + "client/event/lifecycle/v1/"
+for itf, old_n, new_n in [(LCE + "ServerLevelEvents$Load", "onWorldLoad", "onLevelLoad"), (LCE + "ServerLevelEvents$Unload", "onWorldUnload", "onLevelUnload"),
+                          (CLE + "ClientLevelEvents$AfterClientLevelChange", "afterWorldChange", "afterLevelChange"),
+                          (LCE + "ServerTickEvents$StartLevelTick", "onStartTick", "onStartTick"), (LCE + "ServerTickEvents$EndLevelTick", "onEndTick", "onEndTick")]:
+    if old_n != new_n:
+        j.setdefault("samRenames", {}).setdefault(itf, {})[old_n] = new_n
+        j["renames"].setdefault(itf, {})[old_n] = new_n
+for old_c, new_c in [(LCE + "ServerWorldEvents", LCE + "ServerLevelEvents"), (LCE + "ServerWorldEvents$Load", LCE + "ServerLevelEvents$Load"), (LCE + "ServerWorldEvents$Unload", LCE + "ServerLevelEvents$Unload"),
+                     (CLE + "ClientWorldEvents", CLE + "ClientLevelEvents"), (CLE + "ClientWorldEvents$AfterClientWorldChange", CLE + "ClientLevelEvents$AfterClientLevelChange"),
+                     (LCE + "ServerTickEvents$StartWorldTick", LCE + "ServerTickEvents$StartLevelTick"), (LCE + "ServerTickEvents$EndWorldTick", LCE + "ServerTickEvents$EndLevelTick"),
+                     (CLE + "ClientTickEvents$StartWorldTick", CLE + "ClientTickEvents$StartLevelTick"), (CLE + "ClientTickEvents$EndWorldTick", CLE + "ClientTickEvents$EndLevelTick")]:
+    j["classRenames"].setdefault(old_c, new_c)
+j["fieldRedirects"].setdefault(LCE + "ServerTickEvents", {}).update({"getstatic START_WORLD_TICK:Lnet/fabricmc/fabric/api/event/Event;": ["move", LCE + "ServerTickEvents", "Lnet/fabricmc/fabric/api/event/Event;", "START_LEVEL_TICK"], "getstatic END_WORLD_TICK:Lnet/fabricmc/fabric/api/event/Event;": ["move", LCE + "ServerTickEvents", "Lnet/fabricmc/fabric/api/event/Event;", "END_LEVEL_TICK"]})
+j["fieldRedirects"].setdefault(CLE + "ClientTickEvents", {}).update({"getstatic START_WORLD_TICK:Lnet/fabricmc/fabric/api/event/Event;": ["move", CLE + "ClientTickEvents", "Lnet/fabricmc/fabric/api/event/Event;", "START_LEVEL_TICK"], "getstatic END_WORLD_TICK:Lnet/fabricmc/fabric/api/event/Event;": ["move", CLE + "ClientTickEvents", "Lnet/fabricmc/fabric/api/event/Event;", "END_LEVEL_TICK"]})
+j["fieldRedirects"].setdefault(CLE + "ClientLevelEvents", {})["getstatic AFTER_CLIENT_WORLD_CHANGE:Lnet/fabricmc/fabric/api/event/Event;"] = ["move", CLE + "ClientLevelEvents", "Lnet/fabricmc/fabric/api/event/Event;", "AFTER_CLIENT_LEVEL_CHANGE"]
+j["fieldRedirects"].setdefault(LCE + "ServerLevelEvents", {}).update({"getstatic LOAD:Lnet/fabricmc/fabric/api/event/Event;": ["move", LCE + "ServerLevelEvents", "Lnet/fabricmc/fabric/api/event/Event;", "LOAD"]})
+j["fieldRedirects"].setdefault("net/minecraft/world/item/crafting/Ingredient", {})["getstatic CODEC_NONEMPTY:Lcom/mojang/serialization/Codec;"] = ["move", "net/minecraft/world/item/crafting/Ingredient", "Lcom/mojang/serialization/Codec;", "CODEC"]
+HEV = "Lnet/minecraft/network/chat/HoverEvent;"; SHI = "Lnet/minecraft/network/chat/HoverEvent$ShowItem;"; BSS = "Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;"; SCR = "Lnet/minecraft/client/gui/screens/Screen;"
+j["classRenames"]["net/minecraft/network/chat/HoverEvent$ItemStackInfo"] = "net/minecraft/network/chat/HoverEvent$ShowItem"
+j["ctorAdapters"].setdefault("net/minecraft/network/chat/HoverEvent$ShowItem", {})["(" + ISK + ")V"] = {"factory": [CHC, "showItem", "(" + ISK + ")" + SHI]}
+cr.setdefault("net/minecraft/client/gui/GuiGraphicsExtractor", {})["bufferSource()" + BSS] = [GC, "bufferSource", "(" + GGE + ")" + BSS]
+cr.setdefault("net/minecraft/client/gui/screens/Screen", {})["handleComponentClicked(" + STY + ")Z"] = ["foxgrade/shim/ScreenCompat", "handleComponentClicked", "(" + SCR + STY + ")Z"]
+SSP = "Lnet/minecraft/client/StringSplitter;"
+cr.setdefault("net/minecraft/client/StringSplitter", {}).update({"componentStyleAtWidth(Lnet/minecraft/util/FormattedCharSequence;I)" + STY: ["foxgrade/shim/StringSplitterCompat", "componentStyleAtWidth", "(" + SSP + "Lnet/minecraft/util/FormattedCharSequence;I)" + STY],
+    "componentStyleAtWidth(Lnet/minecraft/network/chat/FormattedText;I)" + STY: ["foxgrade/shim/StringSplitterCompat", "componentStyleAtWidth", "(" + SSP + "Lnet/minecraft/network/chat/FormattedText;I)" + STY]})
+FNT = "Lnet/minecraft/client/gui/Font;"; MBS = "Lnet/minecraft/client/renderer/MultiBufferSource;"; DM = "Lnet/minecraft/client/gui/Font$DisplayMode;"
+cr.setdefault("net/minecraft/client/gui/Font", {})["renderText(Ljava/lang/String;FFIZLorg/joml/Matrix4f;" + MBS + DM + "II)I"] = ["foxgrade/shim/FrameCompat", "renderText", "(" + FNT + "Ljava/lang/String;FFIZLorg/joml/Matrix4f;" + MBS + DM + "II)I"]
+cr["net/minecraft/world/entity/LivingEntity"]["getArmorSlots()Ljava/lang/Iterable;"] = [ELC, "getArmorSlots", "(" + LE + ")Ljava/lang/Iterable;"]
+cr["net/minecraft/world/item/Item"]["components()Lnet/minecraft/core/component/DataComponentMap;"] = [ITC, "components", "(" + ITEM + ")Lnet/minecraft/core/component/DataComponentMap;"]
+j["fieldRedirects"].setdefault(FAPI + "tag/convention/v2/ConventionalItemTags", {})["getstatic SPEAR_TOOLS:" + TK] = [ITC, "spearTools", "()" + TK]
 print("fabric api renames: in")
 print("batch 4: in")
 
@@ -849,7 +969,7 @@ if (MOD / "build/classes/foxgrade/shim/GuiCompat.class").exists():
             key = name + "(" + d[len("(" + GGE):]
             if key in miss_gg: tbl[key] = [GC, name, d]
             else: unmatched.append(key)
-    cr["net/minecraft/client/gui/GuiGraphicsExtractor"] = tbl
+    cr.setdefault("net/minecraft/client/gui/GuiGraphicsExtractor", {}).update(tbl)
     print(f"phase 2: GuiGraphics {len(tbl)} bridged of {len(miss_gg)} missing; shim methods without an old counterpart: {unmatched}")
     print("   still unbridged:", sorted(re.sub(r'L[\w/$]*?([\w$]+);', r'\1', m) for m in miss_gg - set(tbl)))
     miss_rs = {ren_desc(m) for m in missing_of("com.mojang.blaze3d.systems.RenderSystem", "com/mojang/blaze3d/systems/RenderSystem")}
@@ -861,4 +981,9 @@ if (MOD / "build/classes/foxgrade/shim/GuiCompat.class").exists():
             elif name != "shaderTexture": unmatched.append(key)
     cr.setdefault("com/mojang/blaze3d/systems/RenderSystem", {}).update(tbl)
     print(f"phase 2: RenderSystem {len(tbl)} bridged of {len(miss_rs)} missing; shim methods without an old counterpart: {unmatched}")
+# Lambdas are created through invokedynamic whose return type is the ORIGINAL interface name (the class rename
+# happens later in the same pass), so SAM renames must be reachable under the old interface name as well.
+for _old_c, _new_c in list(j["classRenames"].items()):
+    if _new_c in j.get("samRenames", {}) and _old_c not in j["samRenames"]:
+        j["samRenames"][_old_c] = dict(j["samRenames"][_new_c])
 BR.write_text(json.dumps(j, indent=2)); print("wrote", BR.name)

@@ -79,11 +79,41 @@ public final class FabricMetaFixer {
         if (!o.has("fabric-api")) o.addProperty("fabric-api", "*");
         touched = true;
       }
+      // A pinned Java range ("java": "21") is a build-time fact about the OLD game, not a requirement of
+      // the port: the target game brings its own runtime and the bytecode runs on anything newer.
+      if (o.has("java")) { o.remove("java"); touched = true; }
+      // Fabric API module ids come and go between versions (key-binding → key-mapping, item-group →
+      // creative-tab, screen-handler → menu, blockrenderlayer gone). A dep on a module the installed
+      // Fabric API no longer ships can never resolve, even though the bytecode bridge already maps the
+      // module's classes. The dep only ever meant "Fabric API is present", so say that instead.
+      for (String id : new java.util.ArrayList<>(o.keySet())) {
+        if (!isFabricModuleId(id) || CURRENT_FABRIC_MODULES.contains(id)) continue;
+        o.remove(id); touched = true;
+        if (field.equals("depends") && !o.has("fabric-api")) o.addProperty("fabric-api", "*");
+      }
       if (!o.has("minecraft")) continue;
       if (field.equals("depends")) { o.addProperty("minecraft", targetMc); touched = true; }
       else { o.remove("minecraft"); touched = true; }
     }
     return touched;
+  }
+
+  /** Fabric API 0.159 (26.2) module ids; a `fabric-…-vN` dependency outside this set is a module that no longer exists. */
+  static final java.util.Set<String> CURRENT_FABRIC_MODULES = java.util.Set.of(
+      "fabric-api-base", "fabric-api-lookup-api-v1", "fabric-biome-api-v1", "fabric-block-api-v1", "fabric-block-getter-api-v2",
+      "fabric-command-api-v2", "fabric-content-registries-v0", "fabric-convention-tags-v2", "fabric-crash-report-info-v1", "fabric-creative-tab-api-v1",
+      "fabric-data-attachment-api-v1", "fabric-data-generation-api-v1", "fabric-debug-api-v1", "fabric-dimensions-v1", "fabric-entity-events-v1",
+      "fabric-events-interaction-v0", "fabric-game-rule-api-v1", "fabric-item-api-v1", "fabric-key-mapping-api-v1", "fabric-lifecycle-events-v1",
+      "fabric-loot-api-v3", "fabric-menu-api-v1", "fabric-message-api-v1", "fabric-model-loading-api-v1", "fabric-networking-api-v1",
+      "fabric-object-builder-api-v1", "fabric-particles-v1", "fabric-permission-api-v1", "fabric-recipe-api-v1", "fabric-registry-sync-v0",
+      "fabric-renderer-api-v1", "fabric-renderer-indigo", "fabric-rendering-fluids-v1", "fabric-rendering-v1", "fabric-resource-conditions-api-v1",
+      "fabric-resource-loader-v0", "fabric-resource-loader-v1", "fabric-screen-api-v1", "fabric-serialization-api-v1", "fabric-sound-api-v1",
+      "fabric-tag-api-v1", "fabric-transfer-api-v1", "fabric-transitive-access-wideners-v1");
+  /** Third-party mods whose ids look like Fabric API modules; they are real dependencies and stay. */
+  private static final java.util.Set<String> NOT_MODULES = java.util.Set.of("fabric-permissions-api-v0", "fabric-language-kotlin", "fabric-language-scala");
+  private static final java.util.regex.Pattern MODULE_ID = java.util.regex.Pattern.compile("^fabric-[a-z0-9-]+-v\\d+$");
+  static boolean isFabricModuleId(String id) {
+    return (MODULE_ID.matcher(id).matches() || id.equals("fabric-api-base") || id.equals("fabric-renderer-indigo")) && !NOT_MODULES.contains(id);
   }
 
   private static void writeEntry(ZipOutputStream out, String name, byte[] bytes) throws IOException {

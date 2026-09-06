@@ -73,25 +73,25 @@ bridged yet.
 
 ## Head-to-head with Retromod
 
-Same 15 mods, same instance, same base jars, through Retromod (Modrinth's other 26.2 auto-porter,
-1.3.0-snapshot.10) and Fox-Grade: **Fox-Grade boots 12, Retromod boots 4.** The set mixes the
-original five (Mod Menu, Zoomify, BetterF3, Lithium, Entity Culling) with a fresh ten pulled from
-Modrinth's popular list for 1.21.1 (AppleSkin, Dynamic FPS, No Chat Reports, FerriteCore, Trinkets,
-Inventory Profiles Next, Xaero's World Map, Waystones + Balm, REI, JEI). Both fail JEI
-(`RecipeSerializer` became a final class), Waystones (its model loading calls an accessor mixin
-whose target class is gone) and REI (needs a cloth-config built for 1.21.1 next to the instance's
-26.2 one). Per-mod causes are in [`docs/compat.md`](../docs/compat.md); the runner is
-`tools/run-h2h.sh`.
+The same 100 mods, same instance, same base jars, through Retromod (Modrinth's other 26.2
+auto-porter, 1.3.0-snapshot.10) and Fox-Grade: **Fox-Grade boots 64, Retromod boots 38.**
+28 boot only under Fox-Grade, 2 only under Retromod, 36 under both, 34 under neither.
+The set is Modrinth's most-downloaded Fabric 1.21.1 mods (libraries and the renderer tier skipped,
+required dependencies pulled in), run identically through both tools; failures were fixed in
+Fox-Grade where the game still has the API and left standing where it does not. Per-mod causes are
+in [`docs/compat.md`](../docs/compat.md); the runner is `tools/run-h2h2.sh` and the corpus
+builder `tools/h2h-corpus.py`.
 
 ## How well does it work?
 
-Batch-tested against 37 mods from 1.21.x and 26.1 (every harness run folded to one row per mod,
-last verdict wins): **26 port and boot into a world** — six of them also verified on a dedicated
+Batch-tested against 130 mods from 1.21.x and 26.1 (every harness run folded to one row per mod,
+last verdict wins): **83 port and boot into a world** — six of them also verified on a dedicated
 server, Mod Menu's mod list opens and renders through the GUI bridges, Lighty boots on the
-re-created world-render events — and 11 crash. The crashes are the 26.2 rewrites Fox-Grade does not
-bridge yet: block/item model rendering, the low-level texture pipeline (GeckoLib), a bundled
-animation engine, one native profiler, and — for the two creature mods — the last few class-hierarchy
-changes (a flower is no longer a bush). Ports that cannot be completed fail safely, with a report
+re-created world-render events — and 47 do not. The failures are the 26.2 rewrites a bytecode port cannot paper over: renderer-tier
+internals (entity models and textures, the texture stitcher, the HUD layer stack, custom particle render
+types), API subsystems that were removed outright (item-model overrides, weighted lists, loot entry types),
+mods that are a rewrite rather than a port (Cobblemon: 251 unresolved references), the Sodium-dependent
+add-ons, and a few datapack formats. Ports that cannot be completed fail safely, with a report
 listing every class, member and constructor the game no longer has. The per-mod table is
 [`docs/compat.md`](../docs/compat.md).
 

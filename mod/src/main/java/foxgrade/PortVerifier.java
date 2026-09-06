@@ -113,6 +113,7 @@ public final class PortVerifier {
     settled = false;
     r.accept(new ClassRemapper(new ClassWriter(0), new Remapper() {
       @Override public String map(String internalName) {
+        if (internalName.endsWith("NonnullByDefault")) return internalName;   // a missing annotation type is ignored by the JVM
         int dollar = internalName.indexOf('$');
         // A missing inner class counts when its outer is a real game class (ArmorMaterial$Layer vanished
         // while ArmorMaterial stayed); anonymous/synthetic inner refs of unknown outers stay noise.

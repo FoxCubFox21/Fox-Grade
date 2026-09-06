@@ -48,6 +48,7 @@ public final class ShimGenerator implements Opcodes {
       Map.entry("foxgrade/shim/ScreenCompat", () -> fromResource("foxgrade/shim/ScreenCompat.class")),
       Map.entry("foxgrade/shim/SkinCompat", () -> fromResource("foxgrade/shim/SkinCompat.class")),
       Map.entry("foxgrade/shim/FabricEventsCompat", () -> fromResource("foxgrade/shim/FabricEventsCompat.class")),
+      Map.entry("foxgrade/shim/FabricEventsCompat$DeadEvent", () -> fromResource("foxgrade/shim/FabricEventsCompat$DeadEvent.class")),
       Map.entry("foxgrade/shim/OptionsCompat", () -> fromResource("foxgrade/shim/OptionsCompat.class")),
       Map.entry("foxgrade/shim/PlayerCompat", () -> fromResource("foxgrade/shim/PlayerCompat.class")),
       // --- world rendering (26.2 submit API) ---
@@ -69,6 +70,9 @@ public final class ShimGenerator implements Opcodes {
       Map.entry("foxgrade/shim/EntityApiCompat", () -> fromResource("foxgrade/shim/EntityApiCompat.class")),
       Map.entry("foxgrade/shim/EntityLegacyCompat", () -> fromResource("foxgrade/shim/EntityLegacyCompat.class")),
       Map.entry("foxgrade/shim/HolderCompat", () -> fromResource("foxgrade/shim/HolderCompat.class")),
+      Map.entry("foxgrade/shim/VersionCompat", () -> fromResource("foxgrade/shim/VersionCompat.class")),
+      Map.entry("foxgrade/shim/BufCompat", () -> fromResource("foxgrade/shim/BufCompat.class")),
+      Map.entry("foxgrade/shim/CodecCompat", () -> fromResource("foxgrade/shim/CodecCompat.class")),
       Map.entry("foxgrade/shim/PathCompat", () -> fromResource("foxgrade/shim/PathCompat.class")),
       Map.entry("foxgrade/shim/ReloadCompat", () -> fromResource("foxgrade/shim/ReloadCompat.class")),
       Map.entry("foxgrade/shim/RegistryCompat", () -> fromResource("foxgrade/shim/RegistryCompat.class")),
@@ -89,6 +93,25 @@ public final class ShimGenerator implements Opcodes {
       Map.entry("net/fabricmc/fabric/api/object/builder/v1/trade/TradeOfferHelper", () -> fromResource("foxgrade/shim/TradeOfferHelperShim.class")),
       Map.entry("net/minecraft/client/renderer/item/ClampedItemPropertyFunction", () -> fromResource("foxgrade/shim/ClampedItemPropertyFunctionShim.class")),
       Map.entry("net/minecraft/client/resources/model/ModelResourceLocation", () -> fromResource("foxgrade/shim/ModelResourceLocationShim.class")),
+      Map.entry("net/fabricmc/fabric/api/registry/FabricBrewingRecipeRegistryBuilder", () -> fromResource("foxgrade/shim/FabricBrewingRecipeRegistryBuilderShim.class")),
+      Map.entry("net/fabricmc/fabric/api/registry/FabricBrewingRecipeRegistryBuilder$BuildCallback", () -> fromResource("foxgrade/shim/FabricBrewingRecipeRegistryBuilderShim$BuildCallback.class")),
+      Map.entry("net/minecraft/server/packs/metadata/MetadataSectionSerializer", () -> fromResource("foxgrade/shim/MetadataSectionSerializerShim.class")),
+      Map.entry("net/minecraft/resources/ResourceLocation$Serializer", () -> fromResource("foxgrade/shim/IdentifierSerializerShim.class")),
+      Map.entry("net/minecraft/world/level/saveddata/SavedData$Factory", () -> fromResource("foxgrade/shim/SavedDataFactoryShim.class")),
+      Map.entry("foxgrade/shim/SavedDataCompat", () -> fromResource("foxgrade/shim/SavedDataCompat.class")),
+      Map.entry("net/minecraft/util/FastColor", () -> fromResource("foxgrade/shim/FastColorShim.class")),
+      Map.entry("net/minecraft/util/FastColor$ARGB32", () -> fromResource("foxgrade/shim/FastColorShim$ARGB32.class")),
+      Map.entry("net/minecraft/util/FastColor$ABGR32", () -> fromResource("foxgrade/shim/FastColorShim$ABGR32.class")),
+      Map.entry("net/minecraft/client/resources/model/BakedModel", () -> fromResource("foxgrade/shim/BakedModelShim.class")),
+      Map.entry("net/minecraft/client/renderer/block/model/ItemOverrides", () -> fromResource("foxgrade/shim/ItemOverridesShim.class")),
+      Map.entry("foxgrade/shim/StringSplitterCompat", () -> fromResource("foxgrade/shim/StringSplitterCompat.class")),
+      Map.entry("net/minecraft/client/renderer/item/ItemProperties", () -> fromResource("foxgrade/shim/ItemPropertiesShim.class")),
+      Map.entry("net/minecraft/client/gui/GuiSpriteManager", () -> fromResource("foxgrade/shim/GuiSpriteManagerShim.class")),
+      Map.entry("net/minecraft/client/renderer/texture/Tickable", () -> fromResource("foxgrade/shim/TickableShim.class")),
+      Map.entry("net/minecraft/advancements/critereon/ItemSubPredicate", () -> fromResource("foxgrade/shim/ItemSubPredicateShim.class")),
+      Map.entry("net/minecraft/advancements/critereon/ItemSubPredicate$Type", () -> fromResource("foxgrade/shim/ItemSubPredicateTypeShim.class")),
+      Map.entry("foxgrade/shim/ResourceMetadataCompat", () -> fromResource("foxgrade/shim/ResourceMetadataCompat.class")),
+      Map.entry("foxgrade/shim/RegistriesCompat", () -> fromResource("foxgrade/shim/RegistriesCompat.class")),
       Map.entry("net/fabricmc/fabric/api/object/builder/v1/client/model/FabricModelPredicateProviderRegistry", () -> fromResource("foxgrade/shim/FabricModelPredicateProviderRegistryShim.class")),
       Map.entry("foxgrade/shim/PermissionCompat", () -> fromResource("foxgrade/shim/PermissionCompat.class")),
       Map.entry("net/minecraft/world/item/ArmorMaterial$Layer", () -> fromResource("foxgrade/shim/ArmorMaterialLayerShim.class")),
@@ -185,6 +208,21 @@ public final class ShimGenerator implements Opcodes {
     m.put("foxgrade/shim/TradeOfferHelperShim", "net/fabricmc/fabric/api/object/builder/v1/trade/TradeOfferHelper");
     m.put("foxgrade/shim/ClampedItemPropertyFunctionShim", "net/minecraft/client/renderer/item/ClampedItemPropertyFunction");
     m.put("foxgrade/shim/ModelResourceLocationShim", "net/minecraft/client/resources/model/ModelResourceLocation");
+    m.put("foxgrade/shim/FabricBrewingRecipeRegistryBuilderShim", "net/fabricmc/fabric/api/registry/FabricBrewingRecipeRegistryBuilder");
+    m.put("foxgrade/shim/FabricBrewingRecipeRegistryBuilderShim$BuildCallback", "net/fabricmc/fabric/api/registry/FabricBrewingRecipeRegistryBuilder$BuildCallback");
+    m.put("foxgrade/shim/MetadataSectionSerializerShim", "net/minecraft/server/packs/metadata/MetadataSectionSerializer");
+    m.put("foxgrade/shim/IdentifierSerializerShim", "net/minecraft/resources/ResourceLocation$Serializer");
+    m.put("foxgrade/shim/SavedDataFactoryShim", "net/minecraft/world/level/saveddata/SavedData$Factory");
+    m.put("foxgrade/shim/FastColorShim", "net/minecraft/util/FastColor");
+    m.put("foxgrade/shim/FastColorShim$ARGB32", "net/minecraft/util/FastColor$ARGB32");
+    m.put("foxgrade/shim/FastColorShim$ABGR32", "net/minecraft/util/FastColor$ABGR32");
+    m.put("foxgrade/shim/BakedModelShim", "net/minecraft/client/resources/model/BakedModel");
+    m.put("foxgrade/shim/ItemOverridesShim", "net/minecraft/client/renderer/block/model/ItemOverrides");
+    m.put("foxgrade/shim/ItemPropertiesShim", "net/minecraft/client/renderer/item/ItemProperties");
+    m.put("foxgrade/shim/GuiSpriteManagerShim", "net/minecraft/client/gui/GuiSpriteManager");
+    m.put("foxgrade/shim/TickableShim", "net/minecraft/client/renderer/texture/Tickable");
+    m.put("foxgrade/shim/ItemSubPredicateShim", "net/minecraft/advancements/critereon/ItemSubPredicate");
+    m.put("foxgrade/shim/ItemSubPredicateTypeShim", "net/minecraft/advancements/critereon/ItemSubPredicate$Type");
     m.put("foxgrade/shim/FabricModelPredicateProviderRegistryShim", "net/fabricmc/fabric/api/object/builder/v1/client/model/FabricModelPredicateProviderRegistry");
     m.put("foxgrade/shim/GameRulesKeyShim", "net/minecraft/world/level/GameRules$Key");
     m.put("foxgrade/shim/TierShim", "net/minecraft/world/item/Tier");
@@ -220,6 +258,10 @@ public final class ShimGenerator implements Opcodes {
       Map.entry("foxgrade/shim/ItemCompat", java.util.List.of("foxgrade/shim/TooltipListShim", "foxgrade/shim/RegistryCompat")),
       Map.entry("foxgrade/shim/BlockApiCompat", java.util.List.of("foxgrade/shim/RegistryCompat")),
       Map.entry("foxgrade/shim/RegistryCompat", java.util.List.of("net/minecraft/world/item/ArmorMaterial$Layer")),
+      Map.entry("foxgrade/shim/ResourceMetadataCompat", java.util.List.of("net/minecraft/server/packs/metadata/MetadataSectionSerializer")),
+      Map.entry("foxgrade/shim/SavedDataCompat", java.util.List.of("net/minecraft/world/level/saveddata/SavedData$Factory")),
+      Map.entry("net/minecraft/client/resources/model/BakedModel", java.util.List.of("net/minecraft/client/renderer/block/model/ItemOverrides")),
+      Map.entry("net/minecraft/client/renderer/item/ItemProperties", java.util.List.of("net/minecraft/client/renderer/item/ClampedItemPropertyFunction")),
       Map.entry("net/fabricmc/fabric/api/client/render/fluid/v1/SimpleFluidRenderHandler", java.util.List.of("net/fabricmc/fabric/api/client/render/fluid/v1/FluidRenderHandler")),
       Map.entry("net/fabricmc/fabric/api/client/render/fluid/v1/FluidRenderHandlerRegistry", java.util.List.of("net/fabricmc/fabric/api/client/render/fluid/v1/FluidRenderHandler")),
       Map.entry("net/fabricmc/fabric/api/object/builder/v1/client/model/FabricModelPredicateProviderRegistry", java.util.List.of("net/minecraft/client/renderer/item/ClampedItemPropertyFunction")),

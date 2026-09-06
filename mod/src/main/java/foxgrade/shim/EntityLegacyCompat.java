@@ -80,4 +80,15 @@ public final class EntityLegacyCompat {
   public static boolean falseValue() { return false; }
   public static net.minecraft.world.phys.Vec3 getCenter(net.minecraft.core.BlockPos pos) { return net.minecraft.world.phys.Vec3.atCenterOf(pos); }
   public static net.minecraft.world.entity.EntityEquipment newEquipment() { return new net.minecraft.world.entity.EntityEquipment(); }
+
+  /** 1.21.x {@code LivingEntity.getArmorSlots()}: the four armour stacks. */
+  public static Iterable<ItemStack> getArmorSlots(LivingEntity e) {
+    return java.util.List.of(e.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.FEET), e.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.LEGS), e.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.CHEST), e.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.HEAD));
+  }
+  /** 1.21's {@code Entity.createCommandSourceStack()}: 26.2 keeps it on ServerPlayer only; other entities resolve through their level. */
+  public static net.minecraft.commands.CommandSourceStack commandSourceStack(net.minecraft.world.entity.Entity e) {
+    if (e instanceof net.minecraft.server.level.ServerPlayer p) return p.createCommandSourceStack();
+    if (e.level() instanceof net.minecraft.server.level.ServerLevel sl) return e.createCommandSourceStackForNameResolution(sl);
+    throw new IllegalStateException("no server level for " + e);
+  }
 }

@@ -13,7 +13,35 @@ SKIP = {"crash-guard", "cguard-seed", "test"}
 # harness runs that tested Fox-Grade, not the mod (BetterF3 ships an access widener: Fabric Loader itself refuses an old one before any mod code runs)
 RAW_SKIP = {"autoinbox-betterf3"}
 # harness limitations worth stating instead of an empty reason
-NOTES = {"rei": "needs cloth-config built for 1.21.1 next to the instance's 26.2 build; Fabric rejects the dependency before either tool runs"}
+NOTES = {"rei": "needs cloth-config built for 1.21.1 next to the instance's 26.2 build; Fabric rejects the dependency before either tool runs",
+  # out of scope for a bytecode port (the 26.2 subsystem the mod is built on no longer exists), stated as such rather than "crashes"
+  "cobblemon": "251 unresolved references across 33 removed classes; a rewrite, not a port",
+  "physicsmod": "renderer-tier: its own render pipeline reads shader resources 26.2 no longer ships",
+  "entity-model-features": "hooks every vanilla entity model's mesh builder (WolfModel.createMeshDefinition and friends), rebuilt in 26.2",
+  "entitytexturefeatures": "entity-render layer internals reshaped in 26.2 (render → submit); the layer hooks it needs are gone",
+  "cit-resewn": "built on item-model overrides (ItemOverride), which 26.2 replaced with item model definitions",
+  "rrls": "its resource-reload mixin mutates 26.2's listener list while it is iterated",
+  "particle-rain": "custom particle render types: ParticleRenderType is a named record in 26.2, nothing can implement it",
+  "supplementaries": "moonlight depends on WeightedRandomList/WeightedEntry, replaced by WeightedList in 26.2",
+  "amendments": "moonlight depends on WeightedRandomList/WeightedEntry, replaced by WeightedList in 26.2",
+  "biomes-o-plenty": "villager types moved to registry keys and WeightedEntry is gone; worldgen data changed shape",
+  "enhancedvisuals": "renders straight into the main render target, which 26.2 no longer exposes",
+  "toms-storage": "draws through Gui.layers (LayeredDraw), removed in 26.2's HUD rewrite",
+  "drippy-loading-screen": "FancyMenu family: blaze3d RenderCall and the GUI framework are gone",
+  "fancymenu": "177 unresolved references in its own GUI framework",
+  "ebe": "needs Fabric's FabricBakedModelManager, removed with the model-loading rewrite",
+  "sodium-shadowy-path-blocks": "requires Sodium, a renderer-tier mod Fox-Grade does not port",
+  "sodium-options-api": "requires Sodium, a renderer-tier mod Fox-Grade does not port",
+  "sodium-dynamic-lights": "requires Sodium, a renderer-tier mod Fox-Grade does not port",
+  "dungeons-and-taverns": "datapack structures in the 1.21 JSON shape; 26.2 rejects them at registry load",
+  "comforts": "listens to EntitySleepEvents.ALLOW_SLEEP_TIME, removed from Fabric API together with its callback interface",
+  "travelersbackpack": "Cardinal Components' entity hooks are among the mixins 26.2 cannot apply",
+  "dynamiccrosshair": "reads private Inventory.selected; widened in 1.1.0",
+  "modernfix": "texture-stitcher internals (Stitcher.SpriteLoader) changed shape in 26.2; renderer-tier",
+  "terralith": "harness limitation: its required library lithostitched was not supplied to the run, so Fabric refused the dependency before either tool ran",
+  "attributefix": "bookshelf reads LootPoolEntryType, removed with 26.2's loot rewrite",
+  "controlify": "its resource-reload listener implements the 1.21 reload signature through a path the reload adapter does not cover",
+}
 KNOWN = set()
 for f in glob.glob(str(pathlib.Path.home() / "foxgrade-work/batch121/ledger*.txt")) + [str(pathlib.Path.home() / "foxgrade-work/batch2/ledger.txt")]:
     for ln in pathlib.Path(f).read_text().splitlines():
@@ -36,7 +64,7 @@ def read_ledger(path):
     for ln in pathlib.Path(path).read_text().splitlines():
         p = ln.split("\t")
         if len(p) < 2 or p[0] not in ("PASS", "CRASH", "HELD", "STALL", "NOSCREEN", "ERROR", "SCREENLOST"): continue
-        if p[1] in RAW_SKIP: continue
+        if p[1] in RAW_SKIP or p[1].startswith("dev-"): continue   # dev-instance engine reruns are not corpus rows
         rows[canon(p[1])] = {"verdict": p[0], "port": p[2] if len(p) > 2 else "", "why": p[3] if len(p) > 3 else ""}
     return rows
 client = {}
@@ -96,6 +124,15 @@ for name, r in sorted(client.items()):
     rows.append(f"| {name} | {source_version(r['port'], name)} | {label.get(r['verdict'], r['verdict'])} | {uc} | {srv} | {rm} | {shot_md} | {notes} |")
 counts = collections.Counter(r["verdict"] for n, r in client.items() if not n.endswith("-A") and n not in SKIP)
 commit = subprocess.run(["git", "-C", str(REPO), "rev-parse", "--short", "HEAD"], capture_output=True, text=True).stdout.strip()
+# head-to-head summary over every mod both tools ran (same instance, same base jars)
+h2h = [n for n in client if n in retro and not n.endswith("-A") and n not in SKIP]
+fox_ok = {n for n in h2h if client[n]["verdict"] == "PASS"}; rm_ok = {n for n in h2h if retro[n]["verdict"] == "PASS"}
+summary = {"h2h_total": len(h2h), "fox_boots": len(fox_ok), "retro_boots": len(rm_ok), "fox_only": len(fox_ok - rm_ok), "retro_only": len(rm_ok - fox_ok),
+           "both": len(fox_ok & rm_ok), "neither": len(set(h2h) - fox_ok - rm_ok), "all_mods": sum(counts.values()), "all_boots": counts.get("PASS", 0),
+           "fox_only_names": sorted(fox_ok - rm_ok), "retro_only_names": sorted(rm_ok - fox_ok)}
+(OUT / "compat-summary.json").write_text(json.dumps(summary, indent=2) + "\n")
+print("head-to-head:", {k: v for k, v in summary.items() if not k.endswith("_names")})
+print("retro rows without a client row:", sorted(n for n in retro if n not in client))
 md = f"""# Fox-Grade compatibility results
 
 Every mod the harness has run, on a real Minecraft 26.2 client (headless launch into a world,

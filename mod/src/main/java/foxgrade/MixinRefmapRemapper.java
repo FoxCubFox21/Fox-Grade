@@ -28,6 +28,18 @@ public final class MixinRefmapRemapper {
     Result(JsonElement j, int h) { json = j; hits = h; }
   }
 
+  /** Translate a single selector string (owner-qualified or bare, intermediary or Mojang names) exactly as a refmap
+   *  value would be; used for mixins that ship no refmap (Fabric remaps their intermediary selectors at runtime). */
+  public static String translateSelector(String selector, IntermediaryBridge bridge, Map<String, String> rulesClassTable, FabricApiBridges apiBridges) {
+    com.google.gson.JsonObject sel = new com.google.gson.JsonObject(); sel.addProperty("k", selector);
+    com.google.gson.JsonObject cls = new com.google.gson.JsonObject(); cls.add("x", sel);
+    com.google.gson.JsonObject root = new com.google.gson.JsonObject(); root.add("mappings", cls);
+    try {
+      JsonElement out = rewrite(root, bridge, rulesClassTable, apiBridges).json;
+      return out.getAsJsonObject().getAsJsonObject("mappings").getAsJsonObject("x").get("k").getAsString();
+    } catch (RuntimeException e) { return selector; }
+  }
+
   public static Result rewrite(JsonElement input, IntermediaryBridge bridge, Map<String, String> rulesClassTable, FabricApiBridges apiBridges) {
     Map<String, String> mergedClasses = new java.util.HashMap<>(bridge.size() + rulesClassTable.size());
     mergedClasses.putAll(bridge.classTable());

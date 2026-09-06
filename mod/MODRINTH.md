@@ -32,16 +32,17 @@ pipeline on a jar without starting the game and lists exactly what the port woul
 ⭐ **Nothing is ever deleted.** Originals are kept, ports are reversible, and every launch writes
 a report of what happened.
 
-**Tested, and honest about the result.** Batch-tested against 37 mods from 1.21.x and 26.1: 26 port
+**Tested, and honest about the result.** Batch-tested against 130 mods from 1.21.x and 26.1: 83 port
 and boot into a world (six also verified on a dedicated server; Mod Menu's mod list opens and
-renders through the GUI bridges; world-drawing mods run on the re-created render events) and 11
-crash on internals 26.2 rewrote that are not bridged yet — block/item model rendering, the
-low-level texture pipeline, a bundled animation engine, native code, and the last hierarchy changes
-behind the two creature mods. The report lists every class, member and constructor a port still
+renders through the GUI bridges; world-drawing mods run on the re-created render events) and 47
+do not: renderer-tier internals 26.2 rewrote (entity models and textures, the texture stitcher, the HUD
+layer stack, particle render types), API subsystems removed outright (item-model overrides, weighted lists,
+loot entry types), one mod that is a rewrite rather than a port, the Sodium-dependent add-ons, and a few
+datapack formats. The report lists every class, member and constructor a port still
 references that the game no longer has; the per-mod table lives in the repository.
 
-**Head-to-head.** The same 15 mods through Retromod (1.3.0-snapshot.10) and Fox-Grade on one
-instance: Fox-Grade boots 12, Retromod boots 4. The table with every cause is in the repository.
+**Head-to-head.** The same 100 mods through Retromod (1.3.0-snapshot.10) and Fox-Grade on one
+instance: Fox-Grade boots 64, Retromod boots 38 (28 boot only under Fox-Grade). The table with every cause is in the repository.
 
 **Minecraft 26.2 only.** The translation tables are built for a single version. On any other
 version Fox-Grade refuses to run rather than produce a port it cannot verify.

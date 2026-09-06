@@ -38,4 +38,7 @@ public final class FrameCompat {
     }
     return (int) x + f.width(seq);
   }
+
+  /** 1.21.x {@code Font.renderText(...)} (what cloth-config reaches through an accessor): the same batch-draw path. */
+  public static int renderText(Font f, String s, float x, float y, int color, boolean shadow, Matrix4f m, MultiBufferSourceShim b, Font.DisplayMode mode, int bg, int light) { return drawInBatch(f, s, x, y, color, shadow, m, b, mode, bg, light); }
 }

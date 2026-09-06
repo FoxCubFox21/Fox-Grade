@@ -56,4 +56,28 @@ public final class ItemCompat {
   public static ItemStack getRecipeRemainder(ItemStack stack) { net.minecraft.world.item.ItemStackTemplate t = stack.getItem().getCraftingRemainder(); return t == null ? ItemStack.EMPTY : t.create(); }
   /** The call site holds Fabric's injected interface type; at runtime it is the ItemStack itself. */
   public static ItemStack getRecipeRemainderOf(Object stack) { return stack instanceof ItemStack s ? getRecipeRemainder(s) : ItemStack.EMPTY; }
+
+  /** 1.21.x code read {@code item.components()} during registration; 26.2 binds components later. Empty until bound. */
+  public static net.minecraft.core.component.DataComponentMap components(Item item) {
+    try { return item.components(); } catch (RuntimeException notBoundYet) { return net.minecraft.core.component.DataComponentMap.EMPTY; }
+  }
+  /** Fabric convention tags a 1.21.x mod still names; the tag key is created from the same id so data packs can fill it. */
+  public static net.minecraft.tags.TagKey<Item> conventionTag(String path) { return net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.ITEM, net.minecraft.resources.Identifier.fromNamespaceAndPath("c", path)); }
+  public static net.minecraft.tags.TagKey<Item> spearTools() { return conventionTag("tools/spear"); }
+  /** {@code new ItemStack(item[, count])}. 26.2 binds an item's components only after the registries are frozen, and an
+   *  ItemStack built before that (a mixin's static initialiser merged into a vanilla class that loads early) throws
+   *  "Components not bound yet". Such a stack is built through the private component-map constructor instead, with empty
+   *  components; once binding has happened the ordinary constructor is used. */
+  public static net.minecraft.world.item.ItemStack stack(net.minecraft.world.level.ItemLike like, int count) {
+    net.minecraft.world.item.Item item = like.asItem();
+    net.minecraft.core.Holder.Reference<net.minecraft.world.item.Item> holder = item.builtInRegistryHolder();
+    if (holder.areComponentsBound()) return new net.minecraft.world.item.ItemStack(like, count);
+    try {
+      java.lang.reflect.Constructor<net.minecraft.world.item.ItemStack> c = net.minecraft.world.item.ItemStack.class.getDeclaredConstructor(
+          net.minecraft.core.Holder.class, int.class, net.minecraft.core.component.PatchedDataComponentMap.class);
+      c.setAccessible(true);
+      return c.newInstance(holder, count, new net.minecraft.core.component.PatchedDataComponentMap(net.minecraft.core.component.DataComponentMap.EMPTY));
+    } catch (ReflectiveOperationException e) { throw new IllegalStateException("early ItemStack of " + item, e); }
+  }
+  public static net.minecraft.world.item.ItemStack stack(net.minecraft.world.level.ItemLike like) { return stack(like, 1); }
 }

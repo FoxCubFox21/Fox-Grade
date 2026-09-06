@@ -18,7 +18,7 @@ if [[ -n ${FA_JAR:-} && ! -d $FA_TMP ]]; then
   mkdir -p "$FA_TMP" && (cd "$FA_TMP" && unzip -o -q "$FA_JAR" 'META-INF/jars/*.jar')
 fi
 CP="${EXTRA_CP:+$EXTRA_CP:}$FG_JAR:$MC_JAR"   # EXTRA_CP: a dir/jar searched first (e.g. a trial bridge table)
-for f in "$LIB"/net/fabricmc/fabric-loader/*/fabric-loader-*.jar "$LIB"/com/google/code/gson/gson/*/gson-*.jar "$LIB"/com/google/guava/guava/*/guava-*.jar \
+for f in "$LIB"/net/fabricmc/fabric-loader/*/fabric-loader-*.jar "$LIB"/com/google/code/gson/gson/*/gson-*.jar "$LIB"/com/google/guava/guava/*/guava-*.jar "$LIB"/com/mojang/authlib/*/authlib-*.jar \
          "$LIB"/org/ow2/asm/asm/*/asm-*.jar "$LIB"/org/ow2/asm/asm-tree/*/asm-tree-*.jar "$LIB"/org/ow2/asm/asm-commons/*/asm-commons-*.jar \
          "$LIB"/org/ow2/asm/asm-util/*/asm-util-*.jar "$LIB"/org/ow2/asm/asm-analysis/*/asm-analysis-*.jar \
          "$LIB"/com/mojang/brigadier/*/brigadier-*.jar "$LIB"/org/joml/joml/*/joml-*.jar "$LIB"/org/jspecify/jspecify/*/jspecify-*.jar \

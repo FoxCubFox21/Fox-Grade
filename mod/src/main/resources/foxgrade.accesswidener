@@ -3,3 +3,13 @@ accessWidener v2 official
 # during record-ization; re-widening restores the old contract for every port at once.
 accessible field net/minecraft/world/level/ChunkPos x I
 accessible field net/minecraft/world/level/ChunkPos z I
+
+# 26.2 made these final records; 1.21.x mods subclass them (custom recipe serializers). Fox-Grade turns their
+# 'implements' into 'extends' and calls the record constructor, so the class must be extendable.
+extendable class net/minecraft/world/item/crafting/RecipeSerializer
+
+# 26.2 made these fields private behind accessors; 1.21.x mods read the field directly.
+accessible field net/minecraft/world/level/Level isClientSide Z
+accessible field net/minecraft/world/entity/player/Inventory selected I
+accessible field net/minecraft/server/level/ServerPlayer server Lnet/minecraft/server/MinecraftServer;
+accessible field net/minecraft/client/gui/screens/Screen children Ljava/util/List;
