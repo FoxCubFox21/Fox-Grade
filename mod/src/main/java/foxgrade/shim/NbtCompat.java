@@ -40,4 +40,24 @@ public final class NbtCompat {
     net.minecraft.world.level.storage.TagValueOutput out = net.minecraft.world.level.storage.TagValueOutput.createWithoutContext(net.minecraft.util.ProblemReporter.DISCARDING);
     net.minecraft.world.ContainerHelper.saveAllItems(out, items); tag.merge(out.buildResult()); return tag;
   }
+
+  // ---- batch 4 (the fresh 1.21.1 set)
+  public static String getAsString(net.minecraft.nbt.Tag tag) { return tag == null ? "" : tag.asString().orElse(tag.toString()); }
+  public static void remove(net.minecraft.nbt.CompoundTag tag, String key) { tag.remove(key); }
+  public static net.minecraft.nbt.Tag createUUID(java.util.UUID id) { return net.minecraft.core.UUIDUtil.CODEC.encodeStart(net.minecraft.nbt.NbtOps.INSTANCE, id).getOrThrow(); }
+  public static java.util.UUID loadUUID(net.minecraft.nbt.Tag tag) { return net.minecraft.core.UUIDUtil.CODEC.parse(net.minecraft.nbt.NbtOps.INSTANCE, tag).getOrThrow(); }
+  public static java.util.Optional<net.minecraft.core.BlockPos> readBlockPos(net.minecraft.nbt.CompoundTag tag, String key) {
+    net.minecraft.nbt.Tag t = tag.get(key); return t == null ? java.util.Optional.empty() : net.minecraft.core.BlockPos.CODEC.parse(net.minecraft.nbt.NbtOps.INSTANCE, t).result();
+  }
+  public static net.minecraft.nbt.Tag writeBlockPos(net.minecraft.core.BlockPos pos) { return net.minecraft.core.BlockPos.CODEC.encodeStart(net.minecraft.nbt.NbtOps.INSTANCE, pos).getOrThrow(); }
+  public static net.minecraft.world.item.ItemStack parseOptional(net.minecraft.core.HolderLookup.Provider provider, net.minecraft.nbt.CompoundTag tag) {
+    if (tag == null || tag.isEmpty()) return net.minecraft.world.item.ItemStack.EMPTY;
+    return net.minecraft.world.item.ItemStack.OPTIONAL_CODEC.parse(provider.createSerializationContext(net.minecraft.nbt.NbtOps.INSTANCE), tag).result().orElse(net.minecraft.world.item.ItemStack.EMPTY);
+  }
+  public static net.minecraft.nbt.Tag saveOptional(net.minecraft.world.item.ItemStack stack, net.minecraft.core.HolderLookup.Provider provider) {
+    if (stack.isEmpty()) return new net.minecraft.nbt.CompoundTag();
+    return net.minecraft.world.item.ItemStack.OPTIONAL_CODEC.encodeStart(provider.createSerializationContext(net.minecraft.nbt.NbtOps.INSTANCE), stack).getOrThrow();
+  }
+  public static net.minecraft.nbt.CompoundTag saveModifier(net.minecraft.world.entity.ai.attributes.AttributeModifier m) { return (net.minecraft.nbt.CompoundTag) net.minecraft.world.entity.ai.attributes.AttributeModifier.CODEC.encodeStart(net.minecraft.nbt.NbtOps.INSTANCE, m).getOrThrow(); }
+  public static net.minecraft.world.entity.ai.attributes.AttributeModifier loadModifier(net.minecraft.nbt.CompoundTag tag) { return net.minecraft.world.entity.ai.attributes.AttributeModifier.CODEC.parse(net.minecraft.nbt.NbtOps.INSTANCE, tag).result().orElse(null); }
 }

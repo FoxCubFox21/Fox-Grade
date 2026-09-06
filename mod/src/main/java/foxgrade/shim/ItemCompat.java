@@ -51,4 +51,9 @@ public final class ItemCompat {
 
   /** {@code new Item.Properties()}: 26.2 needs the registry id first; a placeholder is rewritten at registration. */
   public static Item.Properties properties() { return new Item.Properties().setId(RegistryCompat.pendingItemKey()); }
+  // ---- crafting remainders (1.21.x Item.getCraftingRemainingItem / FabricItemStack.getRecipeRemainder)
+  public static Item craftingRemainingItem(Item item) { net.minecraft.world.item.ItemStackTemplate t = item.getCraftingRemainder(); return t == null ? null : t.item().value(); }
+  public static ItemStack getRecipeRemainder(ItemStack stack) { net.minecraft.world.item.ItemStackTemplate t = stack.getItem().getCraftingRemainder(); return t == null ? ItemStack.EMPTY : t.create(); }
+  /** The call site holds Fabric's injected interface type; at runtime it is the ItemStack itself. */
+  public static ItemStack getRecipeRemainderOf(Object stack) { return stack instanceof ItemStack s ? getRecipeRemainder(s) : ItemStack.EMPTY; }
 }

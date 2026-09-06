@@ -28,4 +28,10 @@ public final class RecipeCompat {
   public static LootPool.Builder conditionally(LootPool.Builder builder, LootItemCondition condition) { return builder.when(() -> condition); }
   /** {@code FoodProperties.Builder.effect(...)}: food effects moved to the Consumable component; the food itself still works. */
   public static FoodProperties.Builder effect(FoodProperties.Builder builder, MobEffectInstance effect, float probability) { return builder; }
+
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  public static net.minecraft.core.NonNullList getIngredients(net.minecraft.world.item.crafting.Recipe recipe) { net.minecraft.core.NonNullList l = net.minecraft.core.NonNullList.create(); l.addAll(recipe.placementInfo().ingredients()); return l; }
+  public static net.minecraft.world.item.crafting.Ingredient emptyIngredient() { return net.minecraft.world.item.crafting.Ingredient.of(java.util.stream.Stream.empty()); }
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  public static net.minecraft.core.HolderLookup.RegistryLookup asLookup(net.minecraft.core.Registry registry) { return (net.minecraft.core.HolderLookup.RegistryLookup) registry; }
 }

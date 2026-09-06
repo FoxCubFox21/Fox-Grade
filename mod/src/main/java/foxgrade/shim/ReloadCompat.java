@@ -17,4 +17,5 @@ public final class ReloadCompat {
   /** {@code new SimpleJsonResourceReloadListener(gson, "dir")}: the JSON codec keeps the map values as JsonElement. */
   public static Codec<?> jsonCodec() { return ExtraCodecs.JSON; }
   public static FileToIdConverter jsonConverter(String directory) { return FileToIdConverter.json(directory); }
+  public static com.mojang.serialization.DynamicOps<com.google.gson.JsonElement> jsonOps() { return com.mojang.serialization.JsonOps.INSTANCE; }
 }

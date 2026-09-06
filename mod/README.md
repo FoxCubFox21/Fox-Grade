@@ -71,6 +71,18 @@ translate to readable names and port through the same layers; what they still hi
 immediate-mode drawing (`BufferBuilder.begin/end`) and the pre-1.20.5 networking API, which are not
 bridged yet.
 
+## Head-to-head with Retromod
+
+Same 15 mods, same instance, same base jars, through Retromod (Modrinth's other 26.2 auto-porter,
+1.3.0-snapshot.10) and Fox-Grade: **Fox-Grade boots 12, Retromod boots 4.** The set mixes the
+original five (Mod Menu, Zoomify, BetterF3, Lithium, Entity Culling) with a fresh ten pulled from
+Modrinth's popular list for 1.21.1 (AppleSkin, Dynamic FPS, No Chat Reports, FerriteCore, Trinkets,
+Inventory Profiles Next, Xaero's World Map, Waystones + Balm, REI, JEI). Both fail JEI
+(`RecipeSerializer` became a final class), Waystones (its model loading calls an accessor mixin
+whose target class is gone) and REI (needs a cloth-config built for 1.21.1 next to the instance's
+26.2 one). Per-mod causes are in [`docs/compat.md`](../docs/compat.md); the runner is
+`tools/run-h2h.sh`.
+
 ## How well does it work?
 
 Batch-tested against 37 mods from 1.21.x and 26.1 (every harness run folded to one row per mod,

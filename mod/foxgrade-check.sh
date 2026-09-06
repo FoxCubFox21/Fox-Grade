@@ -28,4 +28,5 @@ for f in "$LIB"/net/fabricmc/fabric-loader/*/fabric-loader-*.jar "$LIB"/com/goog
          "$LIB"/net/fabricmc/sponge-mixin/*/sponge-mixin-*.jar "$FA_TMP"/META-INF/jars/*.jar; do
   [[ -f $f ]] && CP="$CP:$f"
 done
+export FOXGRADE_FABRIC_MODULES="$FA_TMP/META-INF/jars"
 exec java -Xmx1g -cp "$CP" foxgrade.CheckMain "$MC" "$MC_DIR" "$@"

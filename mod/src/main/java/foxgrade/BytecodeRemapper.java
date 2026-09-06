@@ -192,7 +192,7 @@ public final class BytecodeRemapper {
           for (String i : itfs) {
             Boolean isI = isInterface.apply(i);
             if (isI != null && !isI) {
-              if (isFinalClass.test(i)) { flips.add(name + "#implements " + i.substring(i.lastIndexOf('/') + 1) + " (a final class in the target; cannot be implemented or extended)"); }
+              if (isFinalClass.test(i)) { flips.add(name + "#implements " + i.substring(i.lastIndexOf('/') + 1) + " (a final class in the target; cannot be implemented or extended)"); keep.add(i); }   // kept: dropping it breaks every field typed with it
               else if (superName == null || superName.equals("java/lang/Object")) { superName = i; flips.add(name + ": implements " + i + " → extends (it is a class in the target)"); }
               else { flips.add(name + ": implements " + i + " dropped (a class in the target; this class already extends " + superName + ")"); }
             } else keep.add(i);
@@ -209,6 +209,7 @@ public final class BytecodeRemapper {
           // new-signature one so the game keeps calling into it (see FabricApiBridges).
           for (var oa : overrideAdapters) {
             if (!declared.contains(oa.oldName() + oa.oldDesc()) || declared.contains(oa.newName() + oa.newDesc())) continue;
+            declared.add(oa.newName() + oa.newDesc());   // a second adapter (the erased bridge signature) must not emit it again
             org.objectweb.asm.Type[] newArgs = org.objectweb.asm.Type.getArgumentTypes(oa.newDesc());
             org.objectweb.asm.Type[] oldArgs = org.objectweb.asm.Type.getArgumentTypes(oa.oldDesc());
             int[] slot = slots(newArgs);
@@ -232,6 +233,7 @@ public final class BytecodeRemapper {
           for (var sh : superHooks) {
             String key = sh.name() + sh.desc();
             if (declared.contains(key) || superName == null || !declaredInChain.test(className, key)) continue;
+            declared.add(key);
             org.objectweb.asm.Type[] args = org.objectweb.asm.Type.getArgumentTypes(sh.desc());
             int[] slot = slots(args);
             MethodVisitor mv = super.visitMethod(Opcodes.ACC_PUBLIC, sh.name(), sh.desc(), null, null);
@@ -252,6 +254,7 @@ public final class BytecodeRemapper {
           for (var sy : synths) {
             String key = sy.name() + sy.desc();
             if (declared.contains(key) || superName == null || !declaredInChain.test(className, key) || implementedInChain.test(className, key)) continue;
+            declared.add(key);
             org.objectweb.asm.Type[] args = org.objectweb.asm.Type.getArgumentTypes(sy.desc());
             MethodVisitor mv = super.visitMethod(Opcodes.ACC_PUBLIC, sy.name(), sy.desc(), null, null);
             mv.visitCode();
@@ -467,8 +470,8 @@ public final class BytecodeRemapper {
                 return;
               }
               if (to != null && to[0].equals("move")) {
-                // The constant moved to a holder class (EntityType.FOX → EntityTypes.FOX).
-                super.visitFieldInsn(opcode, to[1], fname, to[2]);
+                // The constant moved to a holder class (EntityType.FOX → EntityTypes.FOX), or was renamed (a 4th element).
+                super.visitFieldInsn(opcode, to[1], to.length > 3 ? to[3] : fname, to[2]);
                 return;
               }
               if (to != null && to[0].equals("holder")) {

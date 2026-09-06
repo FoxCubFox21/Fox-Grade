@@ -22,6 +22,16 @@
   classes), so 1.20.1 jars translate to readable Mojang names and port through the same layers.
 - **Compatibility page.** `docs/compat.md` is generated from the harness ledgers: verdict,
   unresolved count, server result, Retromod result and screenshot per mod.
+- **Head-to-head with Retromod on 15 mods: Fox-Grade 12, Retromod 4** (`docs/compat.md`, runner in
+  `tools/run-h2h.sh`). The fresh ten added chat-event records, numeric permission levels, NbtUtils
+  and optional item-stack codecs, recipe ingredients, screen extract events, `super.use` holder
+  conversion, Fabric's creative-tab / menu API renames, and inactive-but-accepted shims for the
+  removed tint, render-layer, fluid-render, fuel, trade and model-predicate registries (each
+  logs once that it is inactive on 26.2).
+- The verifier now checks Fabric API classes for existence, verifies members of shims that carry
+  game names, and deregisters a mixin whose whole target class is gone.
+- The standalone checker reads Fabric's injected interfaces from the installed modules, so
+  attachment-API calls no longer show as false misses.
 - Fixed: constructor adapters used 1-based slots in two entries and produced a `VerifyError`;
   inner-class shims (`VillagerTrades$ItemListing`, `GameRules$Key`) were never injected.
 - **Dedicated server support.** The restart-to-apply step now detects a dedicated server and asks

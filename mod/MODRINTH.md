@@ -40,6 +40,9 @@ low-level texture pipeline, a bundled animation engine, native code, and the las
 behind the two creature mods. The report lists every class, member and constructor a port still
 references that the game no longer has; the per-mod table lives in the repository.
 
+**Head-to-head.** The same 15 mods through Retromod (1.3.0-snapshot.10) and Fox-Grade on one
+instance: Fox-Grade boots 12, Retromod boots 4. The table with every cause is in the repository.
+
 **Minecraft 26.2 only.** The translation tables are built for a single version. On any other
 version Fox-Grade refuses to run rather than produce a port it cannot verify.
 

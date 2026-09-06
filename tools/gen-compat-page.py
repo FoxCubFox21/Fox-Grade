@@ -12,6 +12,8 @@ ALIAS = {"bhc-ukulib": "betterhurtcam", "bhc": "betterhurtcam", "spr": "sound-ph
 SKIP = {"crash-guard", "cguard-seed", "test"}
 # harness runs that tested Fox-Grade, not the mod (BetterF3 ships an access widener: Fabric Loader itself refuses an old one before any mod code runs)
 RAW_SKIP = {"autoinbox-betterf3"}
+# harness limitations worth stating instead of an empty reason
+NOTES = {"rei": "needs cloth-config built for 1.21.1 next to the instance's 26.2 build; Fabric rejects the dependency before either tool runs"}
 KNOWN = set()
 for f in glob.glob(str(pathlib.Path.home() / "foxgrade-work/batch121/ledger*.txt")) + [str(pathlib.Path.home() / "foxgrade-work/batch2/ledger.txt")]:
     for ln in pathlib.Path(f).read_text().splitlines():
@@ -87,7 +89,7 @@ rows = []
 for name, r in sorted(client.items()):
     if name.endswith("-A") or name in SKIP: continue
     u = unresolved.get(name); uc = "" if u is None else str(len(u))
-    notes = r["why"][:90].replace("|", "/") if r["verdict"] != "PASS" else ""
+    notes = (NOTES.get(name) or r["why"][:90]).replace("|", "/") if r["verdict"] != "PASS" else ""
     srv = label.get(server[name]["verdict"], "") if name in server else ""
     rm = label.get(retro[name]["verdict"], "") if name in retro else ""
     shot = shot_for(name); shot_md = f"[shot]({shot})" if shot else ""
@@ -115,16 +117,16 @@ on {datetime.date.today().isoformat()}; the scripts are in `tools/`.
 
 ## Retromod head-to-head
 
-Same five mods, same instance, same base jars, two launches each (Retromod ports on the first and
-asks for a restart). Retromod 1.3.0-snapshot.10 for 26.2.
+Same mods, same instance, same base jars. Retromod ports on its first launch and asks for a
+restart; the second launch is the verdict. Retromod 1.3.0-snapshot.10 for 26.2. Fox-Grade's
+verdict requires the world to render and a screenshot to be taken; Retromod's requires the world
+to load and the game to still be running.
 
 | Mod | Fox-Grade | Retromod |
 |---|---|---|
-| Mod Menu | boots; mod-list screen renders fully | boots; screen fails to open (`I18n.exists`, `render`→`extract` rename missing) |
-| Zoomify + YACL | boots | crash (reload-listener signature) |
-| BetterF3 | boots | boots |
-| Lithium | boots | crash (mixin targets changed) |
-| Entity Culling | boots | crash (renderer mixin) |
+""" + "\n".join(f"| {n} | {label.get(client[n]['verdict'], client[n]['verdict'])}{(' — ' + (NOTES.get(n) or client[n]['why'])[:90].replace('|', '/')) if client[n]['verdict'] != 'PASS' and (NOTES.get(n) or client[n]['why']) else ''} | {label.get(retro[n]['verdict'], retro[n]['verdict'])}{(' — ' + retro[n]['why'][:70].replace('|', '/')) if retro[n]['verdict'] != 'PASS' and retro[n]['why'] else ''} |" for n in sorted(retro) if n in client and n not in SKIP) + """
+
+""" + f"""Score: Fox-Grade {sum(1 for n in retro if n in client and client[n]['verdict'] == 'PASS')} / Retromod {sum(1 for n in retro if n in client and retro[n]['verdict'] == 'PASS')} of {sum(1 for n in retro if n in client and n not in SKIP)} mods booting.
 
 Reproduce with `batch2/run-retromod.sh` next to the Fox-Grade harness scripts.
 """

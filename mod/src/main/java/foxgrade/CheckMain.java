@@ -23,6 +23,25 @@ public final class CheckMain {
       else if (argv[i].equals("--json")) json = true;
       else jars.add(Path.of(argv[i]));
     }
+    // Fabric API injects interfaces (AttachmentTarget on Entity/BlockEntity/…) that only the loader knows;
+    // read the same declarations from the module jars so the standalone verdict matches the in-game one.
+    String modules = System.getenv("FOXGRADE_FABRIC_MODULES");
+    if (modules != null) {
+      try (var st = Files.list(Path.of(modules))) {
+        for (Path jar : st.filter((f) -> f.toString().endsWith(".jar")).toList()) {
+          try (java.util.zip.ZipFile zf = new java.util.zip.ZipFile(jar.toFile())) {
+            var e = zf.getEntry("fabric.mod.json");
+            if (e == null) continue;
+            var meta = new com.google.gson.Gson().fromJson(new String(zf.getInputStream(e).readAllBytes(), java.nio.charset.StandardCharsets.UTF_8), com.google.gson.JsonObject.class);
+            if (meta == null || !meta.has("custom") || !meta.getAsJsonObject("custom").has("loom:injected_interfaces")) continue;
+            for (var x : meta.getAsJsonObject("custom").getAsJsonObject("loom:injected_interfaces").entrySet()) {
+              var l = PortVerifier.EXTRA_INJECTED.computeIfAbsent(x.getKey().replace('.', '/'), k -> new ArrayList<>());
+              for (var i : x.getValue().getAsJsonArray()) l.add(i.getAsString().replace('.', '/'));
+            }
+          } catch (Exception ignore) { }
+        }
+      } catch (Exception ignore) { }
+    }
     RulesLoader rules = RulesLoader.load(mc);
     IntermediaryBridge bridge = IntermediaryBridge.load(mc);
     FabricApiBridges api = FabricApiBridges.load(gameDir);

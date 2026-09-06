@@ -14,4 +14,7 @@ public final class InteractionCompat {
   public static InteractionResult sidedSuccess(boolean clientSide) { return InteractionResult.SUCCESS; }
   /** Item.use(...) returned a holder around the result; 26.2 returns the result itself. */
   public static InteractionResult fromHolder(InteractionResultHolderShim<?> h) { return h == null ? InteractionResult.PASS : h.getResult(); }
+
+  /** A 1.21.x caller of {@code super.use(...)} expects a holder; wrap the 26.2 result (the stack is not carried). */
+  public static InteractionResultHolderShim toHolder(net.minecraft.world.InteractionResult result) { return new InteractionResultHolderShim(result, net.minecraft.world.item.ItemStack.EMPTY); }
 }

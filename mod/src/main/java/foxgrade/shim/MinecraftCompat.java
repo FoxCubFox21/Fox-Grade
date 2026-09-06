@@ -27,4 +27,6 @@ public final class MinecraftCompat {
   public static boolean renderDebugCharts(net.minecraft.client.Options options) { return Minecraft.getInstance().getDebugOverlay().showProfilerChart(); }
   public static boolean renderFpsChart(net.minecraft.client.Options options) { return Minecraft.getInstance().getDebugOverlay().showFpsCharts(); }
   public static void setRenderDebug(net.minecraft.client.Options options, boolean v) { /* the F3 overlay toggles itself in 26.2 */ }
+
+  public static net.minecraft.client.multiplayer.ClientLevel clientLevel(net.minecraft.client.player.LocalPlayer p) { return (net.minecraft.client.multiplayer.ClientLevel) p.level(); }
 }

@@ -48,6 +48,9 @@ public final class PortVerifier {
 
   // com/mojang covers several EXTERNAL libraries too (authlib, brigadier, serialization);
   // only the subpackages that ship inside the client jar are checkable here.
+  /** True when the target game has this class (only meaningful for game-namespace names). */
+  public boolean knows(String cls) { return known.contains(cls); }
+  public static boolean isGameClass(String internalName) { return checkable(internalName); }
   private static boolean checkable(String internalName) {
     return internalName.startsWith("net/minecraft/")
         || internalName.startsWith("com/mojang/blaze3d/")
@@ -117,7 +120,11 @@ public final class PortVerifier {
         if (checkable(internalName) && (dollar < 0 || innerOfKnown || ShimGenerator.SHIMS.containsKey(internalName)) && !known.contains(internalName)) {
           // inner classes are skipped as noise, except the ones Fox-Grade re-creates (VillagerTrades$ItemListing, GameRules$Key)
           missing.add(internalName);
-        } else if (!checkable(internalName) && ShimGenerator.SHIMS.containsKey(internalName) && shape(internalName) == UNKNOWN) {
+        } else if (!checkable(internalName) && internalName.startsWith("net/fabricmc/fabric/api/") && !ShimGenerator.SHIMS.containsKey(internalName) && shape(internalName) == UNKNOWN) {
+          // Fabric API classes are judged by whether the installed Fabric API can load them: the
+          // 1.21.x ItemGroupEvents / ExtendedScreenHandlerType are gone from the 26.2 modules.
+          missing.add(internalName);
+        } else if (!checkable(internalName) && ShimGenerator.SHIMS.containsKey(internalName) && !loadable(internalName)) {
           // A removed third-party class Fox-Grade re-creates (Fabric's WorldRenderEvents): not in
           // the game's inventory, so its absence is judged by whether the loader can read it.
           missing.add(internalName);
@@ -256,9 +263,12 @@ public final class PortVerifier {
   // `loom:injected_interfaces` custom value): the only legitimate source of a method that no
   // class file declares.
   private Map<String, java.util.List<String>> injected;
+  /** Interfaces injected by Fabric API modules, supplied by a standalone run that has no loader (CheckMain). */
+  public static final Map<String, java.util.List<String>> EXTRA_INJECTED = new HashMap<>();
   private Map<String, java.util.List<String>> injected() {
     if (injected != null) return injected;
     Map<String, java.util.List<String>> m = new HashMap<>();
+    for (var e : EXTRA_INJECTED.entrySet()) m.computeIfAbsent(e.getKey(), k -> new java.util.ArrayList<>()).addAll(e.getValue());
     try {
       for (var mod : loadedMods()) {
         var cv = mod.getMetadata().getCustomValue("loom:injected_interfaces");
@@ -274,6 +284,10 @@ public final class PortVerifier {
     return m;
   }
 
+  /** Whether the target game / installed Fabric API can load this class by its own name (not via a shim). */
+  private static boolean loadable(String cls) {
+    try (InputStream in = open(cls + ".class")) { return in != null; } catch (java.io.IOException e) { return false; }
+  }
   private static InputStream open(String resource) {
     InputStream in = PortVerifier.class.getClassLoader().getResourceAsStream(resource);
     return in != null ? in : ClassLoader.getSystemResourceAsStream(resource);

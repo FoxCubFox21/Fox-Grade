@@ -266,6 +266,15 @@ public final class TransformPipeline {
               if (strip.bytes != null) { emit = strip.bytes; autoStripped += strip.strippedNames.size(); }
             }
           }
+          // A mixin whose target class no longer exists cannot apply at all; Mixin would then refuse
+          // every later load of the mixin class. Deregister it from its config.
+          for (String target : MixinTargets.of(emit)) {
+            if (PortVerifier.isGameClass(target) && !verifier.knows(target)) {
+              fatalMixins.add(slashClass);
+              strippedNames.add(slashClass.substring(slashClass.lastIndexOf('/') + 1) + " (whole mixin: target " + target.substring(target.lastIndexOf('/') + 1) + " no longer exists)");
+              break;
+            }
+          }
           // @Overwrite/@Shadow methods resolve by DECLARED name with no refmap entry — check
           // them against the target's member inventory. Missing shadow METHODS are stripped;
           // a missing shadow FIELD makes the class fatally broken — recorded here, and the

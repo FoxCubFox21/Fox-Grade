@@ -604,7 +604,7 @@ j["ctorAdapters"].setdefault(TIP, {}).update({"(" + ET + "DDD" + LVL + ")V": {"n
     "(" + ET + LE + LVL + ")V": {"newDesc": "(" + ET + LE + LVL + ISK + ")V", "transforms": [{"slot": -2, "via": [ELC, "emptyStack", "()" + ISK]}]}})
 j["ctorAdapters"].setdefault("net/minecraft/world/entity/ai/goal/target/NonTameRandomTargetGoal", {})["(" + TA2 + CLS + "Z" + PRED + ")V"] = {"newDesc": "(" + TA2 + CLS + "Z" + SEL + ")V", "transforms": [{"slot": 3, "via": [GOC, "selector", "(" + PRED + ")" + SEL]}]}
 # call redirects (receiver → arg 0)
-cr.setdefault("net/minecraft/world/entity/LivingEntity", {}).update({"isDamageSourceBlocked(" + DS + ")Z": [ELC, "isDamageSourceBlocked", "(" + LE + DS + ")Z"], "getSlotForHand(" + IH + ")" + ES: [ELC, "getSlotForHand", "(" + LE + IH + ")" + ES]})
+cr.setdefault("net/minecraft/world/entity/LivingEntity", {}).update({"isDamageSourceBlocked(" + DS + ")Z": [ELC, "isDamageSourceBlocked", "(" + LE + DS + ")Z"], "getSlotForHand(" + IH + ")" + ES: [ELC, "getSlotForHand", "(" + IH + ")" + ES]})
 cr.setdefault("net/minecraft/world/entity/PathfinderMob", {})["clearRestriction()V"] = [ELC, "clearRestriction", "(" + PFM + ")V"]
 cr.setdefault("net/minecraft/world/entity/animal/Animal", {})["getAttackBoundingBox()" + AABB] = [ELC, "getAttackBoundingBox", "(" + ANM + ")" + AABB]
 cr.setdefault("net/minecraft/world/entity/player/Player", {}).update({"displayClientMessage(" + CMP + "Z)V": [ELC, "displayClientMessage", "(" + PL + CMP + "Z)V"],
@@ -746,6 +746,81 @@ print("state builder: in")
 VP = "Lnet/minecraft/world/entity/npc/villager/VillagerProfession;"; IMS = "Lcom/google/common/collect/ImmutableSet;"; SE2 = "Lnet/minecraft/sounds/SoundEvent;"
 j["ctorAdapters"].setdefault("net/minecraft/world/entity/npc/villager/VillagerProfession", {})["(Ljava/lang/String;" + PRED + PRED + IMS + IMS + SE2 + ")V"] = {"factory": ["foxgrade/shim/VillagerCompat", "profession", "(Ljava/lang/String;" + PRED + PRED + IMS + IMS + SE2 + ")" + VP]}
 print("villager profession: in")
+# ======================= batch 4: what the fresh 1.21.1 set (appleskin, jei, rei, waystones, balm, trinkets, ncr…) still hit =======================
+CHC = "foxgrade/shim/ChatCompat"; PMC = "foxgrade/shim/PermissionCompat"; CSS = "Lnet/minecraft/commands/CommandSourceStack;"; TAGT = "Lnet/minecraft/nbt/Tag;"; CE = "Lnet/minecraft/network/chat/ClickEvent;"
+CEA = "Lnet/minecraft/network/chat/ClickEvent$Action;"; HE = "Lnet/minecraft/network/chat/HoverEvent;"; HEA = "Lnet/minecraft/network/chat/HoverEvent$Action;"; STY = "Lnet/minecraft/network/chat/Style;"
+UUIDT = "Ljava/util/UUID;"; MSV = "Lnet/minecraft/server/MinecraftServer;"; AMOD = "Lnet/minecraft/world/entity/ai/attributes/AttributeModifier;"; RCP = "Lnet/minecraft/world/item/crafting/Recipe;"; NNL2 = "Lnet/minecraft/core/NonNullList;"
+RLK = "Lnet/minecraft/core/HolderLookup$RegistryLookup;"; EEQ = "Lnet/minecraft/world/entity/EntityEquipment;"; CLV = "Lnet/minecraft/client/multiplayer/ClientLevel;"; LPL = "Lnet/minecraft/client/player/LocalPlayer;"
+cr.setdefault("net/minecraft/commands/CommandSourceStack", {})["hasPermission(I)Z"] = [PMC, "hasPermission", "(" + CSS + "I)Z"]
+cr.setdefault("net/minecraft/nbt/Tag", {})["getAsString()Ljava/lang/String;"] = [NC, "getAsString", "(" + TAGT + ")Ljava/lang/String;"]
+cr["net/minecraft/nbt/CompoundTag"]["remove(Ljava/lang/String;)V"] = [NC, "remove", "(" + CT + "Ljava/lang/String;)V"]
+cr.setdefault("net/minecraft/nbt/NbtUtils", {}).update({"createUUID(" + UUIDT + ")" + TAGT: [NC, "createUUID", "(" + UUIDT + ")" + TAGT], "loadUUID(" + TAGT + ")" + UUIDT: [NC, "loadUUID", "(" + TAGT + ")" + UUIDT],
+    "readBlockPos(" + CT + "Ljava/lang/String;)" + OPT: [NC, "readBlockPos", "(" + CT + "Ljava/lang/String;)" + OPT], "writeBlockPos(" + BP + ")" + TAGT: [NC, "writeBlockPos", "(" + BP + ")" + TAGT]})
+cr["net/minecraft/world/item/ItemStack"].update({"parseOptional(" + HLP + CT + ")" + ISK: [NC, "parseOptional", "(" + HLP + CT + ")" + ISK], "saveOptional(" + HLP + ")" + TAGT: [NC, "saveOptional", "(" + ISK + HLP + ")" + TAGT]})
+cr.setdefault("net/minecraft/world/entity/ai/attributes/AttributeModifier", {}).update({"save()" + CT: [NC, "saveModifier", "(" + AMOD + ")" + CT], "load(" + CT + ")" + AMOD: [NC, "loadModifier", "(" + CT + ")" + AMOD]})
+cr["net/minecraft/world/entity/Entity"]["getServer()" + MSV] = [ELC, "getServer", "(" + ENT + ")" + MSV]
+cr["net/minecraft/world/entity/player/Player"]["createCommandSourceStack()" + CSS] = [ELC, "createCommandSourceStack", "(" + PL + ")" + CSS]
+cr.setdefault("net/minecraft/core/BlockPos", {})["getCenter()" + VEC] = [ELC, "getCenter", "(" + BP + ")" + VEC]
+cr.setdefault("net/minecraft/network/chat/ClickEvent", {})["getValue()Ljava/lang/String;"] = [CHC, "clickValue", "(" + CE + ")Ljava/lang/String;"]
+cr.setdefault("net/minecraft/network/chat/HoverEvent", {})["getValue(" + HEA + ")Ljava/lang/Object;"] = [CHC, "hoverValue", "(" + HE + HEA + ")Ljava/lang/Object;"]
+cr.setdefault("net/minecraft/network/chat/Style", {})["withFont(" + ID + ")" + STY] = [CHC, "withFont", "(" + STY + ID + ")" + STY]
+for o in ["net/minecraft/world/item/crafting/Recipe", "net/minecraft/world/item/crafting/CraftingRecipe", "net/minecraft/world/item/crafting/AbstractCookingRecipe", "net/minecraft/world/item/crafting/CampfireCookingRecipe", "net/minecraft/world/item/crafting/SmeltingRecipe", "net/minecraft/world/item/crafting/ShapedRecipe", "net/minecraft/world/item/crafting/ShapelessRecipe"]:
+    if o in new: cr.setdefault(o, {})["getIngredients()" + NNL2] = [RC, "getIngredients", "(" + RCP + ")" + NNL2]
+j["fieldRedirects"].setdefault("net/minecraft/world/item/crafting/Ingredient", {})["getstatic EMPTY:" + ING] = [RC, "emptyIngredient", "()" + ING]
+cr.setdefault("net/minecraft/core/Registry", {})["asLookup()" + RLK] = [RC, "asLookup", "(" + REG + ")" + RLK]
+j["renames"].setdefault("net/minecraft/core/Registry", {}).update({"getTag": "get", "getTagNames": "listTagIds"})
+fr = j["fieldRedirects"]
+fr.setdefault("net/minecraft/client/player/LocalPlayer", {})["get clientLevel:" + CLV] = [MCC, "clientLevel", "(" + LPL + ")" + CLV]
+# constructors
+j["ctorAdapters"].setdefault("net/minecraft/network/chat/ClickEvent", {})["(" + CEA + "Ljava/lang/String;)V"] = {"factory": [CHC, "clickEvent", "(" + CEA + "Ljava/lang/String;)" + CE]}
+j["ctorAdapters"].setdefault("net/minecraft/network/chat/HoverEvent", {})["(" + HEA + "Ljava/lang/Object;)V"] = {"factory": [CHC, "hoverEvent", "(" + HEA + "Ljava/lang/Object;)" + HE]}
+j["ctorAdapters"].setdefault("net/minecraft/core/NonNullList", {})["()V"] = {"factory": ["net/minecraft/core/NonNullList", "create", "()" + NNL2]}
+j["ctorAdapters"].setdefault("net/minecraft/client/gui/screens/ChatScreen", {})["(Ljava/lang/String;)V"] = {"newDesc": "(Ljava/lang/String;Z)V", "transforms": [{"slot": -2, "via": [ELC, "falseValue", "()Z"]}]}
+j["ctorAdapters"].setdefault("net/minecraft/world/entity/player/Inventory", {})["(" + PL + ")V"] = {"newDesc": "(" + PL + EEQ + ")V", "args": ["o1", ["static", ELC, "newEquipment", "()" + EEQ]]}
+# calls that grew a parameter
+for o in EO:
+    if o not in new: continue
+    j["callAdapters"].setdefault(o, {}).update({"startRiding(" + ENT + "Z)Z": {"newName": "startRiding", "newDesc": "(" + ENT + "ZZ)Z", "args": ["o1", "o2", ["static", ELC, "falseValue", "()Z"]]},
+        "teleportTo(" + SL + "DDD" + SET + "FF)Z": {"newName": "teleportTo", "newDesc": "(" + SL + "DDD" + SET + "FFZ)Z", "args": ["o1", "o2", "o3", "o4", "o5", "o6", "o7", ["static", ELC, "falseValue", "()Z"]]}})
+j["callAdapters"].setdefault("net/minecraft/server/packs/resources/SimpleJsonResourceReloadListener", {})["scanDirectory(" + RSM + "Ljava/lang/String;Lcom/google/gson/Gson;Ljava/util/Map;)V"] = {"newName": "scanDirectory", "newDesc": "(" + RSM + F2I + "Lcom/mojang/serialization/DynamicOps;" + CODEC + "Ljava/util/Map;)V",
+    "args": ["o1", ["static", RLC, "jsonConverter", "(Ljava/lang/String;)" + F2I, "o2"], ["static", RLC, "jsonOps", "()Lcom/mojang/serialization/DynamicOps;"], ["static", RLC, "jsonCodec", "()" + CODEC], "o4"]}
+# super.use(...) on items: 26.2 returns InteractionResult; the 1.21.x caller expects a holder
+for o in ["net/minecraft/world/item/Item", "net/minecraft/world/item/BlockItem", "net/minecraft/world/item/BucketItem", "net/minecraft/world/item/MobBucketItem", "net/minecraft/world/item/ArmorItem"]:
+    if o in new or o == "net/minecraft/world/item/ArmorItem":
+        j["callAdapters"].setdefault(o, {})["use(" + LVL + PL + IH + ")" + IRH] = {"newName": "use", "newDesc": "(" + LVL + PL + IH + ")" + IR, "args": ["o1", "o2", "o3"], "convert": ["static", "foxgrade/shim/InteractionCompat", "toHolder", "(" + IR + ")" + IRH]}
+# Fabric screen events: render → extract
+SEV = "net/fabricmc/fabric/api/client/screen/v1/ScreenEvents"
+j["renames"].setdefault(SEV, {}).update({"beforeRender": "beforeExtract", "afterRender": "afterExtract"})
+j["classRenames"].update({SEV + "$BeforeRender": SEV + "$BeforeExtract", SEV + "$AfterRender": SEV + "$AfterExtract"})
+j.setdefault("samRenames", {}).update({SEV + "$BeforeExtract": {"beforeRender": "beforeExtract"}, SEV + "$AfterExtract": {"afterRender": "afterExtract"}})
+j["fieldRedirects"].setdefault("net/minecraft/world/item/ItemStack", {})["getstatic STRICT_CODEC:Lcom/mojang/serialization/Codec;"] = ["move", "net/minecraft/world/item/ItemStack", "Lcom/mojang/serialization/Codec;", "CODEC"]
+
+# ---- Fabric API renames 1.21.x → 26.2 modules (item groups → creative tabs, screen handlers → menus)
+FAPI = "net/fabricmc/fabric/api/"
+j["classRenames"].update({
+    FAPI + "itemgroup/v1/ItemGroupEvents": FAPI + "creativetab/v1/CreativeModeTabEvents",
+    FAPI + "itemgroup/v1/ItemGroupEvents$ModifyEntries": FAPI + "creativetab/v1/CreativeModeTabEvents$ModifyOutput",
+    FAPI + "itemgroup/v1/ItemGroupEvents$ModifyEntriesAll": FAPI + "creativetab/v1/CreativeModeTabEvents$ModifyOutputAll",
+    FAPI + "itemgroup/v1/FabricItemGroupEntries": FAPI + "creativetab/v1/FabricCreativeModeTabOutput",
+    FAPI + "itemgroup/v1/FabricItemGroup": FAPI + "creativetab/v1/FabricCreativeModeTab",
+    FAPI + "screenhandler/v1/ExtendedScreenHandlerType": FAPI + "menu/v1/ExtendedMenuType",
+    FAPI + "screenhandler/v1/ExtendedScreenHandlerType$ExtendedFactory": FAPI + "menu/v1/ExtendedMenuType$ExtendedFactory",
+    FAPI + "screenhandler/v1/ExtendedScreenHandlerFactory": FAPI + "menu/v1/ExtendedMenuProvider"})
+j["renames"].setdefault(FAPI + "creativetab/v1/CreativeModeTabEvents", {})["modifyEntriesEvent"] = "modifyOutputEvent"
+j["fieldRedirects"].setdefault(FAPI + "creativetab/v1/CreativeModeTabEvents", {})["getstatic MODIFY_ENTRIES_ALL:Lnet/fabricmc/fabric/api/event/Event;"] = ["move", FAPI + "creativetab/v1/CreativeModeTabEvents", "Lnet/fabricmc/fabric/api/event/Event;", "MODIFY_OUTPUT_ALL"]
+j.setdefault("samRenames", {}).update({FAPI + "creativetab/v1/CreativeModeTabEvents$ModifyOutput": {"modifyEntries": "modifyOutput"}, FAPI + "creativetab/v1/CreativeModeTabEvents$ModifyOutputAll": {"modifyEntries": "modifyOutput"}})
+j["renames"].setdefault(FAPI + "event/registry/FabricRegistryBuilder", {})["createSimple"] = "create"
+j["renames"].setdefault(FAPI + "biome/v1/BiomeModificationContext", {})["getSpawnSettings"] = "getMobSpawnSettings"
+j["renames"].setdefault(FAPI + "biome/v1/BiomeSelectionContext", {})["getBiomeRegistryEntry"] = "getBiomeHolder"
+cr.setdefault("net/minecraft/world/item/Item", {})["getCraftingRemainingItem()" + ITEM] = [ITC, "craftingRemainingItem", "(" + ITEM + ")" + ITEM]
+cr.setdefault(FAPI + "item/v1/FabricItemStack", {})["getRecipeRemainder()" + ISK] = [ITC, "getRecipeRemainderOf", "(Ljava/lang/Object;)" + ISK]
+j["classRenames"][FAPI + "biome/v1/BiomeModificationContext$SpawnSettingsContext"] = FAPI + "biome/v1/BiomeModificationContext$MobSpawnSettingsContext"
+cr.setdefault("net/minecraft/world/item/ItemStack", {})["getRecipeRemainder()" + ISK] = [ITC, "getRecipeRemainder", "(" + ISK + ")" + ISK]
+MLC = FAPI + "client/model/loading/v1/ModelLoadingPlugin$Context"
+cr.setdefault(MLC, {}).update({"addModels(Ljava/util/Collection;)V": [MOC, "addModels", "(Ljava/lang/Object;Ljava/util/Collection;)V"], "addModels([" + ID + ")V": [MOC, "addModels", "(Ljava/lang/Object;[" + ID + ")V"]})
+print("fabric api renames: in")
+print("batch 4: in")
+
 
 
 
