@@ -62,17 +62,20 @@ public final class GuiCompat {
   }
 
   // ---- text ----
-  public static int drawString(GuiGraphicsExtractor g, Font f, String s, int x, int y, int color) { use(g).text(f, s, x, y, color); return x + f.width(s); }
-  public static int drawString(GuiGraphicsExtractor g, Font f, String s, int x, int y, int color, boolean shadow) { use(g).text(f, s, x, y, color, shadow); return x + f.width(s); }
-  public static int drawString(GuiGraphicsExtractor g, Font f, Component c, int x, int y, int color) { use(g).text(f, c, x, y, color); return x + f.width(c); }
-  public static int drawString(GuiGraphicsExtractor g, Font f, Component c, int x, int y, int color, boolean shadow) { use(g).text(f, c, x, y, color, shadow); return x + f.width(c); }
-  public static int drawString(GuiGraphicsExtractor g, Font f, FormattedCharSequence c, int x, int y, int color) { use(g).text(f, c, x, y, color); return x + f.width(c); }
-  public static int drawString(GuiGraphicsExtractor g, Font f, FormattedCharSequence c, int x, int y, int color, boolean shadow) { use(g).text(f, c, x, y, color, shadow); return x + f.width(c); }
-  public static void drawCenteredString(GuiGraphicsExtractor g, Font f, String s, int x, int y, int color) { use(g).centeredText(f, s, x, y, color); }
-  public static void drawCenteredString(GuiGraphicsExtractor g, Font f, Component c, int x, int y, int color) { use(g).centeredText(f, c, x, y, color); }
-  public static void drawCenteredString(GuiGraphicsExtractor g, Font f, FormattedCharSequence c, int x, int y, int color) { use(g).centeredText(f, c, x, y, color); }
-  public static int drawStringWithBackdrop(GuiGraphicsExtractor g, Font f, Component c, int x, int y, int w, int color) { use(g).textWithBackdrop(f, c, x, y, w, color); return x + f.width(c); }
-  public static void drawWordWrap(GuiGraphicsExtractor g, Font f, FormattedText t, int x, int y, int w, int color) { use(g).textWithWordWrap(f, t, x, y, w, color); }
+  // 1.21.x Font forced an alpha-less colour (0xFFFFFF, the norm in old mods) opaque; 26.2 draws
+  // alpha 0 as nothing. Same rule, same threshold, applied where the old Font applied it.
+  private static int opaque(int color) { return (color & 0xFC000000) == 0 ? color | 0xFF000000 : color; }
+  public static int drawString(GuiGraphicsExtractor g, Font f, String s, int x, int y, int color) { use(g).text(f, s, x, y, opaque(color)); return x + f.width(s); }
+  public static int drawString(GuiGraphicsExtractor g, Font f, String s, int x, int y, int color, boolean shadow) { use(g).text(f, s, x, y, opaque(color), shadow); return x + f.width(s); }
+  public static int drawString(GuiGraphicsExtractor g, Font f, Component c, int x, int y, int color) { use(g).text(f, c, x, y, opaque(color)); return x + f.width(c); }
+  public static int drawString(GuiGraphicsExtractor g, Font f, Component c, int x, int y, int color, boolean shadow) { use(g).text(f, c, x, y, opaque(color), shadow); return x + f.width(c); }
+  public static int drawString(GuiGraphicsExtractor g, Font f, FormattedCharSequence c, int x, int y, int color) { use(g).text(f, c, x, y, opaque(color)); return x + f.width(c); }
+  public static int drawString(GuiGraphicsExtractor g, Font f, FormattedCharSequence c, int x, int y, int color, boolean shadow) { use(g).text(f, c, x, y, opaque(color), shadow); return x + f.width(c); }
+  public static void drawCenteredString(GuiGraphicsExtractor g, Font f, String s, int x, int y, int color) { use(g).centeredText(f, s, x, y, opaque(color)); }
+  public static void drawCenteredString(GuiGraphicsExtractor g, Font f, Component c, int x, int y, int color) { use(g).centeredText(f, c, x, y, opaque(color)); }
+  public static void drawCenteredString(GuiGraphicsExtractor g, Font f, FormattedCharSequence c, int x, int y, int color) { use(g).centeredText(f, c, x, y, opaque(color)); }
+  public static int drawStringWithBackdrop(GuiGraphicsExtractor g, Font f, Component c, int x, int y, int w, int color) { use(g).textWithBackdrop(f, c, x, y, w, opaque(color)); return x + f.width(c); }
+  public static void drawWordWrap(GuiGraphicsExtractor g, Font f, FormattedText t, int x, int y, int w, int color) { use(g).textWithWordWrap(f, t, x, y, w, opaque(color)); }
 
   // ---- shapes (z dropped: the extractor orders elements itself) ----
   public static void fill(GuiGraphicsExtractor g, int x1, int y1, int x2, int y2, int z, int color) { use(g).fill(x1, y1, x2, y2, color); }
