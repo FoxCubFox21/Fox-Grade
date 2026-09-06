@@ -33,6 +33,14 @@ Fox-Grade's port, because **the author's official build always beats a port**.
 - Nothing is ever deleted: originals go to `fox-grade-inbox/processed/`, retired ports to
   `mods-backup/`.
 
+## Client-side only
+
+Fox-Grade declares `environment: client`, so Fabric will not load it on a dedicated server. The
+porting engine itself is environment-agnostic, but three things are not server-ready yet: the
+self-relaunch would fork and exit a server process managed by systemd or a hosting panel, the
+access widener touches client-only classes, and two compatibility shims reach into client code.
+Server support is a real possibility, not a present claim.
+
 ## What it is not
 
 A guarantee. A port disables what it cannot prove safe — the panel tells you exactly what and

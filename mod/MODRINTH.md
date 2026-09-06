@@ -22,6 +22,10 @@ automatically at next launch. **The author's build always beats a port.**
 ⭐ **Nothing is ever deleted.** Originals are kept, ports are reversible, and every launch writes
 a report of what happened.
 
+**Client-side only.** Fox-Grade won't load on a dedicated server: its restart-to-apply step would
+fork and exit a server process, and parts of it touch client-only classes. Server support is
+possible but is not built or tested yet, so it isn't claimed.
+
 **Honesty section:** a port is not a guarantee. Features whose APIs no longer exist get disabled
 (the panel tells you exactly which), and heavyweight rendering mods are out of scope. Ported mods
 run with the feature set that can be proven safe.
