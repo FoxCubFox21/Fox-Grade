@@ -1,13 +1,13 @@
 {
   "h2h_total": 104,
-  "fox_boots": 61,
+  "fox_boots": 64,
   "retro_boots": 37,
-  "fox_only": 26,
+  "fox_only": 29,
   "retro_only": 2,
   "both": 35,
-  "neither": 41,
+  "neither": 38,
   "all_mods": 130,
-  "all_boots": 77,
+  "all_boots": 80,
   "fox_only_names": [
     "ambientsounds",
     "appleskin",
@@ -33,11 +33,14 @@
     "veinminer-client",
     "wavey-capes",
     "waystones",
+    "yungs-better-dungeons",
     "yungs-better-end-island",
+    "yungs-better-jungle-temples",
+    "yungs-better-strongholds",
     "zoomify"
   ],
   "retro_only_names": [
-    "cit-resewn",
-    "distanthorizons"
+    "distanthorizons",
+    "modmenu"
   ]
 }

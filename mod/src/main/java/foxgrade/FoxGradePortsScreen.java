@@ -58,6 +58,12 @@ public final class FoxGradePortsScreen extends Screen {
 
   private void centered(int y, Component text) {
     int w = this.font.width(text);
+    if (w > this.width - 16) {   // never bleed off both edges: trim with an ellipsis
+      String flat = text.getString();
+      while (flat.length() > 8 && this.font.width(flat + "…") > this.width - 16) flat = flat.substring(0, flat.length() - 4);
+      text = Component.literal("§8" + flat + "…§r");
+      w = this.font.width(text);
+    }
     addRenderableWidget(new StringWidget((this.width - w) / 2, y, w, 12, text, this.font));
   }
 
@@ -179,7 +185,7 @@ public final class FoxGradePortsScreen extends Screen {
     } else {
       String testLine = lastTestLine(gameDir);
       if (testLine != null) centered(this.height - 66, Component.literal(testLine));
-      else centered(this.height - 66, Component.literal("§8Drop old jars in §7mods/fox-grade-inbox/§8 — ported on next launch · F8 opens this panel§r"));
+      else centered(this.height - 66, Component.literal("§8F8 opens this panel§r"));   // the drop-in hint is already the empty state's headline
     }
     if (pendingRestart) {
       centered(this.height - 54, Component.literal("§e⟳ Changes pending — restart to apply§r"));

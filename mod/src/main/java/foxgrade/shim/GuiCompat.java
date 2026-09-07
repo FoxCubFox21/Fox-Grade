@@ -186,4 +186,7 @@ public final class GuiCompat {
 
   /** 1.21.x {@code GuiGraphics.bufferSource()}: the frame's recording buffer source (replayed through the extractor). */
   public static BufferSourceShim bufferSource(net.minecraft.client.gui.GuiGraphicsExtractor g) { return FrameCompat.bufferSource(null); }
+  /** 26.2 extracts a screen's background (and its one blur per frame) before calling into the screen; a 1.21 render()
+   *  that drew it again would blur twice, which 26.2 rejects. */
+  public static void backgroundDrawnByGame(net.minecraft.client.gui.screens.Screen screen, net.minecraft.client.gui.GuiGraphicsExtractor g, int mouseX, int mouseY, float partial) { }
 }

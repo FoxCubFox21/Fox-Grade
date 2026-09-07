@@ -88,10 +88,11 @@ public final class RegistryCompat {
       try {
         m.setAccessible(true);
         Object c = m.invoke(value);
-        if (c instanceof com.mojang.serialization.MapCodec) return c;
-        if (c instanceof com.mojang.serialization.Codec<?> codec) return com.mojang.serialization.MapCodec.assumeMapUnsafe(codec);
+        if (c instanceof com.mojang.serialization.MapCodec) { System.err.println("[Fox-Grade] " + registry.key().identifier() + ": registered " + value.getClass().getSimpleName() + " as its MapCodec"); return c; }
+        if (c instanceof com.mojang.serialization.Codec<?> codec) { System.err.println("[Fox-Grade] " + registry.key().identifier() + ": registered " + value.getClass().getSimpleName() + " as a map codec of its Codec"); return com.mojang.serialization.MapCodec.assumeMapUnsafe(codec); }
       } catch (ReflectiveOperationException | RuntimeException ignored) { }
     }
+    System.err.println("[Fox-Grade] " + registry.key().identifier() + ": " + value.getClass().getName() + " is not a MapCodec and offers no codec accessor (" + cands.size() + " candidates); registered as-is");
     return value;
   }
 

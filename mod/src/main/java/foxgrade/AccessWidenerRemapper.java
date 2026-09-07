@@ -25,6 +25,11 @@ public final class AccessWidenerRemapper {
   public interface Names {
     String method(String owner, String name, String desc);
     String field(String owner, String name, String desc);
+      default String fieldDesc(String owner, String name, String desc) { return desc; }
+    /** The owner as the bytecode remapper would rename it (null: fall back to the class table). */
+    default String clazz(String owner) { return null; }
+    /** A field or method descriptor as the bytecode remapper would rewrite it (null: fall back to the class table). */
+    default String desc(String desc) { return null; }
   }
 
   public static Result rewrite(String text, Map<String, String> slashTable) { return rewrite(text, slashTable, null); }
@@ -68,14 +73,23 @@ public final class AccessWidenerRemapper {
         String desc = tokenIdx.size() >= 5 ? parts.get(tokenIdx.get(4)) : "";
         String to = target.equals("method") ? names.method(owner, name, desc) : target.equals("field") ? names.field(owner, name, desc) : null;
         if (to != null && !to.equals(name)) parts.set(tokenIdx.get(3), to);
+        if (target.equals("field") && tokenIdx.size() >= 5) {   // a field whose TYPE changed (File → Path): widen the real one
+          // Shipped Fabric wideners carry INTERMEDIARY member names (field_1234): look the type change up by the real name.
+          String nd = names.fieldDesc(owner, to != null ? to : name, desc);
+          if (nd != null && !nd.equals(desc)) { parts.set(tokenIdx.get(4), nd); descriptors++; }
+        }
       }
-      String toOwner = slashTable.get(owner);
-      if (toOwner != null) { parts.set(ownerIdx, toOwner); owners++; }
+      // Rename the owner exactly as the bytecode was renamed: the remapper's class map (rules + api bridges + mined
+      // moves) is wider than the plain class table, and a widener aimed at the OLD name silently does nothing.
+      String toOwner = names != null ? names.clazz(owner) : null;
+      if (toOwner == null || toOwner.equals(owner)) toOwner = slashTable.get(owner);
+      if (toOwner != null && !toOwner.equals(owner)) { parts.set(ownerIdx, toOwner); owners++; }
       for (int t = 3; t < tokenIdx.size(); t++) {
         int idx = tokenIdx.get(t);
         String tok = parts.get(idx);
         if (tok.startsWith("(") || (tok.length() > 0 && "BCDFIJSZL[".indexOf(tok.charAt(0)) >= 0)) {
           String rewritten = remapDescriptor(tok, slashTable);
+          if (names != null) { String viaRemapper = names.desc(rewritten); if (viaRemapper != null) rewritten = viaRemapper; }
           if (!rewritten.equals(tok)) { parts.set(idx, rewritten); descriptors++; }
         }
       }

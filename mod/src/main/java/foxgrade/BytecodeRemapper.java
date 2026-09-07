@@ -200,6 +200,11 @@ public final class BytecodeRemapper {
     return l;
   }
 
+  /** Interfaces whose single abstract method vanished in 26.2: lambdas for them are wrapped (interface → shim owner, name). */
+  private static final Map<String, String[]> SAMLESS_WRAP = Map.of(
+      "net/minecraft/world/level/levelgen/structure/templatesystem/StructureProcessorType", new String[] {"foxgrade/shim/ProcessorTypeCodec", "of"});
+
+  public String mapDescriptor(String desc) { return remapper.mapDesc(desc); }
   public Set<String> usedShims() { return usedShims; }
 
   public byte[] remap(byte[] classBytes) {
@@ -409,6 +414,16 @@ public final class BytecodeRemapper {
               super.visitMethodInsn(Opcodes.INVOKESTATIC, to[0], to[1], to[2], false);
               return;
             }
+            // A Fabric API accessor returning an Event that the target dropped (ModelLoadingPlugin.Context.modifyModelBeforeBake()):
+            // hand back a dead event, so the mod's registrations become no-ops instead of a NoSuchMethodError at init.
+            if (opcode != Opcodes.INVOKESTATIC && !mname.equals("<init>") && owner.startsWith("net/fabricmc/fabric/api/")
+                && mdesc.endsWith(")Lnet/fabricmc/fabric/api/event/Event;") && mdesc.startsWith("()")
+                && !ShimGenerator.SHIMS.containsKey(owner) && !declaredInChain.test(owner, mname + mdesc)) {
+              super.visitInsn(Opcodes.POP);
+              usedShims.add("foxgrade/shim/FabricEventsCompat");
+              super.visitMethodInsn(Opcodes.INVOKESTATIC, "foxgrade/shim/FabricEventsCompat", "dead", "()Lnet/fabricmc/fabric/api/event/Event;", false);
+              return;
+            }
             FabricApiBridges.CallAdapter ca = mname.equals("<init>") ? null : lookup(callAdapters, owner, mname + mdesc);
             if (ca != null) {
               // Repack arguments: spill them all, then either fold the first K into an object by
@@ -523,8 +538,30 @@ public final class BytecodeRemapper {
           @Override public void visitInvokeDynamicInsn(String iname, String idesc, org.objectweb.asm.Handle bsm, Object... bsmArgs) {
             org.objectweb.asm.Type ret = org.objectweb.asm.Type.getReturnType(idesc);
             if (ret.getSort() == org.objectweb.asm.Type.OBJECT) {
+              // The lambda's method name is the interface's SAM name. ASM's Remapper never maps it (no owner in the
+              // call), so an intermediary name (method_14453) would survive into the port and the lambda would
+              // implement a method nothing calls: translate it as a method of the interface being implemented.
+              if (bsmArgs.length > 0 && bsmArgs[0] instanceof org.objectweb.asm.Type samType && samType.getSort() == org.objectweb.asm.Type.METHOD) {
+                String mapped = remapper.mapMethodName(ret.getInternalName(), iname, samType.getDescriptor());
+                if (mapped != null && !mapped.equals(iname) && !mapped.startsWith("<")) iname = mapped;
+              }
               Map<String, String> sam = samRenames.get(ret.getInternalName());
               if (sam != null && sam.containsKey(iname)) iname = sam.get(iname);
+              Map<String, String> sam2 = samRenames.get(remapper.map(ret.getInternalName()));
+              if (sam2 != null && sam2.containsKey(iname)) iname = sam2.get(iname);
+            }
+            // An interface that lost its only abstract method (StructureProcessorType: 26.2 registers MapCodecs instead):
+            // build the lambda as a Supplier and hand it to a wrapper that is both the interface and the codec.
+            if (ret.getSort() == org.objectweb.asm.Type.OBJECT && SAMLESS_WRAP.containsKey(remapper.map(ret.getInternalName())) && bsmArgs.length >= 3
+                && bsmArgs[0] instanceof org.objectweb.asm.Type samT && samT.getArgumentTypes().length == 0 && org.objectweb.asm.Type.getArgumentTypes(idesc).length == 0) {
+              String[] w = SAMLESS_WRAP.get(remapper.map(ret.getInternalName()));
+              Object[] sup = bsmArgs.clone();
+              sup[0] = org.objectweb.asm.Type.getMethodType("()Ljava/lang/Object;");
+              super.visitInvokeDynamicInsn("get", "()Ljava/util/function/Supplier;", bsm, sup);
+              usedShims.add(w[0]);
+              super.visitMethodInsn(Opcodes.INVOKESTATIC, w[0], w[1], "(Ljava/util/function/Supplier;)L" + remapper.map(ret.getInternalName()) + ";", false);
+              frameDirty[0] = true;
+              return;
             }
             Object[] out = bsmArgs.clone();
             for (int i = 0; i < out.length; i++) {

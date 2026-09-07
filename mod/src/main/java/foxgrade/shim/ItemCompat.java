@@ -81,4 +81,16 @@ public final class ItemCompat {
     } catch (ReflectiveOperationException e) { throw new IllegalStateException("early ItemStack of " + item, e); }
   }
   public static net.minecraft.world.item.ItemStack stack(net.minecraft.world.level.ItemLike like) { return stack(like, 1); }
+  private static net.minecraft.core.component.DataComponentType<net.minecraft.util.Unit> HIDE_ADDITIONAL_TOOLTIP;
+  /** 1.21's {@code DataComponents.HIDE_ADDITIONAL_TOOLTIP}: 26.2 folded it into TOOLTIP_DISPLAY (a different value type). A
+   *  registered unit component keeps stacks that set it valid; 26.2 just does not read it. */
+  public static synchronized net.minecraft.core.component.DataComponentType<net.minecraft.util.Unit> hideAdditionalTooltip() {
+    if (HIDE_ADDITIONAL_TOOLTIP != null) return HIDE_ADDITIONAL_TOOLTIP;
+    net.minecraft.resources.Identifier id = net.minecraft.resources.Identifier.fromNamespaceAndPath("foxgrade", "hide_additional_tooltip");
+    var reg = net.minecraft.core.registries.BuiltInRegistries.DATA_COMPONENT_TYPE;
+    @SuppressWarnings("unchecked") net.minecraft.core.component.DataComponentType<net.minecraft.util.Unit> existing = (net.minecraft.core.component.DataComponentType<net.minecraft.util.Unit>) reg.getValue(id);
+    if (existing != null) return HIDE_ADDITIONAL_TOOLTIP = existing;
+    net.minecraft.core.component.DataComponentType<net.minecraft.util.Unit> type = net.minecraft.core.component.DataComponentType.<net.minecraft.util.Unit>builder().persistent(net.minecraft.util.Unit.CODEC).build();
+    return HIDE_ADDITIONAL_TOOLTIP = net.minecraft.core.Registry.register(reg, id, type);
+  }
 }

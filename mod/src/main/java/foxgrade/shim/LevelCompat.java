@@ -75,4 +75,19 @@ public final class LevelCompat {
     return (float) (d * 2.0 + e) / 3.0f;
   }
   public static float sunAngle(net.minecraft.world.level.Level level, float partialTick) { return timeOfDay(level, partialTick) * ((float) Math.PI * 2f); }
+
+  /** 1.21 DimensionType.effectsLocation(): the classic effects id, read back from the 26.2 skybox kind. */
+  public static net.minecraft.resources.Identifier effectsLocation(net.minecraft.world.level.dimension.DimensionType type) {
+    Object sky = type.skybox();
+    String s = sky == null ? "" : sky.toString().toLowerCase(java.util.Locale.ROOT);   // OVERWORLD, END, NONE
+    return net.minecraft.resources.Identifier.withDefaultNamespace(s.contains("end") ? "the_end" : s.contains("overworld") ? "overworld" : "the_nether");
+  }
+
+  /** 1.21 WorldData.worldGenOptions(): 26.2 keeps no WorldOptions on the level data. A stand-in whose seed is stable
+   *  per level name, so callers that key caches on it (Distant Horizons) stay consistent between launches. */
+  public static net.minecraft.world.level.levelgen.WorldOptions worldGenOptions(net.minecraft.world.level.storage.WorldData data) {
+    long seed = 0;
+    try { seed = data.getLevelSettings().levelName().hashCode() * 0x9E3779B97F4A7C15L; } catch (RuntimeException ignored) { }
+    return new net.minecraft.world.level.levelgen.WorldOptions(seed, true, false);
+  }
 }

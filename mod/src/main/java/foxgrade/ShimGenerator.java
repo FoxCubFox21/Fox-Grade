@@ -55,6 +55,9 @@ public final class ShimGenerator implements Opcodes {
       Map.entry("foxgrade/shim/RecordingBufferSource", () -> fromResource("foxgrade/shim/RecordingBufferSource.class")),
       Map.entry("foxgrade/shim/RecordingConsumer", () -> fromResource("foxgrade/shim/RecordingConsumer.class")),
       Map.entry("foxgrade/shim/RenderTypeCompat", () -> fromResource("foxgrade/shim/RenderTypeCompat.class")),
+      Map.entry("net/minecraft/client/renderer/RenderType$CompositeState", () -> fromResource("foxgrade/shim/RenderTypeCompositeState.class")),
+      Map.entry("net/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder", () -> fromResource("foxgrade/shim/RenderTypeCompositeStateBuilder.class")),
+      Map.entry("net/minecraft/client/renderer/RenderType$OutlineProperty", () -> fromResource("foxgrade/shim/RenderTypeOutlineProperty.class")),
       Map.entry("foxgrade/shim/LevelRendererCompat", () -> fromResource("foxgrade/shim/LevelRendererCompat.class")),
       Map.entry("foxgrade/shim/LightTextureCompat", () -> fromResource("foxgrade/shim/LightTextureCompat.class")),
       Map.entry("foxgrade/shim/ModelCompat", () -> fromResource("foxgrade/shim/ModelCompat.class")),
@@ -70,6 +73,11 @@ public final class ShimGenerator implements Opcodes {
       Map.entry("foxgrade/shim/EntityApiCompat", () -> fromResource("foxgrade/shim/EntityApiCompat.class")),
       Map.entry("foxgrade/shim/EntityLegacyCompat", () -> fromResource("foxgrade/shim/EntityLegacyCompat.class")),
       Map.entry("foxgrade/shim/HolderCompat", () -> fromResource("foxgrade/shim/HolderCompat.class")),
+      Map.entry("foxgrade/shim/PackCompat", () -> fromResource("foxgrade/shim/PackCompat.class")),
+      Map.entry("foxgrade/shim/NetworkingCompat", () -> fromResource("foxgrade/shim/NetworkingCompat.class")),
+      Map.entry("foxgrade/shim/ChunkCompat", () -> fromResource("foxgrade/shim/ChunkCompat.class")),
+      Map.entry("foxgrade/shim/ProcessorTypeCodec", () -> fromResource("foxgrade/shim/ProcessorTypeCodec.class")),
+      Map.entry("foxgrade/shim/IoCompat", () -> fromResource("foxgrade/shim/IoCompat.class")),
       Map.entry("foxgrade/shim/RecipeSerializerCompat", () -> fromResource("foxgrade/shim/RecipeSerializerCompat.class")),
       Map.entry("foxgrade/shim/ConditionCompat$Handler", () -> fromResource("foxgrade/shim/ConditionCompat$Handler.class")),
       Map.entry("foxgrade/shim/ConditionCompat", () -> fromResource("foxgrade/shim/ConditionCompat.class")),
@@ -110,11 +118,32 @@ public final class ShimGenerator implements Opcodes {
       Map.entry("net/minecraft/util/FastColor$ARGB32", () -> fromResource("foxgrade/shim/FastColorShim$ARGB32.class")),
       Map.entry("net/minecraft/util/FastColor$ABGR32", () -> fromResource("foxgrade/shim/FastColorShim$ABGR32.class")),
       Map.entry("net/minecraft/client/resources/model/BakedModel", () -> fromResource("foxgrade/shim/BakedModelShim.class")),
-      Map.entry("net/minecraft/client/renderer/block/model/ItemOverrides", () -> fromResource("foxgrade/shim/ItemOverridesShim.class")),
       Map.entry("foxgrade/shim/StringSplitterCompat", () -> fromResource("foxgrade/shim/StringSplitterCompat.class")),
       Map.entry("net/minecraft/client/renderer/item/ItemProperties", () -> fromResource("foxgrade/shim/ItemPropertiesShim.class")),
       Map.entry("net/minecraft/client/gui/GuiSpriteManager", () -> fromResource("foxgrade/shim/GuiSpriteManagerShim.class")),
       Map.entry("net/minecraft/client/renderer/texture/Tickable", () -> fromResource("foxgrade/shim/TickableShim.class")),
+      Map.entry("net/minecraft/server/packs/BuiltInMetadata", () -> fromResource("foxgrade/shim/BuiltInMetadataShim.class")),
+      Map.entry("net/minecraft/client/renderer/RenderStateShard", () -> fromResource("foxgrade/shim/RenderStateShardShim.class")),
+      Map.entry("net/minecraft/client/renderer/RenderStateShard$TransparencyStateShard", () -> fromResource("foxgrade/shim/RenderStateShardShim$TransparencyStateShard.class")),
+      Map.entry("net/minecraft/client/renderer/RenderStateShard$TexturingStateShard", () -> fromResource("foxgrade/shim/RenderStateShardShim$TexturingStateShard.class")),
+      Map.entry("net/minecraft/client/renderer/RenderStateShard$WriteMaskStateShard", () -> fromResource("foxgrade/shim/RenderStateShardShim$WriteMaskStateShard.class")),
+      Map.entry("net/minecraft/client/renderer/RenderStateShard$DepthTestStateShard", () -> fromResource("foxgrade/shim/RenderStateShardShim$DepthTestStateShard.class")),
+      Map.entry("net/minecraft/client/renderer/RenderStateShard$CullStateShard", () -> fromResource("foxgrade/shim/RenderStateShardShim$CullStateShard.class")),
+      Map.entry("net/minecraft/client/renderer/RenderStateShard$LayeringStateShard", () -> fromResource("foxgrade/shim/RenderStateShardShim$LayeringStateShard.class")),
+      Map.entry("net/minecraft/client/renderer/RenderStateShard$OutputStateShard", () -> fromResource("foxgrade/shim/RenderStateShardShim$OutputStateShard.class")),
+      Map.entry("net/minecraft/client/renderer/RenderStateShard$LightmapStateShard", () -> fromResource("foxgrade/shim/RenderStateShardShim$LightmapStateShard.class")),
+      Map.entry("net/minecraft/client/renderer/RenderStateShard$OverlayStateShard", () -> fromResource("foxgrade/shim/RenderStateShardShim$OverlayStateShard.class")),
+      Map.entry("net/minecraft/client/renderer/RenderStateShard$ShaderStateShard", () -> fromResource("foxgrade/shim/RenderStateShardShim$ShaderStateShard.class")),
+      Map.entry("net/minecraft/client/renderer/RenderStateShard$EmptyTextureStateShard", () -> fromResource("foxgrade/shim/RenderStateShardShim$EmptyTextureStateShard.class")),
+      Map.entry("net/minecraft/client/renderer/RenderStateShard$TextureStateShard", () -> fromResource("foxgrade/shim/RenderStateShardShim$TextureStateShard.class")),
+      Map.entry("net/minecraft/client/renderer/RenderStateShard$MultiTextureStateShard", () -> fromResource("foxgrade/shim/RenderStateShardShim$MultiTextureStateShard.class")),
+      Map.entry("net/minecraft/client/renderer/RenderStateShard$LineStateShard", () -> fromResource("foxgrade/shim/RenderStateShardShim$LineStateShard.class")),
+      Map.entry("net/minecraft/client/renderer/RenderStateShard$ColorLogicStateShard", () -> fromResource("foxgrade/shim/RenderStateShardShim$ColorLogicStateShard.class")),
+      Map.entry("net/minecraft/client/renderer/block/model/ItemOverride", () -> fromResource("foxgrade/shim/ItemOverrideShim.class")),
+      Map.entry("net/minecraft/client/renderer/block/model/ItemOverride$Predicate", () -> fromResource("foxgrade/shim/ItemOverrideShim$Predicate.class")),
+      Map.entry("net/minecraft/client/renderer/block/model/ItemOverrides", () -> fromResource("foxgrade/shim/ItemOverridesShim.class")),
+      Map.entry("net/minecraft/client/renderer/texture/atlas/SpriteSourceType", () -> fromResource("foxgrade/shim/SpriteSourceTypeShim.class")),
+      Map.entry("net/minecraft/client/resources/model/AtlasSet", () -> fromResource("foxgrade/shim/AtlasSetShim.class")),
       Map.entry("net/fabricmc/fabric/api/networking/v1/PacketByteBufs", () -> fromResource("foxgrade/shim/PacketByteBufsShim.class")),
       Map.entry("net/minecraft/util/random/Weight", () -> fromResource("foxgrade/shim/WeightShim.class")),
       Map.entry("net/minecraft/util/random/WeightedEntry", () -> fromResource("foxgrade/shim/WeightedEntryShim.class")),
@@ -129,6 +158,7 @@ public final class ShimGenerator implements Opcodes {
       Map.entry("net/minecraft/advancements/critereon/ItemSubPredicate", () -> fromResource("foxgrade/shim/ItemSubPredicateShim.class")),
       Map.entry("net/minecraft/advancements/critereon/ItemSubPredicate$Type", () -> fromResource("foxgrade/shim/ItemSubPredicateTypeShim.class")),
       Map.entry("foxgrade/shim/ResourceMetadataCompat", () -> fromResource("foxgrade/shim/ResourceMetadataCompat.class")),
+      Map.entry("foxgrade/shim/MetadataSectionTypeSerializer", () -> fromResource("foxgrade/shim/MetadataSectionTypeSerializer.class")),
       Map.entry("foxgrade/shim/RegistriesCompat", () -> fromResource("foxgrade/shim/RegistriesCompat.class")),
       Map.entry("net/fabricmc/fabric/api/object/builder/v1/client/model/FabricModelPredicateProviderRegistry", () -> fromResource("foxgrade/shim/FabricModelPredicateProviderRegistryShim.class")),
       Map.entry("foxgrade/shim/PermissionCompat", () -> fromResource("foxgrade/shim/PermissionCompat.class")),
@@ -235,10 +265,34 @@ public final class ShimGenerator implements Opcodes {
     m.put("foxgrade/shim/FastColorShim$ARGB32", "net/minecraft/util/FastColor$ARGB32");
     m.put("foxgrade/shim/FastColorShim$ABGR32", "net/minecraft/util/FastColor$ABGR32");
     m.put("foxgrade/shim/BakedModelShim", "net/minecraft/client/resources/model/BakedModel");
-    m.put("foxgrade/shim/ItemOverridesShim", "net/minecraft/client/renderer/block/model/ItemOverrides");
     m.put("foxgrade/shim/ItemPropertiesShim", "net/minecraft/client/renderer/item/ItemProperties");
     m.put("foxgrade/shim/GuiSpriteManagerShim", "net/minecraft/client/gui/GuiSpriteManager");
     m.put("foxgrade/shim/TickableShim", "net/minecraft/client/renderer/texture/Tickable");
+    m.put("foxgrade/shim/BuiltInMetadataShim", "net/minecraft/server/packs/BuiltInMetadata");
+    m.put("foxgrade/shim/RenderStateShardShim", "net/minecraft/client/renderer/RenderStateShard");
+    m.put("foxgrade/shim/RenderTypeCompositeState", "net/minecraft/client/renderer/RenderType$CompositeState");
+    m.put("foxgrade/shim/RenderTypeCompositeStateBuilder", "net/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder");
+    m.put("foxgrade/shim/RenderTypeOutlineProperty", "net/minecraft/client/renderer/RenderType$OutlineProperty");
+    m.put("foxgrade/shim/RenderStateShardShim$TransparencyStateShard", "net/minecraft/client/renderer/RenderStateShard$TransparencyStateShard");
+    m.put("foxgrade/shim/RenderStateShardShim$TexturingStateShard", "net/minecraft/client/renderer/RenderStateShard$TexturingStateShard");
+    m.put("foxgrade/shim/RenderStateShardShim$WriteMaskStateShard", "net/minecraft/client/renderer/RenderStateShard$WriteMaskStateShard");
+    m.put("foxgrade/shim/RenderStateShardShim$DepthTestStateShard", "net/minecraft/client/renderer/RenderStateShard$DepthTestStateShard");
+    m.put("foxgrade/shim/RenderStateShardShim$CullStateShard", "net/minecraft/client/renderer/RenderStateShard$CullStateShard");
+    m.put("foxgrade/shim/RenderStateShardShim$LayeringStateShard", "net/minecraft/client/renderer/RenderStateShard$LayeringStateShard");
+    m.put("foxgrade/shim/RenderStateShardShim$OutputStateShard", "net/minecraft/client/renderer/RenderStateShard$OutputStateShard");
+    m.put("foxgrade/shim/RenderStateShardShim$LightmapStateShard", "net/minecraft/client/renderer/RenderStateShard$LightmapStateShard");
+    m.put("foxgrade/shim/RenderStateShardShim$OverlayStateShard", "net/minecraft/client/renderer/RenderStateShard$OverlayStateShard");
+    m.put("foxgrade/shim/RenderStateShardShim$ShaderStateShard", "net/minecraft/client/renderer/RenderStateShard$ShaderStateShard");
+    m.put("foxgrade/shim/RenderStateShardShim$EmptyTextureStateShard", "net/minecraft/client/renderer/RenderStateShard$EmptyTextureStateShard");
+    m.put("foxgrade/shim/RenderStateShardShim$TextureStateShard", "net/minecraft/client/renderer/RenderStateShard$TextureStateShard");
+    m.put("foxgrade/shim/RenderStateShardShim$MultiTextureStateShard", "net/minecraft/client/renderer/RenderStateShard$MultiTextureStateShard");
+    m.put("foxgrade/shim/RenderStateShardShim$LineStateShard", "net/minecraft/client/renderer/RenderStateShard$LineStateShard");
+    m.put("foxgrade/shim/RenderStateShardShim$ColorLogicStateShard", "net/minecraft/client/renderer/RenderStateShard$ColorLogicStateShard");
+    m.put("foxgrade/shim/ItemOverrideShim", "net/minecraft/client/renderer/block/model/ItemOverride");
+    m.put("foxgrade/shim/ItemOverrideShim$Predicate", "net/minecraft/client/renderer/block/model/ItemOverride$Predicate");
+    m.put("foxgrade/shim/ItemOverridesShim", "net/minecraft/client/renderer/block/model/ItemOverrides");
+    m.put("foxgrade/shim/SpriteSourceTypeShim", "net/minecraft/client/renderer/texture/atlas/SpriteSourceType");
+    m.put("foxgrade/shim/AtlasSetShim", "net/minecraft/client/resources/model/AtlasSet");
     m.put("foxgrade/shim/PacketByteBufsShim", "net/fabricmc/fabric/api/networking/v1/PacketByteBufs");
     m.put("foxgrade/shim/WeightShim", "net/minecraft/util/random/Weight");
     m.put("foxgrade/shim/WeightedEntryShim", "net/minecraft/util/random/WeightedEntry");
@@ -269,6 +323,10 @@ public final class ShimGenerator implements Opcodes {
 
   // Shims that reference other shims; the pipeline injects the closure.
   static final Map<String, java.util.List<String>> SHIM_DEPS = Map.ofEntries(
+      Map.entry("net/minecraft/server/packs/BuiltInMetadata", java.util.List.of("net/minecraft/server/packs/metadata/MetadataSectionSerializer")),
+      Map.entry("net/minecraft/client/renderer/RenderType$CompositeState", java.util.List.of("net/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder", "net/minecraft/client/renderer/RenderType$OutlineProperty", "net/minecraft/client/renderer/RenderStateShard")),
+      Map.entry("net/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder", java.util.List.of("net/minecraft/client/renderer/RenderType$CompositeState", "net/minecraft/client/renderer/RenderType$OutlineProperty", "net/minecraft/client/renderer/RenderStateShard")),
+      Map.entry("foxgrade/shim/RenderTypeCompat", java.util.List.of("net/minecraft/client/renderer/RenderType$CompositeState", "com/mojang/blaze3d/vertex/VertexFormat$Mode", "net/minecraft/client/renderer/RenderStateShard")),
       Map.entry("foxgrade/shim/GuiCompat", java.util.List.of("foxgrade/shim/GuiPoseStack")),
       Map.entry("foxgrade/shim/RenderSystemCompat", java.util.List.of("foxgrade/shim/GuiCompat", "com/mojang/blaze3d/vertex/Tesselator", "foxgrade/shim/SourceFactorShim", "foxgrade/shim/DestFactorShim")),
       Map.entry("foxgrade/shim/HudRenderCallback", java.util.List.of("foxgrade/shim/GuiCompat")),
@@ -287,7 +345,8 @@ public final class ShimGenerator implements Opcodes {
       Map.entry("foxgrade/shim/ItemCompat", java.util.List.of("foxgrade/shim/TooltipListShim", "foxgrade/shim/RegistryCompat")),
       Map.entry("foxgrade/shim/BlockApiCompat", java.util.List.of("foxgrade/shim/RegistryCompat")),
       Map.entry("foxgrade/shim/RegistryCompat", java.util.List.of("net/minecraft/world/item/ArmorMaterial$Layer")),
-      Map.entry("foxgrade/shim/ResourceMetadataCompat", java.util.List.of("net/minecraft/server/packs/metadata/MetadataSectionSerializer")),
+      Map.entry("foxgrade/shim/ResourceMetadataCompat", java.util.List.of("net/minecraft/server/packs/metadata/MetadataSectionSerializer", "foxgrade/shim/MetadataSectionTypeSerializer")),
+      Map.entry("foxgrade/shim/MetadataSectionTypeSerializer", java.util.List.of("net/minecraft/server/packs/metadata/MetadataSectionSerializer")),
       Map.entry("foxgrade/shim/SavedDataCompat", java.util.List.of("net/minecraft/world/level/saveddata/SavedData$Factory")),
       Map.entry("net/minecraft/client/resources/model/BakedModel", java.util.List.of("net/minecraft/client/renderer/block/model/ItemOverrides")),
       Map.entry("net/minecraft/client/renderer/item/ItemProperties", java.util.List.of("net/minecraft/client/renderer/item/ClampedItemPropertyFunction")),

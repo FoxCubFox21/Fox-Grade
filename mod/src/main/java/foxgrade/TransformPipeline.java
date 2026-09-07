@@ -245,12 +245,32 @@ public final class TransformPipeline {
           // 26.2 loads datapack and resource JSON with a STRICT parser; 1.21 accepted comments, trailing commas and the
           // like. Files that fail the strict read are re-serialised from a lenient parse; clean files stay byte-identical.
           byte[] strictened = JsonStrict.strictenIfNeeded(raw);
+          if (name.contains("/worldgen/template_pool/")) {   // 26.2 caps pool element weights at 150; 1.21 packs leaned on YUNG's API lifting that
+            byte[] poolSrc = strictened != null ? strictened : raw, pooled = TemplatePoolFix.clamp(poolSrc);
+            if (pooled != poolSrc) strictened = pooled;
+          }
+          {   // vanilla ids the target renamed (chain → iron_chain): datapack JSON has no data version to fix it up
+            byte[] idSrc = strictened != null ? strictened : raw, renamed = DataIdRenames.apply(idSrc);
+            if (renamed != idSrc) strictened = renamed;
+          }
           if (strictened != null) { emit = strictened; jsonStrictened++; }
         } else if ((name.toLowerCase().endsWith(".accesswidener") || name.toLowerCase().endsWith(".aw") || name.toLowerCase().endsWith(".ct") || name.toLowerCase().endsWith(".classtweaker")) && !mergedClasses.isEmpty()) {
           try {
             AccessWidenerRemapper.Names names = new AccessWidenerRemapper.Names() {
               @Override public String method(String o, String n, String d) { return remapper.mapMethodName(o, n, d); }
               @Override public String field(String o, String n, String d) { return remapper.mapFieldName(o, n, d); }
+              @Override public String clazz(String o) { return remapper.mapClass(o); }
+              @Override public String desc(String d) { try { return remapper.mapDescriptor(d); } catch (RuntimeException e) { return null; } }
+              @Override public String fieldDesc(String o, String n, String d) {
+                String owner = remapper.mapClass(o); String desc = remapper.mapDescriptor(d);
+                Map<String, String[]> fr = apiBridges.fieldRedirects().get(owner);
+                if (fr == null) return desc;
+                for (String kind : new String[] {"get ", "getstatic "}) {
+                  String[] to = fr.get(kind + n + ":" + desc);
+                  if (to != null && to.length > 1 && (to[0].equals("holder") || to[0].equals("retype"))) return to[1];
+                }
+                return desc;
+              }
             };
             AccessWidenerRemapper.Result r = AccessWidenerRemapper.rewrite(new String(raw, StandardCharsets.UTF_8), mergedClasses, names);
             // Even a widener with no member lines needs its header namespace rewritten (Fabric refuses an
@@ -374,9 +394,12 @@ public final class TransformPipeline {
             // Mixin also refuses a mixin whose declared superclass is not in the target's hierarchy any more
             // (AxeItem no longer extends DiggerItem): "Super class X of Y was not found in the hierarchy of target"
             boolean superLost = false;
-            if (!gone && mixinSuper != null && PortVerifier.isGameClass(mixinSuper) && !mixinSuper.equals("java/lang/Object") && verifier.knows(mixinSuper)) {
+            if (!gone && mixinSuper != null && PortVerifier.isGameClass(mixinSuper) && !mixinSuper.equals("java/lang/Object")) {
+              // Mixin walks the target's PARENT chain: a superclass that vanished from 26.2 (DiggerItem), or that is the
+              // target itself (EffectRenderingInventoryScreen folded into AbstractContainerScreen), is lost either way.
               superLost = true;
-              for (String c = target, guard = ""; c != null && guard.length() < 48; c = verifier.superOf(c), guard += "x") if (c.equals(mixinSuper)) { superLost = false; break; }
+              if (verifier.knows(mixinSuper))
+                for (String c = verifier.superOf(target), guard = ""; c != null && guard.length() < 48; c = verifier.superOf(c), guard += "x") if (c.equals(mixinSuper)) { superLost = false; break; }
             }
             if (gone || kindFlipped || superLost) {
               fatalMixins.add(slashClass);

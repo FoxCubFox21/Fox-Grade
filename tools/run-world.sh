@@ -29,7 +29,8 @@ run_one() {
     --quickPlaySingleplayer "APPLE SKIN PORT 3" \
     > "$B/log-$name.log" 2>&1 &
   # Keep the game out of the way: hide every java window within 2 s of it appearing, for the life of this run.
-  ( for i in $(seq 1 120); do sleep 2; osascript -e 'tell application "System Events" to set visible of (every process whose name is "java") to false' >/dev/null 2>&1; pgrep -f "gameDir $PT " >/dev/null || break; done ) &
+  # Hide only THIS instance's game window (by process id) — never other Java apps such as the user's own Minecraft.
+  ( for i in $(seq 1 120); do sleep 2; for pid in $(pgrep -f "gameDir $PT "); do osascript -e "tell application \"System Events\" to set visible of (every process whose unix id is $pid) to false" >/dev/null 2>&1; done; pgrep -f "gameDir $PT " >/dev/null || break; done ) &
   # Identical pass rule to the Retromod lane: the world starts loading (READY marker) and the game is still running
   # 8 s later, within a 150 s cap. A screenshot is still taken when the game gets that far, but it is not the verdict.
   local READY="Preparing spawn area\|Time elapsed\|joined the game"

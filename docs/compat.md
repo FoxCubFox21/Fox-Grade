@@ -7,14 +7,15 @@ exactly that rule, from the same launch command, base jars and instance layout; 
 the tested mod was held back or failed to port is graded "held", not "boots". A screenshot is
 linked where the game got far enough to take one. "Unresolved" is the number of classes,
 fields and methods the port still references that 26.2 no longer has — the honest measure of
-how much of the mod is reachable. Generated from the harness ledgers at commit `1689bc0`
+how much of the mod is reachable. Generated from the harness ledgers at commit `34d9d04`
 on 2026-09-07; the scripts are in `tools/`.
 
 | Result | Mods |
 |---|---|
-| ✅ boots | 77 |
-| ❌ crash | 35 |
-| ❌ stall | 18 |
+| ✅ boots | 80 |
+| ❌ crash | 34 |
+| ❌ stall | 15 |
+| ⚠ screen closed | 1 |
 
 ## Per mod
 
@@ -47,7 +48,7 @@ on 2026-09-07; the scripts are in `tools/`.
 | chipped | 1.21.1 | ❌ stall | 21 |  | ❌ crash |  | the game never starts loading the world with it (silent stall after registration) |
 | chloride | 1.21.1 | ❌ crash | 120 |  | ❌ crash |  |  |
 | chunky |  | ✅ boots | 8 |  | ❌ crash | [shot](shots/chunky.png) |  |
-| cit-resewn | 1.21 | ❌ crash | 2 |  | ✅ boots |  | built on item-model overrides (ItemOverride), which 26.2 replaced with item model definitions |
+| cit-resewn | 1.21 | ✅ boots | 0 |  | ✅ boots |  |  |
 | clumps | 1.21.1 | ✅ boots | 0 |  | ✅ boots | [shot](shots/clumps.png) |  |
 | cobblemon | 1.21.1 | ❌ crash | 246 |  | ❌ crash |  | 251 unresolved references across 33 removed classes; a rewrite, not a port |
 | comforts | 1.21.1 | ❌ crash | 27 |  | ❌ crash |  | its SleepStatus mixin captures the server from a hook that no longer fires, so the field stays null |
@@ -57,10 +58,10 @@ on 2026-09-07; the scripts are in `tools/`.
 | crash-assistant | 1.20.2 | ✅ boots | 9 |  | ⏸ held (library missing) | [shot](shots/crash-assistant.png) |  |
 | cubes-without-borders | 1.21 | ✅ boots | 17 |  | ✅ boots | [shot](shots/cubes-without-borders.png) |  |
 | customskinloader |  | ✅ boots | 2 |  | ✅ boots | [shot](shots/customskinloader.png) |  |
-| cut-through | 1.21.1 | ❌ crash | 275 |  | ❌ crash |  | puzzleslib's sound mixin captures a local that 26.2 no longer has at that point |
+| cut-through | 1.21.1 | ❌ crash | 272 |  | ❌ crash |  | puzzleslib's sound mixin captures a local that 26.2 no longer has at that point |
 | debugify | 1.21.1 | ✅ boots | 14 |  | ❌ crash | [shot](shots/debugify.png) |  |
 | default-options | 1.21.1 | ✅ boots | 0 |  | ❌ crash | [shot](shots/default-options.png) |  |
-| distanthorizons | 1.21.1 | ❌ crash | 51 |  | ✅ boots |  | java.lang.NoSuchFieldError: Class net.minecraft.world.level.storage.SavedDataStorage does  |
+| distanthorizons | 1.21.1 | ❌ crash | 39 |  | ✅ boots |  | died 5s after the world started loading |
 | drippy-loading | 1.21.1 | ❌ crash | 0 |  | ❌ crash |  | java.lang.NoClassDefFoundError: com/mojang/blaze3d/pipeline/RenderCall |
 | duck | 1.21.1 | ❌ crash | 45 |  |  | [shot](shots/duck.png) | java.lang.NoSuchMethodError: 'void net.minecraft.world.entity.MobCategory.<init>(java.lang |
 | dungeons-and-taverns |  | ❌ stall | 0 |  | ❌ crash |  | its loot conditions use the 1.21 time_check shape without the clock key 26.2 requires |
@@ -82,28 +83,28 @@ on 2026-09-07; the scripts are in `tools/`.
 | fastquit |  | ✅ boots | 7 |  | ✅ boots | [shot](shots/fastquit.png) |  |
 | ferrite-core |  | ✅ boots | 13 |  | ❌ crash | [shot](shots/ferrite-core.png) |  |
 | freecam | 1.21 | ✅ boots | 18 |  | ✅ boots | [shot](shots/freecam.png) |  |
-| friends-and-foes | >=1.21 | ❌ crash | 32 |  |  |  |  |
+| friends-and-foes | >=1.21 | ❌ crash | 32 |  |  |  | Caused by: java.lang.NoClassDefFoundError: net/minecraft/world/item/ArmorItem |
 | handcrafted | 1.21.1 | ❌ stall | 23 |  | ❌ crash | [shot](shots/handcrafted.png) | model baking fails on its block models (translucency out of bounds) and the world never loads |
 | highlightmobs | ~1.21.1 | ✅ boots | 2 |  |  | [shot](shots/highlightmobs.png) |  |
 | inventory-profiles-next | 1.21.1 | ✅ boots | 17 |  | ❌ crash | [shot](shots/inventory-profiles-next.png) |  |
-| jade | 1.21.1 | ❌ crash | 96 |  |  |  | Caused by: java.lang.NoSuchMethodError: 'void snownee.jade.mixin.KeyAccess.setDisplayName( |
+| jade | 1.21.1 | ❌ crash | 96 |  |  |  | Caused by: java.lang.NoSuchMethodError: 'void net.minecraft.world.phys.Vec3.<init>(org.jom |
 | jei | 1.21.1 | ✅ boots | 72 |  | ❌ crash | [shot](shots/jei.png) |  |
 | krypton |  | ✅ boots |  | ✅ boots |  | [shot](shots/krypton.png) |  |
 | lambdynamiclights | 1.21.1 | ❌ crash | 0 |  | ❌ crash | [shot](shots/lambdynamiclights.png) | its LevelRenderer duck interface mixin cannot apply; renderer-tier |
 | language-reload | 1.21.1 | ✅ boots | 13 |  | ✅ boots | [shot](shots/language-reload.png) |  |
 | lighty | >=1.21.1 | ✅ boots | 15 |  |  | [shot](shots/lighty.png) |  |
 | lithium | 1.21.1 | ✅ boots |  | ✅ boots | ❌ crash | [shot](shots/lithium.png) |  |
-| llo | ~1.21.1 | ❌ crash | 1 |  |  |  | Caused by: java.lang.NoClassDefFoundError: net/minecraft/world/InteractionResultHolder |
+| llo | ~1.21.1 | ❌ crash | 1 |  |  |  |  |
 | lmd | 1.21.1 | ✅ boots | 0 |  | ✅ boots | [shot](shots/lmd.png) |  |
 | lootr |  | ❌ crash | 93 |  | ❌ crash | [shot](shots/lootr.png) | needs Fabric's BuiltinItemRendererRegistry (custom item renderers), removed with the 26.2 rendering rewrite |
 | mixintrace |  | ✅ boots | 0 |  | ✅ boots | [shot](shots/mixintrace.png) |  |
 | modelfix | 1.21 | ✅ boots | 1 |  | ✅ boots | [shot](shots/modelfix.png) |  |
 | modernfix | 1.21.1 | ❌ stall | 30 |  | ❌ crash | [shot](shots/modernfix.png) | texture-stitcher internals (Stitcher.SpriteLoader) changed shape in 26.2; renderer-tier |
-| modmenu |  | ✅ boots | 0 |  | ✅ boots | [shot](shots/modmenu.png) |  |
+| modmenu |  | ⚠ screen closed | 0 |  | ✅ boots | [shot](shots/modmenu.png) |  |
 | morechathistory |  | ✅ boots | 0 |  | ✅ boots | [shot](shots/morechathistory.png) |  |
 | mouse-tweaks | 1.21 | ✅ boots |  |  |  | [shot](shots/mouse-tweaks.png) |  |
 | mouse-wheelie | 1.21.1 | ✅ boots | 15 |  | ❌ crash | [shot](shots/mouse-wheelie.png) |  |
-| naturalist | ~1.21.1 | ❌ crash | 35 |  |  |  |  |
+| naturalist | ~1.21.1 | ❌ crash | 35 |  |  |  | Caused by: java.lang.NoSuchMethodError: 'net.minecraft.world.entity.EntityType net.minecra |
 | natures-compass | 1.21.1 | ✅ boots | 7 |  | ❌ crash | [shot](shots/natures-compass.png) |  |
 | netherportalfix | 1.21.1 | ✅ boots | 0 |  | ❌ crash | [shot](shots/netherportalfix.png) |  |
 | no-chat-reports | 1.21.1 | ✅ boots | 18 |  | ✅ boots | [shot](shots/no-chat-reports.png) |  |
@@ -117,7 +118,7 @@ on 2026-09-07; the scripts are in `tools/`.
 | presence-footsteps | 1.21.1 | ✅ boots | 5 |  | ❌ crash | [shot](shots/presence-footsteps.png) |  |
 | rei |  | ❌ stall | 118 |  | ❌ crash |  | needs cloth-config built for 1.21.1 next to the instance's 26.2 build; Fabric rejects the dependency before either tool runs |
 | rrls |  | ❌ crash | 8 |  | ❌ crash |  | its resource-reload mixin mutates 26.2's listener list while it is iterated |
-| shulkerboxtooltip | >=1.21.1 | ❌ crash | 18 |  |  |  | java.lang.NoSuchMethodError: 'net.minecraft.nbt.ListTag net.minecraft.world.inventory.Play |
+| shulkerboxtooltip | >=1.21.1 | ❌ crash | 18 |  |  |  | Caused by: java.lang.NoClassDefFoundError: net/fabricmc/fabric/api/networking/v1/S2CPlayCh |
 | sodium-dynamic-lights | 1.21.1 | ❌ stall | 0 |  | ❌ crash |  | no consistent 1.21.1 dependency set exists: Sodium 0.6 rejects Reese's Sodium Options below 1.8.0, and Reese's 2.x requires Sodium 0.8, which rejects this add-on; both tools hit the same loader refusal |
 | sodium-options-api | 1.21.1 | ❌ stall | 0 |  | ❌ crash |  | no consistent 1.21.1 dependency set exists: Sodium 0.6 rejects Reese's Sodium Options below 1.8.0, and Reese's 2.x requires Sodium 0.8, which rejects this add-on; both tools hit the same loader refusal |
 | sodium-shadowy-path-blocks | 1.21.1 | ❌ crash | 4 |  | ❌ crash |  | needs Sodium, and Sodium itself cannot be ported: its particle mixin targets a class hierarchy 26.2 rewrote |
@@ -132,7 +133,7 @@ on 2026-09-07; the scripts are in `tools/`.
 | trinkets |  | ❌ crash | 12 |  | ❌ crash | [shot](shots/trinkets.png) | Cardinal Components attaches its containers from constructor injections whose parameter lists changed in 26.2; the handlers are stripped and the container is never created |
 | veinminer | 1.21.1 | ✅ boots | 1 |  | ❌ crash | [shot](shots/veinminer.png) |  |
 | veinminer-client | 1.21.1 | ✅ boots | 0 |  | ❌ crash | [shot](shots/veinminer-client.png) |  |
-| visual-workbench | 1.21.1 | ❌ crash | 13 |  | ❌ crash |  | puzzleslib's pack-resources lambda implements a callback whose signature 26.2 changed |
+| visual-workbench | 1.21.1 | ❌ crash | 12 |  | ❌ crash |  | puzzleslib's sound mixin captures a local that 26.2 no longer has at that point (same as cut-through); its render-context, pack-metadata and networking calls now bridge |
 | visuality |  | ✅ boots | 5 |  | ✅ boots | [shot](shots/visuality.png) |  |
 | wavey-capes | 1.21.1 | ✅ boots | 0 |  | ❌ crash | [shot](shots/wavey-capes.png) |  |
 | waystones | 1.21.1 | ✅ boots | 45 |  | ❌ crash | [shot](shots/waystones.png) |  |
@@ -141,13 +142,13 @@ on 2026-09-07; the scripts are in `tools/`.
 | xaeros-world-map | 1.21.1 | ❌ stall | 67 |  | ❌ crash | [shot](shots/xaeros-world-map.png) | draws through ShaderInstance objects 26.2 no longer exposes; renderer-tier |
 | yeetus-experimentus |  | ✅ boots | 0 |  | ✅ boots | [shot](shots/yeetus-experimentus.png) |  |
 | yosbr |  | ✅ boots | 0 |  | ✅ boots | [shot](shots/yosbr.png) |  |
-| yungs-better-dungeons |  | ❌ stall | 7 |  | ❌ crash | [shot](shots/yungs-better-dungeons.png) | YUNG's structure processor types still reach 26.2's codec dispatch as 1.21 lambdas (cast to MapCodec fails), so registry loading errors and the world never opens (run with YUNG's API present) |
+| yungs-better-dungeons |  | ✅ boots | 7 |  | ❌ crash | [shot](shots/yungs-better-dungeons.png) |  |
 | yungs-better-end-island |  | ✅ boots | 13 |  | ❌ crash | [shot](shots/yungs-better-end-island.png) |  |
-| yungs-better-jungle-temples |  | ❌ stall | 4 |  | ❌ crash | [shot](shots/yungs-better-jungle-temples.png) | YUNG's structure processor types still reach 26.2's codec dispatch as 1.21 lambdas (cast to MapCodec fails), so registry loading errors and the world never opens (run with YUNG's API present) |
+| yungs-better-jungle-temples |  | ✅ boots | 4 |  | ❌ crash | [shot](shots/yungs-better-jungle-temples.png) |  |
 | yungs-better-mineshafts |  | ✅ boots | 5 |  | ✅ boots | [shot](shots/yungs-better-mineshafts.png) |  |
 | yungs-better-nether-fortresses |  | ✅ boots | 4 |  | ✅ boots | [shot](shots/yungs-better-nether-fortresses.png) |  |
 | yungs-better-ocean-monuments |  | ✅ boots | 1 |  | ✅ boots | [shot](shots/yungs-better-ocean-monuments.png) |  |
-| yungs-better-strongholds |  | ❌ stall | 0 |  | ❌ crash | [shot](shots/yungs-better-strongholds.png) | YUNG's structure processor types still reach 26.2's codec dispatch as 1.21 lambdas (cast to MapCodec fails), so registry loading errors and the world never opens (run with YUNG's API present) |
+| yungs-better-strongholds |  | ✅ boots | 0 |  | ❌ crash | [shot](shots/yungs-better-strongholds.png) |  |
 | yungs-better-witch-huts |  | ✅ boots | 0 |  | ✅ boots | [shot](shots/yungs-better-witch-huts.png) |  |
 | zoomify | 1.21.1 | ✅ boots | 2 |  | ❌ crash | [shot](shots/zoomify.png) |  |
 
@@ -176,7 +177,7 @@ to load and the game to still be running.
 | chipped | ❌ stall — the game never starts loading the world with it (silent stall after registration) | ❌ crash — [23:02:26] [Render thread/INFO]: [STDERR]: [Retromod] A mod entry poin |
 | chloride | ❌ crash | ❌ crash |
 | chunky | ✅ boots | ❌ crash — Description: Exception in server tick loop |
-| cit-resewn | ❌ crash — built on item-model overrides (ItemOverride), which 26.2 replaced with item model definiti | ✅ boots |
+| cit-resewn | ✅ boots | ✅ boots |
 | clumps | ✅ boots | ✅ boots |
 | cobblemon | ❌ crash — 251 unresolved references across 33 removed classes; a rewrite, not a port | ❌ crash |
 | comforts | ❌ crash — its SleepStatus mixin captures the server from a hook that no longer fires, so the field s | ❌ crash — Description: Initializing game |
@@ -188,7 +189,7 @@ to load and the game to still be running.
 | cut-through | ❌ crash — puzzleslib's sound mixin captures a local that 26.2 no longer has at that point | ❌ crash — Description: Bootstrap |
 | debugify | ✅ boots | ❌ crash — Description: Initializing game |
 | default-options | ✅ boots | ❌ crash — [07:32:44] [Render thread/INFO]: [STDERR]: [Retromod] A mod entry poin |
-| distanthorizons | ❌ crash — java.lang.NoSuchFieldError: Class net.minecraft.world.level.storage.SavedDataStorage does  | ✅ boots |
+| distanthorizons | ❌ crash — died 5s after the world started loading | ✅ boots |
 | drippy-loading | ❌ crash — java.lang.NoClassDefFoundError: com/mojang/blaze3d/pipeline/RenderCall | ❌ crash — Description: Initializing game |
 | dungeons-and-taverns | ❌ stall — its loot conditions use the 1.21 time_check shape without the clock key 26.2 requires | ❌ crash |
 | dynamic-fps | ✅ boots | ✅ boots |
@@ -218,7 +219,7 @@ to load and the game to still be running.
 | mixintrace | ✅ boots | ✅ boots |
 | modelfix | ✅ boots | ✅ boots |
 | modernfix | ❌ stall — texture-stitcher internals (Stitcher.SpriteLoader) changed shape in 26.2; renderer-tier | ❌ crash |
-| modmenu | ✅ boots | ✅ boots |
+| modmenu | ⚠ screen closed | ✅ boots |
 | morechathistory | ✅ boots | ✅ boots |
 | mouse-wheelie | ✅ boots | ❌ crash — Description: Initializing game |
 | natures-compass | ✅ boots | ❌ crash — Description: Initializing game |
@@ -246,7 +247,7 @@ to load and the game to still be running.
 | trinkets | ❌ crash — Cardinal Components attaches its containers from constructor injections whose parameter li | ❌ crash — java.lang.NoClassDefFoundError: net/minecraft/world/level/GameRules$Ke |
 | veinminer | ✅ boots | ❌ crash — Description: Exception in server tick loop |
 | veinminer-client | ✅ boots | ❌ crash — Description: Exception in server tick loop |
-| visual-workbench | ❌ crash — puzzleslib's pack-resources lambda implements a callback whose signature 26.2 changed | ❌ crash — Description: Bootstrap |
+| visual-workbench | ❌ crash — puzzleslib's sound mixin captures a local that 26.2 no longer has at that point (same as c | ❌ crash — Description: Bootstrap |
 | visuality | ✅ boots | ✅ boots |
 | wavey-capes | ✅ boots | ❌ crash — Description: Ticking entity |
 | waystones | ✅ boots | ❌ crash — [20:22:44] [Render thread/INFO]: [STDERR]: [Retromod] A mod entry poin |
@@ -255,16 +256,16 @@ to load and the game to still be running.
 | xaeros-world-map | ❌ stall — draws through ShaderInstance objects 26.2 no longer exposes; renderer-tier | ❌ crash — Description: Initializing game |
 | yeetus-experimentus | ✅ boots | ✅ boots |
 | yosbr | ✅ boots | ✅ boots |
-| yungs-better-dungeons | ❌ stall — YUNG's structure processor types still reach 26.2's codec dispatch as 1.21 lambdas (cast t | ❌ crash |
+| yungs-better-dungeons | ✅ boots | ❌ crash |
 | yungs-better-end-island | ✅ boots | ❌ crash — Description: Exception in server tick loop |
-| yungs-better-jungle-temples | ❌ stall — YUNG's structure processor types still reach 26.2's codec dispatch as 1.21 lambdas (cast t | ❌ crash |
+| yungs-better-jungle-temples | ✅ boots | ❌ crash |
 | yungs-better-mineshafts | ✅ boots | ✅ boots |
 | yungs-better-nether-fortresses | ✅ boots | ✅ boots |
 | yungs-better-ocean-monuments | ✅ boots | ✅ boots |
-| yungs-better-strongholds | ❌ stall — YUNG's structure processor types still reach 26.2's codec dispatch as 1.21 lambdas (cast t | ❌ crash |
+| yungs-better-strongholds | ✅ boots | ❌ crash |
 | yungs-better-witch-huts | ✅ boots | ✅ boots |
 | zoomify | ✅ boots | ❌ crash — Description: Initializing game |
 
-Score: Fox-Grade 61 / Retromod 37 of 104 mods booting.
+Score: Fox-Grade 64 / Retromod 37 of 104 mods booting.
 
 Reproduce with `batch2/run-retromod.sh` next to the Fox-Grade harness scripts.

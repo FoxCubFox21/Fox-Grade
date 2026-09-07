@@ -32,7 +32,7 @@ else:
         if nw and nw != moj: derived[moj] = nw
     json.dump(derived, open(_cache, "w")); REN.update(derived)
     print("derived class renames:", len(derived), "| ResourceLocation ->", derived.get("net/minecraft/resources/ResourceLocation"))
-SHIM_RENAMES = {"foxgrade/shim/TesselatorShim": "com/mojang/blaze3d/vertex/Tesselator", "foxgrade/shim/BufferUploaderShim": "com/mojang/blaze3d/vertex/BufferUploader", "foxgrade/shim/VertexFormatModeShim": "com/mojang/blaze3d/vertex/VertexFormat$Mode"}
+SHIM_RENAMES = {"foxgrade/shim/RenderTypeCompositeState": "net/minecraft/client/renderer/RenderType$CompositeState", "foxgrade/shim/RenderTypeCompositeStateBuilder": "net/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder", "foxgrade/shim/RenderTypeOutlineProperty": "net/minecraft/client/renderer/RenderType$OutlineProperty", "foxgrade/shim/TesselatorShim": "com/mojang/blaze3d/vertex/Tesselator", "foxgrade/shim/BufferUploaderShim": "com/mojang/blaze3d/vertex/BufferUploader", "foxgrade/shim/VertexFormatModeShim": "com/mojang/blaze3d/vertex/VertexFormat$Mode"}
 def shim_desc(d): return re.sub(r"L([\w/$]+);", lambda m: "L" + SHIM_RENAMES.get(m.group(1), m.group(1)) + ";", d)
 def ren_desc(d): return re.sub(r"L([\w/$]+);", lambda m: "L" + REN.get(m.group(1), m.group(1)) + ";", d)
 PRIM = {"void":"V","boolean":"Z","byte":"B","char":"C","short":"S","int":"I","long":"J","float":"F","double":"D"}
@@ -327,6 +327,16 @@ BBP_ = "Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;"
 cr.setdefault("net/minecraft/world/level/block/state/BlockBehaviour$Properties", {})["dropsLike(" + BLK + ")" + BBP_] = ["foxgrade/shim/BlockApiCompat", "dropsLike", "(" + BBP_ + BLK + ")" + BBP_]
 cr.setdefault(RMI, {})["registerBuiltinResourcePack(" + IDF + "Ljava/lang/String;" + MCT + "Lnet/minecraft/network/chat/Component;" + RAT + ")Z"] = ["foxgrade/shim/FabricCompat", "registerBuiltinResourcePack", "(" + IDF + "Ljava/lang/String;" + MCT + "Lnet/minecraft/network/chat/Component;Ljava/lang/Object;)Z"]
 j["classRenames"]["net/minecraft/commands/arguments/ResourceLocationArgument"] = "net/minecraft/commands/arguments/IdentifierArgument"
+j["classRenames"]["net/fabricmc/fabric/impl/resource/loader/ModNioResourcePack"] = "net/fabricmc/fabric/impl/resource/pack/ModNioPackResources"   # Fabric internal, but mods reach into it
+# a bridged screen's render() calling renderBackground() would blur a second time per frame (26.2 draws the background itself)
+GGO_ = "Lnet/minecraft/client/gui/GuiGraphics;"
+for _d in (GGE, GGO_):
+    cr.setdefault("net/minecraft/client/gui/screens/Screen", {})["renderBackground(" + _d + "IIF)V"] = ["foxgrade/shim/GuiCompat", "backgroundDrawnByGame", "(" + SCR + GGE + "IIF)V"]
+PMS = "net/minecraft/server/packs/metadata/pack/PackMetadataSection"; CMP = "Lnet/minecraft/network/chat/Component;"; IRG = "Lnet/minecraft/util/InclusiveRange;"
+j["ctorAdapters"].setdefault(PMS, {}).update({
+    "(" + CMP + "ILjava/util/Optional;)V": {"newDesc": "(" + CMP + IRG + ")V", "args": [["o1"], ["static", "foxgrade/shim/PackCompat", "range", "(ILjava/util/Optional;)" + IRG, "o2", "o3"]]},
+    "(" + CMP + "I)V": {"newDesc": "(" + CMP + IRG + ")V", "args": [["o1"], ["static", "foxgrade/shim/PackCompat", "range", "(I)" + IRG, "o2"]]}})
+j["fieldRedirects"].setdefault("net/minecraft/core/component/DataComponents", {})["getstatic HIDE_ADDITIONAL_TOOLTIP:Lnet/minecraft/core/component/DataComponentType;"] = ["foxgrade/shim/ItemCompat", "hideAdditionalTooltip", "()Lnet/minecraft/core/component/DataComponentType;"]
 cr.setdefault("net/minecraft/client/Minecraft", {})["getGuiSprites()Lnet/minecraft/client/gui/GuiSpriteManager;"] = ["net/minecraft/client/gui/GuiSpriteManager", "of", "(Lnet/minecraft/client/Minecraft;)Lnet/minecraft/client/gui/GuiSpriteManager;"]  # 26.2: GUI sprites live in AtlasManager; shim stands in
 ST = "Lnet/minecraft/client/gui/components/toasts/SystemToast;"; STID = "Lnet/minecraft/client/gui/components/toasts/SystemToast$SystemToastId;"; CO = "Lnet/minecraft/network/chat/Component;"
 cr.setdefault("net/minecraft/client/gui/components/toasts/SystemToast", {})["multiline(Lnet/minecraft/client/Minecraft;" + STID + CO + CO + ")" + ST] = ["foxgrade/shim/ToastCompat", "multiline", "(Lnet/minecraft/client/Minecraft;" + STID + CO + CO + ")" + ST]
@@ -650,6 +660,19 @@ for oc, flds in oldF.items():
         j["fieldRedirects"].setdefault(nc, {}).setdefault("getstatic " + fname + ":" + CODEC,
             ["holder", MAPCODEC, "foxgrade/shim/CodecCompat", "toCodec", "(" + MAPCODEC + ")" + CODEC, "com/mojang/serialization/Codec"]); nretyped += 1
 print(f"Codec→MapCodec constants bridged: {nretyped}")
+# ---- File → Path fields (SavedDataStorage.dataFolder): read with the new type and convert back
+FILE, PATHD = "Ljava/io/File;", "Ljava/nio/file/Path;"
+nfp = 0
+for oc, flds in oldF.items():
+    slash = oc.replace(".", "/"); nc = j["classRenames"].get(slash, REN.get(slash, slash))
+    if nc not in new: continue
+    newf = {x.split(":", 1)[0]: x.split(":", 1)[1] for x in new[nc].get("f", [])}
+    for fname, odesc in flds.items():
+        if odesc != FILE or newf.get(fname) != PATHD: continue
+        for kind in ("get ", "getstatic "):
+            j["fieldRedirects"].setdefault(nc, {}).setdefault(kind + fname + ":" + FILE, ["holder", PATHD, "foxgrade/shim/IoCompat", "toFile", "(" + PATHD + ")" + FILE, "java/io/File"])
+        nfp += 1
+print(f"File→Path fields bridged: {nfp}")
 # ---- batch 3: what naturalist / friends-and-foes still hit after batch 2
 ET = "Lnet/minecraft/world/entity/EntityType;"; ESR = "Lnet/minecraft/world/entity/EntitySpawnReason;"; HOLD = "Lnet/minecraft/core/Holder;"; PTY = "Lnet/minecraft/world/level/pathfinder/PathType;"
 GR = "Lnet/minecraft/world/level/gamerules/GameRules;"; GRK = "Lnet/minecraft/world/level/GameRules$Key;"; CMP = "Lnet/minecraft/network/chat/Component;"; AABB = "Lnet/minecraft/world/phys/AABB;"
@@ -740,6 +763,40 @@ cr.setdefault("net/minecraft/world/food/FoodProperties$Builder", {})["effect(" +
 cr.setdefault("net/minecraft/world/level/block/BeehiveBlock", {})["dropHoneycomb(" + LVL + BP + ")V"] = [BAC, "dropHoneycomb", "(" + LVL + BP + ")V"]
 cr.setdefault("net/minecraft/world/entity/player/PlayerSkin", {})["capeTexture()" + ID] = [SKC, "capeTexture", "(" + PLS + ")" + ID]
 cr.setdefault("net/minecraft/client/renderer/rendertype/RenderType", {})["entityGlintDirect()" + RTY] = ["net/minecraft/client/renderer/rendertype/RenderTypes", "entityGlint", "()" + RTY]
+# Fabric networking packet factories: the configuration-phase one was renamed, the client-to-server ones build a payload packet.
+_CPP = "Lnet/minecraft/network/protocol/common/custom/CustomPacketPayload;"; _PKT = "Lnet/minecraft/network/protocol/Packet;"; _NWC = "foxgrade/shim/NetworkingCompat"
+j.setdefault("renames", {}).setdefault("net/fabricmc/fabric/api/networking/v1/ServerConfigurationNetworking", {})["createS2CPacket"] = "createClientboundPacket"
+for _o in ["net/fabricmc/fabric/api/networking/v1/ClientPlayNetworking", "net/fabricmc/fabric/api/networking/v1/ClientConfigurationNetworking"]:
+    cr.setdefault(_o, {})["createC2SPacket(" + _CPP + ")" + _PKT] = [_NWC, "createC2SPacket", "(" + _CPP + ")" + _PKT]
+# BlockEntityRendererProvider.Context became a record with bare accessor names; the item renderer it no longer carries is the shim.
+_BEC = "net/minecraft/client/renderer/blockentity/BlockEntityRendererProvider$Context"
+j.setdefault("renames", {}).setdefault(_BEC, {}).update({"getBlockEntityRenderDispatcher": "blockEntityRenderDispatcher", "getEntityRenderer": "entityRenderer", "getModelSet": "entityModelSet", "getFont": "font"})
+cr.setdefault(_BEC, {})["getItemRenderer()Lnet/minecraft/client/renderer/entity/ItemRenderer;"] = ["net/minecraft/client/renderer/entity/ItemRenderer", "get", "(Ljava/lang/Object;)Lnet/minecraft/client/renderer/entity/ItemRenderer;"]
+# ---- 1.21 chunk internals (Distant Horizons): paletted containers, proto chunks, structure gen, BlockState accessors
+j["classRenames"].setdefault("net/minecraft/world/level/chunk/PalettedContainer$Strategy", "net/minecraft/world/level/chunk/Strategy")
+CC = "foxgrade/shim/ChunkCompat"; STR = "Lnet/minecraft/world/level/chunk/Strategy;"; IDM = "Lnet/minecraft/core/IdMap;"; CDC = "Lcom/mojang/serialization/Codec;"; BST = "Lnet/minecraft/world/level/block/state/BlockState;"
+cr.setdefault("net/minecraft/world/level/chunk/PalettedContainer", {})["codecRW(" + IDM + CDC + STR + "Ljava/lang/Object;)" + CDC] = [CC, "codecRW", "(" + IDM + CDC + STR + "Ljava/lang/Object;)" + CDC]
+j["ctorAdapters"].setdefault("net/minecraft/world/level/chunk/PalettedContainer", {})["(" + IDM + "Ljava/lang/Object;" + STR + ")V"] = {"newDesc": "(Ljava/lang/Object;" + STR + ")V", "args": [["o2"], ["o3"]]}
+PCF = "Lnet/minecraft/world/level/chunk/PalettedContainerFactory;"; REG = "Lnet/minecraft/core/Registry;"; BLD = "Lnet/minecraft/world/level/levelgen/blending/BlendingData;"
+_pc = "(Lnet/minecraft/world/level/ChunkPos;Lnet/minecraft/world/level/chunk/UpgradeData;Lnet/minecraft/world/level/LevelHeightAccessor;"
+j["ctorAdapters"].setdefault("net/minecraft/world/level/chunk/ProtoChunk", {})[_pc + REG + BLD + ")V"] = {"newDesc": _pc + PCF + BLD + ")V", "args": [["o1"], ["o2"], ["o3"], ["static", CC, "factory", "(" + REG + ")" + PCF, "o4"], ["o5"]]}
+BSO = "net/minecraft/world/level/block/state/BlockState"
+cr.setdefault(BSO, {}).update({"block()Lnet/minecraft/world/level/block/Block;": [CC, "block", "(" + BST + ")Lnet/minecraft/world/level/block/Block;"],
+    "getTags()Ljava/util/stream/Stream;": [CC, "getTags", "(" + BST + ")Ljava/util/stream/Stream;"],
+    "propagatesSkylightDown(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Z": [CC, "propagatesSkylightDown", "(" + BST + "Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Z"]})
+cr.setdefault("net/minecraft/world/level/block/BeaconBeamBlock", {})["color()Lnet/minecraft/world/item/DyeColor;"] = [CC, "color", "(Lnet/minecraft/world/level/block/BeaconBeamBlock;)Lnet/minecraft/world/item/DyeColor;"]
+_cs = "(Lnet/minecraft/core/RegistryAccess;Lnet/minecraft/world/level/chunk/ChunkGeneratorStructureState;Lnet/minecraft/world/level/StructureManager;Lnet/minecraft/world/level/chunk/ChunkAccess;Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplateManager;)V"
+cr.setdefault("net/minecraft/world/level/chunk/ChunkGenerator", {})["createStructures" + _cs] = [CC, "createStructures", "(Lnet/minecraft/world/level/chunk/ChunkGenerator;" + _cs[1:]]
+for _o in ["net/minecraft/world/level/BlockAndTintGetter", "net/minecraft/client/renderer/block/BlockAndTintGetter"]:
+    cr.setdefault(_o, {})["getShade(Lnet/minecraft/core/Direction;Z)F"] = [CC, "getShade", "(Ljava/lang/Object;Lnet/minecraft/core/Direction;Z)F"]
+cr.setdefault("net/minecraft/world/level/dimension/DimensionType", {})["effectsLocation()Lnet/minecraft/resources/Identifier;"] = ["foxgrade/shim/LevelCompat", "effectsLocation", "(Lnet/minecraft/world/level/dimension/DimensionType;)Lnet/minecraft/resources/Identifier;"]
+cr.setdefault("net/minecraft/world/level/storage/WorldData", {})["worldGenOptions()Lnet/minecraft/world/level/levelgen/WorldOptions;"] = ["foxgrade/shim/LevelCompat", "worldGenOptions", "(Lnet/minecraft/world/level/storage/WorldData;)Lnet/minecraft/world/level/levelgen/WorldOptions;"]
+# 1.21 RenderType.create(name, format, mode, size, [crumbling, sort,] CompositeState): RenderTypeCompat rebuilds a 26.2 RenderSetup from the shards.
+_CS = "Lnet/minecraft/client/renderer/RenderType$CompositeState;"; _CRT = "Lnet/minecraft/client/renderer/RenderType$CompositeRenderType;"
+for _args in ["(Ljava/lang/String;Lcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;IZZ" + _CS + ")", "(Ljava/lang/String;Lcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;I" + _CS + ")"]:
+    cr.setdefault("net/minecraft/client/renderer/rendertype/RenderType", {})["create" + _args + _CRT] = ["foxgrade/shim/RenderTypeCompat", "create", _args + RTY]
+# PackMetadataSection.TYPE (the one 1.21 section type) -> FALLBACK_TYPE, which reads either pack kind in 26.2.
+j["fieldRedirects"].setdefault("net/minecraft/server/packs/metadata/pack/PackMetadataSection", {})["getstatic TYPE:Lnet/minecraft/server/packs/metadata/MetadataSectionType;"] = ["foxgrade/shim/PackCompat", "type", "()Lnet/minecraft/server/packs/metadata/MetadataSectionType;"]
 # call adapters: super-calls and re-shaped arguments
 EO = ["net/minecraft/world/entity/Entity", "net/minecraft/world/entity/LivingEntity", "net/minecraft/world/entity/Mob", "net/minecraft/world/entity/PathfinderMob", "net/minecraft/world/entity/AgeableMob", "net/minecraft/world/entity/animal/Animal",
       "net/minecraft/world/entity/TamableAnimal", "net/minecraft/world/entity/animal/AbstractGolem", "net/minecraft/world/entity/monster/Monster", "net/minecraft/world/entity/animal/WaterAnimal", "net/minecraft/world/entity/animal/AbstractFish", "net/minecraft/world/entity/animal/AbstractSchoolingFish",
@@ -955,6 +1012,10 @@ j["samRenames"].setdefault(MLP, {})["onInitializeModelLoader"] = "initialize"
 j["renames"].setdefault(MLP, {})["onInitializeModelLoader"] = "initialize"
 RMD = "Lnet/minecraft/server/packs/resources/ResourceMetadata;"; MSS = "Lnet/minecraft/server/packs/metadata/MetadataSectionSerializer;"
 cr.setdefault("net/minecraft/server/packs/resources/ResourceMetadata", {})["getSection(" + MSS + ")" + OPT] = ["foxgrade/shim/ResourceMetadataCompat", "getSection", "(" + RMD + MSS + ")" + OPT]
+# PackResources.getMetadataSection(MetadataSectionSerializer) is getMetadataSection(MetadataSectionType) now: a mod's old override
+# gets a bridge with the new signature, handing the section type over through the 1.21 interface.
+MST = "Lnet/minecraft/server/packs/metadata/MetadataSectionType;"
+j["overrideAdapters"].append({"oldName": "getMetadataSection", "oldDesc": "(" + MSS + ")Ljava/lang/Object;", "newName": "getMetadataSection", "newDesc": "(" + MST + ")Ljava/lang/Object;", "unpack": [["static", "foxgrade/shim/ResourceMetadataCompat", "serializer", "(" + MST + ")" + MSS, "p1"]]})
 cr.setdefault("net/minecraft/server/MinecraftServer", {})["getProfilePermissions(Lcom/mojang/authlib/GameProfile;)I"] = [PMC, "getProfilePermissions", "(" + MSV + "Lcom/mojang/authlib/GameProfile;)I"]
 j["inheritedRenamesByAncestor"].setdefault("onInitializeModelLoader(L" + MLP + "$Context;)V", []).append([MLP, "initialize"])
 SDS = "Lnet/minecraft/world/level/storage/SavedDataStorage;"; SDF = "Lnet/minecraft/world/level/saveddata/SavedData$Factory;"; SDD = "Lnet/minecraft/world/level/saveddata/SavedData;"; SDC = "foxgrade/shim/SavedDataCompat"

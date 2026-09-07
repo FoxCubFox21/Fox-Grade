@@ -13,6 +13,8 @@ public final class ItemRendererShim {
   private static final ItemRendererShim INSTANCE = new ItemRendererShim();
   private static boolean warned;
   public static ItemRendererShim get() { return INSTANCE; }
+  /** BlockEntityRendererProvider.Context.getItemRenderer() (26.2 hands renderers an ItemModelResolver instead). */
+  public static ItemRendererShim get(Object context) { return INSTANCE; }
 
   public void renderStatic(ItemStack stack, ItemDisplayContext ctx, int light, int overlay, PoseStack ps, MultiBufferSourceShim buffers, Level level, int seed) {
     submit(stack, ctx, light, overlay, ps, buffers, level, seed);
