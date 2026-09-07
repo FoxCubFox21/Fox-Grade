@@ -543,6 +543,18 @@
     },
     "net/fabricmc/fabric/api/client/model/loading/v1/PreparableModelLoadingPlugin": {
       "onInitializeModelLoader": "initialize"
+    },
+    "com/mojang/serialization/Dynamic": {
+      "value": "getValue"
+    },
+    "net/fabricmc/fabric/api/transfer/v1/fluid/FluidVariant": {
+      "getComponents": "getComponentsPatch"
+    },
+    "net/fabricmc/fabric/api/transfer/v1/item/ItemVariant": {
+      "getComponents": "getComponentsPatch"
+    },
+    "net/fabricmc/fabric/api/transfer/v1/storage/TransferVariant": {
+      "getComponents": "getComponentsPatch"
     }
   },
   "callRedirects": {
@@ -603,8 +615,18 @@
     },
     "net/minecraft/util/Util": {
       "backgroundExecutor()Ljava/util/concurrent/ExecutorService;": [
-        "foxgrade/shim/UtilCompat",
+        "foxgrade/shim/ExecCompat",
         "backgroundExecutor",
+        "()Ljava/util/concurrent/ExecutorService;"
+      ],
+      "ioPool()Ljava/util/concurrent/ExecutorService;": [
+        "foxgrade/shim/ExecCompat",
+        "ioPool",
+        "()Ljava/util/concurrent/ExecutorService;"
+      ],
+      "nonCriticalIoPool()Ljava/util/concurrent/ExecutorService;": [
+        "foxgrade/shim/ExecCompat",
+        "nonCriticalIoPool",
         "()Ljava/util/concurrent/ExecutorService;"
       ]
     },
@@ -633,6 +655,21 @@
         "net/minecraft/client/gui/GuiSpriteManager",
         "of",
         "(Lnet/minecraft/client/Minecraft;)Lnet/minecraft/client/gui/GuiSpriteManager;"
+      ],
+      "getOverlay()Lnet/minecraft/client/gui/screens/Overlay;": [
+        "foxgrade/shim/MinecraftCompat",
+        "getOverlay",
+        "(Lnet/minecraft/client/Minecraft;)Lnet/minecraft/client/gui/screens/Overlay;"
+      ],
+      "setOverlay(Lnet/minecraft/client/gui/screens/Overlay;)V": [
+        "foxgrade/shim/MinecraftCompat",
+        "setOverlay",
+        "(Lnet/minecraft/client/Minecraft;Lnet/minecraft/client/gui/screens/Overlay;)V"
+      ],
+      "getProfiler()Lnet/minecraft/util/profiling/ProfilerFiller;": [
+        "foxgrade/shim/MinecraftCompat",
+        "getProfiler",
+        "(Lnet/minecraft/client/Minecraft;)Lnet/minecraft/util/profiling/ProfilerFiller;"
       ]
     },
     "net/minecraft/client/gui/screens/Screen": {
@@ -2197,6 +2234,11 @@
         "foxgrade/shim/EntityTypeCompat",
         "build",
         "(Lnet/minecraft/world/entity/EntityType$Builder;Ljava/lang/String;)Lnet/minecraft/world/entity/EntityType;"
+      ],
+      "build()Lnet/minecraft/world/entity/EntityType;": [
+        "foxgrade/shim/RegistryCompat",
+        "buildEntityType",
+        "(Lnet/minecraft/world/entity/EntityType$Builder;)Lnet/minecraft/world/entity/EntityType;"
       ]
     },
     "net/minecraft/client/renderer/RenderBuffers": {
@@ -2240,6 +2282,11 @@
       "getArmorSlots()Ljava/lang/Iterable;": [
         "foxgrade/shim/EntityLegacyCompat",
         "getArmorSlots",
+        "(Lnet/minecraft/world/entity/LivingEntity;)Ljava/lang/Iterable;"
+      ],
+      "getAllSlots()Ljava/lang/Iterable;": [
+        "foxgrade/shim/EntityLegacyCompat",
+        "getAllSlots",
         "(Lnet/minecraft/world/entity/LivingEntity;)Ljava/lang/Iterable;"
       ]
     },
@@ -2542,6 +2589,11 @@
         "foxgrade/shim/BlockApiCompat",
         "isSolidRender",
         "(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Z"
+      ],
+      "getAppearance(Lnet/minecraft/client/renderer/block/BlockAndTintGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/Direction;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;": [
+        "foxgrade/shim/BlockApiCompat",
+        "getAppearance",
+        "(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/client/renderer/block/BlockAndTintGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/Direction;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;"
       ]
     },
     "net/minecraft/world/effect/MobEffectInstance": {
@@ -2587,6 +2639,11 @@
         "foxgrade/shim/BlockApiCompat",
         "ofLegacyCopy",
         "(Lnet/minecraft/world/level/block/state/BlockBehaviour;)Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;"
+      ],
+      "dropsLike(Lnet/minecraft/world/level/block/Block;)Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;": [
+        "foxgrade/shim/BlockApiCompat",
+        "dropsLike",
+        "(Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;Lnet/minecraft/world/level/block/Block;)Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;"
       ]
     },
     "net/minecraft/core/Registry": {
@@ -2619,6 +2676,26 @@
         "foxgrade/shim/RecipeCompat",
         "asLookup",
         "(Lnet/minecraft/core/Registry;)Lnet/minecraft/core/HolderLookup$RegistryLookup;"
+      ],
+      "getOrCreateTag(Lnet/minecraft/tags/TagKey;)Lnet/minecraft/core/HolderSet$Named;": [
+        "foxgrade/shim/RegistryCompat",
+        "getOrCreateTag",
+        "(Lnet/minecraft/core/Registry;Lnet/minecraft/tags/TagKey;)Lnet/minecraft/core/HolderSet$Named;"
+      ],
+      "get(Lnet/minecraft/resources/Identifier;)Ljava/lang/Object;": [
+        "foxgrade/shim/RegistryCompat",
+        "getValue",
+        "(Lnet/minecraft/core/Registry;Lnet/minecraft/resources/Identifier;)Ljava/lang/Object;"
+      ],
+      "get(Lnet/minecraft/resources/ResourceKey;)Ljava/lang/Object;": [
+        "foxgrade/shim/RegistryCompat",
+        "getValue",
+        "(Lnet/minecraft/core/Registry;Lnet/minecraft/resources/ResourceKey;)Ljava/lang/Object;"
+      ],
+      "getOrThrow(Lnet/minecraft/resources/ResourceKey;)Ljava/lang/Object;": [
+        "foxgrade/shim/RegistryCompat",
+        "getValueOrThrow",
+        "(Lnet/minecraft/core/Registry;Lnet/minecraft/resources/ResourceKey;)Ljava/lang/Object;"
       ]
     },
     "net/minecraft/world/level/block/state/StateDefinition$Builder": {
@@ -2825,6 +2902,11 @@
         "foxgrade/shim/BlockApiCompat",
         "isSolidRender",
         "(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Z"
+      ],
+      "getAppearance(Lnet/minecraft/client/renderer/block/BlockAndTintGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/Direction;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;": [
+        "foxgrade/shim/BlockApiCompat",
+        "getAppearance",
+        "(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/client/renderer/block/BlockAndTintGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/Direction;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;"
       ]
     },
     "net/fabricmc/fabric/api/client/model/loading/v1/PreparableModelLoadingPlugin": {
@@ -2894,6 +2976,118 @@
         "net/minecraft/util/valueproviders/FloatProviders",
         "codec",
         "(FF)Lcom/mojang/serialization/Codec;"
+      ]
+    },
+    "net/minecraft/core/DefaultedRegistry": {
+      "getOrCreateTag(Lnet/minecraft/tags/TagKey;)Lnet/minecraft/core/HolderSet$Named;": [
+        "foxgrade/shim/RegistryCompat",
+        "getOrCreateTag",
+        "(Lnet/minecraft/core/Registry;Lnet/minecraft/tags/TagKey;)Lnet/minecraft/core/HolderSet$Named;"
+      ],
+      "get(Lnet/minecraft/resources/Identifier;)Ljava/lang/Object;": [
+        "foxgrade/shim/RegistryCompat",
+        "getValue",
+        "(Lnet/minecraft/core/Registry;Lnet/minecraft/resources/Identifier;)Ljava/lang/Object;"
+      ],
+      "get(Lnet/minecraft/resources/ResourceKey;)Ljava/lang/Object;": [
+        "foxgrade/shim/RegistryCompat",
+        "getValue",
+        "(Lnet/minecraft/core/Registry;Lnet/minecraft/resources/ResourceKey;)Ljava/lang/Object;"
+      ],
+      "getOrThrow(Lnet/minecraft/resources/ResourceKey;)Ljava/lang/Object;": [
+        "foxgrade/shim/RegistryCompat",
+        "getValueOrThrow",
+        "(Lnet/minecraft/core/Registry;Lnet/minecraft/resources/ResourceKey;)Ljava/lang/Object;"
+      ]
+    },
+    "net/minecraft/core/MappedRegistry": {
+      "getOrCreateTag(Lnet/minecraft/tags/TagKey;)Lnet/minecraft/core/HolderSet$Named;": [
+        "foxgrade/shim/RegistryCompat",
+        "getOrCreateTag",
+        "(Lnet/minecraft/core/Registry;Lnet/minecraft/tags/TagKey;)Lnet/minecraft/core/HolderSet$Named;"
+      ],
+      "get(Lnet/minecraft/resources/Identifier;)Ljava/lang/Object;": [
+        "foxgrade/shim/RegistryCompat",
+        "getValue",
+        "(Lnet/minecraft/core/Registry;Lnet/minecraft/resources/Identifier;)Ljava/lang/Object;"
+      ],
+      "get(Lnet/minecraft/resources/ResourceKey;)Ljava/lang/Object;": [
+        "foxgrade/shim/RegistryCompat",
+        "getValue",
+        "(Lnet/minecraft/core/Registry;Lnet/minecraft/resources/ResourceKey;)Ljava/lang/Object;"
+      ],
+      "getOrThrow(Lnet/minecraft/resources/ResourceKey;)Ljava/lang/Object;": [
+        "foxgrade/shim/RegistryCompat",
+        "getValueOrThrow",
+        "(Lnet/minecraft/core/Registry;Lnet/minecraft/resources/ResourceKey;)Ljava/lang/Object;"
+      ]
+    },
+    "net/minecraft/core/DefaultedMappedRegistry": {
+      "getOrCreateTag(Lnet/minecraft/tags/TagKey;)Lnet/minecraft/core/HolderSet$Named;": [
+        "foxgrade/shim/RegistryCompat",
+        "getOrCreateTag",
+        "(Lnet/minecraft/core/Registry;Lnet/minecraft/tags/TagKey;)Lnet/minecraft/core/HolderSet$Named;"
+      ],
+      "get(Lnet/minecraft/resources/Identifier;)Ljava/lang/Object;": [
+        "foxgrade/shim/RegistryCompat",
+        "getValue",
+        "(Lnet/minecraft/core/Registry;Lnet/minecraft/resources/Identifier;)Ljava/lang/Object;"
+      ],
+      "get(Lnet/minecraft/resources/ResourceKey;)Ljava/lang/Object;": [
+        "foxgrade/shim/RegistryCompat",
+        "getValue",
+        "(Lnet/minecraft/core/Registry;Lnet/minecraft/resources/ResourceKey;)Ljava/lang/Object;"
+      ],
+      "getOrThrow(Lnet/minecraft/resources/ResourceKey;)Ljava/lang/Object;": [
+        "foxgrade/shim/RegistryCompat",
+        "getValueOrThrow",
+        "(Lnet/minecraft/core/Registry;Lnet/minecraft/resources/ResourceKey;)Ljava/lang/Object;"
+      ]
+    },
+    "net/minecraft/core/WritableRegistry": {
+      "get(Lnet/minecraft/resources/Identifier;)Ljava/lang/Object;": [
+        "foxgrade/shim/RegistryCompat",
+        "getValue",
+        "(Lnet/minecraft/core/Registry;Lnet/minecraft/resources/Identifier;)Ljava/lang/Object;"
+      ],
+      "get(Lnet/minecraft/resources/ResourceKey;)Ljava/lang/Object;": [
+        "foxgrade/shim/RegistryCompat",
+        "getValue",
+        "(Lnet/minecraft/core/Registry;Lnet/minecraft/resources/ResourceKey;)Ljava/lang/Object;"
+      ],
+      "getOrThrow(Lnet/minecraft/resources/ResourceKey;)Ljava/lang/Object;": [
+        "foxgrade/shim/RegistryCompat",
+        "getValueOrThrow",
+        "(Lnet/minecraft/core/Registry;Lnet/minecraft/resources/ResourceKey;)Ljava/lang/Object;"
+      ]
+    },
+    "net/minecraft/advancements/predicates/entity/EntityTypePredicate": {
+      "matches(Lnet/minecraft/world/entity/EntityType;)Z": [
+        "foxgrade/shim/EntityLegacyCompat",
+        "predicateMatches",
+        "(Lnet/minecraft/advancements/predicates/entity/EntityTypePredicate;Lnet/minecraft/world/entity/EntityType;)Z"
+      ]
+    },
+    "net/fabricmc/fabric/impl/resource/loader/ResourceManagerHelperImpl": {
+      "registerBuiltinResourcePack(Lnet/minecraft/resources/Identifier;Lnet/fabricmc/loader/api/ModContainer;Lnet/fabricmc/fabric/api/resource/ResourcePackActivationType;)Z": [
+        "net/fabricmc/fabric/api/resource/ResourceManagerHelper",
+        "registerBuiltinResourcePack",
+        "(Lnet/minecraft/resources/Identifier;Lnet/fabricmc/loader/api/ModContainer;Lnet/fabricmc/fabric/api/resource/ResourcePackActivationType;)Z"
+      ],
+      "registerBuiltinResourcePack(Lnet/minecraft/resources/Identifier;Lnet/fabricmc/loader/api/ModContainer;Lnet/minecraft/network/chat/Component;Lnet/fabricmc/fabric/api/resource/ResourcePackActivationType;)Z": [
+        "net/fabricmc/fabric/api/resource/ResourceManagerHelper",
+        "registerBuiltinResourcePack",
+        "(Lnet/minecraft/resources/Identifier;Lnet/fabricmc/loader/api/ModContainer;Lnet/minecraft/network/chat/Component;Lnet/fabricmc/fabric/api/resource/ResourcePackActivationType;)Z"
+      ],
+      "registerBuiltinResourcePack(Lnet/minecraft/resources/Identifier;Lnet/fabricmc/loader/api/ModContainer;Ljava/lang/String;Lnet/fabricmc/fabric/api/resource/ResourcePackActivationType;)Z": [
+        "net/fabricmc/fabric/api/resource/ResourceManagerHelper",
+        "registerBuiltinResourcePack",
+        "(Lnet/minecraft/resources/Identifier;Lnet/fabricmc/loader/api/ModContainer;Ljava/lang/String;Lnet/fabricmc/fabric/api/resource/ResourcePackActivationType;)Z"
+      ],
+      "registerBuiltinResourcePack(Lnet/minecraft/resources/Identifier;Ljava/lang/String;Lnet/fabricmc/loader/api/ModContainer;Lnet/minecraft/network/chat/Component;Lnet/fabricmc/fabric/api/resource/ResourcePackActivationType;)Z": [
+        "foxgrade/shim/FabricCompat",
+        "registerBuiltinResourcePack",
+        "(Lnet/minecraft/resources/Identifier;Ljava/lang/String;Lnet/fabricmc/loader/api/ModContainer;Lnet/minecraft/network/chat/Component;Ljava/lang/Object;)Z"
       ]
     }
   },
@@ -3009,7 +3203,11 @@
     "net/minecraft/network/chat/HoverEvent$ItemStackInfo": "net/minecraft/network/chat/HoverEvent$ShowItem",
     "net/minecraft/data/tags/TagsProvider$TagAppender": "net/minecraft/data/tags/TagAppender",
     "net/minecraft/commands/arguments/item/ItemParser$ItemResult": "net/minecraft/commands/arguments/item/ItemInput",
-    "net/minecraft/client/player/Input": "net/minecraft/client/player/ClientInput"
+    "net/minecraft/client/player/Input": "net/minecraft/client/player/ClientInput",
+    "net/minecraft/client/gui/screens/inventory/EffectRenderingInventoryScreen": "net/minecraft/client/gui/screens/inventory/AbstractContainerScreen",
+    "net/minecraft/world/item/crafting/SimpleCraftingRecipeSerializer": "net/minecraft/world/item/crafting/RecipeSerializer",
+    "net/minecraft/world/level/biome/AmbientParticleSettings": "net/minecraft/world/attribute/AmbientParticle",
+    "net/minecraft/commands/arguments/ResourceLocationArgument": "net/minecraft/commands/arguments/IdentifierArgument"
   },
   "ctorAdapters": {
     "net/minecraft/world/level/chunk/ChunkAccess": {
@@ -3535,6 +3733,11 @@
               "()F"
             ]
           }
+        ],
+        "factory": [
+          "foxgrade/shim/BlockApiCompat",
+          "leaves",
+          "(Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)Lnet/minecraft/world/level/block/LeavesBlock;"
         ]
       }
     },
@@ -3559,6 +3762,51 @@
           ],
           [
             "o1"
+          ]
+        ]
+      }
+    },
+    "net/minecraft/world/item/crafting/RecipeSerializer": {
+      "(Ljava/util/function/Function;)V": {
+        "newDesc": "(Lcom/mojang/serialization/MapCodec;Lnet/minecraft/network/codec/StreamCodec;)V",
+        "args": [
+          [
+            "static",
+            "foxgrade/shim/RecipeSerializerCompat",
+            "simpleMapCodec",
+            "(Ljava/util/function/Function;)Lcom/mojang/serialization/MapCodec;",
+            "o1"
+          ],
+          [
+            "static",
+            "foxgrade/shim/RecipeSerializerCompat",
+            "simpleStreamCodec",
+            "(Ljava/util/function/Function;)Lnet/minecraft/network/codec/StreamCodec;",
+            "o1"
+          ]
+        ],
+        "factory": [
+          "foxgrade/shim/RecipeSerializerCompat",
+          "simpleSerializer",
+          "(Ljava/util/function/Function;)Lnet/minecraft/world/item/crafting/RecipeSerializer;"
+        ]
+      }
+    },
+    "net/minecraft/world/item/StandingAndWallBlockItem": {
+      "(Lnet/minecraft/world/level/block/Block;Lnet/minecraft/world/level/block/Block;Lnet/minecraft/world/item/Item$Properties;Lnet/minecraft/core/Direction;)V": {
+        "newDesc": "(Lnet/minecraft/world/level/block/Block;Lnet/minecraft/world/level/block/Block;Lnet/minecraft/core/Direction;Lnet/minecraft/world/item/Item$Properties;)V",
+        "args": [
+          [
+            "o1"
+          ],
+          [
+            "o2"
+          ],
+          [
+            "o4"
+          ],
+          [
+            "o3"
           ]
         ]
       }
@@ -7958,6 +8206,12 @@
         "net/minecraft/world/item/ItemStack",
         "Lcom/mojang/serialization/Codec;",
         "CODEC"
+      ],
+      "getstatic SINGLE_ITEM_CODEC:Lcom/mojang/serialization/Codec;": [
+        "move",
+        "net/minecraft/world/item/ItemStack",
+        "Lcom/mojang/serialization/Codec;",
+        "CODEC"
       ]
     },
     "net/minecraft/world/item/JukeboxPlayable": {
@@ -9113,6 +9367,12 @@
         "move",
         "net/minecraft/world/level/levelgen/DensityFunctions",
         "Lcom/mojang/serialization/Codec;"
+      ],
+      "getstatic HOLDER_HELPER_CODEC:Lcom/mojang/serialization/Codec;": [
+        "move",
+        "net/minecraft/world/level/levelgen/DensityFunction",
+        "Lcom/mojang/serialization/Codec;",
+        "CODEC"
       ]
     },
     "net/minecraft/world/entity/EntitySpawnReason": {
@@ -10656,6 +10916,11 @@
         "foxgrade/shim/ItemCompat",
         "spearTools",
         "()Lnet/minecraft/tags/TagKey;"
+      ],
+      "getstatic SHEARS_TOOLS:Lnet/minecraft/tags/TagKey;": [
+        "foxgrade/shim/ItemCompat",
+        "shearsTools",
+        "()Lnet/minecraft/tags/TagKey;"
       ]
     },
     "net/minecraft/network/chat/HoverEvent$EntityTooltipInfo": {
@@ -10711,6 +10976,13 @@
         "net/minecraft/world/level/block/ChestBlock",
         "Lnet/minecraft/world/phys/shapes/VoxelShape;",
         "SHAPE"
+      ]
+    },
+    "net/fabricmc/fabric/api/resource/ResourceReloadListenerKeys": {
+      "getstatic TAGS:Lnet/minecraft/resources/Identifier;": [
+        "foxgrade/shim/FabricCompat",
+        "reloadKeyTags",
+        "()Lnet/minecraft/resources/Identifier;"
       ]
     }
   },
@@ -17518,6 +17790,73 @@
       ]
     },
     {
+      "oldName": "getType",
+      "oldDesc": "()Lnet/minecraft/world/level/storage/loot/entries/LootPoolEntryType;",
+      "newName": "codec",
+      "newDesc": "()Lcom/mojang/serialization/MapCodec;",
+      "unpack": [],
+      "convert": [
+        "static",
+        "foxgrade/shim/LootTypeCompat",
+        "unwrap",
+        "(Ljava/lang/Object;)Lcom/mojang/serialization/MapCodec;"
+      ]
+    },
+    {
+      "oldName": "getType",
+      "oldDesc": "()Lnet/minecraft/world/level/storage/loot/functions/LootItemFunctionType;",
+      "newName": "codec",
+      "newDesc": "()Lcom/mojang/serialization/MapCodec;",
+      "unpack": [],
+      "convert": [
+        "static",
+        "foxgrade/shim/LootTypeCompat",
+        "unwrap",
+        "(Ljava/lang/Object;)Lcom/mojang/serialization/MapCodec;"
+      ]
+    },
+    {
+      "oldName": "getType",
+      "oldDesc": "()Lnet/minecraft/world/level/storage/loot/predicates/LootItemConditionType;",
+      "newName": "codec",
+      "newDesc": "()Lcom/mojang/serialization/MapCodec;",
+      "unpack": [],
+      "convert": [
+        "static",
+        "foxgrade/shim/LootTypeCompat",
+        "unwrap",
+        "(Ljava/lang/Object;)Lcom/mojang/serialization/MapCodec;"
+      ]
+    },
+    {
+      "oldName": "test",
+      "oldDesc": "(Lnet/minecraft/core/HolderLookup$Provider;)Z",
+      "newName": "test",
+      "newDesc": "(Lnet/minecraft/resources/RegistryOps$RegistryInfoLookup;)Z",
+      "unpack": [
+        [
+          "static",
+          "foxgrade/shim/ConditionCompat",
+          "provider",
+          "(Lnet/minecraft/resources/RegistryOps$RegistryInfoLookup;)Lnet/minecraft/core/HolderLookup$Provider;",
+          "p1"
+        ]
+      ]
+    },
+    {
+      "oldName": "getType",
+      "oldDesc": "()Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructureProcessorType;",
+      "newName": "codec",
+      "newDesc": "()Lcom/mojang/serialization/MapCodec;",
+      "unpack": [],
+      "convert": [
+        "static",
+        "foxgrade/shim/LootTypeCompat",
+        "unwrap",
+        "(Ljava/lang/Object;)Lcom/mojang/serialization/MapCodec;"
+      ]
+    },
+    {
       "oldName": "render",
       "oldDesc": "(Lnet/minecraft/world/entity/Entity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
       "newName": "submit",
@@ -18065,7 +18404,7 @@
       "newName": "element",
       "newDesc": "(Lnet/minecraft/resources/Identifier;Z)Ljava/lang/Object;",
       "unpack": [
-        "p0"
+        "p1"
       ]
     },
     {
@@ -20928,9 +21267,401 @@
           "p5"
         ]
       ]
+    },
+    {
+      "name": "extractRenderState",
+      "desc": "(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/client/renderer/entity/state/EntityRenderState;F)V",
+      "hooks": [
+        [
+          "static",
+          "foxgrade/shim/EntityRenderCompat",
+          "remember",
+          "(Ljava/lang/Object;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/client/renderer/entity/state/EntityRenderState;F)V",
+          "this",
+          "p1",
+          "p2",
+          "p3"
+        ]
+      ]
+    },
+    {
+      "name": "extractRenderState",
+      "desc": "(Lnet/minecraft/world/level/block/entity/BlockEntity;Lnet/minecraft/client/renderer/blockentity/state/BlockEntityRenderState;FLnet/minecraft/world/phys/Vec3;Lnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V",
+      "hooks": [
+        [
+          "static",
+          "foxgrade/shim/BlockEntityRenderCompat",
+          "remember",
+          "(Ljava/lang/Object;Lnet/minecraft/world/level/block/entity/BlockEntity;Lnet/minecraft/client/renderer/blockentity/state/BlockEntityRenderState;FLnet/minecraft/world/phys/Vec3;Lnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V",
+          "this",
+          "p1",
+          "p2",
+          "p3",
+          "p4",
+          "p5"
+        ]
+      ]
+    },
+    {
+      "name": "extractRenderState",
+      "desc": "(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/client/renderer/entity/state/EntityRenderState;F)V",
+      "hooks": [
+        [
+          "static",
+          "foxgrade/shim/EntityRenderCompat",
+          "remember",
+          "(Ljava/lang/Object;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/client/renderer/entity/state/EntityRenderState;F)V",
+          "this",
+          "p1",
+          "p2",
+          "p3"
+        ]
+      ]
+    },
+    {
+      "name": "extractRenderState",
+      "desc": "(Lnet/minecraft/world/level/block/entity/BlockEntity;Lnet/minecraft/client/renderer/blockentity/state/BlockEntityRenderState;FLnet/minecraft/world/phys/Vec3;Lnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V",
+      "hooks": [
+        [
+          "static",
+          "foxgrade/shim/BlockEntityRenderCompat",
+          "remember",
+          "(Ljava/lang/Object;Lnet/minecraft/world/level/block/entity/BlockEntity;Lnet/minecraft/client/renderer/blockentity/state/BlockEntityRenderState;FLnet/minecraft/world/phys/Vec3;Lnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V",
+          "this",
+          "p1",
+          "p2",
+          "p3",
+          "p4",
+          "p5"
+        ]
+      ]
+    },
+    {
+      "name": "extractRenderState",
+      "desc": "(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/client/renderer/entity/state/EntityRenderState;F)V",
+      "hooks": [
+        [
+          "static",
+          "foxgrade/shim/EntityRenderCompat",
+          "remember",
+          "(Ljava/lang/Object;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/client/renderer/entity/state/EntityRenderState;F)V",
+          "this",
+          "p1",
+          "p2",
+          "p3"
+        ]
+      ]
+    },
+    {
+      "name": "extractRenderState",
+      "desc": "(Lnet/minecraft/world/level/block/entity/BlockEntity;Lnet/minecraft/client/renderer/blockentity/state/BlockEntityRenderState;FLnet/minecraft/world/phys/Vec3;Lnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V",
+      "hooks": [
+        [
+          "static",
+          "foxgrade/shim/BlockEntityRenderCompat",
+          "remember",
+          "(Ljava/lang/Object;Lnet/minecraft/world/level/block/entity/BlockEntity;Lnet/minecraft/client/renderer/blockentity/state/BlockEntityRenderState;FLnet/minecraft/world/phys/Vec3;Lnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V",
+          "this",
+          "p1",
+          "p2",
+          "p3",
+          "p4",
+          "p5"
+        ]
+      ]
+    },
+    {
+      "name": "extractRenderState",
+      "desc": "(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/client/renderer/entity/state/EntityRenderState;F)V",
+      "hooks": [
+        [
+          "static",
+          "foxgrade/shim/EntityRenderCompat",
+          "remember",
+          "(Ljava/lang/Object;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/client/renderer/entity/state/EntityRenderState;F)V",
+          "this",
+          "p1",
+          "p2",
+          "p3"
+        ]
+      ]
+    },
+    {
+      "name": "extractRenderState",
+      "desc": "(Lnet/minecraft/world/level/block/entity/BlockEntity;Lnet/minecraft/client/renderer/blockentity/state/BlockEntityRenderState;FLnet/minecraft/world/phys/Vec3;Lnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V",
+      "hooks": [
+        [
+          "static",
+          "foxgrade/shim/BlockEntityRenderCompat",
+          "remember",
+          "(Ljava/lang/Object;Lnet/minecraft/world/level/block/entity/BlockEntity;Lnet/minecraft/client/renderer/blockentity/state/BlockEntityRenderState;FLnet/minecraft/world/phys/Vec3;Lnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V",
+          "this",
+          "p1",
+          "p2",
+          "p3",
+          "p4",
+          "p5"
+        ]
+      ]
+    },
+    {
+      "name": "extractRenderState",
+      "desc": "(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/client/renderer/entity/state/EntityRenderState;F)V",
+      "hooks": [
+        [
+          "static",
+          "foxgrade/shim/EntityRenderCompat",
+          "remember",
+          "(Ljava/lang/Object;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/client/renderer/entity/state/EntityRenderState;F)V",
+          "this",
+          "p1",
+          "p2",
+          "p3"
+        ]
+      ]
+    },
+    {
+      "name": "extractRenderState",
+      "desc": "(Lnet/minecraft/world/level/block/entity/BlockEntity;Lnet/minecraft/client/renderer/blockentity/state/BlockEntityRenderState;FLnet/minecraft/world/phys/Vec3;Lnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V",
+      "hooks": [
+        [
+          "static",
+          "foxgrade/shim/BlockEntityRenderCompat",
+          "remember",
+          "(Ljava/lang/Object;Lnet/minecraft/world/level/block/entity/BlockEntity;Lnet/minecraft/client/renderer/blockentity/state/BlockEntityRenderState;FLnet/minecraft/world/phys/Vec3;Lnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V",
+          "this",
+          "p1",
+          "p2",
+          "p3",
+          "p4",
+          "p5"
+        ]
+      ]
+    },
+    {
+      "name": "extractRenderState",
+      "desc": "(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/client/renderer/entity/state/EntityRenderState;F)V",
+      "hooks": [
+        [
+          "static",
+          "foxgrade/shim/EntityRenderCompat",
+          "remember",
+          "(Ljava/lang/Object;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/client/renderer/entity/state/EntityRenderState;F)V",
+          "this",
+          "p1",
+          "p2",
+          "p3"
+        ]
+      ]
+    },
+    {
+      "name": "extractRenderState",
+      "desc": "(Lnet/minecraft/world/level/block/entity/BlockEntity;Lnet/minecraft/client/renderer/blockentity/state/BlockEntityRenderState;FLnet/minecraft/world/phys/Vec3;Lnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V",
+      "hooks": [
+        [
+          "static",
+          "foxgrade/shim/BlockEntityRenderCompat",
+          "remember",
+          "(Ljava/lang/Object;Lnet/minecraft/world/level/block/entity/BlockEntity;Lnet/minecraft/client/renderer/blockentity/state/BlockEntityRenderState;FLnet/minecraft/world/phys/Vec3;Lnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V",
+          "this",
+          "p1",
+          "p2",
+          "p3",
+          "p4",
+          "p5"
+        ]
+      ]
+    },
+    {
+      "name": "extractRenderState",
+      "desc": "(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/client/renderer/entity/state/EntityRenderState;F)V",
+      "hooks": [
+        [
+          "static",
+          "foxgrade/shim/EntityRenderCompat",
+          "remember",
+          "(Ljava/lang/Object;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/client/renderer/entity/state/EntityRenderState;F)V",
+          "this",
+          "p1",
+          "p2",
+          "p3"
+        ]
+      ]
+    },
+    {
+      "name": "extractRenderState",
+      "desc": "(Lnet/minecraft/world/level/block/entity/BlockEntity;Lnet/minecraft/client/renderer/blockentity/state/BlockEntityRenderState;FLnet/minecraft/world/phys/Vec3;Lnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V",
+      "hooks": [
+        [
+          "static",
+          "foxgrade/shim/BlockEntityRenderCompat",
+          "remember",
+          "(Ljava/lang/Object;Lnet/minecraft/world/level/block/entity/BlockEntity;Lnet/minecraft/client/renderer/blockentity/state/BlockEntityRenderState;FLnet/minecraft/world/phys/Vec3;Lnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V",
+          "this",
+          "p1",
+          "p2",
+          "p3",
+          "p4",
+          "p5"
+        ]
+      ]
     }
   ],
   "synthesizeIfMissing": [
+    {
+      "name": "createRenderState",
+      "desc": "()Lnet/minecraft/client/renderer/entity/state/EntityRenderState;",
+      "call": [
+        "static",
+        "foxgrade/shim/EntityRenderCompat",
+        "newState",
+        "(Ljava/lang/Object;)Lnet/minecraft/client/renderer/entity/state/EntityRenderState;",
+        "this"
+      ]
+    },
+    {
+      "name": "createRenderState",
+      "desc": "()Lnet/minecraft/client/renderer/blockentity/state/BlockEntityRenderState;",
+      "call": [
+        "static",
+        "foxgrade/shim/BlockEntityRenderCompat",
+        "newState",
+        "(Ljava/lang/Object;)Lnet/minecraft/client/renderer/blockentity/state/BlockEntityRenderState;",
+        "this"
+      ]
+    },
+    {
+      "name": "createRenderState",
+      "desc": "()Lnet/minecraft/client/renderer/entity/state/EntityRenderState;",
+      "call": [
+        "static",
+        "foxgrade/shim/EntityRenderCompat",
+        "newState",
+        "(Ljava/lang/Object;)Lnet/minecraft/client/renderer/entity/state/EntityRenderState;",
+        "this"
+      ]
+    },
+    {
+      "name": "createRenderState",
+      "desc": "()Lnet/minecraft/client/renderer/blockentity/state/BlockEntityRenderState;",
+      "call": [
+        "static",
+        "foxgrade/shim/BlockEntityRenderCompat",
+        "newState",
+        "(Ljava/lang/Object;)Lnet/minecraft/client/renderer/blockentity/state/BlockEntityRenderState;",
+        "this"
+      ]
+    },
+    {
+      "name": "createRenderState",
+      "desc": "()Lnet/minecraft/client/renderer/entity/state/EntityRenderState;",
+      "call": [
+        "static",
+        "foxgrade/shim/EntityRenderCompat",
+        "newState",
+        "(Ljava/lang/Object;)Lnet/minecraft/client/renderer/entity/state/EntityRenderState;",
+        "this"
+      ]
+    },
+    {
+      "name": "createRenderState",
+      "desc": "()Lnet/minecraft/client/renderer/blockentity/state/BlockEntityRenderState;",
+      "call": [
+        "static",
+        "foxgrade/shim/BlockEntityRenderCompat",
+        "newState",
+        "(Ljava/lang/Object;)Lnet/minecraft/client/renderer/blockentity/state/BlockEntityRenderState;",
+        "this"
+      ]
+    },
+    {
+      "name": "createRenderState",
+      "desc": "()Lnet/minecraft/client/renderer/entity/state/EntityRenderState;",
+      "call": [
+        "static",
+        "foxgrade/shim/EntityRenderCompat",
+        "newState",
+        "(Ljava/lang/Object;)Lnet/minecraft/client/renderer/entity/state/EntityRenderState;",
+        "this"
+      ]
+    },
+    {
+      "name": "createRenderState",
+      "desc": "()Lnet/minecraft/client/renderer/blockentity/state/BlockEntityRenderState;",
+      "call": [
+        "static",
+        "foxgrade/shim/BlockEntityRenderCompat",
+        "newState",
+        "(Ljava/lang/Object;)Lnet/minecraft/client/renderer/blockentity/state/BlockEntityRenderState;",
+        "this"
+      ]
+    },
+    {
+      "name": "createRenderState",
+      "desc": "()Lnet/minecraft/client/renderer/entity/state/EntityRenderState;",
+      "call": [
+        "static",
+        "foxgrade/shim/EntityRenderCompat",
+        "newState",
+        "(Ljava/lang/Object;)Lnet/minecraft/client/renderer/entity/state/EntityRenderState;",
+        "this"
+      ]
+    },
+    {
+      "name": "createRenderState",
+      "desc": "()Lnet/minecraft/client/renderer/blockentity/state/BlockEntityRenderState;",
+      "call": [
+        "static",
+        "foxgrade/shim/BlockEntityRenderCompat",
+        "newState",
+        "(Ljava/lang/Object;)Lnet/minecraft/client/renderer/blockentity/state/BlockEntityRenderState;",
+        "this"
+      ]
+    },
+    {
+      "name": "createRenderState",
+      "desc": "()Lnet/minecraft/client/renderer/entity/state/EntityRenderState;",
+      "call": [
+        "static",
+        "foxgrade/shim/EntityRenderCompat",
+        "newState",
+        "(Ljava/lang/Object;)Lnet/minecraft/client/renderer/entity/state/EntityRenderState;",
+        "this"
+      ]
+    },
+    {
+      "name": "createRenderState",
+      "desc": "()Lnet/minecraft/client/renderer/blockentity/state/BlockEntityRenderState;",
+      "call": [
+        "static",
+        "foxgrade/shim/BlockEntityRenderCompat",
+        "newState",
+        "(Ljava/lang/Object;)Lnet/minecraft/client/renderer/blockentity/state/BlockEntityRenderState;",
+        "this"
+      ]
+    },
+    {
+      "name": "createRenderState",
+      "desc": "()Lnet/minecraft/client/renderer/entity/state/EntityRenderState;",
+      "call": [
+        "static",
+        "foxgrade/shim/EntityRenderCompat",
+        "newState",
+        "(Ljava/lang/Object;)Lnet/minecraft/client/renderer/entity/state/EntityRenderState;",
+        "this"
+      ]
+    },
+    {
+      "name": "createRenderState",
+      "desc": "()Lnet/minecraft/client/renderer/blockentity/state/BlockEntityRenderState;",
+      "call": [
+        "static",
+        "foxgrade/shim/BlockEntityRenderCompat",
+        "newState",
+        "(Ljava/lang/Object;)Lnet/minecraft/client/renderer/blockentity/state/BlockEntityRenderState;",
+        "this"
+      ]
+    },
     {
       "name": "createRenderState",
       "desc": "()Lnet/minecraft/client/renderer/entity/state/EntityRenderState;",

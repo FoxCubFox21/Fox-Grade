@@ -54,7 +54,9 @@ public final class RemovedEventSynth {
         // a listener CLASS implementing the removed callback type: the type must exist for the class to load at all
         if (itfs != null) for (String i : itfs) if (candidate(i) && !exists.test(i)) into.computeIfAbsent(i, k -> new Missing());
       }
+      @Override public org.objectweb.asm.FieldVisitor visitField(int a, String n, String d, String s, Object v) { noteTypes(d, exists, into); return null; }
       @Override public MethodVisitor visitMethod(int a, String n, String d, String s, String[] e) {
+        noteTypes(d, exists, into);   // a removed context/callback type in a parameter list still has to resolve
         return new MethodVisitor(Opcodes.ASM9) {
           @Override public void visitFieldInsn(int op, String owner, String name, String desc) {
             if (op == Opcodes.GETSTATIC && desc.equals(EVENT_DESC) && candidate(owner)) {
@@ -78,6 +80,12 @@ public final class RemovedEventSynth {
   }
 
   static boolean candidate(String owner) { return owner.startsWith("net/fabricmc/fabric/api/"); }
+  /** Every object type in a descriptor that is a removed Fabric API type gets an (empty) stand-in. */
+  static void noteTypes(String desc, Predicate<String> exists, Map<String, Missing> into) {
+    if (desc == null) return;
+    java.util.regex.Matcher m = java.util.regex.Pattern.compile("L(net/fabricmc/fabric/api/[^;]+);").matcher(desc);
+    while (m.find()) { String t = m.group(1); if (!exists.test(t)) into.computeIfAbsent(t, k -> new Missing()); }
+  }
 
   /** Build the stand-in interface. */
   public static byte[] synthesize(String owner, Missing m) {

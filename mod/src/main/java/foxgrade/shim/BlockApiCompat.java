@@ -63,4 +63,11 @@ public final class BlockApiCompat {
   public static float leafParticleChance() { return 0.01f; }
   public static net.minecraft.sounds.SoundEvent chestOpenSound() { return net.minecraft.sounds.SoundEvents.CHEST_OPEN; }
   public static net.minecraft.sounds.SoundEvent chestCloseSound() { return net.minecraft.sounds.SoundEvents.CHEST_CLOSE; }
+  /** Fabric's block-appearance hook ({@code FabricBlockState.getAppearance}) changed shape in 26.2; the appearance of a
+   *  state, absent a facade mod, is the state. */
+  public static net.minecraft.world.level.block.state.BlockState getAppearance(net.minecraft.world.level.block.state.BlockState state, net.minecraft.client.renderer.block.BlockAndTintGetter level, net.minecraft.core.BlockPos pos, net.minecraft.core.Direction side, net.minecraft.world.level.block.state.BlockState source, net.minecraft.core.BlockPos sourcePos) { return state; }
+  /** {@code new LeavesBlock(props)}: LeavesBlock is abstract in 26.2; the tinted-particle variant is what oak/birch use. */
+  public static net.minecraft.world.level.block.LeavesBlock leaves(net.minecraft.world.level.block.state.BlockBehaviour.Properties props) { return new net.minecraft.world.level.block.TintedParticleLeavesBlock(0.01f, props); }
+  /** 1.21's {@code Properties.dropsLike(block)}: 26.2 overrides the loot table by key. */
+  public static net.minecraft.world.level.block.state.BlockBehaviour.Properties dropsLike(net.minecraft.world.level.block.state.BlockBehaviour.Properties props, net.minecraft.world.level.block.Block block) { return props.overrideLootTable(block.getLootTable()); }
 }

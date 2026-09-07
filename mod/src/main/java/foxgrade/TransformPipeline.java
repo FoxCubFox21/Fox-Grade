@@ -104,6 +104,7 @@ public final class TransformPipeline {
     Map<String, Map<String, String>> refmapByClass = new HashMap<>();   // raw key → translated selector
     boolean hasRefmapFile = false;
     int autoStripped = 0;
+    int jsonStrictened = 0;
     if (auto.isLoaded()) {
       try (ZipFile in0 = new ZipFile(src.toFile())) {
         var entries0 = in0.entries();
@@ -194,7 +195,10 @@ public final class TransformPipeline {
             awFiles += inner.awFiles; awOwners += inner.awOwners; awDescs += inner.awDescs;
             refmapFiles += inner.refmapFiles; refmapHits += inner.refmapHits;
             mixinsStripped += inner.mixinsStripped; autoStripped += inner.autoStripped;
-          } catch (Exception ex) { /* leave the nested jar as-is if recursion fails */ }
+          } catch (Exception ex) {
+            System.err.println("[Fox-Grade] bundled jar " + name + " could not be ported (" + ex + "); shipped unchanged");
+            if (System.getenv("FOXGRADE_DEBUG_STRIP") != null) ex.printStackTrace();
+          }
           buffered.put(name, emit);
           continue;
         }
@@ -237,6 +241,11 @@ public final class TransformPipeline {
             emit = (GSON.toJson(meta) + "\n").getBytes(StandardCharsets.UTF_8);
             if (touched) metaFixed++;
           } catch (Exception ex) { /* leave the meta alone if malformed */ }
+        } else if (name.endsWith(".json") && (name.startsWith("data/") || name.startsWith("assets/"))) {
+          // 26.2 loads datapack and resource JSON with a STRICT parser; 1.21 accepted comments, trailing commas and the
+          // like. Files that fail the strict read are re-serialised from a lenient parse; clean files stay byte-identical.
+          byte[] strictened = JsonStrict.strictenIfNeeded(raw);
+          if (strictened != null) { emit = strictened; jsonStrictened++; }
         } else if ((name.toLowerCase().endsWith(".accesswidener") || name.toLowerCase().endsWith(".aw") || name.toLowerCase().endsWith(".ct") || name.toLowerCase().endsWith(".classtweaker")) && !mergedClasses.isEmpty()) {
           try {
             AccessWidenerRemapper.Names names = new AccessWidenerRemapper.Names() {
@@ -355,16 +364,25 @@ public final class TransformPipeline {
           // A mixin whose target class no longer exists cannot apply at all; Mixin would then refuse
           // every later load of the mixin class. Deregister it from its config.
           if (!mixinTargets.isEmpty()) { emit = MixinRequireZeroer.zero(emit); mixinClasses.add(slashClass); }   // failed injections become warnings, not crashes
-          boolean mixinIsInterface = !mixinTargets.isEmpty() && (new org.objectweb.asm.ClassReader(emit).getAccess() & org.objectweb.asm.Opcodes.ACC_INTERFACE) != 0;
+          org.objectweb.asm.ClassReader mixinReader = mixinTargets.isEmpty() ? null : new org.objectweb.asm.ClassReader(emit);
+          boolean mixinIsInterface = mixinReader != null && (mixinReader.getAccess() & org.objectweb.asm.Opcodes.ACC_INTERFACE) != 0;
+          String mixinSuper = mixinReader == null ? null : mixinReader.getSuperName();
           for (String target : mixinTargets) {
             if (!PortVerifier.isGameClass(target)) continue;
             boolean gone = !verifier.knows(target);
             boolean kindFlipped = !gone && !mixinIsInterface && Boolean.TRUE.equals(verifier.isInterface(target));   // Mixin: "target type mismatch"
-            if (gone || kindFlipped) {
+            // Mixin also refuses a mixin whose declared superclass is not in the target's hierarchy any more
+            // (AxeItem no longer extends DiggerItem): "Super class X of Y was not found in the hierarchy of target"
+            boolean superLost = false;
+            if (!gone && mixinSuper != null && PortVerifier.isGameClass(mixinSuper) && !mixinSuper.equals("java/lang/Object") && verifier.knows(mixinSuper)) {
+              superLost = true;
+              for (String c = target, guard = ""; c != null && guard.length() < 48; c = verifier.superOf(c), guard += "x") if (c.equals(mixinSuper)) { superLost = false; break; }
+            }
+            if (gone || kindFlipped || superLost) {
               fatalMixins.add(slashClass);
               emit = MixinNeutralizer.neutralize(emit);   // loadable as a plain class; invokers return defaults
               relocated.put(slashClass, slashClass.contains("/mixin/") ? slashClass.replace("/mixin/", "/mixinfg/") : slashClass + "_fg");
-              strippedNames.add(slashClass.substring(slashClass.lastIndexOf('/') + 1) + " (whole mixin: target " + target.substring(target.lastIndexOf('/') + 1) + (gone ? " no longer exists)" : " became an interface)"));
+              strippedNames.add(slashClass.substring(slashClass.lastIndexOf('/') + 1) + " (whole mixin: target " + target.substring(target.lastIndexOf('/') + 1) + (gone ? " no longer exists)" : kindFlipped ? " became an interface)" : " no longer extends " + mixinSuper.substring(mixinSuper.lastIndexOf('/') + 1) + ")"));
               break;
             }
           }

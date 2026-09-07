@@ -70,6 +70,13 @@ public final class ShimGenerator implements Opcodes {
       Map.entry("foxgrade/shim/EntityApiCompat", () -> fromResource("foxgrade/shim/EntityApiCompat.class")),
       Map.entry("foxgrade/shim/EntityLegacyCompat", () -> fromResource("foxgrade/shim/EntityLegacyCompat.class")),
       Map.entry("foxgrade/shim/HolderCompat", () -> fromResource("foxgrade/shim/HolderCompat.class")),
+      Map.entry("foxgrade/shim/RecipeSerializerCompat", () -> fromResource("foxgrade/shim/RecipeSerializerCompat.class")),
+      Map.entry("foxgrade/shim/ConditionCompat$Handler", () -> fromResource("foxgrade/shim/ConditionCompat$Handler.class")),
+      Map.entry("foxgrade/shim/ConditionCompat", () -> fromResource("foxgrade/shim/ConditionCompat.class")),
+      Map.entry("foxgrade/shim/ExecCompat$Wrapped", () -> fromResource("foxgrade/shim/ExecCompat$Wrapped.class")),
+      Map.entry("foxgrade/shim/LootTypeCompat", () -> fromResource("foxgrade/shim/LootTypeCompat.class")),
+      Map.entry("foxgrade/shim/FabricCompat", () -> fromResource("foxgrade/shim/FabricCompat.class")),
+      Map.entry("foxgrade/shim/ExecCompat", () -> fromResource("foxgrade/shim/ExecCompat.class")),
       Map.entry("foxgrade/shim/VersionCompat", () -> fromResource("foxgrade/shim/VersionCompat.class")),
       Map.entry("foxgrade/shim/BufCompat", () -> fromResource("foxgrade/shim/BufCompat.class")),
       Map.entry("foxgrade/shim/CodecCompat", () -> fromResource("foxgrade/shim/CodecCompat.class")),
@@ -108,6 +115,17 @@ public final class ShimGenerator implements Opcodes {
       Map.entry("net/minecraft/client/renderer/item/ItemProperties", () -> fromResource("foxgrade/shim/ItemPropertiesShim.class")),
       Map.entry("net/minecraft/client/gui/GuiSpriteManager", () -> fromResource("foxgrade/shim/GuiSpriteManagerShim.class")),
       Map.entry("net/minecraft/client/renderer/texture/Tickable", () -> fromResource("foxgrade/shim/TickableShim.class")),
+      Map.entry("net/fabricmc/fabric/api/networking/v1/PacketByteBufs", () -> fromResource("foxgrade/shim/PacketByteBufsShim.class")),
+      Map.entry("net/minecraft/util/random/Weight", () -> fromResource("foxgrade/shim/WeightShim.class")),
+      Map.entry("net/minecraft/util/random/WeightedEntry", () -> fromResource("foxgrade/shim/WeightedEntryShim.class")),
+      Map.entry("net/minecraft/util/random/WeightedEntry$Wrapper", () -> fromResource("foxgrade/shim/WeightedEntryShim$Wrapper.class")),
+      Map.entry("net/minecraft/util/random/WeightedEntry$IntrusiveBase", () -> fromResource("foxgrade/shim/WeightedEntryShim$IntrusiveBase.class")),
+      Map.entry("net/minecraft/util/random/WeightedRandomList", () -> fromResource("foxgrade/shim/WeightedRandomListShim.class")),
+      Map.entry("net/minecraft/world/level/storage/loot/entries/LootPoolEntryType", () -> fromResource("foxgrade/shim/LootPoolEntryTypeShim.class")),
+      Map.entry("net/minecraft/world/level/storage/loot/functions/LootItemFunctionType", () -> fromResource("foxgrade/shim/LootItemFunctionTypeShim.class")),
+      Map.entry("net/minecraft/world/level/storage/loot/predicates/LootItemConditionType", () -> fromResource("foxgrade/shim/LootItemConditionTypeShim.class")),
+      Map.entry("net/minecraft/world/entity/FlyingMob", () -> fromResource("foxgrade/shim/FlyingMobShim.class")),
+      Map.entry("net/minecraft/client/renderer/ShaderInstance", () -> fromResource("foxgrade/shim/ShaderInstanceShim.class")),
       Map.entry("net/minecraft/advancements/critereon/ItemSubPredicate", () -> fromResource("foxgrade/shim/ItemSubPredicateShim.class")),
       Map.entry("net/minecraft/advancements/critereon/ItemSubPredicate$Type", () -> fromResource("foxgrade/shim/ItemSubPredicateTypeShim.class")),
       Map.entry("foxgrade/shim/ResourceMetadataCompat", () -> fromResource("foxgrade/shim/ResourceMetadataCompat.class")),
@@ -221,6 +239,17 @@ public final class ShimGenerator implements Opcodes {
     m.put("foxgrade/shim/ItemPropertiesShim", "net/minecraft/client/renderer/item/ItemProperties");
     m.put("foxgrade/shim/GuiSpriteManagerShim", "net/minecraft/client/gui/GuiSpriteManager");
     m.put("foxgrade/shim/TickableShim", "net/minecraft/client/renderer/texture/Tickable");
+    m.put("foxgrade/shim/PacketByteBufsShim", "net/fabricmc/fabric/api/networking/v1/PacketByteBufs");
+    m.put("foxgrade/shim/WeightShim", "net/minecraft/util/random/Weight");
+    m.put("foxgrade/shim/WeightedEntryShim", "net/minecraft/util/random/WeightedEntry");
+    m.put("foxgrade/shim/WeightedEntryShim$Wrapper", "net/minecraft/util/random/WeightedEntry$Wrapper");
+    m.put("foxgrade/shim/WeightedEntryShim$IntrusiveBase", "net/minecraft/util/random/WeightedEntry$IntrusiveBase");
+    m.put("foxgrade/shim/WeightedRandomListShim", "net/minecraft/util/random/WeightedRandomList");
+    m.put("foxgrade/shim/LootPoolEntryTypeShim", "net/minecraft/world/level/storage/loot/entries/LootPoolEntryType");
+    m.put("foxgrade/shim/LootItemFunctionTypeShim", "net/minecraft/world/level/storage/loot/functions/LootItemFunctionType");
+    m.put("foxgrade/shim/LootItemConditionTypeShim", "net/minecraft/world/level/storage/loot/predicates/LootItemConditionType");
+    m.put("foxgrade/shim/FlyingMobShim", "net/minecraft/world/entity/FlyingMob");
+    m.put("foxgrade/shim/ShaderInstanceShim", "net/minecraft/client/renderer/ShaderInstance");
     m.put("foxgrade/shim/ItemSubPredicateShim", "net/minecraft/advancements/critereon/ItemSubPredicate");
     m.put("foxgrade/shim/ItemSubPredicateTypeShim", "net/minecraft/advancements/critereon/ItemSubPredicate$Type");
     m.put("foxgrade/shim/FabricModelPredicateProviderRegistryShim", "net/fabricmc/fabric/api/object/builder/v1/client/model/FabricModelPredicateProviderRegistry");
@@ -262,6 +291,8 @@ public final class ShimGenerator implements Opcodes {
       Map.entry("foxgrade/shim/SavedDataCompat", java.util.List.of("net/minecraft/world/level/saveddata/SavedData$Factory")),
       Map.entry("net/minecraft/client/resources/model/BakedModel", java.util.List.of("net/minecraft/client/renderer/block/model/ItemOverrides")),
       Map.entry("net/minecraft/client/renderer/item/ItemProperties", java.util.List.of("net/minecraft/client/renderer/item/ClampedItemPropertyFunction")),
+      Map.entry("net/minecraft/util/random/WeightedRandomList", java.util.List.of("net/minecraft/util/random/WeightedEntry", "net/minecraft/util/random/Weight")),
+      Map.entry("net/minecraft/util/random/WeightedEntry", java.util.List.of("net/minecraft/util/random/Weight")),
       Map.entry("net/fabricmc/fabric/api/client/render/fluid/v1/SimpleFluidRenderHandler", java.util.List.of("net/fabricmc/fabric/api/client/render/fluid/v1/FluidRenderHandler")),
       Map.entry("net/fabricmc/fabric/api/client/render/fluid/v1/FluidRenderHandlerRegistry", java.util.List.of("net/fabricmc/fabric/api/client/render/fluid/v1/FluidRenderHandler")),
       Map.entry("net/fabricmc/fabric/api/object/builder/v1/client/model/FabricModelPredicateProviderRegistry", java.util.List.of("net/minecraft/client/renderer/item/ClampedItemPropertyFunction")),

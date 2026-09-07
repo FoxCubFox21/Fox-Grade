@@ -74,8 +74,8 @@ bridged yet.
 ## Head-to-head with Retromod
 
 The same 104 mods, same instance, same base jars, through Retromod (Modrinth's other 26.2
-auto-porter, 1.3.0-snapshot.10) and Fox-Grade: **Fox-Grade boots 51, Retromod boots 37.**
-21 boot only under Fox-Grade, 7 only under Retromod, 30 under both, 46 under neither.
+auto-porter, 1.3.0-snapshot.10) and Fox-Grade: **Fox-Grade boots 61, Retromod boots 37.**
+26 boot only under Fox-Grade, 2 only under Retromod, 35 under both, 41 under neither.
 The set is Modrinth's most-downloaded Fabric 1.21.1 mods (libraries and the renderer tier skipped,
 required libraries pulled in), run through both tools under one rule: same launch command, same
 base jars, same instance layout, and a pass means the world starts loading and the game is still
@@ -87,9 +87,9 @@ builder `tools/h2h-corpus.py`.
 ## How well does it work?
 
 Batch-tested against 130 mods from 1.21.x and 26.1 (every harness run folded to one row per mod,
-last verdict wins): **67 port and boot into a world** — six of them also verified on a dedicated
+last verdict wins): **77 port and boot into a world** — six of them also verified on a dedicated
 server, Mod Menu's mod list opens and renders through the GUI bridges, Lighty boots on the
-re-created world-render events — and 63 do not. The failures are the 26.2 rewrites a bytecode port cannot paper over: renderer-tier
+re-created world-render events — and 53 do not. The failures are the 26.2 rewrites a bytecode port cannot paper over: renderer-tier
 internals (entity models and textures, the texture stitcher, the HUD layer stack, custom particle render
 types), API subsystems that were removed outright (item-model overrides, weighted lists, loot entry types),
 mods that are a rewrite rather than a port (Cobblemon: 251 unresolved references), the Sodium-dependent

@@ -91,4 +91,14 @@ public final class EntityLegacyCompat {
     if (e.level() instanceof net.minecraft.server.level.ServerLevel sl) return e.createCommandSourceStackForNameResolution(sl);
     throw new IllegalStateException("no server level for " + e);
   }
+  /** 1.21's {@code LivingEntity.getAllSlots()} (hand + armor stacks): every equipment slot in 26.2. */
+  public static Iterable<net.minecraft.world.item.ItemStack> getAllSlots(net.minecraft.world.entity.LivingEntity e) {
+    java.util.List<net.minecraft.world.item.ItemStack> out = new java.util.ArrayList<>();
+    for (net.minecraft.world.entity.EquipmentSlot s : net.minecraft.world.entity.EquipmentSlot.values()) out.add(e.getItemBySlot(s));
+    return out;
+  }
+  /** 1.21's {@code EntityTypePredicate.matches(EntityType)}: 26.2 matches holders. */
+  public static boolean predicateMatches(net.minecraft.advancements.predicates.entity.EntityTypePredicate predicate, net.minecraft.world.entity.EntityType<?> type) {
+    return predicate.matches(net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.wrapAsHolder(type));
+  }
 }

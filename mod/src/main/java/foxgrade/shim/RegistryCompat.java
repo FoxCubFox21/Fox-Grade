@@ -33,13 +33,13 @@ public final class RegistryCompat {
   @SuppressWarnings({"unchecked", "rawtypes"})
   public static Object register(Registry registry, String id, Object value) { return register(registry, Identifier.parse(id), value); }
   @SuppressWarnings({"unchecked", "rawtypes"})
-  public static Object register(Registry registry, Identifier id, Object value) { fixUp(registry, id, value); return registerOrDefer(registry, ResourceKey.create(registry.key(), id), value); }
+  public static Object register(Registry registry, Identifier id, Object value) { value = toRegistryShape(registry, value); fixUp(registry, id, value); return registerOrDefer(registry, ResourceKey.create(registry.key(), id), value); }
   @SuppressWarnings({"unchecked", "rawtypes"})
-  public static Object register(Registry registry, ResourceKey key, Object value) { fixUp(registry, key.identifier(), value); return registerOrDefer(registry, key, value); }
+  public static Object register(Registry registry, ResourceKey key, Object value) { value = toRegistryShape(registry, value); fixUp(registry, key.identifier(), value); return registerOrDefer(registry, key, value); }
   @SuppressWarnings({"unchecked", "rawtypes"})
-  public static Holder.Reference registerForHolder(Registry registry, Identifier id, Object value) { fixUp(registry, id, value); return Registry.registerForHolder(registry, id, value); }
+  public static Holder.Reference registerForHolder(Registry registry, Identifier id, Object value) { value = toRegistryShape(registry, value); fixUp(registry, id, value); return Registry.registerForHolder(registry, id, value); }
   @SuppressWarnings({"unchecked", "rawtypes"})
-  public static Holder.Reference registerForHolder(Registry registry, ResourceKey key, Object value) { fixUp(registry, key.identifier(), value); return Registry.registerForHolder(registry, key, value); }
+  public static Holder.Reference registerForHolder(Registry registry, ResourceKey key, Object value) { value = toRegistryShape(registry, value); fixUp(registry, key.identifier(), value); return Registry.registerForHolder(registry, key, value); }
 
   // ---- 26.2 builds every block state's cache INSIDE Registry.register (1.21.x rebuilt caches after
   // all registration). A block whose getShape reads its own registry holder therefore NPEs before
@@ -69,10 +69,37 @@ public final class RegistryCompat {
       try { st.initCache(); } catch (RuntimeException e) { System.err.println("[Fox-Grade] " + b + ": state cache still failing: " + e); }
     }
   }
+  /** 26.2 turned several "type" registries (structure processors, loot entries/functions/conditions/providers, rule
+   *  tests) into registries of MapCodecs. A 1.21 mod registers a type object — a record holding the codec, or a lambda
+   *  implementing the old functional interface — so when the registry's existing entries are MapCodecs and the value is
+   *  not one, the value's own {@code codec()} is what 26.2 wants (a plain Codec is wrapped as a map codec). */
+  static Object toRegistryShape(Registry<?> registry, Object value) {
+    if (value instanceof com.mojang.serialization.MapCodec) return value;
+    java.util.Iterator<?> it = ((Iterable<?>) registry).iterator();
+    if (!it.hasNext() || !(it.next() instanceof com.mojang.serialization.MapCodec)) return value;
+    // the holder's accessor is usually codec(); a lambda of the old functional interface may keep an intermediary name
+    // (method_16822), so any zero-argument method that yields a codec counts
+    java.util.List<java.lang.reflect.Method> cands = new java.util.ArrayList<>();
+    for (java.lang.reflect.Method m : value.getClass().getMethods()) if (m.getName().equals("codec") && m.getParameterCount() == 0) cands.add(m);
+    for (java.lang.reflect.Method m : value.getClass().getDeclaredMethods()) if (m.getParameterCount() == 0 && !java.lang.reflect.Modifier.isStatic(m.getModifiers()) && !cands.contains(m)) cands.add(m);
+    for (java.lang.reflect.Method m : cands) {
+      Class<?> rt = m.getReturnType();
+      if (!com.mojang.serialization.Codec.class.isAssignableFrom(rt) && !com.mojang.serialization.MapCodec.class.isAssignableFrom(rt) && rt != Object.class) continue;
+      try {
+        m.setAccessible(true);
+        Object c = m.invoke(value);
+        if (c instanceof com.mojang.serialization.MapCodec) return c;
+        if (c instanceof com.mojang.serialization.Codec<?> codec) return com.mojang.serialization.MapCodec.assumeMapUnsafe(codec);
+      } catch (ReflectiveOperationException | RuntimeException ignored) { }
+    }
+    return value;
+  }
+
   private static void fixUp(Registry<?> registry, Identifier id, Object value) {
     try {
       if (value instanceof Item item && registry == BuiltInRegistries.ITEM) fixItem(item, id);
       else if (value instanceof Block block && registry == BuiltInRegistries.BLOCK) fixBlock(block, id);
+      else if (value instanceof net.minecraft.world.entity.EntityType<?> et && registry == BuiltInRegistries.ENTITY_TYPE) fixEntityType(et, id);
     } catch (Throwable t) {
       System.err.println("[Fox-Grade] could not rewrite placeholder id of " + id + ": " + t);
     }
@@ -141,5 +168,41 @@ public final class RegistryCompat {
     if (layers != null && !layers.isEmpty() && layers.get(0) instanceof ArmorMaterialLayerShim layer)
       asset = net.minecraft.resources.ResourceKey.create(net.minecraft.world.item.equipment.EquipmentAssets.ROOT_ID, layer.assetName());
     return new net.minecraft.world.item.equipment.ArmorMaterial(15, defense, enchantability, equipSound, toughness, knockbackResistance, net.minecraft.tags.ItemTags.PLANKS, asset);
+  }
+  /** 1.21's {@code Registry.getOrCreateTag(TagKey)}: the named holder set for a tag, created empty when unknown. */
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  public static net.minecraft.core.HolderSet.Named getOrCreateTag(net.minecraft.core.Registry registry, net.minecraft.tags.TagKey key) {
+    for (String n : new String[] {"getOrThrow", "get", "getTag"}) {
+      try {
+        java.lang.reflect.Method m = registry.getClass().getMethod(n, net.minecraft.tags.TagKey.class);
+        Object r = m.invoke(registry, key);
+        if (r instanceof java.util.Optional<?> o) r = o.orElse(null);
+        if (r instanceof net.minecraft.core.HolderSet.Named named) return named;
+      } catch (ReflectiveOperationException | RuntimeException ignored) { }
+    }
+    return net.minecraft.core.HolderSet.emptyNamed(registry, key);
+  }
+  /** 1.21's {@code Registry.get(id)} / {@code get(key)} / {@code getOrThrow(key)} returning the VALUE: renamed getValue* in 26.2. */
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  public static Object getValue(Registry registry, Identifier id) { return registry.getValue(id); }
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  public static Object getValue(Registry registry, ResourceKey key) { return registry.getValue(key); }
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  public static Object getValueOrThrow(Registry registry, ResourceKey key) { return registry.getValueOrThrow(key); }
+
+  private static int pendingEntityTypes = 0;
+  /** 1.21's {@code EntityType.Builder.build()} / {@code build(String)}: 26.2 needs the registry key up front. A placeholder
+   *  key is used and the description id is repaired when the type is registered. */
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  public static net.minecraft.world.entity.EntityType buildEntityType(net.minecraft.world.entity.EntityType.Builder builder, String id) {
+    Identifier ident = id != null && id.contains(":") ? Identifier.parse(id) : Identifier.fromNamespaceAndPath(PENDING_NS, "pending_" + (pendingEntityTypes++) + (id == null ? "" : "_" + id.replaceAll("[^a-z0-9_./-]", "_")));
+    return builder.build(ResourceKey.create(Registries.ENTITY_TYPE, ident));
+  }
+  @SuppressWarnings({"unchecked", "rawtypes"})
+  public static net.minecraft.world.entity.EntityType buildEntityType(net.minecraft.world.entity.EntityType.Builder builder) { return buildEntityType(builder, null); }
+  private static void fixEntityType(net.minecraft.world.entity.EntityType<?> type, Identifier id) throws Exception {
+    Field descF = field(net.minecraft.world.entity.EntityType.class, "descriptionId");
+    String current = (String) descF.get(type);
+    if (current != null && current.contains("." + PENDING_NS + ".pending_")) descF.set(type, "entity." + id.getNamespace() + "." + id.getPath().replace('/', '.'));
   }
 }

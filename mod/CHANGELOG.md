@@ -1,6 +1,26 @@
 # Changelog
 
 ## 1.1.0 (unreleased)
+- **Constructor references and bundled libraries.** `LeavesBlock::new`-style references to a
+  constructor that changed shape now go through a synthesised bridge so the constructor adapters
+  apply to them; a factory adapter no longer fires on a subclass's `super(...)` call. Jar-in-jar
+  libraries are ported recursively as before, but a failure to port one is now logged instead of
+  silently shipping the old jar (that bug hid behind a 1-based recipe slot).
+- **Interface default methods get override adapters** (a reload-listener mix-in that implements
+  the 1.21 `reload` by default now gets the 26.2 one synthesised).
+- **Removed Fabric API types referenced only in signatures** are synthesised as empty
+  interfaces; removed `Event` constants on surviving classes read as dead events.
+- **Registries of codecs.** 26.2 turned the structure-processor, loot-entry/function/condition and
+  similar "type" registries into registries of MapCodecs; a 1.21 type object (record or lambda)
+  registered into one is unwrapped to its codec. `getType()` overrides on loot entries, functions
+  and conditions become `codec()`.
+- **Datapack JSON that only a lenient parser accepts** is re-serialised strictly at port time
+  (26.2 loads registry data strictly).
+- **More bridges.** `Registry.get/getOrThrow` (value forms), `EntityType.Builder.build()`,
+  `EntityTypePredicate.matches(EntityType)`, `Util` executor pools, `IntProvider/FloatProvider.codec`,
+  `PacketByteBufs`, `SimpleCraftingRecipeSerializer`, Fabric resource conditions, transfer-API
+  component patches, `WeightedRandomList`/`WeightedEntry`/`Weight`, `FlyingMob`, `ShaderInstance`
+  (type only), `LootPoolEntryType`, the block-appearance hook, leaves and chest constructors.
 - **Faster launches.** The translation tables (intermediary and Mojang renames, verified class
   moves) are parsed once and kept as a binary cache under `.fox-grade/cache/`; a later launch
   reads them in about a tenth of a second instead of parsing several megabytes of JSON. The 26.2
@@ -55,7 +75,7 @@
   classes), so 1.20.1 jars translate to readable Mojang names and port through the same layers.
 - **Compatibility page.** `docs/compat.md` is generated from the harness ledgers: verdict,
   unresolved count, server result, Retromod result and screenshot per mod.
-- **Head-to-head with Retromod on 104 mods: Fox-Grade 51, Retromod 37** (21 boot only under Fox-Grade) (`docs/compat.md`, runner in
+- **Head-to-head with Retromod on 104 mods: Fox-Grade 61, Retromod 37** (26 boot only under Fox-Grade) (`docs/compat.md`, runner in
   `tools/run-h2h.sh`). The fresh ten added chat-event records, numeric permission levels, NbtUtils
   and optional item-stack codecs, recipe ingredients, screen extract events, `super.use` holder
   conversion, Fabric's creative-tab / menu API renames, and inactive-but-accepted shims for the

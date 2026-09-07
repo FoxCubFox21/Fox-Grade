@@ -116,7 +116,9 @@ public final class AnnotationTargetScanner {
           @Override public void visitEnd() {
             if (kind[0] == null) return;
             String mirrored = mirroredArgs(kind[0], desc, sugarParams);
-            if (mirrored == null || mirrored.isEmpty()) return;               // nothing mirrored: always fits
+            String retMirror = null;                                          // @ModifyReturnValue: the first parameter IS the target's return value
+            if (kind[0].endsWith("/ModifyReturnValue;")) { try { org.objectweb.asm.Type[] ps = org.objectweb.asm.Type.getArgumentTypes(desc); if (ps.length > 0) retMirror = ps[0].getDescriptor(); } catch (RuntimeException e) { } }
+            if ((mirrored == null || mirrored.isEmpty()) && retMirror == null) return;   // nothing mirrored: always fits
             for (String sel : methodKeys) {
               if (sel.indexOf('(') >= 0) continue;                            // descriptor given: Mixin matches exactly
               String bare = sel.startsWith("L") && sel.indexOf(';') > 0 ? sel.substring(sel.indexOf(';') + 1) : sel;
@@ -125,7 +127,12 @@ public final class AnnotationTargetScanner {
                 Set<String> cands = candidates.apply(target, mapped);
                 if (cands == null || cands.isEmpty()) continue;
                 boolean fits = false;
-                for (String cd : cands) { int po = cd.indexOf('('); if (po >= 0 && argsOf(cd.substring(po)).equals(mirrored)) { fits = true; break; } }
+                for (String cd : cands) {
+                  int po = cd.indexOf('('); if (po < 0) continue;
+                  boolean argsOk = mirrored == null || mirrored.isEmpty() || argsOf(cd.substring(po)).equals(mirrored);
+                  boolean retOk = retMirror == null || org.objectweb.asm.Type.getReturnType(cd.substring(po)).getDescriptor().equals(retMirror);
+                  if (argsOk && retOk) { fits = true; break; }
+                }
                 if (!fits) { out.add(new BrokenHandler(name, desc)); return; }
               }
             }

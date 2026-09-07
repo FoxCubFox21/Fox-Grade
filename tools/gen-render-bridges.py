@@ -276,6 +276,57 @@ j["fieldRedirects"].setdefault("net/minecraft/world/level/block/ChestBlock", {})
 # value-provider bounded codecs moved to the plural holder classes (YUNG's API)
 cr.setdefault("net/minecraft/util/valueproviders/IntProvider", {})["codec(II)Lcom/mojang/serialization/Codec;"] = ["net/minecraft/util/valueproviders/IntProviders", "codec", "(II)Lcom/mojang/serialization/Codec;"]
 cr.setdefault("net/minecraft/util/valueproviders/FloatProvider", {})["codec(FF)Lcom/mojang/serialization/Codec;"] = ["net/minecraft/util/valueproviders/FloatProviders", "codec", "(FF)Lcom/mojang/serialization/Codec;"]
+ESV = "Ljava/util/concurrent/ExecutorService;"
+cr.setdefault("net/minecraft/util/Util", {}).update({"backgroundExecutor()" + ESV: ["foxgrade/shim/ExecCompat", "backgroundExecutor", "()" + ESV], "ioPool()" + ESV: ["foxgrade/shim/ExecCompat", "ioPool", "()" + ESV], "nonCriticalIoPool()" + ESV: ["foxgrade/shim/ExecCompat", "nonCriticalIoPool", "()" + ESV]})
+j["classRenames"]["net/minecraft/client/gui/screens/inventory/EffectRenderingInventoryScreen"] = "net/minecraft/client/gui/screens/inventory/AbstractContainerScreen"   # 26.2 folded effect rendering into the container screen
+OVL = "Lnet/minecraft/client/gui/screens/Overlay;"; MCC = "Lnet/minecraft/client/Minecraft;"
+cr.setdefault("net/minecraft/client/Minecraft", {}).update({"getOverlay()" + OVL: ["foxgrade/shim/MinecraftCompat", "getOverlay", "(" + MCC + ")" + OVL], "setOverlay(" + OVL + ")V": ["foxgrade/shim/MinecraftCompat", "setOverlay", "(" + MCC + OVL + ")V"]})
+cr.setdefault("net/minecraft/world/entity/LivingEntity", {})["getAllSlots()Ljava/lang/Iterable;"] = ["foxgrade/shim/EntityLegacyCompat", "getAllSlots", "(Lnet/minecraft/world/entity/LivingEntity;)Ljava/lang/Iterable;"]
+HSN = "Lnet/minecraft/core/HolderSet$Named;"; TGK = "Lnet/minecraft/tags/TagKey;"
+for _o in ("net/minecraft/core/Registry", "net/minecraft/core/DefaultedRegistry", "net/minecraft/core/MappedRegistry", "net/minecraft/core/DefaultedMappedRegistry"):
+    cr.setdefault(_o, {})["getOrCreateTag(" + TGK + ")" + HSN] = ["foxgrade/shim/RegistryCompat", "getOrCreateTag", "(Lnet/minecraft/core/Registry;" + TGK + ")" + HSN]
+j["renames"].setdefault("com/mojang/serialization/Dynamic", {})["value"] = "getValue"   # DFU 9
+j["fieldRedirects"].setdefault("net/fabricmc/fabric/api/resource/ResourceReloadListenerKeys", {})["getstatic TAGS:Lnet/minecraft/resources/Identifier;"] = ["foxgrade/shim/FabricCompat", "reloadKeyTags", "()Lnet/minecraft/resources/Identifier;"]
+MCD = "Lcom/mojang/serialization/MapCodec;"; LTC = "foxgrade/shim/LootTypeCompat"
+for _t in ("Lnet/minecraft/world/level/storage/loot/entries/LootPoolEntryType;", "Lnet/minecraft/world/level/storage/loot/functions/LootItemFunctionType;", "Lnet/minecraft/world/level/storage/loot/predicates/LootItemConditionType;"):
+    j["overrideAdapters"].append({"oldName": "getType", "oldDesc": "()" + _t, "newName": "codec", "newDesc": "()" + MCD, "unpack": [], "convert": ["static", LTC, "unwrap", "(Ljava/lang/Object;)" + MCD]})
+RGY = "Lnet/minecraft/core/Registry;"; RKY = "Lnet/minecraft/resources/ResourceKey;"; IDF = "Lnet/minecraft/resources/Identifier;"
+for _o in ("net/minecraft/core/Registry", "net/minecraft/core/DefaultedRegistry", "net/minecraft/core/MappedRegistry", "net/minecraft/core/DefaultedMappedRegistry", "net/minecraft/core/WritableRegistry"):
+    cr.setdefault(_o, {}).update({"get(" + IDF + ")Ljava/lang/Object;": ["foxgrade/shim/RegistryCompat", "getValue", "(" + RGY + IDF + ")Ljava/lang/Object;"],
+        "get(" + RKY + ")Ljava/lang/Object;": ["foxgrade/shim/RegistryCompat", "getValue", "(" + RGY + RKY + ")Ljava/lang/Object;"],
+        "getOrThrow(" + RKY + ")Ljava/lang/Object;": ["foxgrade/shim/RegistryCompat", "getValueOrThrow", "(" + RGY + RKY + ")Ljava/lang/Object;"]})
+ETB = "Lnet/minecraft/world/entity/EntityType$Builder;"; ETY = "Lnet/minecraft/world/entity/EntityType;"
+cr.setdefault("net/minecraft/world/entity/EntityType$Builder", {}).update({"build()" + ETY: ["foxgrade/shim/RegistryCompat", "buildEntityType", "(" + ETB + ")" + ETY], "build(Ljava/lang/String;)" + ETY: ["foxgrade/shim/RegistryCompat", "buildEntityType", "(" + ETB + "Ljava/lang/String;)" + ETY]})
+ETP = "Lnet/minecraft/advancements/predicates/entity/EntityTypePredicate;"
+cr.setdefault("net/minecraft/advancements/predicates/entity/EntityTypePredicate", {})["matches(" + ETY + ")Z"] = ["foxgrade/shim/EntityLegacyCompat", "predicateMatches", "(" + ETP + ETY + ")Z"]
+BST = "Lnet/minecraft/world/level/block/state/BlockState;"; BTG = "Lnet/minecraft/client/renderer/block/BlockAndTintGetter;"; DIR = "Lnet/minecraft/core/Direction;"
+for _o in ("net/minecraft/world/level/block/state/BlockState", "net/minecraft/world/level/block/state/BlockBehaviour$BlockStateBase"):
+    cr.setdefault(_o, {})["getAppearance(" + BTG + BP + DIR + BST + BP + ")" + BST] = ["foxgrade/shim/BlockApiCompat", "getAppearance", "(" + BST + BTG + BP + DIR + BST + BP + ")" + BST]
+j["fieldRedirects"].setdefault("net/minecraft/world/level/levelgen/DensityFunction", {})["getstatic HOLDER_HELPER_CODEC:Lcom/mojang/serialization/Codec;"] = ["move", "net/minecraft/world/level/levelgen/DensityFunction", "Lcom/mojang/serialization/Codec;", "CODEC"]
+RIL = "Lnet/minecraft/resources/RegistryOps$RegistryInfoLookup;"; HLP = "Lnet/minecraft/core/HolderLookup$Provider;"
+j["overrideAdapters"].append({"oldName": "test", "oldDesc": "(" + HLP + ")Z", "newName": "test", "newDesc": "(" + RIL + ")Z", "unpack": [["static", "foxgrade/shim/ConditionCompat", "provider", "(" + RIL + ")" + HLP, "p1"]]})   # Fabric ResourceCondition
+for _o in ("fluid/FluidVariant", "item/ItemVariant", "storage/TransferVariant"):
+    j["renames"].setdefault("net/fabricmc/fabric/api/transfer/v1/" + _o, {})["getComponents"] = "getComponentsPatch"   # 1.21's getComponents() returned the patch
+j["classRenames"]["net/minecraft/world/item/crafting/SimpleCraftingRecipeSerializer"] = "net/minecraft/world/item/crafting/RecipeSerializer"
+RSZ = "Lnet/minecraft/world/item/crafting/RecipeSerializer;"; RSC = "foxgrade/shim/RecipeSerializerCompat"
+j["ctorAdapters"].setdefault("net/minecraft/world/item/crafting/RecipeSerializer", {})["(Ljava/util/function/Function;)V"] = {"newDesc": "(Lcom/mojang/serialization/MapCodec;Lnet/minecraft/network/codec/StreamCodec;)V",
+    "args": [["static", RSC, "simpleMapCodec", "(Ljava/util/function/Function;)Lcom/mojang/serialization/MapCodec;", "o1"], ["static", RSC, "simpleStreamCodec", "(Ljava/util/function/Function;)Lnet/minecraft/network/codec/StreamCodec;", "o1"]],
+    "factory": [RSC, "simpleSerializer", "(Ljava/util/function/Function;)" + RSZ]}
+cr.setdefault("net/minecraft/core/Registry", {})["register(" + RGY + "Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;"] = ["foxgrade/shim/RegistryCompat", "register", "(" + RGY + "Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;"]
+BLK = "Lnet/minecraft/world/level/block/Block;"; IPP = "Lnet/minecraft/world/item/Item$Properties;"
+j["ctorAdapters"].setdefault("net/minecraft/world/item/StandingAndWallBlockItem", {})["(" + BLK + BLK + IPP + DIR + ")V"] = {"newDesc": "(" + BLK + BLK + DIR + IPP + ")V", "args": [["o1"], ["o2"], ["o4"], ["o3"]]}   # 26.2 swapped the last two
+cr.setdefault("net/minecraft/client/Minecraft", {})["getProfiler()Lnet/minecraft/util/profiling/ProfilerFiller;"] = ["foxgrade/shim/MinecraftCompat", "getProfiler", "(" + MCC + ")Lnet/minecraft/util/profiling/ProfilerFiller;"]
+j["classRenames"]["net/minecraft/world/level/biome/AmbientParticleSettings"] = "net/minecraft/world/attribute/AmbientParticle"
+SPT_ = "Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructureProcessorType;"
+j["overrideAdapters"].append({"oldName": "getType", "oldDesc": "()" + SPT_, "newName": "codec", "newDesc": "()" + MCD, "unpack": [], "convert": ["static", LTC, "unwrap", "(Ljava/lang/Object;)" + MCD]})   # StructureProcessor.getType() returns the MapCodec now
+RMI = "net/fabricmc/fabric/impl/resource/loader/ResourceManagerHelperImpl"; RMA = "net/fabricmc/fabric/api/resource/ResourceManagerHelper"; MCT = "Lnet/fabricmc/loader/api/ModContainer;"; RAT = "Lnet/fabricmc/fabric/api/resource/ResourcePackActivationType;"
+for _d in ("(" + IDF + MCT + RAT + ")Z", "(" + IDF + MCT + "Lnet/minecraft/network/chat/Component;" + RAT + ")Z", "(" + IDF + MCT + "Ljava/lang/String;" + RAT + ")Z"):
+    cr.setdefault(RMI, {})["registerBuiltinResourcePack" + _d] = [RMA, "registerBuiltinResourcePack", _d]
+j["fieldRedirects"].setdefault("net/minecraft/world/item/ItemStack", {})["getstatic SINGLE_ITEM_CODEC:Lcom/mojang/serialization/Codec;"] = ["move", "net/minecraft/world/item/ItemStack", "Lcom/mojang/serialization/Codec;", "CODEC"]
+BBP_ = "Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;"
+cr.setdefault("net/minecraft/world/level/block/state/BlockBehaviour$Properties", {})["dropsLike(" + BLK + ")" + BBP_] = ["foxgrade/shim/BlockApiCompat", "dropsLike", "(" + BBP_ + BLK + ")" + BBP_]
+cr.setdefault(RMI, {})["registerBuiltinResourcePack(" + IDF + "Ljava/lang/String;" + MCT + "Lnet/minecraft/network/chat/Component;" + RAT + ")Z"] = ["foxgrade/shim/FabricCompat", "registerBuiltinResourcePack", "(" + IDF + "Ljava/lang/String;" + MCT + "Lnet/minecraft/network/chat/Component;Ljava/lang/Object;)Z"]
+j["classRenames"]["net/minecraft/commands/arguments/ResourceLocationArgument"] = "net/minecraft/commands/arguments/IdentifierArgument"
 cr.setdefault("net/minecraft/client/Minecraft", {})["getGuiSprites()Lnet/minecraft/client/gui/GuiSpriteManager;"] = ["net/minecraft/client/gui/GuiSpriteManager", "of", "(Lnet/minecraft/client/Minecraft;)Lnet/minecraft/client/gui/GuiSpriteManager;"]  # 26.2: GUI sprites live in AtlasManager; shim stands in
 ST = "Lnet/minecraft/client/gui/components/toasts/SystemToast;"; STID = "Lnet/minecraft/client/gui/components/toasts/SystemToast$SystemToastId;"; CO = "Lnet/minecraft/network/chat/Component;"
 cr.setdefault("net/minecraft/client/gui/components/toasts/SystemToast", {})["multiline(Lnet/minecraft/client/Minecraft;" + STID + CO + CO + ")" + ST] = ["foxgrade/shim/ToastCompat", "multiline", "(Lnet/minecraft/client/Minecraft;" + STID + CO + CO + ")" + ST]
@@ -652,10 +703,10 @@ cr.setdefault("net/minecraft/server/level/TicketType", {}).update({
     "create(Ljava/lang/String;Ljava/util/Comparator;I)" + TT: ["foxgrade/shim/LevelCompat", "ticketType", "(Ljava/lang/String;Ljava/util/Comparator;I)" + TT],
     "create(Ljava/lang/String;Ljava/util/Comparator;)" + TT: ["foxgrade/shim/LevelCompat", "ticketType", "(Ljava/lang/String;Ljava/util/Comparator;)" + TT]})
 BBP = "Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;"; SND = "Lnet/minecraft/sounds/SoundEvent;"; BAC_ = "foxgrade/shim/BlockApiCompat"
-j["ctorAdapters"].setdefault("net/minecraft/world/level/block/LeavesBlock", {})["(" + BBP + ")V"] = {"newDesc": "(F" + BBP + ")V", "transforms": [{"slot": -1, "via": [BAC_, "leafParticleChance", "()F"]}]}
+j["ctorAdapters"].setdefault("net/minecraft/world/level/block/LeavesBlock", {})["(" + BBP + ")V"] = {"newDesc": "(F" + BBP + ")V", "transforms": [{"slot": -1, "via": [BAC_, "leafParticleChance", "()F"]}], "factory": [BAC_, "leaves", "(" + BBP + ")Lnet/minecraft/world/level/block/LeavesBlock;"]}   # abstract in 26.2: new LeavesBlock → tinted variant; super(props) keeps the grown ctor
 j["ctorAdapters"].setdefault("net/minecraft/world/level/block/ChestBlock", {})["(" + BBP + "Ljava/util/function/Supplier;)V"] = {"newDesc": "(Ljava/util/function/Supplier;" + SND + SND + BBP + ")V",
     "args": [["o2"], ["static", BAC_, "chestOpenSound", "()" + SND], ["static", BAC_, "chestCloseSound", "()" + SND], ["o1"]]}   # "oN" is 1-based
-j["overrideAdapters"].append({"oldName": "element", "oldDesc": "(Lnet/minecraft/resources/Identifier;)Ljava/lang/Object;", "newName": "element", "newDesc": "(Lnet/minecraft/resources/Identifier;Z)Ljava/lang/Object;", "unpack": ["p0"]})   # TagEntry.Lookup
+j["overrideAdapters"].append({"oldName": "element", "oldDesc": "(Lnet/minecraft/resources/Identifier;)Ljava/lang/Object;", "newName": "element", "newDesc": "(Lnet/minecraft/resources/Identifier;Z)Ljava/lang/Object;", "unpack": ["p1"]})   # TagEntry.Lookup ("pN" is 1-based)
 j["ctorAdapters"].setdefault("net/minecraft/core/particles/DustParticleOptions", {})["(" + V3F + "F)V"] = {"factory": [PAC, "dust", "(" + V3F + "F)" + DPO]}
 j["ctorAdapters"].setdefault("net/minecraft/world/item/alchemy/Potion", {})["([" + MEI + ")V"] = {"newDesc": "(Ljava/lang/String;[" + MEI + ")V", "transforms": [{"slot": -1, "via": [ITC, "potionName", "()Ljava/lang/String;"]}]}
 TIP = "net/minecraft/world/entity/projectile/throwableitemprojectile/ThrowableItemProjectile"
@@ -943,6 +994,7 @@ cr.setdefault("net/minecraft/client/gui/Font", {})["renderText(Ljava/lang/String
 cr["net/minecraft/world/entity/LivingEntity"]["getArmorSlots()Ljava/lang/Iterable;"] = [ELC, "getArmorSlots", "(" + LE + ")Ljava/lang/Iterable;"]
 cr["net/minecraft/world/item/Item"]["components()Lnet/minecraft/core/component/DataComponentMap;"] = [ITC, "components", "(" + ITEM + ")Lnet/minecraft/core/component/DataComponentMap;"]
 j["fieldRedirects"].setdefault(FAPI + "tag/convention/v2/ConventionalItemTags", {})["getstatic SPEAR_TOOLS:" + TK] = [ITC, "spearTools", "()" + TK]
+j["fieldRedirects"].setdefault(FAPI + "tag/convention/v2/ConventionalItemTags", {})["getstatic SHEARS_TOOLS:" + TK] = [ITC, "shearsTools", "()" + TK]
 print("fabric api renames: in")
 print("batch 4: in")
 

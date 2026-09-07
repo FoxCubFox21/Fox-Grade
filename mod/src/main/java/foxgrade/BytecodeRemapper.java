@@ -212,6 +212,8 @@ public final class BytecodeRemapper {
     ClassVisitor redirect = new ClassVisitor(Opcodes.ASM9, writer) {
       String className; int classAccess;
       final Set<String> declared = new HashSet<>();
+      final Set<String> declaredConcrete = new HashSet<>();   // declared with a body (interface default methods included)
+      final java.util.List<String[]> ctorBridges = new java.util.ArrayList<>();   // [bridgeName, bridgeDesc, ctorOwner, ctorDesc]
       @Override public void visit(int version, int access, String name, String sig, String superName, String[] itfs) {
         // 26.2 turned some interfaces into classes (RecipeSerializer). A mod class implementing one
         // must extend it instead — possible when it has no other superclass.
@@ -240,6 +242,38 @@ public final class BytecodeRemapper {
       }
       String superName; String flippedSuper; String demotedSuper;   // demotedSuper: old superclass that is an interface now   // set when 'implements X' became 'extends X' for an EXTENDABLE record
       @Override public void visitEnd() {
+        for (String[] b : ctorBridges) {
+          org.objectweb.asm.Type[] args = org.objectweb.asm.Type.getArgumentTypes(b[1]);
+          MethodVisitor mv = visitMethod(Opcodes.ACC_PRIVATE | Opcodes.ACC_STATIC | Opcodes.ACC_SYNTHETIC, b[0], b[1], null, null);
+          mv.visitCode();
+          mv.visitTypeInsn(Opcodes.NEW, b[2]); mv.visitInsn(Opcodes.DUP);
+          int slot = 0;
+          for (org.objectweb.asm.Type t : args) { mv.visitVarInsn(t.getOpcode(Opcodes.ILOAD), slot); slot += t.getSize(); }
+          mv.visitMethodInsn(Opcodes.INVOKESPECIAL, b[2], "<init>", b[3], false);
+          mv.visitInsn(Opcodes.ARETURN);
+          mv.visitMaxs(0, 0); mv.visitEnd();
+        }
+        // Override adapters also apply to INTERFACES whose old-signature method is a default method (a reload
+        // listener mix-in that implements the 1.21 reload() by default): the new signature is synthesised as a default.
+        boolean itfClass = (classAccess & Opcodes.ACC_INTERFACE) != 0;
+        if (itfClass) {
+          for (var oa : overrideAdapters) {
+            if (!declaredConcrete.contains(oa.oldName() + oa.oldDesc()) || declared.contains(oa.newName() + oa.newDesc())) continue;
+            declared.add(oa.newName() + oa.newDesc());
+            org.objectweb.asm.Type[] newArgs = org.objectweb.asm.Type.getArgumentTypes(oa.newDesc());
+            org.objectweb.asm.Type[] oldArgs = org.objectweb.asm.Type.getArgumentTypes(oa.oldDesc());
+            int[] slot = slots(newArgs);
+            MethodVisitor mv = super.visitMethod(Opcodes.ACC_PUBLIC, oa.newName(), oa.newDesc(), null, null);
+            mv.visitCode();
+            mv.visitVarInsn(Opcodes.ALOAD, 0);
+            for (int i = 0; i < oa.unpack().size() && i < oldArgs.length; i++) pushSource(mv, oa.unpack().get(i), newArgs, slot, className);
+            mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, className, oa.oldName(), oa.oldDesc(), true);
+            if (oa.convert() != null) { usedShims.add(oa.convert()[1]); mv.visitMethodInsn(Opcodes.INVOKESTATIC, oa.convert()[1], oa.convert()[2], oa.convert()[3], false); }
+            for (String[] h : oa.after()) pushSource(mv, h, newArgs, slot, className);
+            mv.visitInsn(org.objectweb.asm.Type.getReturnType(oa.newDesc()).getOpcode(Opcodes.IRETURN));
+            mv.visitMaxs(0, 0); mv.visitEnd();
+          }
+        }
         if ((classAccess & Opcodes.ACC_INTERFACE) == 0) {
           // Override adapters: the mod overrides an old-signature callback; synthesise the
           // new-signature one so the game keeps calling into it (see FabricApiBridges).
@@ -310,6 +344,7 @@ public final class BytecodeRemapper {
           return null;
         }
         if ((access & (Opcodes.ACC_STATIC | Opcodes.ACC_PRIVATE)) == 0) declared.add(name + desc);
+        if ((access & Opcodes.ACC_ABSTRACT) == 0) declaredConcrete.add(name + desc);
         MethodVisitor down = super.visitMethod(access, name, desc, sig, ex);
         final String[] hook = (access & Opcodes.ACC_STATIC) == 0 ? entryHooks.get(name + desc) : null;
         return new MethodVisitor(Opcodes.ASM9, down) {
@@ -427,7 +462,8 @@ public final class BytecodeRemapper {
                 for (int i = args.length - 1; i >= 0; i--) {
                   super.visitVarInsn(args[i].getOpcode(Opcodes.ISTORE), slotAt[i]);
                 }
-                if (ad.factory() != null) {
+                boolean superCall = name.equals("<init>") && owner.equals(superName);   // a subclass constructor chaining up: no NEW/DUP to drop
+                if (ad.factory() != null && !(superCall && (!ad.transforms().isEmpty() || ad.newDesc() != null))) {
                   // The constructor is gone: drop the two uninitialised refs NEW+DUP left and call
                   // the static factory that builds the replacement value.
                   if (withheld) withheld = false; else { super.visitInsn(Opcodes.POP); super.visitInsn(Opcodes.POP); }
@@ -524,6 +560,14 @@ public final class BytecodeRemapper {
                 }
                 if (ad != null && ad.transforms().isEmpty() && ad.args() == null && ad.factory() == null) {
                   out[i] = new org.objectweb.asm.Handle(h.getTag(), h.getOwner(), "<init>", ad.newDesc(), false);
+                } else if (ad != null) {
+                  // LeavesBlock::new where the constructor grew or reshaped: point the reference at a synthesised static
+                  // bridge in this class whose body is the plain `new` — the constructor adapter rewrites that body.
+                  String bridge = "fg$new$" + ctorBridges.size();
+                  String bridgeDesc = h.getDesc().substring(0, h.getDesc().lastIndexOf(')') + 1) + "L" + h.getOwner() + ";";
+                  ctorBridges.add(new String[] {bridge, bridgeDesc, h.getOwner(), h.getDesc()});
+                  out[i] = new org.objectweb.asm.Handle(Opcodes.H_INVOKESTATIC, className, bridge, bridgeDesc, (classAccess & Opcodes.ACC_INTERFACE) != 0);
+                  frameDirty[0] = true;
                 }
               }
             }

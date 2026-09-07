@@ -64,6 +64,7 @@ public final class ItemCompat {
   /** Fabric convention tags a 1.21.x mod still names; the tag key is created from the same id so data packs can fill it. */
   public static net.minecraft.tags.TagKey<Item> conventionTag(String path) { return net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.ITEM, net.minecraft.resources.Identifier.fromNamespaceAndPath("c", path)); }
   public static net.minecraft.tags.TagKey<Item> spearTools() { return conventionTag("tools/spear"); }
+  public static net.minecraft.tags.TagKey<Item> shearsTools() { return conventionTag("tools/shear"); }
   /** {@code new ItemStack(item[, count])}. 26.2 binds an item's components only after the registries are frozen, and an
    *  ItemStack built before that (a mixin's static initialiser merged into a vanilla class that loads early) throws
    *  "Components not bound yet". Such a stack is built through the private component-map constructor instead, with empty

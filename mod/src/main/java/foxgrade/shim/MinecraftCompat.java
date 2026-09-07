@@ -29,4 +29,9 @@ public final class MinecraftCompat {
   public static void setRenderDebug(net.minecraft.client.Options options, boolean v) { /* the F3 overlay toggles itself in 26.2 */ }
 
   public static net.minecraft.client.multiplayer.ClientLevel clientLevel(net.minecraft.client.player.LocalPlayer p) { return (net.minecraft.client.multiplayer.ClientLevel) p.level(); }
+  /** 1.21's loading overlay accessors; 26.2 has no mod-visible overlay object, so "none showing". */
+  public static net.minecraft.client.gui.screens.Overlay getOverlay(net.minecraft.client.Minecraft mc) { return null; }
+  public static void setOverlay(net.minecraft.client.Minecraft mc, net.minecraft.client.gui.screens.Overlay overlay) { }
+  /** 1.21's {@code Minecraft.getProfiler()}: the profiler is thread-local in 26.2. */
+  public static net.minecraft.util.profiling.ProfilerFiller getProfiler(net.minecraft.client.Minecraft mc) { return net.minecraft.util.profiling.Profiler.get(); }
 }

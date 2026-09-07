@@ -22,6 +22,8 @@ launch() {   # $1 = log name
     --accessToken dummy --userType msa --versionType release \
     --quickPlaySingleplayer "APPLE SKIN PORT 3" \
     > "$B/log-rm-$1.log" 2>&1 &
+  # Keep the game out of the way: hide every java window within 2 s of it appearing, for the life of this run.
+  ( for i in $(seq 1 120); do sleep 2; osascript -e 'tell application "System Events" to set visible of (every process whose name is "java") to false' >/dev/null 2>&1; pgrep -f "gameDir $PT " >/dev/null || break; done ) &
   local w=0
   while [ $w -lt 150 ]; do
     sleep 6; w=$((w+6))

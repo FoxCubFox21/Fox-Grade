@@ -1,20 +1,23 @@
 {
   "h2h_total": 104,
-  "fox_boots": 51,
+  "fox_boots": 61,
   "retro_boots": 37,
-  "fox_only": 21,
-  "retro_only": 7,
-  "both": 30,
-  "neither": 46,
+  "fox_only": 26,
+  "retro_only": 2,
+  "both": 35,
+  "neither": 41,
   "all_mods": 130,
-  "all_boots": 67,
+  "all_boots": 77,
   "fox_only_names": [
+    "ambientsounds",
     "appleskin",
     "carry-on",
     "chunky",
+    "controlify",
     "crash-assistant",
     "debugify",
     "default-options",
+    "dynamiccrosshair",
     "entityculling",
     "ferrite-core",
     "inventory-profiles-next",
@@ -29,15 +32,12 @@
     "veinminer",
     "veinminer-client",
     "wavey-capes",
-    "waystones"
+    "waystones",
+    "yungs-better-end-island",
+    "zoomify"
   ],
   "retro_only_names": [
     "cit-resewn",
-    "distanthorizons",
-    "dynamic-fps",
-    "yungs-better-mineshafts",
-    "yungs-better-nether-fortresses",
-    "yungs-better-ocean-monuments",
-    "yungs-better-witch-huts"
+    "distanthorizons"
   ]
 }

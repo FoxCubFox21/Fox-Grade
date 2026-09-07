@@ -13,3 +13,4 @@ accessible field net/minecraft/world/level/Level isClientSide Z
 accessible field net/minecraft/world/entity/player/Inventory selected I
 accessible field net/minecraft/server/level/ServerPlayer server Lnet/minecraft/server/MinecraftServer;
 accessible field net/minecraft/client/gui/screens/Screen children Ljava/util/List;
+accessible field net/minecraft/world/level/block/ChestBlock SHAPE Lnet/minecraft/world/phys/shapes/VoxelShape;
