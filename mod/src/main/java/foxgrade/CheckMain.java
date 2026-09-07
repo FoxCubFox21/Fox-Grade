@@ -42,8 +42,8 @@ public final class CheckMain {
         }
       } catch (Exception ignore) { }
     }
-    RulesLoader rules = RulesLoader.load(mc);
-    IntermediaryBridge bridge = IntermediaryBridge.load(mc);
+    RulesLoader rules = RulesLoader.load(mc, gameDir.resolve(".fox-grade").resolve("cache"));
+    IntermediaryBridge bridge = IntermediaryBridge.load(mc, gameDir.resolve(".fox-grade").resolve("cache"));
     FabricApiBridges api = FabricApiBridges.load(gameDir);
     Map<String, Set<String>> blocklist = MixinBlocklistLoader.load(gameDir);
     int worst = 0;

@@ -1,6 +1,11 @@
 # Changelog
 
 ## 1.1.0 (unreleased)
+- **Faster launches.** The translation tables (intermediary and Mojang renames, verified class
+  moves) are parsed once and kept as a binary cache under `.fox-grade/cache/`; a later launch
+  reads them in about a tenth of a second instead of parsing several megabytes of JSON. The 26.2
+  class inventory is parsed once per launch rather than once per ported jar. The launch log now
+  prints per-phase timings for each port.
 - **Mixin surgery, round two (from the 100-mod head-to-head).** Every injector is made non-required
   (`require = 0`, config `defaultRequire = 0`), so an injection that cannot apply logs instead of
   taking the game down. Handlers whose target still exists but changed its parameters are stripped

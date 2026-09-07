@@ -48,17 +48,21 @@ public final class FoxGradePreLaunch implements PreLaunchEntrypoint {
     catch (IOException e) { log("  ! could not read config: " + e.getMessage()); return; }
 
     RulesLoader rules;
-    try { rules = RulesLoader.load(mc); }
+    long tRules = System.nanoTime();
+    java.nio.file.Path cacheDir = gameDir.resolve(".fox-grade").resolve("cache");
+    try { rules = RulesLoader.load(mc, cacheDir); }
     catch (IOException e) { log("  ! could not load bundled rules.json.gz: " + e.getMessage()); return; }
     log("  loaded " + rules.size() + " verified class rename(s) for " + mc);
+    long tBridge = System.nanoTime();
 
     IntermediaryBridge bridge;
-    try { bridge = IntermediaryBridge.load(mc); }
+    try { bridge = IntermediaryBridge.load(mc, cacheDir); }
     catch (IOException e) {
       log("  ! could not load intermediary bridge: " + e.getMessage());
       try { bridge = IntermediaryBridge.load(""); } catch (IOException ignored) { return; }
     }
     log("  loaded " + bridge.size() + " intermediary→mojang class + " + bridge.memberCount() + " member rename(s) for " + mc);
+    long tApi = System.nanoTime();
     // The bundled tables are built for ONE target version, and they load EMPTY rather than
     // failing on any other. Without this guard Fox-Grade would "port" a mod without translating
     // a single name, skip mixin verification entirely (the class inventory is missing too), and
@@ -80,6 +84,8 @@ public final class FoxGradePreLaunch implements PreLaunchEntrypoint {
       try { apiBridges = FabricApiBridges.load(gameDir.resolve("does-not-exist")); } catch (IOException ignored) { return; }
     }
     log("  loaded " + apiBridges.size() + " third-party API rename(s)");
+    log(String.format("  timing: rules %dms, intermediary tables %dms, api tables %dms", (tBridge - tRules) / 1_000_000, (tApi - tBridge) / 1_000_000, (System.nanoTime() - tApi) / 1_000_000));
+    long tScan = System.nanoTime();
 
     Map<String, Set<String>> blocklist;
     try { blocklist = MixinBlocklistLoader.load(gameDir); }
@@ -88,6 +94,7 @@ public final class FoxGradePreLaunch implements PreLaunchEntrypoint {
     List<ModsScanner.ModInfo> mods;
     try { mods = ModsScanner.scan(modsDir); }
     catch (IOException e) { log("  ! could not list mods folder: " + e.getMessage()); return; }
+    log(String.format("  timing: mods scan %dms", (System.nanoTime() - tScan) / 1_000_000));
 
     BackupService backup = new BackupService(backupDir);
 
@@ -133,7 +140,9 @@ public final class FoxGradePreLaunch implements PreLaunchEntrypoint {
       }
       for (Path jar : inboxJars) {
         try {
+          long tJar = System.nanoTime();
           TransformPipeline.Outcome o = TransformPipeline.transform(jar, mc, rules, bridge, apiBridges, blocklist);
+          log(String.format("  timing: %s ported in %dms (%s)", jar.getFileName(), (System.nanoTime() - tJar) / 1_000_000, TransformPipeline.lastTimings));
           java.util.List<String> missing = new java.util.ArrayList<>();
           for (String dep : JarDeps.dependsOf(o.outputBytes)) {
             if (satisfiable.contains(dep) || dep.startsWith("fabric-") || dep.equals("fabric")) continue;

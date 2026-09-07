@@ -31,7 +31,21 @@ public final class RulesLoader {
   public Map<String, String> dotTable() { return dot; }
   public int size() { return slash.size(); }
 
-  public static RulesLoader load(String targetMc) throws IOException {
+  public static RulesLoader load(String targetMc) throws IOException { return load(targetMc, null); }
+
+  public static RulesLoader load(String targetMc, java.nio.file.Path cacheDir) throws IOException {
+    String stamp = TableCache.stamp("/foxgrade/rules.json.gz", targetMc);
+    try (java.io.DataInputStream in = TableCache.open(cacheDir, "rules-" + targetMc + ".bin", stamp)) {
+      if (in != null) return new RulesLoader(TableCache.readMap(in), TableCache.readMap(in));
+    } catch (IOException stale) { }
+    RulesLoader r = parse(targetMc);
+    try (java.io.DataOutputStream out = TableCache.create(cacheDir, "rules-" + targetMc + ".bin", stamp)) {
+      if (out != null) { TableCache.writeMap(out, r.slash); TableCache.writeMap(out, r.dot); }
+    } catch (IOException ignored) { }
+    return r;
+  }
+
+  private static RulesLoader parse(String targetMc) throws IOException {
     try (InputStream raw = RulesLoader.class.getResourceAsStream("/foxgrade/rules.json.gz")) {
       if (raw == null) throw new IOException("rules.json.gz missing from bundled resources");
       try (GZIPInputStream gz = new GZIPInputStream(raw)) {

@@ -38,6 +38,10 @@ public final class TransformPipeline {
   private static final Pattern REFMAP = Pattern.compile("(?i)refmap");
   private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
+  /** Phase timings of the most recent transform(), for the launch log. */
+  public static volatile String lastTimings = "";
+  private static final java.util.concurrent.ConcurrentHashMap<String, AutoBlocklistFromRefmap> INVENTORIES = new java.util.concurrent.ConcurrentHashMap<>();
+
   public static final class Outcome {
     public final byte[] outputBytes;
     public final int metaFixed, awFiles, awOwners, awDescs, refmapFiles, refmapHits, classesRemapped, mixinsStripped, autoStripped;
@@ -93,7 +97,8 @@ public final class TransformPipeline {
     // annotation strings), so we collect the broken RAW KEYS per mixin class here, and the class
     // pass below uses AnnotationTargetScanner to find which handler methods carry those strings
     // in their annotations, stripping exactly those.
-    AutoBlocklistFromRefmap auto = new AutoBlocklistFromRefmap(targetMc);
+    long tStart = System.nanoTime();
+    AutoBlocklistFromRefmap auto = INVENTORIES.computeIfAbsent(targetMc, (v) -> { try { return new AutoBlocklistFromRefmap(v); } catch (IOException e) { throw new java.io.UncheckedIOException(e); } });   // parsed once per launch, not per jar
     Map<String, Set<String>> brokenKeysByClass = new HashMap<>();
     Map<String, Set<String>> changedKeysByClass = new HashMap<>();   // target exists, but its parameter count changed
     Map<String, Map<String, String>> refmapByClass = new HashMap<>();   // raw key → translated selector
@@ -157,6 +162,7 @@ public final class TransformPipeline {
     remapper.setIsInterface(verifier::isInterface);
     remapper.setIsFinalClass(verifier::isFinalClass);
     String[] fromMcHolder = { "" };
+    long tPrescan = System.nanoTime(), tClasses = tPrescan, tShims = tPrescan;
     Set<String> fatalMixins = new HashSet<>();          // mixin classes to deregister from configs
     Map<String, String> relocated = new HashMap<>();
     Map<String, Set<String>> strippedByClass = new HashMap<>();   // class → name+desc of every method removed from it
@@ -389,6 +395,7 @@ public final class TransformPipeline {
         }
         buffered.put(name, emit);
       }
+      tClasses = System.nanoTime();
       // Callback types 26.2's Fabric API dropped: synthesise them so registration is a no-op instead of a crash.
       for (var re : removedEvents.entrySet()) {
         String cls = re.getKey();
@@ -517,6 +524,7 @@ public final class TransformPipeline {
       }
       // Final marker enrichment: the panel in-game shows per-port stats, which only exist now
       // that every stage has run. Rewrite custom.foxgrade with the completed numbers.
+      tShims = System.nanoTime();
       byte[] metaBytes = buffered.get("fabric.mod.json");
       if (metaBytes != null) {
         try {
@@ -561,6 +569,8 @@ public final class TransformPipeline {
       }
     }
     for (String flip : remapper.flips()) if (flip.contains("cannot be")) verifier.missing().add(flip.substring(0, flip.indexOf(" (")));
+    long tEnd = System.nanoTime();
+    lastTimings = String.format("prescan %dms, classes %dms, post+shims %dms, meta+write %dms", (tPrescan - tStart) / 1_000_000, (tClasses - tPrescan) / 1_000_000, (tShims - tClasses) / 1_000_000, (tEnd - tShims) / 1_000_000);
     Outcome o = new Outcome(sink.toByteArray(), metaFixed, awFiles, awOwners, awDescs, refmapFiles, refmapHits, classesRemapped, mixinsStripped, autoStripped, verifier.missing());
     o.deregisteredMixins.addAll(fatalMixins);
     return o;

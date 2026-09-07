@@ -74,7 +74,28 @@ public final class IntermediaryBridge {
     return n;
   }
 
-  public static IntermediaryBridge load(String targetMc) throws IOException {
+  public static IntermediaryBridge load(String targetMc) throws IOException { return load(targetMc, null); }
+
+  /** With a cache directory, the parsed tables are read from / written to a binary cache (see TableCache). */
+  public static IntermediaryBridge load(String targetMc, java.nio.file.Path cacheDir) throws IOException {
+    String stamp = TableCache.stamp("/foxgrade/intermediary-to-mojang." + targetMc + ".json.gz", targetMc);
+    try (java.io.DataInputStream in = TableCache.open(cacheDir, "intermediary-" + targetMc + ".bin", stamp)) {
+      if (in != null) {
+        return new IntermediaryBridge(TableCache.readMap(in), TableCache.readNested(in), TableCache.readNested(in), TableCache.readMap(in), TableCache.readMap(in),
+            TableCache.readNested(in), TableCache.readMap(in), TableCache.readNested(in), TableCache.readNested(in));
+      }
+    } catch (IOException stale) { /* parse below and rewrite */ }
+    IntermediaryBridge b = parse(targetMc);
+    try (java.io.DataOutputStream out = TableCache.create(cacheDir, "intermediary-" + targetMc + ".bin", stamp)) {
+      if (out != null) {
+        TableCache.writeMap(out, b.classes); TableCache.writeNested(out, b.methods); TableCache.writeNested(out, b.fields); TableCache.writeMap(out, b.globalMethods); TableCache.writeMap(out, b.globalFields);
+        TableCache.writeNested(out, b.mojangMethods); TableCache.writeMap(out, b.mojangMethodsGlobal); TableCache.writeNested(out, b.yarnMethods); TableCache.writeNested(out, b.yarnFields);
+      }
+    } catch (IOException ignored) { }
+    return b;
+  }
+
+  private static IntermediaryBridge parse(String targetMc) throws IOException {
     // Try plain first (dev convenience), then the gzipped resource (the shipped form).
     String base = "/foxgrade/intermediary-to-mojang." + targetMc + ".json";
     String text = readResource(base);
