@@ -26,6 +26,28 @@ final class JarDeps {
       return out;
     } catch (Exception ex) { return java.util.List.of(); }
   }
+  /** Ids (and provides) of the jars a mod bundles under META-INF/jars — a dependency satisfied by the mod itself. */
+  static java.util.List<String> nestedIds(Path jar) {
+    java.util.List<String> out = new java.util.ArrayList<>();
+    try (ZipFile zf = new ZipFile(jar.toFile())) {
+      var en = zf.entries();
+      while (en.hasMoreElements()) {
+        ZipEntry e = en.nextElement();
+        if (!e.getName().startsWith("META-INF/jars/") || !e.getName().endsWith(".jar")) continue;
+        try (var nested = new java.util.zip.ZipInputStream(zf.getInputStream(e))) {
+          ZipEntry ne;
+          while ((ne = nested.getNextEntry()) != null) {
+            if (!ne.getName().equals("fabric.mod.json")) continue;
+            JsonObject meta = new Gson().fromJson(new String(nested.readAllBytes()), JsonObject.class);
+            if (meta != null && meta.has("id")) out.add(meta.get("id").getAsString());
+            if (meta != null && meta.has("provides") && meta.get("provides").isJsonArray()) for (var x : meta.getAsJsonArray("provides")) out.add(x.getAsString());
+            break;
+          }
+        } catch (Exception ignore) { }
+      }
+    } catch (Exception ex) { }
+    return out;
+  }
   static String idOf(Path jar) {
     try (ZipFile zf = new ZipFile(jar.toFile())) {
       ZipEntry e = zf.getEntry("fabric.mod.json");

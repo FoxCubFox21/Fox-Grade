@@ -7,15 +7,14 @@ exactly that rule, from the same launch command, base jars and instance layout; 
 the tested mod was held back or failed to port is graded "held", not "boots". A screenshot is
 linked where the game got far enough to take one. "Unresolved" is the number of classes,
 fields and methods the port still references that 26.2 no longer has — the honest measure of
-how much of the mod is reachable. Generated from the harness ledgers at commit `d8bf6ae`
+how much of the mod is reachable. Generated from the harness ledgers at commit `c1fe658`
 on 2026-09-07; the scripts are in `tools/`.
 
 | Result | Mods |
 |---|---|
-| ✅ boots | 66 |
-| ❌ crash | 39 |
-| ❌ stall | 18 |
-| ⏸ held (library missing) | 7 |
+| ✅ boots | 67 |
+| ❌ crash | 43 |
+| ❌ stall | 20 |
 
 ## Per mod
 
@@ -65,7 +64,7 @@ on 2026-09-07; the scripts are in `tools/`.
 | drippy-loading | 1.21.1 | ❌ crash | 0 |  | ❌ crash |  | java.lang.NoClassDefFoundError: com/mojang/blaze3d/pipeline/RenderCall |
 | duck | 1.21.1 | ❌ crash | 45 |  |  | [shot](shots/duck.png) | java.lang.NoSuchMethodError: 'void net.minecraft.world.entity.MobCategory.<init>(java.lang |
 | dungeons-and-taverns |  | ❌ stall | 0 |  | ❌ crash |  | datapack structures in the 1.21 JSON shape; 26.2 rejects them at registry load |
-| dynamic-fps |  | ⏸ held (library missing) |  |  | ✅ boots | [shot](shots/dynamic-fps.png) | they get ported alongside) |
+| dynamic-fps | 1.21.0 | ❌ crash | 5 |  | ✅ boots | [shot](shots/dynamic-fps.png) | java.lang.NoSuchMethodError: 'net.minecraft.client.gui.screens.Overlay net.minecraft.clien |
 | dynamiccrosshair | 1.21.1 | ❌ stall | 9 |  | ❌ crash |  | reads private Inventory.selected; widened in 1.1.0 |
 | e4mc |  | ✅ boots | 3 |  | ✅ boots | [shot](shots/e4mc.png) |  |
 | eating-animation | >=1.21 | ❌ crash |  |  |  |  |  |
@@ -86,11 +85,11 @@ on 2026-09-07; the scripts are in `tools/`.
 | friends-and-foes | >=1.21 | ❌ crash | 32 |  |  |  |  |
 | handcrafted | 1.21.1 | ❌ stall | 23 |  | ❌ crash | [shot](shots/handcrafted.png) | model baking fails on its block models (translucency out of bounds) and the world never loads |
 | highlightmobs | ~1.21.1 | ✅ boots | 2 |  |  | [shot](shots/highlightmobs.png) |  |
-| inventory-profiles-next |  | ⏸ held (library missing) |  |  | ❌ crash | [shot](shots/inventory-profiles-next.png) | they get ported alongside) |
+| inventory-profiles-next | 1.21.1 | ✅ boots | 17 |  | ❌ crash | [shot](shots/inventory-profiles-next.png) |  |
 | jade | 1.21.1 | ❌ crash | 96 |  |  |  | Caused by: java.lang.NoSuchMethodError: 'void snownee.jade.mixin.KeyAccess.setDisplayName( |
 | jei | 1.21.1 | ✅ boots | 72 |  | ❌ crash | [shot](shots/jei.png) |  |
 | krypton |  | ✅ boots |  | ✅ boots |  | [shot](shots/krypton.png) |  |
-| lambdynamiclights |  | ⏸ held (library missing) |  |  |  | [shot](shots/lambdynamiclights.png) | they get ported alongside) |
+| lambdynamiclights | 1.21.1 | ❌ crash | 0 |  | ❌ crash | [shot](shots/lambdynamiclights.png) | Caused by: java.lang.NoSuchMethodError: 'java.lang.Iterable net.minecraft.world.entity.Liv |
 | language-reload | 1.21.1 | ✅ boots | 13 |  | ✅ boots | [shot](shots/language-reload.png) |  |
 | lighty | >=1.21.1 | ✅ boots | 15 |  |  | [shot](shots/lighty.png) |  |
 | lithium | 1.21.1 | ✅ boots |  | ✅ boots | ❌ crash | [shot](shots/lithium.png) |  |
@@ -103,7 +102,7 @@ on 2026-09-07; the scripts are in `tools/`.
 | modmenu |  | ✅ boots | 0 |  | ✅ boots | [shot](shots/modmenu.png) |  |
 | morechathistory |  | ✅ boots | 0 |  | ✅ boots | [shot](shots/morechathistory.png) |  |
 | mouse-tweaks | 1.21 | ✅ boots |  |  |  | [shot](shots/mouse-tweaks.png) |  |
-| mouse-wheelie |  | ⏸ held (library missing) |  |  |  | [shot](shots/mouse-wheelie.png) | they get ported alongside) |
+| mouse-wheelie | 1.21.1 | ✅ boots | 15 |  | ❌ crash | [shot](shots/mouse-wheelie.png) |  |
 | naturalist | ~1.21.1 | ❌ crash | 35 |  |  |  |  |
 | natures-compass | 1.21.1 | ✅ boots | 7 |  | ❌ crash | [shot](shots/natures-compass.png) |  |
 | netherportalfix | 1.21.1 | ✅ boots | 0 |  | ❌ crash | [shot](shots/netherportalfix.png) |  |
@@ -130,16 +129,16 @@ on 2026-09-07; the scripts are in `tools/`.
 | toms-storage | 1.21 | ❌ crash | 76 |  | ❌ crash |  | draws through Gui.layers (LayeredDraw), removed in 26.2's HUD rewrite |
 | towns-and-towers | 1.21.1 | ❌ crash | 0 |  | ❌ crash |  | java.lang.NoSuchMethodError: 'java.lang.Object com.mojang.serialization.Dynamic.value()' |
 | travelersbackpack |  | ❌ crash | 86 |  | ❌ crash |  | Cardinal Components' entity hooks are among the mixins 26.2 cannot apply (run with Cardinal Components and Cloth Config present) |
-| trinkets |  | ⏸ held (library missing) |  |  | ❌ crash | [shot](shots/trinkets.png) | they get ported alongside) |
+| trinkets |  | ❌ crash | 13 |  | ❌ crash | [shot](shots/trinkets.png) | java.lang.RuntimeException: Could not execute entrypoint stage 'main' due to errors, provi |
 | veinminer | 1.21.1 | ✅ boots | 1 |  | ❌ crash | [shot](shots/veinminer.png) |  |
 | veinminer-client | 1.21.1 | ✅ boots | 0 |  | ❌ crash | [shot](shots/veinminer-client.png) |  |
 | visual-workbench | 1.21.1 | ❌ crash | 14 |  | ❌ crash |  |  |
 | visuality |  | ✅ boots | 5 |  | ✅ boots | [shot](shots/visuality.png) |  |
 | wavey-capes | 1.21.1 | ✅ boots | 0 |  | ❌ crash | [shot](shots/wavey-capes.png) |  |
 | waystones | 1.21.1 | ✅ boots | 45 |  | ❌ crash | [shot](shots/waystones.png) |  |
-| wthit | >=1.21-0 | ❌ crash | 72 |  |  | [shot](shots/wthit.png) | Caused by: java.lang.NoClassDefFoundError: net/minecraft/resources/ResourceLocation$Serial |
-| xaeros-minimap |  | ⏸ held (library missing) |  |  |  | [shot](shots/xaeros-minimap.png) | they get ported alongside) |
-| xaeros-world-map |  | ⏸ held (library missing) |  |  | ❌ crash | [shot](shots/xaeros-world-map.png) | they get ported alongside) |
+| wthit | >=1.21-0 | ❌ crash | 32 |  | ❌ crash | [shot](shots/wthit.png) | java.lang.RuntimeException: Could not execute entrypoint stage 'main' due to errors, provi |
+| xaeros-minimap | 1.21.1 | ❌ stall | 96 |  | ❌ crash | [shot](shots/xaeros-minimap.png) | java.util.concurrent.CompletionException: java.lang.NoClassDefFoundError: net/minecraft/cl |
+| xaeros-world-map | 1.21.1 | ❌ stall | 69 |  | ❌ crash | [shot](shots/xaeros-world-map.png) | java.util.concurrent.CompletionException: java.lang.NoClassDefFoundError: net/minecraft/cl |
 | yeetus-experimentus |  | ✅ boots | 0 |  | ✅ boots | [shot](shots/yeetus-experimentus.png) |  |
 | yosbr |  | ✅ boots | 0 |  | ✅ boots | [shot](shots/yosbr.png) |  |
 | yungs-better-dungeons |  | ❌ stall | 7 |  | ❌ crash | [shot](shots/yungs-better-dungeons.png) | YUNG's API registers structure processor types as Codec lambdas; 26.2's StructureProcessorType wants MapCodecs, so registry loading fails and the world never opens (run with YUNG's API present) |
@@ -150,7 +149,7 @@ on 2026-09-07; the scripts are in `tools/`.
 | yungs-better-ocean-monuments |  | ❌ stall | 1 |  | ✅ boots | [shot](shots/yungs-better-ocean-monuments.png) | YUNG's API registers structure processor types as Codec lambdas; 26.2's StructureProcessorType wants MapCodecs, so registry loading fails and the world never opens (run with YUNG's API present) |
 | yungs-better-strongholds |  | ❌ stall | 0 |  | ❌ crash | [shot](shots/yungs-better-strongholds.png) | YUNG's API registers structure processor types as Codec lambdas; 26.2's StructureProcessorType wants MapCodecs, so registry loading fails and the world never opens (run with YUNG's API present) |
 | yungs-better-witch-huts |  | ❌ stall | 0 |  | ✅ boots | [shot](shots/yungs-better-witch-huts.png) | YUNG's API registers structure processor types as Codec lambdas; 26.2's StructureProcessorType wants MapCodecs, so registry loading fails and the world never opens (run with YUNG's API present) |
-| zoomify | 1.21.1 | ✅ boots | 0 |  | ❌ crash | [shot](shots/zoomify.png) |  |
+| zoomify | 1.21.1 | ❌ crash | 2 |  | ❌ crash | [shot](shots/zoomify.png) | died 4s after the world started loading |
 
 ## Retromod head-to-head
 
@@ -192,7 +191,7 @@ to load and the game to still be running.
 | distanthorizons | ❌ crash — java.lang.NoSuchFieldError: Class net.minecraft.world.level.storage.SavedDataStorage does  | ✅ boots |
 | drippy-loading | ❌ crash — java.lang.NoClassDefFoundError: com/mojang/blaze3d/pipeline/RenderCall | ❌ crash — Description: Initializing game |
 | dungeons-and-taverns | ❌ stall — datapack structures in the 1.21 JSON shape; 26.2 rejects them at registry load | ❌ crash |
-| dynamic-fps | ⏸ held (library missing) — they get ported alongside) | ✅ boots |
+| dynamic-fps | ❌ crash — java.lang.NoSuchMethodError: 'net.minecraft.client.gui.screens.Overlay net.minecraft.clien | ✅ boots |
 | dynamiccrosshair | ❌ stall — reads private Inventory.selected; widened in 1.1.0 | ❌ crash — Description: Unexpected error |
 | e4mc | ✅ boots | ✅ boots |
 | ebe | ❌ crash — needs Fabric's FabricBakedModelManager, removed with the model-loading rewrite | ❌ crash — Description: Initializing game |
@@ -209,8 +208,9 @@ to load and the game to still be running.
 | ferrite-core | ✅ boots | ❌ crash — Caused by: java.lang.RuntimeException: java.lang.NoSuchFieldException: |
 | freecam | ✅ boots | ✅ boots |
 | handcrafted | ❌ stall — model baking fails on its block models (translucency out of bounds) and the world never lo | ❌ crash — Description: Initializing game |
-| inventory-profiles-next | ⏸ held (library missing) — they get ported alongside) | ❌ crash |
+| inventory-profiles-next | ✅ boots | ❌ crash — Description: Unexpected error |
 | jei | ✅ boots | ❌ crash — Description: Unexpected error |
+| lambdynamiclights | ❌ crash — Caused by: java.lang.NoSuchMethodError: 'java.lang.Iterable net.minecraft.world.entity.Liv | ❌ crash — Description: Bootstrap |
 | language-reload | ✅ boots | ✅ boots |
 | lithium | ✅ boots | ❌ crash |
 | lmd | ✅ boots | ✅ boots |
@@ -220,6 +220,7 @@ to load and the game to still be running.
 | modernfix | ❌ stall — texture-stitcher internals (Stitcher.SpriteLoader) changed shape in 26.2; renderer-tier | ❌ crash |
 | modmenu | ✅ boots | ✅ boots |
 | morechathistory | ✅ boots | ✅ boots |
+| mouse-wheelie | ✅ boots | ❌ crash — Description: Initializing game |
 | natures-compass | ✅ boots | ❌ crash — Description: Initializing game |
 | netherportalfix | ✅ boots | ❌ crash — [07:08:41] [Render thread/INFO]: [STDERR]: [Retromod] A mod entry poin |
 | no-chat-reports | ✅ boots | ✅ boots |
@@ -242,14 +243,16 @@ to load and the game to still be running.
 | toms-storage | ❌ crash — draws through Gui.layers (LayeredDraw), removed in 26.2's HUD rewrite | ❌ crash — java.lang.NoClassDefFoundError: net/minecraft/class_2960 |
 | towns-and-towers | ❌ crash — java.lang.NoSuchMethodError: 'java.lang.Object com.mojang.serialization.Dynamic.value()' | ❌ crash — java.lang.NoSuchMethodError: 'int net.minecraft.WorldVersion.getPackVe |
 | travelersbackpack | ❌ crash — Cardinal Components' entity hooks are among the mixins 26.2 cannot apply (run with Cardina | ❌ crash — Caused by: java.lang.NullPointerException: Cannot invoke "net.minecraf |
-| trinkets | ⏸ held (library missing) — they get ported alongside) | ❌ crash — java.lang.NoClassDefFoundError: net/minecraft/world/level/GameRules$Ke |
+| trinkets | ❌ crash — java.lang.RuntimeException: Could not execute entrypoint stage 'main' due to errors, provi | ❌ crash — java.lang.NoClassDefFoundError: net/minecraft/world/level/GameRules$Ke |
 | veinminer | ✅ boots | ❌ crash — Description: Exception in server tick loop |
 | veinminer-client | ✅ boots | ❌ crash — Description: Exception in server tick loop |
 | visual-workbench | ❌ crash | ❌ crash — Description: Bootstrap |
 | visuality | ✅ boots | ✅ boots |
 | wavey-capes | ✅ boots | ❌ crash — Description: Ticking entity |
 | waystones | ✅ boots | ❌ crash — [20:22:44] [Render thread/INFO]: [STDERR]: [Retromod] A mod entry poin |
-| xaeros-world-map | ⏸ held (library missing) — they get ported alongside) | ❌ crash — Description: Initializing game |
+| wthit | ❌ crash — java.lang.RuntimeException: Could not execute entrypoint stage 'main' due to errors, provi | ❌ crash — Description: Initializing game |
+| xaeros-minimap | ❌ stall — java.util.concurrent.CompletionException: java.lang.NoClassDefFoundError: net/minecraft/cl | ❌ crash — Description: Initializing game |
+| xaeros-world-map | ❌ stall — java.util.concurrent.CompletionException: java.lang.NoClassDefFoundError: net/minecraft/cl | ❌ crash — Description: Initializing game |
 | yeetus-experimentus | ✅ boots | ✅ boots |
 | yosbr | ✅ boots | ✅ boots |
 | yungs-better-dungeons | ❌ stall — YUNG's API registers structure processor types as Codec lambdas; 26.2's StructureProcessor | ❌ crash |
@@ -260,8 +263,8 @@ to load and the game to still be running.
 | yungs-better-ocean-monuments | ❌ stall — YUNG's API registers structure processor types as Codec lambdas; 26.2's StructureProcessor | ✅ boots |
 | yungs-better-strongholds | ❌ stall — YUNG's API registers structure processor types as Codec lambdas; 26.2's StructureProcessor | ❌ crash |
 | yungs-better-witch-huts | ❌ stall — YUNG's API registers structure processor types as Codec lambdas; 26.2's StructureProcessor | ✅ boots |
-| zoomify | ✅ boots | ❌ crash |
+| zoomify | ❌ crash — died 4s after the world started loading | ❌ crash — Description: Initializing game |
 
-Score: Fox-Grade 50 / Retromod 37 of 100 mods booting.
+Score: Fox-Grade 51 / Retromod 37 of 104 mods booting.
 
 Reproduce with `batch2/run-retromod.sh` next to the Fox-Grade harness scripts.

@@ -1,13 +1,13 @@
 {
-  "h2h_total": 100,
-  "fox_boots": 50,
+  "h2h_total": 104,
+  "fox_boots": 51,
   "retro_boots": 37,
-  "fox_only": 20,
+  "fox_only": 21,
   "retro_only": 7,
   "both": 30,
-  "neither": 43,
+  "neither": 46,
   "all_mods": 130,
-  "all_boots": 66,
+  "all_boots": 67,
   "fox_only_names": [
     "appleskin",
     "carry-on",
@@ -17,8 +17,10 @@
     "default-options",
     "entityculling",
     "ferrite-core",
+    "inventory-profiles-next",
     "jei",
     "lithium",
+    "mouse-wheelie",
     "natures-compass",
     "netherportalfix",
     "optigui",
@@ -27,8 +29,7 @@
     "veinminer",
     "veinminer-client",
     "wavey-capes",
-    "waystones",
-    "zoomify"
+    "waystones"
   ],
   "retro_only_names": [
     "cit-resewn",

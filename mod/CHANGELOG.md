@@ -50,7 +50,7 @@
   classes), so 1.20.1 jars translate to readable Mojang names and port through the same layers.
 - **Compatibility page.** `docs/compat.md` is generated from the harness ledgers: verdict,
   unresolved count, server result, Retromod result and screenshot per mod.
-- **Head-to-head with Retromod on 100 mods: Fox-Grade 64, Retromod 38** (28 boot only under Fox-Grade) (`docs/compat.md`, runner in
+- **Head-to-head with Retromod on 104 mods: Fox-Grade 51, Retromod 37** (21 boot only under Fox-Grade) (`docs/compat.md`, runner in
   `tools/run-h2h.sh`). The fresh ten added chat-event records, numeric permission levels, NbtUtils
   and optional item-stack codecs, recipe ingredients, screen extract events, `super.use` holder
   conversion, Fabric's creative-tab / menu API renames, and inactive-but-accepted shims for the
