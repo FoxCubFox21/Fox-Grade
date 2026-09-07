@@ -124,10 +124,11 @@ public final class FoxGradePreLaunch implements PreLaunchEntrypoint {
       // run. So nothing with an unsatisfiable dep is installed. Ids satisfied by installed
       // mods, by OTHER jars in this same inbox batch, or by the loader's builtins all count.
       Set<String> satisfiable = new java.util.HashSet<>(java.util.List.of("minecraft", "java", "fabricloader"));
-      for (var m : mods) satisfiable.add(m.id);
+      for (var m : mods) { satisfiable.add(m.id); if (m.jar != null) satisfiable.addAll(JarDeps.providesOf(m.jar)); }   // cloth-config provides cloth-config2
       for (Path jar : inboxJars) {
         String id = JarDeps.idOf(jar);
         if (id != null) satisfiable.add(id);
+        satisfiable.addAll(JarDeps.providesOf(jar));
       }
       for (Path jar : inboxJars) {
         try {

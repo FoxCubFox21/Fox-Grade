@@ -15,6 +15,17 @@ import java.util.zip.ZipInputStream;
 final class JarDeps {
   private JarDeps() { }
 
+  /** The ids a jar's fabric.mod.json says it provides (cloth-config → cloth-config2); empty when none. */
+  static java.util.List<String> providesOf(Path jar) {
+    try (ZipFile zf = new ZipFile(jar.toFile())) {
+      ZipEntry e = zf.getEntry("fabric.mod.json");
+      if (e == null) return java.util.List.of();
+      JsonObject meta = new Gson().fromJson(new String(zf.getInputStream(e).readAllBytes()), JsonObject.class);
+      java.util.List<String> out = new java.util.ArrayList<>();
+      if (meta != null && meta.has("provides") && meta.get("provides").isJsonArray()) for (var x : meta.getAsJsonArray("provides")) out.add(x.getAsString());
+      return out;
+    } catch (Exception ex) { return java.util.List.of(); }
+  }
   static String idOf(Path jar) {
     try (ZipFile zf = new ZipFile(jar.toFile())) {
       ZipEntry e = zf.getEntry("fabric.mod.json");

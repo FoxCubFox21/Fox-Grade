@@ -74,18 +74,20 @@ bridged yet.
 ## Head-to-head with Retromod
 
 The same 100 mods, same instance, same base jars, through Retromod (Modrinth's other 26.2
-auto-porter, 1.3.0-snapshot.10) and Fox-Grade: **Fox-Grade boots 64, Retromod boots 38.**
-28 boot only under Fox-Grade, 2 only under Retromod, 36 under both, 34 under neither.
+auto-porter, 1.3.0-snapshot.10) and Fox-Grade: **Fox-Grade boots 50, Retromod boots 37.**
+20 boot only under Fox-Grade, 7 only under Retromod, 30 under both, 43 under neither.
 The set is Modrinth's most-downloaded Fabric 1.21.1 mods (libraries and the renderer tier skipped,
-required dependencies pulled in), run identically through both tools; failures were fixed in
-Fox-Grade where the game still has the API and left standing where it does not. Per-mod causes are
+required libraries pulled in), run through both tools under one rule: same launch command, same
+base jars, same instance layout, and a pass means the world starts loading and the game is still
+running 8 seconds later with the tested mod actually loaded, within a 150-second cap. Failures
+were fixed in Fox-Grade where the game still has the API and left standing where it does not. Per-mod causes are
 in [`docs/compat.md`](../docs/compat.md); the runner is `tools/run-h2h2.sh` and the corpus
 builder `tools/h2h-corpus.py`.
 
 ## How well does it work?
 
 Batch-tested against 130 mods from 1.21.x and 26.1 (every harness run folded to one row per mod,
-last verdict wins): **83 port and boot into a world** — six of them also verified on a dedicated
+last verdict wins): **66 port and boot into a world** — six of them also verified on a dedicated
 server, Mod Menu's mod list opens and renders through the GUI bridges, Lighty boots on the
 re-created world-render events — and 47 do not. The failures are the 26.2 rewrites a bytecode port cannot paper over: renderer-tier
 internals (entity models and textures, the texture stitcher, the HUD layer stack, custom particle render

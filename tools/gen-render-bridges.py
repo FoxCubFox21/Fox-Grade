@@ -271,6 +271,11 @@ SEV_ = "Lnet/minecraft/sounds/SoundEvent;"
 for _o, _n in (("LEASH_KNOT_BREAK", "LEAD_BREAK"), ("LEASH_KNOT_PLACE", "LEAD_TIED")):   # 26.2 renamed leash knots to leads
     j["fieldRedirects"].setdefault("net/minecraft/sounds/SoundEvents", {})["getstatic " + _o + ":" + SEV_] = ["move", "net/minecraft/sounds/SoundEvents", SEV_, _n]
 cr.setdefault("net/minecraft/WorldVersion", {})["getPackVersion(Lnet/minecraft/server/packs/PackType;)I"] = ["foxgrade/shim/VersionCompat", "packVersion", "(Lnet/minecraft/WorldVersion;Lnet/minecraft/server/packs/PackType;)I"]
+VSH = "Lnet/minecraft/world/phys/shapes/VoxelShape;"
+j["fieldRedirects"].setdefault("net/minecraft/world/level/block/ChestBlock", {})["getstatic AABB:" + VSH] = ["move", "net/minecraft/world/level/block/ChestBlock", VSH, "SHAPE"]   # lootr
+# value-provider bounded codecs moved to the plural holder classes (YUNG's API)
+cr.setdefault("net/minecraft/util/valueproviders/IntProvider", {})["codec(II)Lcom/mojang/serialization/Codec;"] = ["net/minecraft/util/valueproviders/IntProviders", "codec", "(II)Lcom/mojang/serialization/Codec;"]
+cr.setdefault("net/minecraft/util/valueproviders/FloatProvider", {})["codec(FF)Lcom/mojang/serialization/Codec;"] = ["net/minecraft/util/valueproviders/FloatProviders", "codec", "(FF)Lcom/mojang/serialization/Codec;"]
 cr.setdefault("net/minecraft/client/Minecraft", {})["getGuiSprites()Lnet/minecraft/client/gui/GuiSpriteManager;"] = ["net/minecraft/client/gui/GuiSpriteManager", "of", "(Lnet/minecraft/client/Minecraft;)Lnet/minecraft/client/gui/GuiSpriteManager;"]  # 26.2: GUI sprites live in AtlasManager; shim stands in
 ST = "Lnet/minecraft/client/gui/components/toasts/SystemToast;"; STID = "Lnet/minecraft/client/gui/components/toasts/SystemToast$SystemToastId;"; CO = "Lnet/minecraft/network/chat/Component;"
 cr.setdefault("net/minecraft/client/gui/components/toasts/SystemToast", {})["multiline(Lnet/minecraft/client/Minecraft;" + STID + CO + CO + ")" + ST] = ["foxgrade/shim/ToastCompat", "multiline", "(Lnet/minecraft/client/Minecraft;" + STID + CO + CO + ")" + ST]
@@ -649,7 +654,7 @@ cr.setdefault("net/minecraft/server/level/TicketType", {}).update({
 BBP = "Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;"; SND = "Lnet/minecraft/sounds/SoundEvent;"; BAC_ = "foxgrade/shim/BlockApiCompat"
 j["ctorAdapters"].setdefault("net/minecraft/world/level/block/LeavesBlock", {})["(" + BBP + ")V"] = {"newDesc": "(F" + BBP + ")V", "transforms": [{"slot": -1, "via": [BAC_, "leafParticleChance", "()F"]}]}
 j["ctorAdapters"].setdefault("net/minecraft/world/level/block/ChestBlock", {})["(" + BBP + "Ljava/util/function/Supplier;)V"] = {"newDesc": "(Ljava/util/function/Supplier;" + SND + SND + BBP + ")V",
-    "args": [["o1"], ["static", BAC_, "chestOpenSound", "()" + SND], ["static", BAC_, "chestCloseSound", "()" + SND], ["o0"]]}
+    "args": [["o2"], ["static", BAC_, "chestOpenSound", "()" + SND], ["static", BAC_, "chestCloseSound", "()" + SND], ["o1"]]}   # "oN" is 1-based
 j["overrideAdapters"].append({"oldName": "element", "oldDesc": "(Lnet/minecraft/resources/Identifier;)Ljava/lang/Object;", "newName": "element", "newDesc": "(Lnet/minecraft/resources/Identifier;Z)Ljava/lang/Object;", "unpack": ["p0"]})   # TagEntry.Lookup
 j["ctorAdapters"].setdefault("net/minecraft/core/particles/DustParticleOptions", {})["(" + V3F + "F)V"] = {"factory": [PAC, "dust", "(" + V3F + "F)" + DPO]}
 j["ctorAdapters"].setdefault("net/minecraft/world/item/alchemy/Potion", {})["([" + MEI + ")V"] = {"newDesc": "(Ljava/lang/String;[" + MEI + ")V", "transforms": [{"slot": -1, "via": [ITC, "potionName", "()Ljava/lang/String;"]}]}

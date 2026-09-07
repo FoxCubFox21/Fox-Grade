@@ -18,8 +18,10 @@ The same {T} mods, same instance, same base jars, through Retromod (Modrinth's o
 auto-porter, 1.3.0-snapshot.10) and Fox-Grade: **Fox-Grade boots {F}, Retromod boots {R}.**
 {FO} boot only under Fox-Grade, {RO} only under Retromod, {S['both']} under both, {S['neither']} under neither.
 The set is Modrinth's most-downloaded Fabric 1.21.1 mods (libraries and the renderer tier skipped,
-required dependencies pulled in), run identically through both tools; failures were fixed in
-Fox-Grade where the game still has the API and left standing where it does not. Per-mod causes are
+required libraries pulled in), run through both tools under one rule: same launch command, same
+base jars, same instance layout, and a pass means the world starts loading and the game is still
+running 8 seconds later with the tested mod actually loaded, within a 150-second cap. Failures
+were fixed in Fox-Grade where the game still has the API and left standing where it does not. Per-mod causes are
 in [`docs/compat.md`](../docs/compat.md); the runner is `tools/run-h2h2.sh` and the corpus
 builder `tools/h2h-corpus.py`.
 

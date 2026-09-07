@@ -16,6 +16,7 @@ run_one() {
   for bjar in $BASE; do case "$(basename "$bjar")" in cloth-config*) [[ ${NOBASECLOTH:-0} == 1 ]] && continue;; esac; cp "$bjar" $PT/mods/; done
   rm -f $PT/mods/fox-grade-inbox/*.jar
   rm -rf $PT/screenshots $PT/fox-grade-report.txt $PT/crash-reports $PT/.fox-grade-crash-seen
+  local mainjar=$1
   mkdir -p $PT/mods/fox-grade-inbox; for jar in "$@"; do if [[ ${AUTOINBOX:-0} == 1 ]]; then cp "$jar" $PT/mods/; else cp "$jar" $PT/mods/fox-grade-inbox/; fi; done   # AUTOINBOX=1: drop into mods/ and let the sweep find it
   echo "{ \"port\": [], \"portAll\": false, \"autotestTicks\": 220, \"autotestCommands\": [${CMDS:-}] }" > $PT/fox-grade.config.json
   cd $PT
@@ -27,17 +28,20 @@ run_one() {
     --accessToken dummy --userType msa --versionType release \
     --quickPlaySingleplayer "APPLE SKIN PORT 3" \
     > "$B/log-$name.log" 2>&1 &
-  local waited=0
-  while [ $waited -lt 240 ]; do
+  # Identical pass rule to the Retromod lane: the world starts loading (READY marker) and the game is still running
+  # 8 s later, within a 150 s cap. A screenshot is still taken when the game gets that far, but it is not the verdict.
+  local READY="Preparing spawn area\|Time elapsed\|joined the game"
+  local waited=0 ready=0
+  while [ $waited -lt 150 ]; do
     sleep 6; waited=$((waited+6))
-    find $PT/screenshots -name "*.png" 2>/dev/null | grep -q . && break
     pgrep -f "gameDir $PT " >/dev/null || break
+    grep -q "$READY" "$B/log-$name.log" 2>/dev/null && { sleep 8; ready=1; break; }
   done
   local port_line=$(grep -m1 "INBOX PORTED\|INBOX ERROR" "$B/log-$name.log" | sed 's/.*INBOX/INBOX/')
   local verdict
-  if find $PT/screenshots -name "*.png" 2>/dev/null | grep -q .; then
+  if [ $ready = 1 ] && pgrep -f "gameDir $PT " >/dev/null; then
     verdict=PASS
-    cp "$(find $PT/screenshots -name "*.png" | head -1)" "$B/shot-$name.png"
+    find $PT/screenshots -name "*.png" 2>/dev/null | head -1 | while read -r shot; do cp "$shot" "$B/shot-$name.png"; done
   elif ! pgrep -f "gameDir $PT " >/dev/null; then
     verdict=CRASH
   else
@@ -45,7 +49,12 @@ run_one() {
   fi
   pkill -f "gameDir $PT " 2>/dev/null; sleep 2
   mkdir -p $B/ports; for pj in $PT/mods/*-fgport.jar; do cp "$pj" "$B/ports/${name}--$(basename $pj)"; done
-  local why=""
+  # A boot without the mod under test is not a pass: the mod may have been held for a missing library.
+  local mainid=$(unzip -p "$mainjar" fabric.mod.json 2>/dev/null | /usr/bin/python3 -c 'import json,sys; print(json.load(sys.stdin).get("id",""))' 2>/dev/null)
+  if [[ $verdict == PASS && -n $mainid ]] && ! grep -qE "^[[:space:]]*[-\\|]+[[:space:]]*${mainid}(_fgport)?[[:space:]]" "$B/log-$name.log"; then
+    verdict=HELD; why_held=$(grep -m1 "INBOX HELD *$(basename "$mainjar")" "$B/log-$name.log" | sed 's/.*— needs /needs /; s/;.*//')
+  fi
+  local why="${why_held:-}"
   if [ "$verdict" != PASS ]; then
     why=$(grep -m1 "requires any version\|Incompatible mods\|InjectionError\|Mixin apply failed\|Unable to launch\|NoClassDefFoundError\|NoSuchMethodError" "$B/log-$name.log" | head -c 160)
   fi

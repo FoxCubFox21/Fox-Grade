@@ -231,7 +231,7 @@ public final class TransformPipeline {
             emit = (GSON.toJson(meta) + "\n").getBytes(StandardCharsets.UTF_8);
             if (touched) metaFixed++;
           } catch (Exception ex) { /* leave the meta alone if malformed */ }
-        } else if ((name.toLowerCase().endsWith(".accesswidener") || name.toLowerCase().endsWith(".ct") || name.toLowerCase().endsWith(".classtweaker")) && !mergedClasses.isEmpty()) {
+        } else if ((name.toLowerCase().endsWith(".accesswidener") || name.toLowerCase().endsWith(".aw") || name.toLowerCase().endsWith(".ct") || name.toLowerCase().endsWith(".classtweaker")) && !mergedClasses.isEmpty()) {
           try {
             AccessWidenerRemapper.Names names = new AccessWidenerRemapper.Names() {
               @Override public String method(String o, String n, String d) { return remapper.mapMethodName(o, n, d); }

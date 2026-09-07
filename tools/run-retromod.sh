@@ -43,6 +43,8 @@ rm_run() {
   { echo "== mods"; ls $PT/mods; echo "== mods/retromod-input"; ls $PT/mods/retromod-input; echo "== processed"; ls $PT/mods/retromod-input/processed 2>/dev/null; } > "$B/log-rm-$name.files" 2>&1
   launch "$name"
   local v=CRASH; grep -q "$READY" "$B/log-rm-$name.log" && pgrep -f "gameDir $PT " >/dev/null && v=PASS
+  local mainid=$(unzip -p "$1" fabric.mod.json 2>/dev/null | /usr/bin/python3 -c 'import json,sys; print(json.load(sys.stdin).get("id",""))' 2>/dev/null)
+  if [ "$v" = PASS ] && [ -n "$mainid" ] && ! grep -qE "^[[:space:]]*[-\\|]+[[:space:]]*${mainid}([_-][A-Za-z0-9]+)?[[:space:]]" "$B/log-rm-$name.log"; then v=HELD; fi
   pkill -f "gameDir $PT " 2>/dev/null; sleep 2
   local loaded=$(grep -m1 -o "Loading [0-9]* mods" "$B/log-rm-$name.log")
   local why=""; [ "$v" != PASS ] && why=$(grep -m1 "Caused by\|NoClassDefFoundError\|NoSuchMethodError\|AbstractMethodError" "$B/log-rm-$name.log" | grep -v HTTP_ERROR | head -c 170)

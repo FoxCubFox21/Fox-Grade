@@ -30,15 +30,24 @@ NOTES = {"rei": "needs cloth-config built for 1.21.1 next to the instance's 26.2
   "drippy-loading-screen": "FancyMenu family: blaze3d RenderCall and the GUI framework are gone",
   "fancymenu": "177 unresolved references in its own GUI framework",
   "ebe": "needs Fabric's FabricBakedModelManager, removed with the model-loading rewrite",
-  "sodium-shadowy-path-blocks": "requires Sodium, a renderer-tier mod Fox-Grade does not port",
-  "sodium-options-api": "requires Sodium, a renderer-tier mod Fox-Grade does not port",
-  "sodium-dynamic-lights": "requires Sodium, a renderer-tier mod Fox-Grade does not port",
+  "sodium-shadowy-path-blocks": "needs Sodium, and Sodium itself cannot be ported: its particle mixin targets a class hierarchy 26.2 rewrote",
+  "sodium-options-api": "no consistent 1.21.1 dependency set exists: Sodium 0.6 rejects Reese's Sodium Options below 1.8.0, and Reese's 2.x requires Sodium 0.8, which rejects this add-on; both tools hit the same loader refusal",
+  "sodium-dynamic-lights": "no consistent 1.21.1 dependency set exists: Sodium 0.6 rejects Reese's Sodium Options below 1.8.0, and Reese's 2.x requires Sodium 0.8, which rejects this add-on; both tools hit the same loader refusal",
   "dungeons-and-taverns": "datapack structures in the 1.21 JSON shape; 26.2 rejects them at registry load",
   "comforts": "listens to EntitySleepEvents.ALLOW_SLEEP_TIME, removed from Fabric API together with its callback interface",
-  "travelersbackpack": "Cardinal Components' entity hooks are among the mixins 26.2 cannot apply",
+  "travelersbackpack": "Cardinal Components' entity hooks are among the mixins 26.2 cannot apply (run with Cardinal Components and Cloth Config present)",
+  "handcrafted": "model baking fails on its block models (translucency out of bounds) and the world never loads",
   "dynamiccrosshair": "reads private Inventory.selected; widened in 1.1.0",
   "modernfix": "texture-stitcher internals (Stitcher.SpriteLoader) changed shape in 26.2; renderer-tier",
-  "terralith": "harness limitation: its required library lithostitched was not supplied to the run, so Fabric refused the dependency before either tool ran",
+  "yungs-better-nether-fortresses": "YUNG's API registers structure processor types as Codec lambdas; 26.2's StructureProcessorType wants MapCodecs, so registry loading fails and the world never opens (run with YUNG's API present)",
+  "yungs-better-ocean-monuments": "YUNG's API registers structure processor types as Codec lambdas; 26.2's StructureProcessorType wants MapCodecs, so registry loading fails and the world never opens (run with YUNG's API present)",
+  "yungs-better-dungeons": "YUNG's API registers structure processor types as Codec lambdas; 26.2's StructureProcessorType wants MapCodecs, so registry loading fails and the world never opens (run with YUNG's API present)",
+  "yungs-better-jungle-temples": "YUNG's API registers structure processor types as Codec lambdas; 26.2's StructureProcessorType wants MapCodecs, so registry loading fails and the world never opens (run with YUNG's API present)",
+  "yungs-better-strongholds": "YUNG's API registers structure processor types as Codec lambdas; 26.2's StructureProcessorType wants MapCodecs, so registry loading fails and the world never opens (run with YUNG's API present)",
+  "yungs-better-witch-huts": "YUNG's API registers structure processor types as Codec lambdas; 26.2's StructureProcessorType wants MapCodecs, so registry loading fails and the world never opens (run with YUNG's API present)",
+  "presence-footsteps": "references FlyingMob, removed from 26.2 (run with Kirin present)",
+
+  "terralith": "its library lithostitched injects into VillagerType with a handler 26.2's verifier rejects",
   "attributefix": "bookshelf reads LootPoolEntryType, removed with 26.2's loot rewrite",
   "controlify": "its resource-reload listener implements the 1.21 reload signature through a path the reload adapter does not cover",
 }
@@ -135,9 +144,12 @@ print("head-to-head:", {k: v for k, v in summary.items() if not k.endswith("_nam
 print("retro rows without a client row:", sorted(n for n in retro if n not in client))
 md = f"""# Fox-Grade compatibility results
 
-Every mod the harness has run, on a real Minecraft 26.2 client (headless launch into a world,
-screenshot at tick 220). **Boots** means the ported mod loaded and the game reached the world with
-it; a screen or overlay test is linked where one ran. "Unresolved" is the number of classes,
+Every mod the harness has run, on a real Minecraft 26.2 client launched straight into a world.
+**Boots** means the mod under test was loaded, the world started loading, and the game was still
+running 8 seconds later, within a 150-second cap. Both tools in the head-to-head are graded by
+exactly that rule, from the same launch command, base jars and instance layout; a boot in which
+the tested mod was held back or failed to port is graded "held", not "boots". A screenshot is
+linked where the game got far enough to take one. "Unresolved" is the number of classes,
 fields and methods the port still references that 26.2 no longer has — the honest measure of
 how much of the mod is reachable. Generated from the harness ledgers at commit `{commit}`
 on {datetime.date.today().isoformat()}; the scripts are in `tools/`.
