@@ -763,6 +763,11 @@ cr.setdefault("net/minecraft/world/food/FoodProperties$Builder", {})["effect(" +
 cr.setdefault("net/minecraft/world/level/block/BeehiveBlock", {})["dropHoneycomb(" + LVL + BP + ")V"] = [BAC, "dropHoneycomb", "(" + LVL + BP + ")V"]
 cr.setdefault("net/minecraft/world/entity/player/PlayerSkin", {})["capeTexture()" + ID] = [SKC, "capeTexture", "(" + PLS + ")" + ID]
 cr.setdefault("net/minecraft/client/renderer/rendertype/RenderType", {})["entityGlintDirect()" + RTY] = ["net/minecraft/client/renderer/rendertype/RenderTypes", "entityGlint", "()" + RTY]
+# RenderTarget under the 26.2 GPU abstraction: main target lives on the game renderer; viewport fields and GL ids are bridged.
+_RTG = "Lcom/mojang/blaze3d/pipeline/RenderTarget;"; _RTC = "foxgrade/shim/RenderTargetCompat"
+cr.setdefault("net/minecraft/client/Minecraft", {})["getMainRenderTarget()" + _RTG] = ["foxgrade/shim/MinecraftCompat", "getMainRenderTarget", "(Lnet/minecraft/client/Minecraft;)" + _RTG]
+cr.setdefault("com/mojang/blaze3d/pipeline/RenderTarget", {}).update({"getColorTextureId()I": [_RTC, "getColorTextureId", "(" + _RTG + ")I"], "getDepthTextureId()I": [_RTC, "getDepthTextureId", "(" + _RTG + ")I"]})
+j["fieldRedirects"].setdefault("com/mojang/blaze3d/pipeline/RenderTarget", {}).update({"get viewWidth:I": [_RTC, "viewWidth", "(" + _RTG + ")I"], "get viewHeight:I": [_RTC, "viewHeight", "(" + _RTG + ")I"], "get frameBufferId:I": [_RTC, "frameBufferId", "(" + _RTG + ")I"]})
 # Fabric networking packet factories: the configuration-phase one was renamed, the client-to-server ones build a payload packet.
 _CPP = "Lnet/minecraft/network/protocol/common/custom/CustomPacketPayload;"; _PKT = "Lnet/minecraft/network/protocol/Packet;"; _NWC = "foxgrade/shim/NetworkingCompat"
 j.setdefault("renames", {}).setdefault("net/fabricmc/fabric/api/networking/v1/ServerConfigurationNetworking", {})["createS2CPacket"] = "createClientboundPacket"

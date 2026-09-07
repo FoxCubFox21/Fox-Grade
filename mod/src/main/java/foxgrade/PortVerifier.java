@@ -73,6 +73,8 @@ public final class PortVerifier {
   }
   /** Is the method declared (abstract or not) somewhere up the superclass chain starting AT cls? */
   public boolean declaredInChain(String cls, String key) { return chainHas(cls, key, false, 0); }
+  /** name+desc of every abstract method the class itself declares (a callback interface's SAM among them); empty when unknown. */
+  public java.util.Set<String> abstractsOf(String cls) { Shape s = shape(cls); return s == UNKNOWN ? java.util.Set.of() : s.abstracts(); }
   // Walks superclasses AND interfaces (a renderer may inherit its abstract methods from an
   // interface such as BlockEntityRenderer). implementedOnly: abstract declarations do not count.
   private boolean chainHas(String cls, String key, boolean implementedOnly, int depth) {

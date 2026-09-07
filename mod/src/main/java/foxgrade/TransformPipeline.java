@@ -161,6 +161,7 @@ public final class TransformPipeline {
     remapper.setOracles(verifier::declares, verifier::finalInChain, verifier::implementedInChain, verifier::declaredInChain);
     remapper.setInterfacesOf(verifier::interfacesOf);
     remapper.setIsInterface(verifier::isInterface);
+    remapper.setAbstractsOf(verifier::abstractsOf);
     remapper.setIsFinalClass(verifier::isFinalClass);
     String[] fromMcHolder = { "" };
     long tPrescan = System.nanoTime(), tClasses = tPrescan, tShims = tPrescan;

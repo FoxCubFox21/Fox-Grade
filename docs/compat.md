@@ -7,15 +7,14 @@ exactly that rule, from the same launch command, base jars and instance layout; 
 the tested mod was held back or failed to port is graded "held", not "boots". A screenshot is
 linked where the game got far enough to take one. "Unresolved" is the number of classes,
 fields and methods the port still references that 26.2 no longer has — the honest measure of
-how much of the mod is reachable. Generated from the harness ledgers at commit `34d9d04`
+how much of the mod is reachable. Generated from the harness ledgers at commit `39b621f`
 on 2026-09-07; the scripts are in `tools/`.
 
 | Result | Mods |
 |---|---|
-| ✅ boots | 80 |
-| ❌ crash | 34 |
+| ✅ boots | 82 |
+| ❌ crash | 33 |
 | ❌ stall | 15 |
-| ⚠ screen closed | 1 |
 
 ## Per mod
 
@@ -61,7 +60,7 @@ on 2026-09-07; the scripts are in `tools/`.
 | cut-through | 1.21.1 | ❌ crash | 272 |  | ❌ crash |  | puzzleslib's sound mixin captures a local that 26.2 no longer has at that point |
 | debugify | 1.21.1 | ✅ boots | 14 |  | ❌ crash | [shot](shots/debugify.png) |  |
 | default-options | 1.21.1 | ✅ boots | 0 |  | ❌ crash | [shot](shots/default-options.png) |  |
-| distanthorizons | 1.21.1 | ❌ crash | 39 |  | ✅ boots |  | died 5s after the world started loading |
+| distanthorizons | 1.21.1 | ✅ boots | 33 |  | ✅ boots |  |  |
 | drippy-loading | 1.21.1 | ❌ crash | 0 |  | ❌ crash |  | java.lang.NoClassDefFoundError: com/mojang/blaze3d/pipeline/RenderCall |
 | duck | 1.21.1 | ❌ crash | 45 |  |  | [shot](shots/duck.png) | java.lang.NoSuchMethodError: 'void net.minecraft.world.entity.MobCategory.<init>(java.lang |
 | dungeons-and-taverns |  | ❌ stall | 0 |  | ❌ crash |  | its loot conditions use the 1.21 time_check shape without the clock key 26.2 requires |
@@ -100,7 +99,7 @@ on 2026-09-07; the scripts are in `tools/`.
 | mixintrace |  | ✅ boots | 0 |  | ✅ boots | [shot](shots/mixintrace.png) |  |
 | modelfix | 1.21 | ✅ boots | 1 |  | ✅ boots | [shot](shots/modelfix.png) |  |
 | modernfix | 1.21.1 | ❌ stall | 30 |  | ❌ crash | [shot](shots/modernfix.png) | texture-stitcher internals (Stitcher.SpriteLoader) changed shape in 26.2; renderer-tier |
-| modmenu |  | ⚠ screen closed | 0 |  | ✅ boots | [shot](shots/modmenu.png) |  |
+| modmenu |  | ✅ boots | 0 |  | ✅ boots | [shot](shots/modmenu.png) |  |
 | morechathistory |  | ✅ boots | 0 |  | ✅ boots | [shot](shots/morechathistory.png) |  |
 | mouse-tweaks | 1.21 | ✅ boots |  |  |  | [shot](shots/mouse-tweaks.png) |  |
 | mouse-wheelie | 1.21.1 | ✅ boots | 15 |  | ❌ crash | [shot](shots/mouse-wheelie.png) |  |
@@ -189,7 +188,7 @@ to load and the game to still be running.
 | cut-through | ❌ crash — puzzleslib's sound mixin captures a local that 26.2 no longer has at that point | ❌ crash — Description: Bootstrap |
 | debugify | ✅ boots | ❌ crash — Description: Initializing game |
 | default-options | ✅ boots | ❌ crash — [07:32:44] [Render thread/INFO]: [STDERR]: [Retromod] A mod entry poin |
-| distanthorizons | ❌ crash — died 5s after the world started loading | ✅ boots |
+| distanthorizons | ✅ boots | ✅ boots |
 | drippy-loading | ❌ crash — java.lang.NoClassDefFoundError: com/mojang/blaze3d/pipeline/RenderCall | ❌ crash — Description: Initializing game |
 | dungeons-and-taverns | ❌ stall — its loot conditions use the 1.21 time_check shape without the clock key 26.2 requires | ❌ crash |
 | dynamic-fps | ✅ boots | ✅ boots |
@@ -219,7 +218,7 @@ to load and the game to still be running.
 | mixintrace | ✅ boots | ✅ boots |
 | modelfix | ✅ boots | ✅ boots |
 | modernfix | ❌ stall — texture-stitcher internals (Stitcher.SpriteLoader) changed shape in 26.2; renderer-tier | ❌ crash |
-| modmenu | ⚠ screen closed | ✅ boots |
+| modmenu | ✅ boots | ✅ boots |
 | morechathistory | ✅ boots | ✅ boots |
 | mouse-wheelie | ✅ boots | ❌ crash — Description: Initializing game |
 | natures-compass | ✅ boots | ❌ crash — Description: Initializing game |
@@ -266,6 +265,6 @@ to load and the game to still be running.
 | yungs-better-witch-huts | ✅ boots | ✅ boots |
 | zoomify | ✅ boots | ❌ crash — Description: Initializing game |
 
-Score: Fox-Grade 64 / Retromod 37 of 104 mods booting.
+Score: Fox-Grade 66 / Retromod 37 of 104 mods booting.
 
 Reproduce with `batch2/run-retromod.sh` next to the Fox-Grade harness scripts.

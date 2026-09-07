@@ -74,6 +74,7 @@ public final class ShimGenerator implements Opcodes {
       Map.entry("foxgrade/shim/EntityLegacyCompat", () -> fromResource("foxgrade/shim/EntityLegacyCompat.class")),
       Map.entry("foxgrade/shim/HolderCompat", () -> fromResource("foxgrade/shim/HolderCompat.class")),
       Map.entry("foxgrade/shim/PackCompat", () -> fromResource("foxgrade/shim/PackCompat.class")),
+      Map.entry("foxgrade/shim/RenderTargetCompat", () -> fromResource("foxgrade/shim/RenderTargetCompat.class")),
       Map.entry("foxgrade/shim/NetworkingCompat", () -> fromResource("foxgrade/shim/NetworkingCompat.class")),
       Map.entry("foxgrade/shim/ChunkCompat", () -> fromResource("foxgrade/shim/ChunkCompat.class")),
       Map.entry("foxgrade/shim/ProcessorTypeCodec", () -> fromResource("foxgrade/shim/ProcessorTypeCodec.class")),

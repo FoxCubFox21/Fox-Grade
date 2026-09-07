@@ -58,6 +58,8 @@ public final class BytecodeRemapper {
   // shadows an ancestor's rewrite) and drive override dropping and method synthesis.
   private java.util.function.BiPredicate<String, String> declares = (c, k) -> false, finalInChain = (c, k) -> false,
       implementedInChain = (c, k) -> false, declaredInChain = (c, k) -> false;
+  private java.util.function.Function<String, java.util.Set<String>> abstractsOf = c -> java.util.Set.of();
+  public void setAbstractsOf(java.util.function.Function<String, java.util.Set<String>> f) { this.abstractsOf = f; }
   public void setOracles(java.util.function.BiPredicate<String, String> declares, java.util.function.BiPredicate<String, String> finalInChain,
                          java.util.function.BiPredicate<String, String> implementedInChain, java.util.function.BiPredicate<String, String> declaredInChain) {
     this.declares = declares; this.finalInChain = finalInChain; this.implementedInChain = implementedInChain; this.declaredInChain = declaredInChain;
@@ -219,6 +221,7 @@ public final class BytecodeRemapper {
       final Set<String> declared = new HashSet<>();
       final Set<String> declaredConcrete = new HashSet<>();   // declared with a body (interface default methods included)
       final java.util.List<String[]> ctorBridges = new java.util.ArrayList<>();   // [bridgeName, bridgeDesc, ctorOwner, ctorDesc]
+      final java.util.List<Object[]> samBridges = new java.util.ArrayList<>();   // [bridgeName, bridgeDesc, implHandle, capturedCount, oldSamArgCount]
       @Override public void visit(int version, int access, String name, String sig, String superName, String[] itfs) {
         // 26.2 turned some interfaces into classes (RecipeSerializer). A mod class implementing one
         // must extend it instead — possible when it has no other superclass.
@@ -247,6 +250,20 @@ public final class BytecodeRemapper {
       }
       String superName; String flippedSuper; String demotedSuper;   // demotedSuper: old superclass that is an interface now   // set when 'implements X' became 'extends X' for an EXTENDABLE record
       @Override public void visitEnd() {
+        // Bridges for callbacks whose interface gained trailing parameters: drop them, call the original implementation.
+        for (Object[] b : samBridges) {
+          String bdesc = (String) b[1]; org.objectweb.asm.Handle impl = (org.objectweb.asm.Handle) b[2]; int captured = (Integer) b[3], oldN = (Integer) b[4];
+          org.objectweb.asm.Type[] args = org.objectweb.asm.Type.getArgumentTypes(bdesc);
+          MethodVisitor mv = super.visitMethod(Opcodes.ACC_PRIVATE | Opcodes.ACC_STATIC | Opcodes.ACC_SYNTHETIC, (String) b[0], bdesc, null, null);
+          mv.visitCode();
+          int slot = 0;
+          for (int i = 0; i < args.length; i++) { if (i < captured + oldN) mv.visitVarInsn(args[i].getOpcode(Opcodes.ILOAD), slot); slot += args[i].getSize(); }
+          int op = switch (impl.getTag()) { case Opcodes.H_INVOKESTATIC -> Opcodes.INVOKESTATIC; case Opcodes.H_INVOKEINTERFACE -> Opcodes.INVOKEINTERFACE; case Opcodes.H_INVOKESPECIAL -> Opcodes.INVOKESPECIAL; default -> Opcodes.INVOKEVIRTUAL; };
+          mv.visitMethodInsn(op, impl.getOwner(), impl.getName(), impl.getDesc(), impl.isInterface());
+          org.objectweb.asm.Type r = org.objectweb.asm.Type.getReturnType(bdesc);
+          mv.visitInsn(r.getSort() == org.objectweb.asm.Type.VOID ? Opcodes.RETURN : r.getOpcode(Opcodes.IRETURN));
+          mv.visitMaxs(0, 0); mv.visitEnd();
+        }
         for (String[] b : ctorBridges) {
           org.objectweb.asm.Type[] args = org.objectweb.asm.Type.getArgumentTypes(b[1]);
           MethodVisitor mv = visitMethod(Opcodes.ACC_PRIVATE | Opcodes.ACC_STATIC | Opcodes.ACC_SYNTHETIC, b[0], b[1], null, null);
@@ -604,6 +621,38 @@ public final class BytecodeRemapper {
                   String bridgeDesc = h.getDesc().substring(0, h.getDesc().lastIndexOf(')') + 1) + "L" + h.getOwner() + ";";
                   ctorBridges.add(new String[] {bridge, bridgeDesc, h.getOwner(), h.getDesc()});
                   out[i] = new org.objectweb.asm.Handle(Opcodes.H_INVOKESTATIC, className, bridge, bridgeDesc, (classAccess & Opcodes.ACC_INTERFACE) != 0);
+                  frameDirty[0] = true;
+                }
+              }
+            }
+            // A Fabric API callback that gained trailing parameters (ServerChunkEvents.Load.onChunkLoad(level, chunk[, newlyGenerated])):
+            // the lambda still has the 1.21 shape, so the interface's new SAM is routed through a synthesised static bridge
+            // in this class that drops the extra arguments and calls the original implementation.
+            if (bsm.getOwner().equals("java/lang/invoke/LambdaMetafactory") && out.length >= 3
+                && out[0] instanceof org.objectweb.asm.Type samT && out[1] instanceof org.objectweb.asm.Handle impl && out[2] instanceof org.objectweb.asm.Type instT
+                && ret.getSort() == org.objectweb.asm.Type.OBJECT && ret.getInternalName().startsWith("net/fabricmc/fabric/api/")
+                && impl.getTag() != Opcodes.H_NEWINVOKESPECIAL) {
+              String want = null;
+              for (String m : abstractsOf.apply(ret.getInternalName())) if (m.startsWith(iname + "(")) { want = m.substring(iname.length()); break; }
+              if (want != null && !want.equals(samT.getDescriptor())) {
+                org.objectweb.asm.Type[] newArgs = org.objectweb.asm.Type.getArgumentTypes(want), oldArgs = samT.getArgumentTypes(), instArgs = instT.getArgumentTypes();
+                boolean prefix = newArgs.length > oldArgs.length && instArgs.length == oldArgs.length
+                    && org.objectweb.asm.Type.getReturnType(want).equals(samT.getReturnType())
+                    && org.objectweb.asm.Type.getReturnType(impl.getDesc()).equals(instT.getReturnType());
+                for (int i = 0; prefix && i < oldArgs.length; i++) if (!newArgs[i].equals(oldArgs[i])) prefix = false;
+                if (prefix) {
+                  org.objectweb.asm.Type[] captured = org.objectweb.asm.Type.getArgumentTypes(idesc);
+                  org.objectweb.asm.Type[] samArgs = new org.objectweb.asm.Type[newArgs.length];
+                  for (int i = 0; i < newArgs.length; i++) samArgs[i] = i < oldArgs.length ? instArgs[i] : newArgs[i];
+                  org.objectweb.asm.Type[] bridgeArgs = new org.objectweb.asm.Type[captured.length + samArgs.length];
+                  System.arraycopy(captured, 0, bridgeArgs, 0, captured.length);
+                  System.arraycopy(samArgs, 0, bridgeArgs, captured.length, samArgs.length);
+                  String bridge = "fg$sam$" + samBridges.size();
+                  String bridgeDesc = org.objectweb.asm.Type.getMethodDescriptor(instT.getReturnType(), bridgeArgs);
+                  samBridges.add(new Object[] {bridge, bridgeDesc, impl, captured.length, oldArgs.length});
+                  out[0] = org.objectweb.asm.Type.getMethodType(want);
+                  out[1] = new org.objectweb.asm.Handle(Opcodes.H_INVOKESTATIC, className, bridge, bridgeDesc, (classAccess & Opcodes.ACC_INTERFACE) != 0);
+                  out[2] = org.objectweb.asm.Type.getMethodType(instT.getReturnType(), samArgs);
                   frameDirty[0] = true;
                 }
               }

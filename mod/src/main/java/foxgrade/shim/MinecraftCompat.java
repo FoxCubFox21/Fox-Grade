@@ -12,6 +12,8 @@ import org.joml.Quaternionf;
 public final class MinecraftCompat {
   private MinecraftCompat() {}
   public static Entity cameraEntity(Minecraft mc) { return mc.getCameraEntity(); }
+  /** 1.21 Minecraft.getMainRenderTarget(): the game renderer owns it now. */
+  public static com.mojang.blaze3d.pipeline.RenderTarget getMainRenderTarget(Minecraft mc) { return mc.gameRenderer.mainRenderTarget(); }
   public static void setCameraEntity(Minecraft mc, Entity e) { mc.setCameraEntity(e); }
   public static Screen screen(Minecraft mc) { return mc.gui.screen(); }
   public static void setScreenField(Minecraft mc, Screen s) { mc.gui.setScreen(s); }

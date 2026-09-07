@@ -1,13 +1,13 @@
 {
   "h2h_total": 104,
-  "fox_boots": 64,
+  "fox_boots": 66,
   "retro_boots": 37,
   "fox_only": 29,
-  "retro_only": 2,
-  "both": 35,
+  "retro_only": 0,
+  "both": 37,
   "neither": 38,
   "all_mods": 130,
-  "all_boots": 80,
+  "all_boots": 82,
   "fox_only_names": [
     "ambientsounds",
     "appleskin",
@@ -39,8 +39,5 @@
     "yungs-better-strongholds",
     "zoomify"
   ],
-  "retro_only_names": [
-    "distanthorizons",
-    "modmenu"
-  ]
+  "retro_only_names": []
 }
