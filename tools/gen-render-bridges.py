@@ -763,6 +763,11 @@ cr.setdefault("net/minecraft/world/food/FoodProperties$Builder", {})["effect(" +
 cr.setdefault("net/minecraft/world/level/block/BeehiveBlock", {})["dropHoneycomb(" + LVL + BP + ")V"] = [BAC, "dropHoneycomb", "(" + LVL + BP + ")V"]
 cr.setdefault("net/minecraft/world/entity/player/PlayerSkin", {})["capeTexture()" + ID] = [SKC, "capeTexture", "(" + PLS + ")" + ID]
 cr.setdefault("net/minecraft/client/renderer/rendertype/RenderType", {})["entityGlintDirect()" + RTY] = ["net/minecraft/client/renderer/rendertype/RenderTypes", "entityGlint", "()" + RTY]
+# Fabric API moved the pack activation enum; ModNioPackResources.create now takes the v1 one (towns-and-towers).
+_MNP = "Lnet/fabricmc/fabric/impl/resource/pack/ModNioPackResources;"; _MC_ = "Lnet/fabricmc/loader/api/ModContainer;"
+_PT_ = "Lnet/minecraft/server/packs/PackType;"; _RPAT = "Lnet/fabricmc/fabric/api/resource/ResourcePackActivationType;"
+_oldCreate = "create(Ljava/lang/String;" + _MC_ + "Ljava/lang/String;" + _PT_ + _RPAT + "Z)" + _MNP
+cr.setdefault("net/fabricmc/fabric/impl/resource/pack/ModNioPackResources", {})[_oldCreate] = ["foxgrade/shim/PackCompat", "createModPack", "(Ljava/lang/String;" + _MC_ + "Ljava/lang/String;" + _PT_ + _RPAT + "Z)" + _MNP]
 # WorldVersion became a record in 26.2: every getX() lost its prefix (entityculling reads getName()).
 for _g, _n, _r in [("getName", "name", "Ljava/lang/String;"), ("getId", "id", "Ljava/lang/String;"),
                    ("getBuildTime", "buildTime", "Ljava/util/Date;"), ("getProtocolVersion", "protocolVersion", "I"),

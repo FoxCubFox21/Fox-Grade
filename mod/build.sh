@@ -16,7 +16,7 @@ FA_TMP=$(mktemp -d)
 if [[ -n ${FA_JAR:-} ]]; then
   (cd "$FA_TMP" && unzip -o -q "$FA_JAR" 'META-INF/jars/fabric-lifecycle-events-v1-*.jar' \
       'META-INF/jars/fabric-api-base-*.jar' 'META-INF/jars/fabric-screen-api-v1-*.jar' \
-      'META-INF/jars/fabric-rendering-v1-*.jar' 'META-INF/jars/fabric-entity-events-v1-*.jar')
+      'META-INF/jars/fabric-rendering-v1-*.jar' 'META-INF/jars/fabric-entity-events-v1-*.jar' 'META-INF/jars/fabric-resource-loader-v1-*.jar' 'META-INF/jars/fabric-resource-loader-v0-*.jar')
 fi
 
 CP="$MC_JAR"
