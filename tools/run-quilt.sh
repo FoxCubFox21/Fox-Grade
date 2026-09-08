@@ -23,7 +23,7 @@ run_one() {
   mkdir -p $PT/fox-grade-inbox; for jar in "$@"; do if [[ ${AUTOINBOX:-0} == 1 ]]; then cp "$jar" $PT/mods/; else cp "$jar" $PT/fox-grade-inbox/; fi; done   # Quilt scans mods/ recursively: use the game-folder inbox   # AUTOINBOX=1: drop into mods/ and let the sweep find it
   echo "{ \"port\": [], \"portAll\": false, \"autotestTicks\": 220, \"autotestCommands\": [${CMDS:-}] }" > $PT/fox-grade.config.json
   cd $PT
-  /usr/bin/java -XstartOnFirstThread -Xmx3G -DFabricMcEmu="net.minecraft.client.main.Main" -cp "$LCP" \
+  /usr/bin/java -XstartOnFirstThread -Xmx3G -Dloader.noGui=true -DFabricMcEmu="net.minecraft.client.main.Main" -cp "$LCP" \
     org.quiltmc.loader.impl.launch.knot.KnotClient \
     --username FGTest --version quilt-loader-0.31.0-beta.4-26.2 \
     --gameDir "$PT" --assetsDir "$MC/assets" --assetIndex 32 \
@@ -57,7 +57,7 @@ run_one() {
   mkdir -p $B/ports; for pj in $PT/mods/*-fgport.jar; do cp "$pj" "$B/ports/${name}--$(basename $pj)"; done
   # A boot without the mod under test is not a pass: the mod may have been held for a missing library.
   local mainid=$(unzip -p "$mainjar" fabric.mod.json 2>/dev/null | /usr/bin/python3 -c 'import json,sys; print(json.load(sys.stdin).get("id",""))' 2>/dev/null)
-  if [[ $verdict == PASS && -n $mainid ]] && ! grep -qE "^[[:space:]]*[-\\|]+[[:space:]]*${mainid}(_fgport)?[[:space:]]" "$B/log-$name.log"; then
+  if [[ $verdict == PASS && -n $mainid ]] && ! grep -qE "^[[:space:]]*[-\\|]+[[:space:]]*${mainid}(_fgport)?[[:space:]]|^\\|[^|]*\\|[^|]*\\|[[:space:]]*${mainid}(_fgport)?[[:space:]]*\\|" "$B/log-$name.log"; then
     verdict=HELD; why_held=$(grep -m1 "INBOX HELD *$(basename "$mainjar")" "$B/log-$name.log" | sed 's/.*— needs /needs /; s/;.*//')
   fi
   local why="${why_held:-}"
