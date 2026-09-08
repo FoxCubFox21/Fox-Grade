@@ -35,6 +35,7 @@ public final class ShimGenerator implements Opcodes {
       Map.entry("foxgrade/shim/GuiPoseStack", () -> fromResource("foxgrade/shim/GuiPoseStack.class")),
       Map.entry("foxgrade/shim/GuiQuadElement", () -> fromResource("foxgrade/shim/GuiQuadElement.class")),
       Map.entry("foxgrade/shim/RenderSystemCompat", () -> fromResource("foxgrade/shim/RenderSystemCompat.class")),
+      Map.entry("com/mojang/blaze3d/shaders/Uniform", () -> fromResource("foxgrade/shim/UniformShim.class")),
       Map.entry("com/mojang/blaze3d/pipeline/RenderCall", () -> fromResource("foxgrade/shim/RenderCallShim.class")),
       Map.entry("foxgrade/shim/ShaderCompat", () -> fromResource("foxgrade/shim/ShaderCompat.class")),
       Map.entry("foxgrade/shim/InputCompat", () -> fromResource("foxgrade/shim/InputCompat.class")),
@@ -201,6 +202,9 @@ public final class ShimGenerator implements Opcodes {
       Map.entry("net/minecraft/world/item/ArmorItem", () -> fromResource("foxgrade/shim/ArmorItemShim.class")),
       Map.entry("net/minecraft/world/entity/animal/FlyingAnimal", () -> fromResource("foxgrade/shim/FlyingAnimalShim.class")),
       Map.entry("net/minecraft/client/renderer/MultiBufferSource", () -> fromResource("foxgrade/shim/MultiBufferSourceShim.class")),
+      Map.entry("net/fabricmc/fabric/api/client/rendering/v1/BuiltinItemRendererRegistry", () -> fromResource("foxgrade/shim/BuiltinItemRendererRegistryShim.class")),
+      Map.entry("net/fabricmc/fabric/api/client/rendering/v1/BuiltinItemRendererRegistry$DynamicItemRenderer", () -> fromResource("foxgrade/shim/BuiltinItemRendererRegistryShim$DynamicItemRenderer.class")),
+      Map.entry("net/fabricmc/fabric/api/client/rendering/v1/BuiltinItemRendererRegistry$Impl", () -> fromResource("foxgrade/shim/BuiltinItemRendererRegistryShim$Impl.class")),
       Map.entry("net/minecraft/client/renderer/MultiBufferSource$BufferSource", () -> fromResource("foxgrade/shim/BufferSourceShim.class")),
       Map.entry("net/minecraft/client/model/HierarchicalModel", () -> fromResource("foxgrade/shim/HierarchicalModelShim.class")),
       Map.entry("net/minecraft/client/renderer/entity/ItemRenderer", () -> fromResource("foxgrade/shim/ItemRendererShim.class")),
@@ -244,6 +248,9 @@ public final class ShimGenerator implements Opcodes {
     m.put("foxgrade/shim/BufferUploaderShim", "com/mojang/blaze3d/vertex/BufferUploader");
     m.put("foxgrade/shim/VertexFormatModeShim", "com/mojang/blaze3d/vertex/VertexFormat$Mode");
     m.put("foxgrade/shim/MultiBufferSourceShim", "net/minecraft/client/renderer/MultiBufferSource");
+    m.put("foxgrade/shim/BuiltinItemRendererRegistryShim", "net/fabricmc/fabric/api/client/rendering/v1/BuiltinItemRendererRegistry");
+    m.put("foxgrade/shim/BuiltinItemRendererRegistryShim$DynamicItemRenderer", "net/fabricmc/fabric/api/client/rendering/v1/BuiltinItemRendererRegistry$DynamicItemRenderer");
+    m.put("foxgrade/shim/BuiltinItemRendererRegistryShim$Impl", "net/fabricmc/fabric/api/client/rendering/v1/BuiltinItemRendererRegistry$Impl");
     m.put("foxgrade/shim/BufferSourceShim", "net/minecraft/client/renderer/MultiBufferSource$BufferSource");
     m.put("foxgrade/shim/HierarchicalModelShim", "net/minecraft/client/model/HierarchicalModel");
     m.put("foxgrade/shim/ItemRendererShim", "net/minecraft/client/renderer/entity/ItemRenderer");
@@ -286,6 +293,7 @@ public final class ShimGenerator implements Opcodes {
     m.put("foxgrade/shim/BuiltInMetadataShim", "net/minecraft/server/packs/BuiltInMetadata");
     m.put("foxgrade/shim/RenderStateShardShim", "net/minecraft/client/renderer/RenderStateShard");
     m.put("foxgrade/shim/RenderCallShim", "com/mojang/blaze3d/pipeline/RenderCall");
+    m.put("foxgrade/shim/UniformShim", "com/mojang/blaze3d/shaders/Uniform");
     m.put("foxgrade/shim/QuiltVersionShim", "org/quiltmc/loader/api/Version");
     m.put("foxgrade/shim/QuiltModMetadataShim", "org/quiltmc/loader/api/ModMetadata");
     m.put("foxgrade/shim/QuiltModContainerShim", "org/quiltmc/loader/api/ModContainer");
@@ -347,6 +355,8 @@ public final class ShimGenerator implements Opcodes {
 
   // Shims that reference other shims; the pipeline injects the closure.
   static final Map<String, java.util.List<String>> SHIM_DEPS = Map.ofEntries(
+      Map.entry("net/fabricmc/fabric/api/client/rendering/v1/BuiltinItemRendererRegistry", java.util.List.of("net/minecraft/client/renderer/MultiBufferSource")),
+      Map.entry("net/minecraft/client/renderer/ShaderInstance", java.util.List.of("com/mojang/blaze3d/shaders/Uniform")),
       Map.entry("foxgrade/shim/QuiltSelfContainer", java.util.List.of("org/quiltmc/loader/api/ModContainer", "org/quiltmc/loader/api/QuiltLoader", "foxgrade/shim/QuiltModContainerImpl", "foxgrade/shim/QuiltSelfContainer$Delegate")),
       Map.entry("org/quiltmc/loader/api/Version", java.util.List.of("foxgrade/shim/QuiltVersionImpl")),
       Map.entry("foxgrade/shim/QuiltVersionImpl", java.util.List.of("org/quiltmc/loader/api/Version")),

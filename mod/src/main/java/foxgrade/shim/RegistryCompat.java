@@ -206,4 +206,17 @@ public final class RegistryCompat {
     String current = (String) descF.get(type);
     if (current != null && current.contains("." + PENDING_NS + ".pending_")) descF.set(type, "entity." + id.getNamespace() + "." + id.getPath().replace('/', '.'));
   }
+
+  /** 1.21's {@code ReloadableServerRegistries.Holder.get()} handed back the frozen RegistryAccess; 26.2 renamed it to
+   *  {@code lookup()} and widened the return type to HolderLookup.Provider. Narrow it back when we can, which is the
+   *  normal case because the holder really does carry the full registry access. */
+  public static net.minecraft.core.RegistryAccess.Frozen reloadableRegistries(net.minecraft.server.ReloadableServerRegistries.Holder holder) {
+    if (holder == null) return null;
+    Object lookup = holder.lookup();
+    if (lookup instanceof net.minecraft.core.RegistryAccess.Frozen frozen) return frozen;
+    if (lookup instanceof net.minecraft.core.RegistryAccess access) return access.freeze();
+    System.err.println("[Fox-Grade] reloadable registries: 26.2 handed back " + (lookup == null ? "null" : lookup.getClass().getName())
+        + ", which is not a RegistryAccess — returning null");
+    return null;
+  }
 }

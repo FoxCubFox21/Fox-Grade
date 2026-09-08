@@ -32,7 +32,7 @@ else:
         if nw and nw != moj: derived[moj] = nw
     json.dump(derived, open(_cache, "w")); REN.update(derived)
     print("derived class renames:", len(derived), "| ResourceLocation ->", derived.get("net/minecraft/resources/ResourceLocation"))
-SHIM_RENAMES = {"foxgrade/shim/RenderCallShim": "com/mojang/blaze3d/pipeline/RenderCall", "foxgrade/shim/RenderTypeCompositeState": "net/minecraft/client/renderer/RenderType$CompositeState", "foxgrade/shim/RenderTypeCompositeStateBuilder": "net/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder", "foxgrade/shim/RenderTypeOutlineProperty": "net/minecraft/client/renderer/RenderType$OutlineProperty", "foxgrade/shim/TesselatorShim": "com/mojang/blaze3d/vertex/Tesselator", "foxgrade/shim/BufferUploaderShim": "com/mojang/blaze3d/vertex/BufferUploader", "foxgrade/shim/VertexFormatModeShim": "com/mojang/blaze3d/vertex/VertexFormat$Mode"}
+SHIM_RENAMES = {"foxgrade/shim/BuiltinItemRendererRegistryShim": "net/fabricmc/fabric/api/client/rendering/v1/BuiltinItemRendererRegistry", "foxgrade/shim/UniformShim": "com/mojang/blaze3d/shaders/Uniform", "foxgrade/shim/RenderCallShim": "com/mojang/blaze3d/pipeline/RenderCall", "foxgrade/shim/RenderTypeCompositeState": "net/minecraft/client/renderer/RenderType$CompositeState", "foxgrade/shim/RenderTypeCompositeStateBuilder": "net/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder", "foxgrade/shim/RenderTypeOutlineProperty": "net/minecraft/client/renderer/RenderType$OutlineProperty", "foxgrade/shim/TesselatorShim": "com/mojang/blaze3d/vertex/Tesselator", "foxgrade/shim/BufferUploaderShim": "com/mojang/blaze3d/vertex/BufferUploader", "foxgrade/shim/VertexFormatModeShim": "com/mojang/blaze3d/vertex/VertexFormat$Mode"}
 def shim_desc(d): return re.sub(r"L([\w/$]+);", lambda m: "L" + SHIM_RENAMES.get(m.group(1), m.group(1)) + ";", d)
 def ren_desc(d): return re.sub(r"L([\w/$]+);", lambda m: "L" + REN.get(m.group(1), m.group(1)) + ";", d)
 PRIM = {"void":"V","boolean":"Z","byte":"B","char":"C","short":"S","int":"I","long":"J","float":"F","double":"D"}
@@ -763,6 +763,9 @@ cr.setdefault("net/minecraft/world/food/FoodProperties$Builder", {})["effect(" +
 cr.setdefault("net/minecraft/world/level/block/BeehiveBlock", {})["dropHoneycomb(" + LVL + BP + ")V"] = [BAC, "dropHoneycomb", "(" + LVL + BP + ")V"]
 cr.setdefault("net/minecraft/world/entity/player/PlayerSkin", {})["capeTexture()" + ID] = [SKC, "capeTexture", "(" + PLS + ")" + ID]
 cr.setdefault("net/minecraft/client/renderer/rendertype/RenderType", {})["entityGlintDirect()" + RTY] = ["net/minecraft/client/renderer/rendertype/RenderTypes", "entityGlint", "()" + RTY]
+# ReloadableServerRegistries.Holder.get() -> lookup(), widened to HolderLookup.Provider in 26.2 (wthit).
+_RSRH = "Lnet/minecraft/server/ReloadableServerRegistries$Holder;"; _FROZ = "Lnet/minecraft/core/RegistryAccess$Frozen;"
+cr.setdefault("net/minecraft/server/ReloadableServerRegistries$Holder", {})["get()" + _FROZ] = ["foxgrade/shim/RegistryCompat", "reloadableRegistries", "(" + _RSRH + ")" + _FROZ]
 # RenderSystem.recordRenderCall + the RenderCall interface: both gone in 26.2 (fancymenu, drippy-loading-screen).
 _RCALL = "Lcom/mojang/blaze3d/pipeline/RenderCall;"
 cr.setdefault("com/mojang/blaze3d/systems/RenderSystem", {})["recordRenderCall(" + _RCALL + ")V"] = ["foxgrade/shim/RenderSystemCompat", "recordRenderCall", "(" + _RCALL + ")V"]
