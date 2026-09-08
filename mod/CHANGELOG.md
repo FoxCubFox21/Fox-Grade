@@ -9,6 +9,8 @@
   (Quilt scans `mods/` recursively), on a Quilt host the loader's own API classes are never shipped as stand-ins,
   and the self-relaunch drops Quilt's transform cache and waits for the old JVM to exit first (Quilt 0.31 cannot
   re-create that cache in place when the mod set changes).
+  Fox-Grade ships as two Modrinth entries: the Fabric jar and a Quilt jar that carries Fox-Grade's own
+  `quilt.mod.json` (`build-quilt-jar.sh`), so Quilt Loader lists it as a Quilt mod.
   A Quilt mod looking itself up (its entrypoint container, `QuiltLoader.getModContainer`) gets its original id on
   either host, not the port's aliased one. QSL's own API modules are not bridged.
 - **Custom render types.** 1.21's `RenderType.create(...)` with a `CompositeState` of shards is rebuilt
