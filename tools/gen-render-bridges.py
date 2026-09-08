@@ -763,6 +763,15 @@ cr.setdefault("net/minecraft/world/food/FoodProperties$Builder", {})["effect(" +
 cr.setdefault("net/minecraft/world/level/block/BeehiveBlock", {})["dropHoneycomb(" + LVL + BP + ")V"] = [BAC, "dropHoneycomb", "(" + LVL + BP + ")V"]
 cr.setdefault("net/minecraft/world/entity/player/PlayerSkin", {})["capeTexture()" + ID] = [SKC, "capeTexture", "(" + PLS + ")" + ID]
 cr.setdefault("net/minecraft/client/renderer/rendertype/RenderType", {})["entityGlintDirect()" + RTY] = ["net/minecraft/client/renderer/rendertype/RenderTypes", "entityGlint", "()" + RTY]
+# WorldVersion became a record in 26.2: every getX() lost its prefix (entityculling reads getName()).
+for _g, _n, _r in [("getName", "name", "Ljava/lang/String;"), ("getId", "id", "Ljava/lang/String;"),
+                   ("getBuildTime", "buildTime", "Ljava/util/Date;"), ("getProtocolVersion", "protocolVersion", "I"),
+                   ("isStable", "stable", "Z")]:
+    j.setdefault("renames", {}).setdefault("net/minecraft/WorldVersion", {})[_g] = _n
+# Fabric API renamed the key-binding helper and moved its package (entityculling).
+j["classRenames"]["net/fabricmc/fabric/api/client/keybinding/v1/KeyBindingHelper"] = "net/fabricmc/fabric/api/client/keymapping/v1/KeyMappingHelper"
+_KMH = "net/fabricmc/fabric/api/client/keymapping/v1/KeyMappingHelper"; _KM = "Lnet/minecraft/client/KeyMapping;"
+j.setdefault("renames", {}).setdefault(_KMH, {}).update({"registerKeyBinding": "registerKeyMapping", "getBoundKeyOf": "getBoundKeyOf"})
 # ReloadableServerRegistries.Holder.get() -> lookup(), widened to HolderLookup.Provider in 26.2 (wthit).
 _RSRH = "Lnet/minecraft/server/ReloadableServerRegistries$Holder;"; _FROZ = "Lnet/minecraft/core/RegistryAccess$Frozen;"
 cr.setdefault("net/minecraft/server/ReloadableServerRegistries$Holder", {})["get()" + _FROZ] = ["foxgrade/shim/RegistryCompat", "reloadableRegistries", "(" + _RSRH + ")" + _FROZ]

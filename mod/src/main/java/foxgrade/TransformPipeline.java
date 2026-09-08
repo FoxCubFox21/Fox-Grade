@@ -515,6 +515,32 @@ public final class TransformPipeline {
           entry.setValue((GSON.toJson(cfg) + "\n").getBytes(StandardCharsets.UTF_8));
         } catch (Exception ignore) { }
       }
+      // A mixin may extend another mixin. Mixin requires that superclass to itself be a mixin on a supertype of the
+      // target, so once a parent is neutralised the child can never apply either — it fails at apply time with
+      // "Super class ... was not found in the hierarchy of target". Close the fatal set over subclasses (transitively)
+      // and neutralise them the same way, so the whole broken branch comes out cleanly instead of at runtime.
+      for (boolean grew = true; grew; ) {
+        grew = false;
+        for (var be : new java.util.ArrayList<>(buffered.entrySet())) {
+          String entryName = be.getKey();
+          if (!entryName.endsWith(".class")) continue;
+          String cls = entryName.substring(0, entryName.length() - 6);
+          if (fatalMixins.contains(cls) || !mixinClasses.contains(cls)) continue;
+          String sup;
+          try { sup = new org.objectweb.asm.ClassReader(be.getValue()).getSuperName(); } catch (Exception bad) { continue; }
+          if (sup == null) continue;
+          // the parent may already carry its relocated name at this point
+          String parent = sup;
+          for (var re : relocated.entrySet()) if (re.getValue().equals(sup)) { parent = re.getKey(); break; }
+          if (!fatalMixins.contains(parent)) continue;
+          fatalMixins.add(cls);
+          be.setValue(MixinNeutralizer.neutralize(be.getValue()));
+          relocated.put(cls, cls.contains("/mixin/") ? cls.replace("/mixin/", "/mixinfg/") : cls + "_fg");
+          strippedNames.add(cls.substring(cls.lastIndexOf('/') + 1) + " (whole mixin: extends the neutralised "
+              + parent.substring(parent.lastIndexOf('/') + 1) + ")");
+          grew = true;
+        }
+      }
       if (!fatalMixins.isEmpty()) {
         // FEATURE-level granularity: mixin configs group cohesive features (ferritecore ships
         // one config per feature). A fatally broken member usually cooperates with its config

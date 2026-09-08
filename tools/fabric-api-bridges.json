@@ -68,10 +68,12 @@
       "getName": "name",
       "getId": "id",
       "getProtocolVersion": "protocolVersion",
-      "isStable": "stable"
+      "isStable": "stable",
+      "getBuildTime": "buildTime"
     },
     "net/fabricmc/fabric/api/client/keymapping/v1/KeyMappingHelper": {
-      "registerKeyBinding": "registerKeyMapping"
+      "registerKeyBinding": "registerKeyMapping",
+      "getBoundKeyOf": "getBoundKeyOf"
     },
     "com/mojang/blaze3d/platform/Window": {
       "getWindow": "handle"
@@ -22326,9 +22328,121 @@
           "p5"
         ]
       ]
+    },
+    {
+      "name": "extractRenderState",
+      "desc": "(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/client/renderer/entity/state/EntityRenderState;F)V",
+      "hooks": [
+        [
+          "static",
+          "foxgrade/shim/EntityRenderCompat",
+          "remember",
+          "(Ljava/lang/Object;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/client/renderer/entity/state/EntityRenderState;F)V",
+          "this",
+          "p1",
+          "p2",
+          "p3"
+        ]
+      ]
+    },
+    {
+      "name": "extractRenderState",
+      "desc": "(Lnet/minecraft/world/level/block/entity/BlockEntity;Lnet/minecraft/client/renderer/blockentity/state/BlockEntityRenderState;FLnet/minecraft/world/phys/Vec3;Lnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V",
+      "hooks": [
+        [
+          "static",
+          "foxgrade/shim/BlockEntityRenderCompat",
+          "remember",
+          "(Ljava/lang/Object;Lnet/minecraft/world/level/block/entity/BlockEntity;Lnet/minecraft/client/renderer/blockentity/state/BlockEntityRenderState;FLnet/minecraft/world/phys/Vec3;Lnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V",
+          "this",
+          "p1",
+          "p2",
+          "p3",
+          "p4",
+          "p5"
+        ]
+      ]
+    },
+    {
+      "name": "extractRenderState",
+      "desc": "(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/client/renderer/entity/state/EntityRenderState;F)V",
+      "hooks": [
+        [
+          "static",
+          "foxgrade/shim/EntityRenderCompat",
+          "remember",
+          "(Ljava/lang/Object;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/client/renderer/entity/state/EntityRenderState;F)V",
+          "this",
+          "p1",
+          "p2",
+          "p3"
+        ]
+      ]
+    },
+    {
+      "name": "extractRenderState",
+      "desc": "(Lnet/minecraft/world/level/block/entity/BlockEntity;Lnet/minecraft/client/renderer/blockentity/state/BlockEntityRenderState;FLnet/minecraft/world/phys/Vec3;Lnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V",
+      "hooks": [
+        [
+          "static",
+          "foxgrade/shim/BlockEntityRenderCompat",
+          "remember",
+          "(Ljava/lang/Object;Lnet/minecraft/world/level/block/entity/BlockEntity;Lnet/minecraft/client/renderer/blockentity/state/BlockEntityRenderState;FLnet/minecraft/world/phys/Vec3;Lnet/minecraft/client/renderer/feature/ModelFeatureRenderer$CrumblingOverlay;)V",
+          "this",
+          "p1",
+          "p2",
+          "p3",
+          "p4",
+          "p5"
+        ]
+      ]
     }
   ],
   "synthesizeIfMissing": [
+    {
+      "name": "createRenderState",
+      "desc": "()Lnet/minecraft/client/renderer/entity/state/EntityRenderState;",
+      "call": [
+        "static",
+        "foxgrade/shim/EntityRenderCompat",
+        "newState",
+        "(Ljava/lang/Object;)Lnet/minecraft/client/renderer/entity/state/EntityRenderState;",
+        "this"
+      ]
+    },
+    {
+      "name": "createRenderState",
+      "desc": "()Lnet/minecraft/client/renderer/blockentity/state/BlockEntityRenderState;",
+      "call": [
+        "static",
+        "foxgrade/shim/BlockEntityRenderCompat",
+        "newState",
+        "(Ljava/lang/Object;)Lnet/minecraft/client/renderer/blockentity/state/BlockEntityRenderState;",
+        "this"
+      ]
+    },
+    {
+      "name": "createRenderState",
+      "desc": "()Lnet/minecraft/client/renderer/entity/state/EntityRenderState;",
+      "call": [
+        "static",
+        "foxgrade/shim/EntityRenderCompat",
+        "newState",
+        "(Ljava/lang/Object;)Lnet/minecraft/client/renderer/entity/state/EntityRenderState;",
+        "this"
+      ]
+    },
+    {
+      "name": "createRenderState",
+      "desc": "()Lnet/minecraft/client/renderer/blockentity/state/BlockEntityRenderState;",
+      "call": [
+        "static",
+        "foxgrade/shim/BlockEntityRenderCompat",
+        "newState",
+        "(Ljava/lang/Object;)Lnet/minecraft/client/renderer/blockentity/state/BlockEntityRenderState;",
+        "this"
+      ]
+    },
     {
       "name": "createRenderState",
       "desc": "()Lnet/minecraft/client/renderer/entity/state/EntityRenderState;",
