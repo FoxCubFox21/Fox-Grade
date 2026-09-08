@@ -763,6 +763,8 @@ cr.setdefault("net/minecraft/world/food/FoodProperties$Builder", {})["effect(" +
 cr.setdefault("net/minecraft/world/level/block/BeehiveBlock", {})["dropHoneycomb(" + LVL + BP + ")V"] = [BAC, "dropHoneycomb", "(" + LVL + BP + ")V"]
 cr.setdefault("net/minecraft/world/entity/player/PlayerSkin", {})["capeTexture()" + ID] = [SKC, "capeTexture", "(" + PLS + ")" + ID]
 cr.setdefault("net/minecraft/client/renderer/rendertype/RenderType", {})["entityGlintDirect()" + RTY] = ["net/minecraft/client/renderer/rendertype/RenderTypes", "entityGlint", "()" + RTY]
+# Quilt mods looking themselves up: the container comes back with the original id on either host (see QuiltSelfContainer).
+cr.setdefault("org/quiltmc/loader/api/QuiltLoader", {}).update({"getModContainer(Ljava/lang/String;)Ljava/util/Optional;": ["foxgrade/shim/QuiltSelfContainer", "byId", "(Ljava/lang/String;)Ljava/util/Optional;"], "getModContainer(Ljava/lang/Class;)Ljava/util/Optional;": ["foxgrade/shim/QuiltSelfContainer", "byClass", "(Ljava/lang/Class;)Ljava/util/Optional;"]})
 # RenderTarget under the 26.2 GPU abstraction: main target lives on the game renderer; viewport fields and GL ids are bridged.
 _RTG = "Lcom/mojang/blaze3d/pipeline/RenderTarget;"; _RTC = "foxgrade/shim/RenderTargetCompat"
 cr.setdefault("net/minecraft/client/Minecraft", {})["getMainRenderTarget()" + _RTG] = ["foxgrade/shim/MinecraftCompat", "getMainRenderTarget", "(Lnet/minecraft/client/Minecraft;)" + _RTG]

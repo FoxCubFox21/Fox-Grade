@@ -74,6 +74,8 @@ public final class ShimGenerator implements Opcodes {
       Map.entry("foxgrade/shim/EntityLegacyCompat", () -> fromResource("foxgrade/shim/EntityLegacyCompat.class")),
       Map.entry("foxgrade/shim/HolderCompat", () -> fromResource("foxgrade/shim/HolderCompat.class")),
       Map.entry("foxgrade/shim/PackCompat", () -> fromResource("foxgrade/shim/PackCompat.class")),
+      Map.entry("foxgrade/shim/QuiltSelfContainer", () -> fromResource("foxgrade/shim/QuiltSelfContainer.class")),
+      Map.entry("foxgrade/shim/QuiltSelfContainer$Delegate", () -> fromResource("foxgrade/shim/QuiltSelfContainer$Delegate.class")),
       Map.entry("org/quiltmc/loader/api/Version", () -> fromResource("foxgrade/shim/QuiltVersionShim.class")),
       Map.entry("org/quiltmc/loader/api/ModMetadata", () -> fromResource("foxgrade/shim/QuiltModMetadataShim.class")),
       Map.entry("org/quiltmc/loader/api/ModContainer", () -> fromResource("foxgrade/shim/QuiltModContainerShim.class")),
@@ -343,6 +345,7 @@ public final class ShimGenerator implements Opcodes {
 
   // Shims that reference other shims; the pipeline injects the closure.
   static final Map<String, java.util.List<String>> SHIM_DEPS = Map.ofEntries(
+      Map.entry("foxgrade/shim/QuiltSelfContainer", java.util.List.of("org/quiltmc/loader/api/ModContainer", "org/quiltmc/loader/api/QuiltLoader", "foxgrade/shim/QuiltModContainerImpl", "foxgrade/shim/QuiltSelfContainer$Delegate")),
       Map.entry("org/quiltmc/loader/api/Version", java.util.List.of("foxgrade/shim/QuiltVersionImpl")),
       Map.entry("foxgrade/shim/QuiltVersionImpl", java.util.List.of("org/quiltmc/loader/api/Version")),
       Map.entry("org/quiltmc/loader/api/ModMetadata", java.util.List.of("org/quiltmc/loader/api/Version")),
@@ -350,9 +353,9 @@ public final class ShimGenerator implements Opcodes {
       Map.entry("org/quiltmc/loader/api/ModContainer", java.util.List.of("org/quiltmc/loader/api/ModMetadata")),
       Map.entry("foxgrade/shim/QuiltModContainerImpl", java.util.List.of("org/quiltmc/loader/api/ModContainer", "org/quiltmc/loader/api/ModMetadata", "foxgrade/shim/QuiltModMetadataImpl")),
       Map.entry("org/quiltmc/loader/api/QuiltLoader", java.util.List.of("org/quiltmc/loader/api/ModContainer", "foxgrade/shim/QuiltModContainerImpl")),
-      Map.entry("org/quiltmc/qsl/base/api/entrypoint/ModInitializer", java.util.List.of("org/quiltmc/loader/api/QuiltLoader", "org/quiltmc/loader/api/ModContainer")),
-      Map.entry("org/quiltmc/qsl/base/api/entrypoint/client/ClientModInitializer", java.util.List.of("org/quiltmc/loader/api/QuiltLoader", "org/quiltmc/loader/api/ModContainer")),
-      Map.entry("org/quiltmc/qsl/base/api/entrypoint/server/DedicatedServerModInitializer", java.util.List.of("org/quiltmc/loader/api/QuiltLoader", "org/quiltmc/loader/api/ModContainer")),
+      Map.entry("org/quiltmc/qsl/base/api/entrypoint/ModInitializer", java.util.List.of("foxgrade/shim/QuiltSelfContainer", "org/quiltmc/loader/api/QuiltLoader", "org/quiltmc/loader/api/ModContainer")),
+      Map.entry("org/quiltmc/qsl/base/api/entrypoint/client/ClientModInitializer", java.util.List.of("foxgrade/shim/QuiltSelfContainer", "org/quiltmc/loader/api/QuiltLoader", "org/quiltmc/loader/api/ModContainer")),
+      Map.entry("org/quiltmc/qsl/base/api/entrypoint/server/DedicatedServerModInitializer", java.util.List.of("foxgrade/shim/QuiltSelfContainer", "org/quiltmc/loader/api/QuiltLoader", "org/quiltmc/loader/api/ModContainer")),
       Map.entry("net/minecraft/server/packs/BuiltInMetadata", java.util.List.of("net/minecraft/server/packs/metadata/MetadataSectionSerializer")),
       Map.entry("net/minecraft/client/renderer/RenderType$CompositeState", java.util.List.of("net/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder", "net/minecraft/client/renderer/RenderType$OutlineProperty", "net/minecraft/client/renderer/RenderStateShard")),
       Map.entry("net/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder", java.util.List.of("net/minecraft/client/renderer/RenderType$CompositeState", "net/minecraft/client/renderer/RenderType$OutlineProperty", "net/minecraft/client/renderer/RenderStateShard")),

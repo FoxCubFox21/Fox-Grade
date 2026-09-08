@@ -9,7 +9,8 @@
   (Quilt scans `mods/` recursively), on a Quilt host the loader's own API classes are never shipped as stand-ins,
   and the self-relaunch drops Quilt's transform cache and waits for the old JVM to exit first (Quilt 0.31 cannot
   re-create that cache in place when the mod set changes).
-  QSL's own API modules are not bridged.
+  A Quilt mod looking itself up (its entrypoint container, `QuiltLoader.getModContainer`) gets its original id on
+  either host, not the port's aliased one. QSL's own API modules are not bridged.
 - **Custom render types.** 1.21's `RenderType.create(...)` with a `CompositeState` of shards is rebuilt
   as a 26.2 `RenderSetup` on the nearest pipeline (glint layers on the glint pipeline); cit-resewn boots.
 - **Access wideners by mapped name.** Shipped wideners carry intermediary member names; type changes
