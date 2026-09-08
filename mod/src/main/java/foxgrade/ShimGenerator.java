@@ -74,6 +74,17 @@ public final class ShimGenerator implements Opcodes {
       Map.entry("foxgrade/shim/EntityLegacyCompat", () -> fromResource("foxgrade/shim/EntityLegacyCompat.class")),
       Map.entry("foxgrade/shim/HolderCompat", () -> fromResource("foxgrade/shim/HolderCompat.class")),
       Map.entry("foxgrade/shim/PackCompat", () -> fromResource("foxgrade/shim/PackCompat.class")),
+      Map.entry("org/quiltmc/loader/api/Version", () -> fromResource("foxgrade/shim/QuiltVersionShim.class")),
+      Map.entry("org/quiltmc/loader/api/ModMetadata", () -> fromResource("foxgrade/shim/QuiltModMetadataShim.class")),
+      Map.entry("org/quiltmc/loader/api/ModContainer", () -> fromResource("foxgrade/shim/QuiltModContainerShim.class")),
+      Map.entry("org/quiltmc/loader/api/QuiltLoader", () -> fromResource("foxgrade/shim/QuiltLoaderShim.class")),
+      Map.entry("org/quiltmc/loader/api/minecraft/MinecraftQuiltLoader", () -> fromResource("foxgrade/shim/MinecraftQuiltLoaderShim.class")),
+      Map.entry("org/quiltmc/qsl/base/api/entrypoint/ModInitializer", () -> fromResource("foxgrade/shim/QuiltModInitializerShim.class")),
+      Map.entry("org/quiltmc/qsl/base/api/entrypoint/client/ClientModInitializer", () -> fromResource("foxgrade/shim/QuiltClientModInitializerShim.class")),
+      Map.entry("org/quiltmc/qsl/base/api/entrypoint/server/DedicatedServerModInitializer", () -> fromResource("foxgrade/shim/QuiltServerModInitializerShim.class")),
+      Map.entry("foxgrade/shim/QuiltVersionImpl", () -> fromResource("foxgrade/shim/QuiltVersionImpl.class")),
+      Map.entry("foxgrade/shim/QuiltModMetadataImpl", () -> fromResource("foxgrade/shim/QuiltModMetadataImpl.class")),
+      Map.entry("foxgrade/shim/QuiltModContainerImpl", () -> fromResource("foxgrade/shim/QuiltModContainerImpl.class")),
       Map.entry("foxgrade/shim/RenderTargetCompat", () -> fromResource("foxgrade/shim/RenderTargetCompat.class")),
       Map.entry("foxgrade/shim/NetworkingCompat", () -> fromResource("foxgrade/shim/NetworkingCompat.class")),
       Map.entry("foxgrade/shim/ChunkCompat", () -> fromResource("foxgrade/shim/ChunkCompat.class")),
@@ -271,6 +282,14 @@ public final class ShimGenerator implements Opcodes {
     m.put("foxgrade/shim/TickableShim", "net/minecraft/client/renderer/texture/Tickable");
     m.put("foxgrade/shim/BuiltInMetadataShim", "net/minecraft/server/packs/BuiltInMetadata");
     m.put("foxgrade/shim/RenderStateShardShim", "net/minecraft/client/renderer/RenderStateShard");
+    m.put("foxgrade/shim/QuiltVersionShim", "org/quiltmc/loader/api/Version");
+    m.put("foxgrade/shim/QuiltModMetadataShim", "org/quiltmc/loader/api/ModMetadata");
+    m.put("foxgrade/shim/QuiltModContainerShim", "org/quiltmc/loader/api/ModContainer");
+    m.put("foxgrade/shim/QuiltLoaderShim", "org/quiltmc/loader/api/QuiltLoader");
+    m.put("foxgrade/shim/MinecraftQuiltLoaderShim", "org/quiltmc/loader/api/minecraft/MinecraftQuiltLoader");
+    m.put("foxgrade/shim/QuiltModInitializerShim", "org/quiltmc/qsl/base/api/entrypoint/ModInitializer");
+    m.put("foxgrade/shim/QuiltClientModInitializerShim", "org/quiltmc/qsl/base/api/entrypoint/client/ClientModInitializer");
+    m.put("foxgrade/shim/QuiltServerModInitializerShim", "org/quiltmc/qsl/base/api/entrypoint/server/DedicatedServerModInitializer");
     m.put("foxgrade/shim/RenderTypeCompositeState", "net/minecraft/client/renderer/RenderType$CompositeState");
     m.put("foxgrade/shim/RenderTypeCompositeStateBuilder", "net/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder");
     m.put("foxgrade/shim/RenderTypeOutlineProperty", "net/minecraft/client/renderer/RenderType$OutlineProperty");
@@ -324,6 +343,16 @@ public final class ShimGenerator implements Opcodes {
 
   // Shims that reference other shims; the pipeline injects the closure.
   static final Map<String, java.util.List<String>> SHIM_DEPS = Map.ofEntries(
+      Map.entry("org/quiltmc/loader/api/Version", java.util.List.of("foxgrade/shim/QuiltVersionImpl")),
+      Map.entry("foxgrade/shim/QuiltVersionImpl", java.util.List.of("org/quiltmc/loader/api/Version")),
+      Map.entry("org/quiltmc/loader/api/ModMetadata", java.util.List.of("org/quiltmc/loader/api/Version")),
+      Map.entry("foxgrade/shim/QuiltModMetadataImpl", java.util.List.of("org/quiltmc/loader/api/ModMetadata", "org/quiltmc/loader/api/Version", "foxgrade/shim/QuiltVersionImpl")),
+      Map.entry("org/quiltmc/loader/api/ModContainer", java.util.List.of("org/quiltmc/loader/api/ModMetadata")),
+      Map.entry("foxgrade/shim/QuiltModContainerImpl", java.util.List.of("org/quiltmc/loader/api/ModContainer", "org/quiltmc/loader/api/ModMetadata", "foxgrade/shim/QuiltModMetadataImpl")),
+      Map.entry("org/quiltmc/loader/api/QuiltLoader", java.util.List.of("org/quiltmc/loader/api/ModContainer", "foxgrade/shim/QuiltModContainerImpl")),
+      Map.entry("org/quiltmc/qsl/base/api/entrypoint/ModInitializer", java.util.List.of("org/quiltmc/loader/api/QuiltLoader", "org/quiltmc/loader/api/ModContainer")),
+      Map.entry("org/quiltmc/qsl/base/api/entrypoint/client/ClientModInitializer", java.util.List.of("org/quiltmc/loader/api/QuiltLoader", "org/quiltmc/loader/api/ModContainer")),
+      Map.entry("org/quiltmc/qsl/base/api/entrypoint/server/DedicatedServerModInitializer", java.util.List.of("org/quiltmc/loader/api/QuiltLoader", "org/quiltmc/loader/api/ModContainer")),
       Map.entry("net/minecraft/server/packs/BuiltInMetadata", java.util.List.of("net/minecraft/server/packs/metadata/MetadataSectionSerializer")),
       Map.entry("net/minecraft/client/renderer/RenderType$CompositeState", java.util.List.of("net/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder", "net/minecraft/client/renderer/RenderType$OutlineProperty", "net/minecraft/client/renderer/RenderStateShard")),
       Map.entry("net/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder", java.util.List.of("net/minecraft/client/renderer/RenderType$CompositeState", "net/minecraft/client/renderer/RenderType$OutlineProperty", "net/minecraft/client/renderer/RenderStateShard")),

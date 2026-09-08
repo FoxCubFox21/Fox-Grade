@@ -44,6 +44,8 @@ references that the game no longer has; the per-mod table lives in the repositor
 **Head-to-head.** The same 104 mods through Retromod (1.3.0-snapshot.10) and Fox-Grade on one
 instance: Fox-Grade boots 66, Retromod boots 37 (29 boot only under Fox-Grade). The table with every cause is in the repository.
 
+**Quilt mods too.** A Quilt-only jar (a `quilt.mod.json` and no `fabric.mod.json`) ports the same way: the manifest becomes a `fabric.mod.json` with the same id, entrypoints, mixins and widener, and Quilt's loader API and QSL entrypoint interfaces are bridged onto Fabric Loader. QSL's own API modules are not bridged.
+
 **Minecraft 26.2 only.** The translation tables are built for a single version. On any other
 version Fox-Grade refuses to run rather than produce a port it cannot verify.
 

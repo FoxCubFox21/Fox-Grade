@@ -1,6 +1,24 @@
 # Changelog
 
 ## 1.1.0 (unreleased)
+- **Quilt-only mods.** A jar with a `quilt.mod.json` and no `fabric.mod.json` is ported like any other:
+  the manifest becomes a `fabric.mod.json` (ids, entrypoints, mixins, widener, dependencies), and Quilt's
+  loader API (`QuiltLoader`, `ModContainer`, `ModMetadata`, `Version`, `MinecraftQuiltLoader`) and the QSL
+  entrypoint interfaces are bridged onto Fabric Loader. QSL's own API modules are not bridged.
+- **Custom render types.** 1.21's `RenderType.create(...)` with a `CompositeState` of shards is rebuilt
+  as a 26.2 `RenderSetup` on the nearest pipeline (glint layers on the glint pipeline); cit-resewn boots.
+- **Access wideners by mapped name.** Shipped wideners carry intermediary member names; type changes
+  (File → Path) and class moves are now looked up the way the bytecode is remapped. Distant Horizons boots,
+  together with bridges for its chunk-level calls (paletted containers, proto chunks, structure generation).
+- **Callbacks that gained parameters.** A Fabric API callback whose interface grew a trailing parameter
+  (`ServerChunkEvents.Load`) gets a synthesised bridge at the lambda site.
+- **Datapacks.** Template-pool weights are rescaled to the 26.2 cap of 150; vanilla ids the target renamed
+  (`chain` → `iron_chain`) are rewritten in datapack and resource JSON, from a table mined out of the game's
+  own DataFixers. YUNG's dungeons, jungle temples and strongholds boot.
+- **Mixins whose superclass vanished** (or is the target itself) are neutralised; Mixin walks the parent chain.
+- Dropped Fabric API event accessors return a dead event; the Fabric networking packet factories, pack
+  metadata `TYPE`/`BuiltInMetadata`/`getMetadataSection`, and the block-entity renderer context are bridged.
+- `DataComponents.HIDE_ADDITIONAL_TOOLTIP` gets a Fox-Grade-owned component registered at mod init.
 - **Constructor references and bundled libraries.** `LeavesBlock::new`-style references to a
   constructor that changed shape now go through a synthesised bridge so the constructor adapters
   apply to them; a factory adapter no longer fires on a subclass's `super(...)` call. Jar-in-jar

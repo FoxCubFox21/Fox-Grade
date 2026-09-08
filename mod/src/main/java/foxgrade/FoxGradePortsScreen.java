@@ -493,11 +493,11 @@ public final class FoxGradePortsScreen extends Screen {
       for (Path f : st.toList()) {
         if (!f.getFileName().toString().endsWith(".jar.disabled")) continue;
         try (var zf = new java.util.zip.ZipFile(f.toFile())) {
-          var entry = zf.getEntry("fabric.mod.json");
-          if (entry == null) continue;
+          String metaText = QuiltMeta.fabricMeta(zf);
+          if (metaText == null) continue;
           com.google.gson.JsonObject meta;
-          try (var in = zf.getInputStream(entry)) {
-            meta = new com.google.gson.Gson().fromJson(new String(in.readAllBytes()), com.google.gson.JsonObject.class);
+          {
+            meta = new com.google.gson.Gson().fromJson(metaText, com.google.gson.JsonObject.class);
           }
           if (meta == null || !meta.has("custom") || !meta.getAsJsonObject("custom").has("foxgrade")) continue;
           var fg = meta.getAsJsonObject("custom").getAsJsonObject("foxgrade");
@@ -730,11 +730,11 @@ public final class FoxGradePortsScreen extends Screen {
             for (Path f : st.toList()) {
               if (!f.getFileName().toString().endsWith(".jar")) continue;
               try (var zf = new java.util.zip.ZipFile(f.toFile())) {
-                var entry = zf.getEntry("fabric.mod.json");
-                if (entry == null) continue;
+                String metaText = QuiltMeta.fabricMeta(zf);
+                if (metaText == null) continue;
                 com.google.gson.JsonObject meta;
-                try (var in = zf.getInputStream(entry)) {
-                  meta = new com.google.gson.Gson().fromJson(new String(in.readAllBytes()), com.google.gson.JsonObject.class);
+                {
+                  meta = new com.google.gson.Gson().fromJson(metaText, com.google.gson.JsonObject.class);
                 }
                 if (meta != null && meta.has("id") && meta.get("id").getAsString().equals(pt.origId)) { found = f; break; }
               } catch (Exception ignored) { }

@@ -4,6 +4,10 @@ Port Minecraft Fabric mods across versions — from source **or straight from th
 and get told plainly when it doesn't know.
 
 ```bash
+Quilt-only mods (a `quilt.mod.json`, no `fabric.mod.json`) are accepted too: the manifest becomes a
+`fabric.mod.json` and Quilt's loader API and QSL entrypoint interfaces are bridged onto Fabric Loader.
+QSL's own API modules are not.
+
 # the whole mechanical pipeline, one command, no AI involved
 node port-pipeline.mjs mod.jar --from 26.1 --to 26.2 \
   --classpath "$(node build-classpath.mjs --version 26.2)" --out ported.jar

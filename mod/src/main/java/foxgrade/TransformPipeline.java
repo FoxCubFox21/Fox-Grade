@@ -174,6 +174,7 @@ public final class TransformPipeline {
     java.util.LinkedHashMap<String, byte[]> buffered = new java.util.LinkedHashMap<>();
     ByteArrayOutputStream sink = new ByteArrayOutputStream();
     try (ZipFile in = new ZipFile(src.toFile()); ZipOutputStream out = new ZipOutputStream(sink)) {
+      boolean quiltOnly = QuiltMeta.isQuiltOnly(in);
       var entries = in.entries();
       while (entries.hasMoreElements()) {
         ZipEntry e = entries.nextElement();
@@ -181,6 +182,12 @@ public final class TransformPipeline {
         if (SIG.matcher(name).matches()) continue;
         if (e.isDirectory()) { buffered.put(name, new byte[0]); continue; }
         byte[] raw = readAll(in, e);
+        if (quiltOnly && name.equals("quilt.mod.json")) {
+          // A Quilt-only mod: its manifest becomes a fabric.mod.json (same ids, entrypoints, mixins, widener), and the port
+          // is a plain Fabric mod from here on. The original manifest rides along under another name, for the record.
+          String synth = QuiltMeta.fabricJsonFrom(new String(raw, StandardCharsets.UTF_8));
+          if (synth != null) { buffered.put("quilt.mod.json.original", raw); raw = synth.getBytes(StandardCharsets.UTF_8); name = "fabric.mod.json"; }
+        }
         byte[] emit = raw;
         // Nested Jar-in-Jar dependencies get the FULL pipeline recursively — an untransformed
         // bundled dep (say, an intermediary-era cloth-config) otherwise ships inside a "ported"

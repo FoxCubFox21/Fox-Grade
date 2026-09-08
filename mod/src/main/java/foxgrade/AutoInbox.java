@@ -54,9 +54,9 @@ public final class AutoInbox {
   /** The jar's declared Minecraft dependency range, or null if it has none / cannot be read. */
   static String minecraftRange(Path jar) {
     try (ZipFile z = new ZipFile(jar.toFile())) {
-      ZipEntry e = z.getEntry("fabric.mod.json");
-      if (e == null) return null;
-      JsonObject meta = new Gson().fromJson(new String(z.getInputStream(e).readAllBytes(), StandardCharsets.UTF_8), JsonObject.class);
+      String text = QuiltMeta.fabricMeta(z);
+      if (text == null) return null;
+      JsonObject meta = new Gson().fromJson(text, JsonObject.class);
       if (meta == null || !meta.has("depends") || !meta.get("depends").isJsonObject()) return null;
       JsonElement mc = meta.getAsJsonObject("depends").get("minecraft");
       if (mc == null) return null;

@@ -34,10 +34,8 @@ public final class ModsScanner {
 
   private static ModInfo readOne(Path jar) {
     try (ZipFile zf = new ZipFile(jar.toFile())) {
-      ZipEntry e = zf.getEntry("fabric.mod.json");
-      if (e == null) return new ModInfo(jar, jar.getFileName().toString(), "?", null, false, null);
-      String text;
-      try (InputStream in = zf.getInputStream(e)) { text = new String(in.readAllBytes(), StandardCharsets.UTF_8); }
+      String text = QuiltMeta.fabricMeta(zf);
+      if (text == null) return new ModInfo(jar, jar.getFileName().toString(), "?", null, false, null);
       JsonObject obj = GSON.fromJson(text, JsonObject.class);
       String id = obj.has("id") ? obj.get("id").getAsString() : jar.getFileName().toString();
       String version = obj.has("version") ? obj.get("version").getAsString() : "?";

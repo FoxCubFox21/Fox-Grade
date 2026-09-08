@@ -55,7 +55,8 @@ public final class PortVerifier {
     return internalName.startsWith("net/minecraft/")
         || internalName.startsWith("com/mojang/blaze3d/")
         || internalName.startsWith("com/mojang/math/")
-        || internalName.startsWith("com/mojang/realmsclient/");
+        || internalName.startsWith("com/mojang/realmsclient/")
+        || internalName.startsWith("org/quiltmc/loader/api/") || internalName.startsWith("org/quiltmc/qsl/");   // Quilt-only mods: loader + QSL stand-ins
   }
 
   /** Pre-declare a class of the jar being ported (names in target form), so members reached
