@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "quilt_loader": {
+    "group": "foxtest",
+    "id": "quilttest",
+    "version": "1.0.0",
+    "metadata": {
+      "name": "Quilt Test",
+      "description": "A Quilt-only mod used to test Fox-Grade's Quilt support.",
+      "contributors": { "Fox-Grade": "Owner" },
+      "contact": { "sources": "https://github.com/FoxCubFox21/foxgrade" },
+      "license": "MIT"
+    },
+    "intermediate_mappings": "net.fabricmc:intermediary",
+    "entrypoints": {
+      "init": ["foxtest.QuiltTestMod"],
+      "client_init": ["foxtest.QuiltTestClient"]
+    },
+    "depends": [
+      { "id": "quilt_loader", "versions": ">=0.26.0" },
+      { "id": "minecraft", "versions": "~1.21.1" },
+      { "id": "quilted_fabric_api", "versions": "*" }
+    ]
+  },
+  "minecraft": { "environment": "*" }
+}

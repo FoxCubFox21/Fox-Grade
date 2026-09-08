@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "quilt_loader": {
+    "group": "foxgrade",
+    "id": "foxgrade",
+    "version": "1.1.0",
+    "metadata": {
+      "name": "Fox-Grade",
+      "description": "Ports Fabric and Quilt mods forward across MC versions at launch. Drop it in mods/, launch, it reports what worked and what didn't before Minecraft finishes booting.",
+      "contributors": { "Cassius Mehlhopt (FoxCubFox21)": "Owner" },
+      "contact": {
+        "homepage": "https://github.com/FoxCubFox21/Fox-Grade",
+        "sources": "https://github.com/FoxCubFox21/Fox-Grade",
+        "issues": "https://github.com/FoxCubFox21/Fox-Grade/issues"
+      },
+      "license": "PolyForm-Noncommercial-1.0.0",
+      "icon": "assets/foxgrade/icon.png"
+    },
+    "intermediate_mappings": "net.fabricmc:intermediary",
+    "entrypoints": {
+      "main": ["foxgrade.FoxGradeMain"],
+      "preLaunch": ["foxgrade.FoxGradePreLaunch"],
+      "client": ["foxgrade.FoxGradeClient"]
+    },
+    "depends": [
+      { "id": "quilt_loader", "versions": "*" },
+      { "id": "minecraft", "versions": "26.2" },
+      { "id": "java", "versions": ">=25" },
+      { "id": "fabric-api", "versions": "*" }
+    ]
+  },
+  "access_widener": "foxgrade.accesswidener",
+  "minecraft": { "environment": "*" }
+}
