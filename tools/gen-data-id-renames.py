@@ -37,6 +37,16 @@ def literals(path):
     return [utf[x] for x in strs if x in utf]
 
 
+# Renames outside the block/item registries, which the DataFixers mining below cannot see because its filter is the
+# block+item id sets. Each entry is hand-verified against the target jar: the old id is absent from the target and the
+# new one is a real registered id there.
+#   damage_item -> change_item_damage : 26.2 renamed the enchantment entity effect (class ChangeItemDamage);
+#                                       a 1.21 enchantment JSON otherwise fails with "Unknown registry key".
+CURATED = {
+    "minecraft:damage_item": "minecraft:change_item_damage",
+}
+
+
 def main():
     if not (DATAFIXERS.exists() and TARGET_IDS.exists() and all(p.exists() for p in SOURCE_ID_FILES)):
         print("inputs missing; keeping", OUT.name); return
@@ -55,6 +65,8 @@ def main():
     for old, new in pairs:
         o, n = old.split(":", 1)[1], new.split(":", 1)[1]
         if o in source and o not in target and n in target: table[old] = new
+    for old, new in CURATED.items():
+        table.setdefault(old, new)
     OUT.write_text(json.dumps(table, indent=2) + "\n")
     print(f"{len(pairs)} rename pairs in DataFixers, {len(table)} apply to this port:", table)
 
