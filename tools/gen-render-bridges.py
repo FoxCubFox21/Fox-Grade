@@ -1039,6 +1039,9 @@ j["samRenames"].setdefault(MLP, {})["onInitializeModelLoader"] = "initialize"
 j["renames"].setdefault(MLP, {})["onInitializeModelLoader"] = "initialize"
 RMD = "Lnet/minecraft/server/packs/resources/ResourceMetadata;"; MSS = "Lnet/minecraft/server/packs/metadata/MetadataSectionSerializer;"
 cr.setdefault("net/minecraft/server/packs/resources/ResourceMetadata", {})["getSection(" + MSS + ")" + OPT] = ["foxgrade/shim/ResourceMetadataCompat", "getSection", "(" + RMD + MSS + ")" + OPT]
+# PackResources.getMetadataSection(MetadataSectionSerializer) -> the codec-typed section in 26.2 (fancymenu).
+_PKR = "Lnet/minecraft/server/packs/PackResources;"
+cr.setdefault("net/minecraft/server/packs/PackResources", {})["getMetadataSection(" + MSS + ")Ljava/lang/Object;"] = ["foxgrade/shim/ResourceMetadataCompat", "packSection", "(" + _PKR + MSS + ")Ljava/lang/Object;"]
 # PackResources.getMetadataSection(MetadataSectionSerializer) is getMetadataSection(MetadataSectionType) now: a mod's old override
 # gets a bridge with the new signature, handing the section type over through the 1.21 interface.
 MST = "Lnet/minecraft/server/packs/metadata/MetadataSectionType;"
