@@ -41,9 +41,30 @@ public final class MixinNeutralizer {
               case Type.LONG -> { mv.visitInsn(Opcodes.LCONST_0); mv.visitInsn(Opcodes.LRETURN); }
               case Type.FLOAT -> { mv.visitInsn(Opcodes.FCONST_0); mv.visitInsn(Opcodes.FRETURN); }
               case Type.DOUBLE -> { mv.visitInsn(Opcodes.DCONST_0); mv.visitInsn(Opcodes.DRETURN); }
-              default -> { mv.visitInsn(Opcodes.ACONST_NULL); mv.visitInsn(Opcodes.ARETURN); }
+              // A neutralised accessor that hands back null is a delayed crash: callers of an @Accessor almost always
+              // dereference the result straight away (bookshelf reads a render-type map and writes into it). For the
+              // collection types an accessor realistically returns, give back a real empty, mutable container — writes
+              // land nowhere, which is exactly right when the registry behind it no longer exists.
+              default -> {
+                String empty = switch (ret.getInternalName()) {
+                  case "java/util/Map", "java/util/HashMap", "java/util/AbstractMap" -> "java/util/HashMap";
+                  case "java/util/List", "java/util/ArrayList", "java/util/Collection", "java/lang/Iterable" -> "java/util/ArrayList";
+                  case "java/util/Set", "java/util/HashSet" -> "java/util/HashSet";
+                  default -> null;
+                };
+                if (empty != null) {
+                  mv.visitTypeInsn(Opcodes.NEW, empty);
+                  mv.visitInsn(Opcodes.DUP);
+                  mv.visitMethodInsn(Opcodes.INVOKESPECIAL, empty, "<init>", "()V", false);
+                } else if (ret.getInternalName().equals("java/util/Optional")) {
+                  mv.visitMethodInsn(Opcodes.INVOKESTATIC, "java/util/Optional", "empty", "()Ljava/util/Optional;", false);
+                } else {
+                  mv.visitInsn(Opcodes.ACONST_NULL);
+                }
+                mv.visitInsn(Opcodes.ARETURN);
+              }
             }
-            mv.visitMaxs(2, Math.max(1, Type.getArgumentsAndReturnSizes(desc) >> 2));
+            mv.visitMaxs(3, Math.max(1, Type.getArgumentsAndReturnSizes(desc) >> 2));
             mv.visitEnd();
             // swallow the original body
             mv = new MethodVisitor(Opcodes.ASM9) { };

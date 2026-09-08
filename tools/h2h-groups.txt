@@ -95,3 +95,11 @@ wthit	-	/Users/cassiusmehlhopt/foxgrade-work/batch2/gui/wthit--wthit-1.21.1-fabr
 xaeros-minimap	-	/Users/cassiusmehlhopt/foxgrade-work/batch2/xaeros-minimap--xaerominimap-fabric-1.21.1-26.4.2.jar
 xaeros-world-map	-	/Users/cassiusmehlhopt/foxgrade-work/batch2/h2h/xaeros-world-map--xaeroworldmap-fabric-1.21.1-1.45.0.jar
 zoomify	-	/Users/cassiusmehlhopt/foxgrade-work/batch2/v1201/zoomify--zoomify-2.15.2%2B1.20.1.jar /Users/cassiusmehlhopt/foxgrade-work/batch2/gui/yacl--yet_another_config_lib_v3-3.8.2+1.21.1-fabric.jar
+appleskin	-	/Users/cassiusmehlhopt/foxgrade-work/fab121/appleskin-fabric-mc1.21-3.0.6.jar
+ferrite-core	-	/Users/cassiusmehlhopt/foxgrade-work/batch2/h2h/ferrite-core--ferritecore-7.0.3-fabric.jar
+no-chat-reports	-	/Users/cassiusmehlhopt/foxgrade-work/batch2/h2h/no-chat-reports--NoChatReports-FABRIC-1.21.1-v2.9.1.jar
+modmenu	-	/Users/cassiusmehlhopt/foxgrade-work/batch2/modmenu--modmenu-11.0.4.jar
+betterf3	-	/Users/cassiusmehlhopt/foxgrade-work/batch2/saved-mods/betterf3--BetterF3-11.0.3-Fabric-1.21.1.jar
+lithium	-	/Users/cassiusmehlhopt/foxgrade-work/batch2/lithium--lithium-fabric-0.15.4+mc1.21.1.jar
+entityculling	-	/Users/cassiusmehlhopt/foxgrade-work/batch2/entityculling--entityculling-fabric-1.10.5-mc1.21.1.jar
+zoomify+yacl	-	/Users/cassiusmehlhopt/foxgrade-work/batch2/zoomify--zoomify-2.15.2+1.21.1.jar /Users/cassiusmehlhopt/foxgrade-work/batch2/gui/yacl--yet_another_config_lib_v3-3.8.2+1.21.1-fabric.jar

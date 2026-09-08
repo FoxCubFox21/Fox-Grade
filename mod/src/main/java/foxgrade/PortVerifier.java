@@ -35,8 +35,8 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public final class PortVerifier {
-  private static java.util.Collection<net.fabricmc.loader.api.ModContainer> loadedMods() {
-    try { return net.fabricmc.loader.api.FabricLoader.getInstance().getAllMods(); } catch (Throwable standalone) { return java.util.List.of(); }
+  private static java.util.List<LoaderHost.Mod> loadedMods() {
+    try { return Loaders.current().mods(); } catch (Throwable standalone) { return java.util.List.of(); }
   }
 
   private final Set<String> known;
@@ -275,12 +275,12 @@ public final class PortVerifier {
     for (var e : EXTRA_INJECTED.entrySet()) m.computeIfAbsent(e.getKey(), k -> new java.util.ArrayList<>()).addAll(e.getValue());
     try {
       for (var mod : loadedMods()) {
-        var cv = mod.getMetadata().getCustomValue("loom:injected_interfaces");
-        if (cv == null || cv.getType() != net.fabricmc.loader.api.metadata.CustomValue.CvType.OBJECT) continue;
-        for (var e : cv.getAsObject()) {
-          if (e.getValue().getType() != net.fabricmc.loader.api.metadata.CustomValue.CvType.ARRAY) continue;
+        var cv = mod.custom("loom:injected_interfaces");
+        if (cv == null) continue;
+        for (var e : cv.entrySet()) {
+          if (!e.getValue().isJsonArray()) continue;
           java.util.List<String> l = m.computeIfAbsent(e.getKey().replace('.', '/'), k -> new java.util.ArrayList<>());
-          for (var i : e.getValue().getAsArray()) l.add(i.getAsString().replace('.', '/'));
+          for (var i : e.getValue().getAsJsonArray()) l.add(i.getAsString().replace('.', '/'));
         }
       }
     } catch (Throwable ignore) { }

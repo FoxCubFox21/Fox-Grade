@@ -65,7 +65,7 @@ public final class TransformPipeline {
 
   /** Quilt Loader hosts register themselves as the mod "quilt_loader" (it also answers the Fabric loader API). */
   static boolean isQuiltHost() {
-    try { return net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded("quilt_loader"); } catch (Throwable t) { return false; }
+    try { return Loaders.current().name().equals("Quilt"); } catch (Throwable t) { return false; }
   }
 
   // Cheap check: does this jar's fabric.mod.json already declare it's been ported for `targetMc`?
@@ -177,6 +177,7 @@ public final class TransformPipeline {
     Set<String> mixinClasses = new HashSet<>();   // neutralised mixins moved out of their declared mixin package (Mixin refuses to load anything left inside it)
     java.util.List<String> strippedNames = new java.util.ArrayList<>();   // "MixinClass#handler" per strip, for the panel
     java.util.LinkedHashMap<String, byte[]> buffered = new java.util.LinkedHashMap<>();
+    Set<String> droppedNested = new HashSet<>();   // bundled jars left out of the port (and of fabric.mod.json "jars")
     ByteArrayOutputStream sink = new ByteArrayOutputStream();
     try (ZipFile in = new ZipFile(src.toFile()); ZipOutputStream out = new ZipOutputStream(sink)) {
       boolean quiltOnly = QuiltMeta.isQuiltOnly(in);
@@ -201,6 +202,19 @@ public final class TransformPipeline {
           try {
             java.nio.file.Path tmp = java.nio.file.Files.createTempFile("fg-nested", ".jar");
             java.nio.file.Files.write(tmp, raw);
+            // Quilt Loader ships MixinExtras itself and rejects a mod's bundled copy as a duplicate mod ("The solver returned a
+            // solution with duplicate mods"); Fabric Loader merely picks the newer one. On a Quilt host the bundled copy is dropped.
+            String nestedId = JarDeps.idOf(tmp);
+            // Same for a bundled Fabric API module (an old fabric-networking-api-v1 inside Distant Horizons): Quilt's solver
+            // sees two providers of one module and gives up ("Failed to pre-process a rule set"); the installed Fabric API wins.
+            boolean bundledMixinExtras = nestedId != null && (nestedId.contains("mixinextras") || JarDeps.providesOf(tmp).contains("mixinextras"));
+            boolean bundledFabricModule = nestedId != null && (nestedId.equals("fabric-api") || FabricMetaFixer.isFabricModuleId(nestedId));
+            if (isQuiltHost() && (bundledMixinExtras || bundledFabricModule)) {
+              java.nio.file.Files.deleteIfExists(tmp);
+              droppedNested.add(name);
+              System.err.println("[Fox-Grade] bundled " + name + " left out: the loader already provides " + (bundledMixinExtras ? "mixinextras" : nestedId) + " on Quilt");
+              continue;
+            }
             Outcome inner = transform(tmp, targetMc, rules, bridge, apiBridges, blocklist);
             java.nio.file.Files.deleteIfExists(tmp);
             emit = inner.outputBytes;
@@ -588,6 +602,14 @@ public final class TransformPipeline {
           JsonObject custom = meta.has("custom") && meta.get("custom").isJsonObject() ? meta.getAsJsonObject("custom") : new JsonObject();
           JsonObject fg = custom.has("foxgrade") && custom.get("foxgrade").isJsonObject() ? custom.getAsJsonObject("foxgrade") : new JsonObject();
           fg.addProperty("source", src.getFileName().toString());
+          if (!droppedNested.isEmpty() && meta.has("jars") && meta.get("jars").isJsonArray()) {
+            com.google.gson.JsonArray keep = new com.google.gson.JsonArray();
+            for (JsonElement j : meta.getAsJsonArray("jars")) {
+              String file = j.isJsonObject() && j.getAsJsonObject().has("file") ? j.getAsJsonObject().get("file").getAsString() : null;
+              if (file == null || !droppedNested.contains(file)) keep.add(j);
+            }
+            meta.add("jars", keep);
+          }
           byte[] quiltOrig = buffered.get("quilt.mod.json.original");
           if (quiltOrig != null) {   // Quilt-only source: ship a 26.2 quilt.mod.json as well, so Quilt Loader still sees a Quilt mod
             String qj = QuiltMeta.quiltJsonFor(new String(quiltOrig, StandardCharsets.UTF_8), meta);

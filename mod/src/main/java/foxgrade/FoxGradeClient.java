@@ -11,7 +11,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Screenshot;
 
 import java.nio.file.Files;
@@ -30,7 +29,7 @@ public final class FoxGradeClient implements ClientModInitializer {
 
   @Override public void onInitializeClient() {
     try {
-      Path cfg = FabricLoader.getInstance().getGameDir().resolve("fox-grade.config.json");
+      Path cfg = Loaders.current().gameDir().resolve("fox-grade.config.json");
       if (Files.exists(cfg)) {
         JsonObject o = new Gson().fromJson(Files.readString(cfg), JsonObject.class);
         if (o != null && o.has("autotestTicks")) autotestTicks = o.get("autotestTicks").getAsInt();
@@ -203,13 +202,13 @@ public final class FoxGradeClient implements ClientModInitializer {
         // Panel-armed one-shot boot test: reaching this tick in-world IS the pass signal.
         // Record the verdict for the panel, disarm the config so normal launches stay normal.
         if (autotestOnce) {
-          Path gameDir = FabricLoader.getInstance().getGameDir();
+          Path gameDir = Loaders.current().gameDir();
           try {
             JsonObject result = new JsonObject();
             result.addProperty("passed", true);
             result.addProperty("ticks", counted);
             result.addProperty("world", mc.level.dimension().identifier().toString());
-            result.addProperty("mods", FabricLoader.getInstance().getAllMods().size());
+            result.addProperty("mods", Loaders.current().mods().size());
             result.addProperty("when", System.currentTimeMillis());
             Files.writeString(gameDir.resolve("fox-grade-test-result.json"), new Gson().toJson(result));
             FoxGradePreLaunch.log("boot test PASSED — world reached and stable for " + counted + " ticks");

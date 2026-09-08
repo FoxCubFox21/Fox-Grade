@@ -5,7 +5,7 @@
 set -e
 cd "$(dirname "$0")"
 v=$(grep -m1 '"version"' src/main/resources/fabric.mod.json | sed 's/.*: *"\([^"]*\)".*/\1/')
-src=$(ls dist/foxgrade-$v.jar); out="dist/foxgrade-$v+quilt.jar"
+src=$(ls dist/foxgrade-$v.jar); mkdir -p dist/quilt; out="dist/quilt/foxgrade-$v+quilt.jar"
 cp "$src" "$out"
 tmp=$(mktemp -d); sed "s/\"version\": \"1.1.0\"/\"version\": \"$v\"/" quilt/quilt.mod.json > "$tmp/quilt.mod.json"
 (cd "$tmp" && zip -q -u "$OLDPWD/$out" quilt.mod.json)

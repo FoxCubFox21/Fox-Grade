@@ -35,6 +35,7 @@ public final class ShimGenerator implements Opcodes {
       Map.entry("foxgrade/shim/GuiPoseStack", () -> fromResource("foxgrade/shim/GuiPoseStack.class")),
       Map.entry("foxgrade/shim/GuiQuadElement", () -> fromResource("foxgrade/shim/GuiQuadElement.class")),
       Map.entry("foxgrade/shim/RenderSystemCompat", () -> fromResource("foxgrade/shim/RenderSystemCompat.class")),
+      Map.entry("com/mojang/blaze3d/pipeline/RenderCall", () -> fromResource("foxgrade/shim/RenderCallShim.class")),
       Map.entry("foxgrade/shim/ShaderCompat", () -> fromResource("foxgrade/shim/ShaderCompat.class")),
       Map.entry("foxgrade/shim/InputCompat", () -> fromResource("foxgrade/shim/InputCompat.class")),
       Map.entry("foxgrade/shim/FontCompat", () -> fromResource("foxgrade/shim/FontCompat.class")),
@@ -284,6 +285,7 @@ public final class ShimGenerator implements Opcodes {
     m.put("foxgrade/shim/TickableShim", "net/minecraft/client/renderer/texture/Tickable");
     m.put("foxgrade/shim/BuiltInMetadataShim", "net/minecraft/server/packs/BuiltInMetadata");
     m.put("foxgrade/shim/RenderStateShardShim", "net/minecraft/client/renderer/RenderStateShard");
+    m.put("foxgrade/shim/RenderCallShim", "com/mojang/blaze3d/pipeline/RenderCall");
     m.put("foxgrade/shim/QuiltVersionShim", "org/quiltmc/loader/api/Version");
     m.put("foxgrade/shim/QuiltModMetadataShim", "org/quiltmc/loader/api/ModMetadata");
     m.put("foxgrade/shim/QuiltModContainerShim", "org/quiltmc/loader/api/ModContainer");
@@ -361,7 +363,7 @@ public final class ShimGenerator implements Opcodes {
       Map.entry("net/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder", java.util.List.of("net/minecraft/client/renderer/RenderType$CompositeState", "net/minecraft/client/renderer/RenderType$OutlineProperty", "net/minecraft/client/renderer/RenderStateShard")),
       Map.entry("foxgrade/shim/RenderTypeCompat", java.util.List.of("net/minecraft/client/renderer/RenderType$CompositeState", "com/mojang/blaze3d/vertex/VertexFormat$Mode", "net/minecraft/client/renderer/RenderStateShard")),
       Map.entry("foxgrade/shim/GuiCompat", java.util.List.of("foxgrade/shim/GuiPoseStack")),
-      Map.entry("foxgrade/shim/RenderSystemCompat", java.util.List.of("foxgrade/shim/GuiCompat", "com/mojang/blaze3d/vertex/Tesselator", "foxgrade/shim/SourceFactorShim", "foxgrade/shim/DestFactorShim")),
+      Map.entry("foxgrade/shim/RenderSystemCompat", java.util.List.of("com/mojang/blaze3d/pipeline/RenderCall", "foxgrade/shim/GuiCompat", "com/mojang/blaze3d/vertex/Tesselator", "foxgrade/shim/SourceFactorShim", "foxgrade/shim/DestFactorShim")),
       Map.entry("foxgrade/shim/HudRenderCallback", java.util.List.of("foxgrade/shim/GuiCompat")),
       Map.entry("foxgrade/shim/TooltipCompat", java.util.List.of("foxgrade/shim/GuiCompat")),
       Map.entry("foxgrade/shim/ScreenCompat", java.util.List.of("foxgrade/shim/GuiCompat")),

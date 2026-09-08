@@ -121,4 +121,17 @@ public final class RenderSystemCompat {
   public static String getCapsString() { return ""; }
   public static void getString(int name, Consumer<String> out) { out.accept(""); }
   public static TesselatorShim renderThreadTesselator() { return TesselatorShim.getInstance(); }
+
+  /** 1.21 queued work for the render thread through RenderSystem.recordRenderCall; 26.2 dropped the queue. Run it now
+   *  when we are already on the render thread, otherwise hand it to the client's task queue, which is the same ordering
+   *  guarantee the old queue gave. Never lets a mod's render task take the game down. */
+  public static void recordRenderCall(RenderCallShim call) {
+    if (call == null) return;
+    try {
+      if (RenderSystem.isOnRenderThread()) call.execute();
+      else Minecraft.getInstance().execute(call::execute);
+    } catch (Throwable t) {
+      System.err.println("[Fox-Grade] a queued render call failed: " + t);
+    }
+  }
 }

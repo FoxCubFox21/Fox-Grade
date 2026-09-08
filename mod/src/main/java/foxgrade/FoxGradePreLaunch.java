@@ -20,7 +20,6 @@
 // the original is left alone and the mod is marked ERROR with the reason.
 package foxgrade;
 
-import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
 
 import java.io.IOException;
@@ -34,11 +33,11 @@ public final class FoxGradePreLaunch implements PreLaunchEntrypoint {
   static final String VERSION = "1.1.0";
 
   @Override public void onPreLaunch() {
-    FabricLoader loader = FabricLoader.getInstance();
-    Path gameDir = loader.getGameDir();
+    LoaderHost host = Loaders.current();
+    Path gameDir = host.gameDir();
     Path modsDir = gameDir.resolve("mods");
     Path backupDir = gameDir.resolve("mods-backup");
-    String mc = loader.getModContainer("minecraft").orElseThrow().getMetadata().getVersion().getFriendlyString();
+    String mc = host.gameVersion();
 
     log("Fox-Grade " + VERSION + " — target MC " + mc);
     if (!Files.isDirectory(modsDir)) { log("  no mods folder; nothing to do."); return; }
@@ -352,7 +351,7 @@ public final class FoxGradePreLaunch implements PreLaunchEntrypoint {
   // restart-to-apply step never runs there — the operator restarts it the way their setup expects.
   static boolean isDedicatedServer() {
     try {
-      return net.fabricmc.loader.api.FabricLoader.getInstance().getEnvironmentType() == net.fabricmc.api.EnvType.SERVER;
+      return Loaders.current().isServer();
     } catch (Throwable t) { return false; }
   }
 

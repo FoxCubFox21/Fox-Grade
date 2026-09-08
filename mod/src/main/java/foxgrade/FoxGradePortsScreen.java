@@ -14,9 +14,6 @@
 // Stock widgets only — Fox-Grade depends on no other mod.
 package foxgrade;
 
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.ModContainer;
-import net.fabricmc.loader.api.metadata.CustomValue;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageWidget;
 import net.minecraft.client.gui.components.StringWidget;
@@ -83,7 +80,7 @@ public final class FoxGradePortsScreen extends Screen {
   }
 
   @Override protected void init() {
-    Path gameDir = FabricLoader.getInstance().getGameDir();
+    Path gameDir = Loaders.current().gameDir();
     List<Port> ports = collectPorts();
     collectDisabledFromDisk(gameDir, ports);
     for (Port pt : ports) askModrinth(pt.origId);
@@ -356,7 +353,7 @@ public final class FoxGradePortsScreen extends Screen {
     if (ICONS_TRIED.contains(pt.origId)) return ICONS.get(pt.origId);
     ICONS_TRIED.add(pt.origId);
     try {
-      var iconPath = pt.container.getMetadata().getIconPath(32);
+      var iconPath = pt.container.iconPath(32);
       if (iconPath.isEmpty()) return null;
       var file = pt.container.findPath(iconPath.get());
       if (file.isEmpty()) return null;
@@ -376,8 +373,7 @@ public final class FoxGradePortsScreen extends Screen {
   // Read-only public API, one query per mod id per session, quietly gives up on any failure.
   static void askModrinth(String id) {
     if (!MODRINTH_ASKED.add(id)) return;
-    String mc = FabricLoader.getInstance().getModContainer("minecraft")
-        .map((m) -> m.getMetadata().getVersion().getFriendlyString()).orElse("?");
+    String mc = Loaders.current().gameVersion();
     Thread t = new Thread(() -> {
       Official found = null;
       try {
@@ -439,21 +435,20 @@ public final class FoxGradePortsScreen extends Screen {
     List<String> disabledMixins = new ArrayList<>();
     int unresolvedCount = 0;
     Path jar;
-    ModContainer container;
+    LoaderHost.Mod container;
     boolean retired = false;
     boolean disabled = false;
   }
 
   static List<Port> collectPorts() {
     List<Port> out = new ArrayList<>();
-    for (ModContainer mod : FabricLoader.getInstance().getAllMods()) {
-      CustomValue cv = mod.getMetadata().getCustomValue("foxgrade");
-      if (cv == null || cv.getType() != CustomValue.CvType.OBJECT) continue;
-      CustomValue.CvObject o = cv.getAsObject();
+    for (LoaderHost.Mod mod : Loaders.current().mods()) {
+      com.google.gson.JsonObject o = mod.custom("foxgrade");
+      if (o == null) continue;
       if (o.get("pastPort") == null) continue;
       Port pt = new Port();
       pt.container = mod;
-      pt.origId = str(o, "originalId", mod.getMetadata().getId());
+      pt.origId = str(o, "originalId", mod.id());
       pt.targetMc = str(o, "pastPort", "?");
       pt.source = str(o, "source", "?");
       pt.summary = str(o, "summary", "");
@@ -471,7 +466,7 @@ public final class FoxGradePortsScreen extends Screen {
       strList(o, "disabledMixins", pt.disabledMixins);
       pt.unresolvedCount = pt.unresolved.size();
       try {
-        var paths = mod.getOrigin().getPaths();
+        var paths = mod.jarPaths();
         if (!paths.isEmpty()) pt.jar = paths.get(0);
       } catch (Exception ignored) { }
       // Disabled THIS session: the loaded jar path is gone but its .disabled sibling exists.
@@ -524,16 +519,16 @@ public final class FoxGradePortsScreen extends Screen {
     } catch (Exception ignored) { }
   }
 
-  static void strList(CustomValue.CvObject o, String key, List<String> into) {
-    CustomValue v = o.get(key);
-    if (v != null && v.getType() == CustomValue.CvType.ARRAY) {
-      for (CustomValue e : v.getAsArray()) into.add(e.getAsString());
+  static void strList(com.google.gson.JsonObject o, String key, List<String> into) {
+    com.google.gson.JsonElement v = o.get(key);
+    if (v != null && v.isJsonArray()) {
+      for (com.google.gson.JsonElement e : v.getAsJsonArray()) into.add(e.getAsString());
     }
   }
 
-  static String str(CustomValue.CvObject o, String key, String def) {
-    CustomValue v = o.get(key);
-    return v != null && v.getType() == CustomValue.CvType.STRING ? v.getAsString() : def;
+  static String str(com.google.gson.JsonObject o, String key, String def) {
+    com.google.gson.JsonElement v = o.get(key);
+    return v != null && v.isJsonPrimitive() && v.getAsJsonPrimitive().isString() ? v.getAsString() : def;
   }
 
   @Override public void onClose() {
@@ -721,7 +716,7 @@ public final class FoxGradePortsScreen extends Screen {
     // with the CURRENT engine, and retire the existing port so the two never collide.
     private void runReport(Button b) {
       try {
-        Path gameDir = FabricLoader.getInstance().getGameDir();
+        Path gameDir = Loaders.current().gameDir();
         Path found = null;
         for (Path dir : List.of(gameDir.resolve("mods").resolve("fox-grade-inbox").resolve("processed"),
                                 gameDir.resolve("fox-grade-inbox").resolve("processed"), gameDir.resolve("mods-backup"))) {
@@ -768,7 +763,7 @@ public final class FoxGradePortsScreen extends Screen {
       Thread t = new Thread(() -> {
         String err = null;
         try {
-          Path modsDir = FabricLoader.getInstance().getGameDir().resolve("mods");
+          Path modsDir = Loaders.current().gameDir().resolve("mods");
           Path tmp = modsDir.resolve(off.filename() + ".fgdownload");
           var conn = (java.net.HttpURLConnection) java.net.URI.create(off.url()).toURL().openConnection();
           conn.setConnectTimeout(8000); conn.setReadTimeout(30000);

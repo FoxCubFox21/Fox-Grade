@@ -32,7 +32,7 @@ else:
         if nw and nw != moj: derived[moj] = nw
     json.dump(derived, open(_cache, "w")); REN.update(derived)
     print("derived class renames:", len(derived), "| ResourceLocation ->", derived.get("net/minecraft/resources/ResourceLocation"))
-SHIM_RENAMES = {"foxgrade/shim/RenderTypeCompositeState": "net/minecraft/client/renderer/RenderType$CompositeState", "foxgrade/shim/RenderTypeCompositeStateBuilder": "net/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder", "foxgrade/shim/RenderTypeOutlineProperty": "net/minecraft/client/renderer/RenderType$OutlineProperty", "foxgrade/shim/TesselatorShim": "com/mojang/blaze3d/vertex/Tesselator", "foxgrade/shim/BufferUploaderShim": "com/mojang/blaze3d/vertex/BufferUploader", "foxgrade/shim/VertexFormatModeShim": "com/mojang/blaze3d/vertex/VertexFormat$Mode"}
+SHIM_RENAMES = {"foxgrade/shim/RenderCallShim": "com/mojang/blaze3d/pipeline/RenderCall", "foxgrade/shim/RenderTypeCompositeState": "net/minecraft/client/renderer/RenderType$CompositeState", "foxgrade/shim/RenderTypeCompositeStateBuilder": "net/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder", "foxgrade/shim/RenderTypeOutlineProperty": "net/minecraft/client/renderer/RenderType$OutlineProperty", "foxgrade/shim/TesselatorShim": "com/mojang/blaze3d/vertex/Tesselator", "foxgrade/shim/BufferUploaderShim": "com/mojang/blaze3d/vertex/BufferUploader", "foxgrade/shim/VertexFormatModeShim": "com/mojang/blaze3d/vertex/VertexFormat$Mode"}
 def shim_desc(d): return re.sub(r"L([\w/$]+);", lambda m: "L" + SHIM_RENAMES.get(m.group(1), m.group(1)) + ";", d)
 def ren_desc(d): return re.sub(r"L([\w/$]+);", lambda m: "L" + REN.get(m.group(1), m.group(1)) + ";", d)
 PRIM = {"void":"V","boolean":"Z","byte":"B","char":"C","short":"S","int":"I","long":"J","float":"F","double":"D"}
@@ -763,6 +763,9 @@ cr.setdefault("net/minecraft/world/food/FoodProperties$Builder", {})["effect(" +
 cr.setdefault("net/minecraft/world/level/block/BeehiveBlock", {})["dropHoneycomb(" + LVL + BP + ")V"] = [BAC, "dropHoneycomb", "(" + LVL + BP + ")V"]
 cr.setdefault("net/minecraft/world/entity/player/PlayerSkin", {})["capeTexture()" + ID] = [SKC, "capeTexture", "(" + PLS + ")" + ID]
 cr.setdefault("net/minecraft/client/renderer/rendertype/RenderType", {})["entityGlintDirect()" + RTY] = ["net/minecraft/client/renderer/rendertype/RenderTypes", "entityGlint", "()" + RTY]
+# RenderSystem.recordRenderCall + the RenderCall interface: both gone in 26.2 (fancymenu, drippy-loading-screen).
+_RCALL = "Lcom/mojang/blaze3d/pipeline/RenderCall;"
+cr.setdefault("com/mojang/blaze3d/systems/RenderSystem", {})["recordRenderCall(" + _RCALL + ")V"] = ["foxgrade/shim/RenderSystemCompat", "recordRenderCall", "(" + _RCALL + ")V"]
 # Quilt mods looking themselves up: the container comes back with the original id on either host (see QuiltSelfContainer).
 cr.setdefault("org/quiltmc/loader/api/QuiltLoader", {}).update({"getModContainer(Ljava/lang/String;)Ljava/util/Optional;": ["foxgrade/shim/QuiltSelfContainer", "byId", "(Ljava/lang/String;)Ljava/util/Optional;"], "getModContainer(Ljava/lang/Class;)Ljava/util/Optional;": ["foxgrade/shim/QuiltSelfContainer", "byClass", "(Ljava/lang/Class;)Ljava/util/Optional;"]})
 # RenderTarget under the 26.2 GPU abstraction: main target lives on the game renderer; viewport fields and GL ids are bridged.

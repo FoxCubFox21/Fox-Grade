@@ -1,7 +1,6 @@
 package foxgrade;
 
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.loader.api.FabricLoader;
 
 /** Common-side init, client and server alike: anything a port needs registered before the registries freeze. */
 public final class FoxGradeMain implements ModInitializer {
@@ -10,7 +9,7 @@ public final class FoxGradeMain implements ModInitializer {
     // It has to exist before the data-component registry freezes, which is long before any ported mod first touches it.
     // Shims are served from Fox-Grade's own jar (one copy for every port), so "a port is loaded" is the signal.
     boolean wanted = false;
-    for (var mod : FabricLoader.getInstance().getAllMods()) if (mod.getMetadata().getId().endsWith("_fgport")) { wanted = true; break; }
+    for (var mod : Loaders.current().mods()) if (mod.id().endsWith("_fgport")) { wanted = true; break; }
     if (!wanted) return;
     try {
       foxgrade.shim.ItemCompat.hideAdditionalTooltip();

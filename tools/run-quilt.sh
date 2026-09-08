@@ -23,14 +23,14 @@ run_one() {
   mkdir -p $PT/fox-grade-inbox; for jar in "$@"; do if [[ ${AUTOINBOX:-0} == 1 ]]; then cp "$jar" $PT/mods/; else cp "$jar" $PT/fox-grade-inbox/; fi; done   # Quilt scans mods/ recursively: use the game-folder inbox   # AUTOINBOX=1: drop into mods/ and let the sweep find it
   echo "{ \"port\": [], \"portAll\": false, \"autotestTicks\": 220, \"autotestCommands\": [${CMDS:-}] }" > $PT/fox-grade.config.json
   cd $PT
-  /usr/bin/java -XstartOnFirstThread -Xmx3G -Dloader.noGui=true -DFabricMcEmu="net.minecraft.client.main.Main" -cp "$LCP" \
+  /usr/bin/java -XstartOnFirstThread -Xmx3G -Dloader.noGui=true -Dloader.transform_cache.disable_preload=true -DFabricMcEmu="net.minecraft.client.main.Main" -cp "$LCP" \
     org.quiltmc.loader.impl.launch.knot.KnotClient \
     --username FGTest --version quilt-loader-0.31.0-beta.4-26.2 \
     --gameDir "$PT" --assetsDir "$MC/assets" --assetIndex 32 \
     --uuid 00000000-0000-0000-0000-000000000000 \
     --accessToken dummy --userType msa --versionType release \
     --quickPlaySingleplayer "APPLE SKIN PORT 3" \
-    > "$B/log-$name.log" 2>&1 &
+    > "$B/log-quilt-$name.log" 2>&1 &
   # Keep the game out of the way: hide every java window within 2 s of it appearing, for the life of this run.
   # Hide only THIS instance's game window (by process id) — never other Java apps such as the user's own Minecraft.
   ( for i in $(seq 1 120); do sleep 2; for pid in $(pgrep -f "gameDir $PT "); do osascript -e "tell application \"System Events\" to set visible of (every process whose unix id is $pid) to false" >/dev/null 2>&1; done; pgrep -f "gameDir $PT " >/dev/null || break; done ) &
@@ -41,13 +41,13 @@ run_one() {
   while [ $waited -lt 150 ]; do
     sleep 6; waited=$((waited+6))
     pgrep -f "gameDir $PT " >/dev/null || break
-    grep -q "$READY" "$B/log-$name.log" 2>/dev/null && { sleep 8; ready=1; break; }
+    grep -q "$READY" "$B/log-quilt-$name.log" 2>/dev/null && { sleep 8; ready=1; break; }
   done
-  local port_line=$(grep -m1 "INBOX PORTED\|INBOX ERROR" "$B/log-$name.log" | sed 's/.*INBOX/INBOX/')
+  local port_line=$(grep -m1 "INBOX PORTED\|INBOX ERROR" "$B/log-quilt-$name.log" | sed 's/.*INBOX/INBOX/')
   local verdict
   if [ $ready = 1 ] && pgrep -f "gameDir $PT " >/dev/null; then
     verdict=PASS
-    find $PT/screenshots -name "*.png" 2>/dev/null | head -1 | while read -r shot; do cp "$shot" "$B/shot-$name.png"; done
+    find $PT/screenshots -name "*.png" 2>/dev/null | head -1 | while read -r shot; do cp "$shot" "$B/shot-quilt-$name.png"; done
   elif ! pgrep -f "gameDir $PT " >/dev/null; then
     verdict=CRASH
   else
@@ -57,12 +57,12 @@ run_one() {
   mkdir -p $B/ports; for pj in $PT/mods/*-fgport.jar; do cp "$pj" "$B/ports/${name}--$(basename $pj)"; done
   # A boot without the mod under test is not a pass: the mod may have been held for a missing library.
   local mainid=$(unzip -p "$mainjar" fabric.mod.json 2>/dev/null | /usr/bin/python3 -c 'import json,sys; print(json.load(sys.stdin).get("id",""))' 2>/dev/null)
-  if [[ $verdict == PASS && -n $mainid ]] && ! grep -qE "^[[:space:]]*[-\\|]+[[:space:]]*${mainid}(_fgport)?[[:space:]]|^\\|[^|]*\\|[^|]*\\|[[:space:]]*${mainid}(_fgport)?[[:space:]]*\\|" "$B/log-$name.log"; then
-    verdict=HELD; why_held=$(grep -m1 "INBOX HELD *$(basename "$mainjar")" "$B/log-$name.log" | sed 's/.*— needs /needs /; s/;.*//')
+  if [[ $verdict == PASS && -n $mainid ]] && ! grep -qE "^[[:space:]]*[-\\|]+[[:space:]]*${mainid}(_fgport)?[[:space:]]|^\\|[^|]*\\|[^|]*\\|[[:space:]]*${mainid}(_fgport)?[[:space:]]*\\|" "$B/log-quilt-$name.log"; then
+    verdict=HELD; why_held=$(grep -m1 "INBOX HELD *$(basename "$mainjar")" "$B/log-quilt-$name.log" | sed 's/.*— needs /needs /; s/;.*//')
   fi
   local why="${why_held:-}"
   if [ "$verdict" != PASS ]; then
-    why=$(grep -m1 "requires any version\|Incompatible mods\|InjectionError\|Mixin apply failed\|Unable to launch\|NoClassDefFoundError\|NoSuchMethodError" "$B/log-$name.log" | head -c 160)
+    why=$(grep -m1 "requires any version\|Incompatible mods\|InjectionError\|Mixin apply failed\|Unable to launch\|NoClassDefFoundError\|NoSuchMethodError" "$B/log-quilt-$name.log" | head -c 160)
   fi
   mkdir -p $B/crashes; for c in $PT/crash-reports/*.txt; do [[ -f $c ]] && cp "$c" "$B/crashes/$name--$(basename "$c")"; done; cp $PT/logs/latest.log "$B/crashes/$name--latest.log" 2>/dev/null
   if [[ $verdict != PASS && -z $why ]]; then c=$(ls -t $PT/crash-reports/*.txt 2>/dev/null | head -1); [[ -n $c ]] && why=$(grep -m1 "Caused by\|^java\.\|Exception:" "$c" | grep -v HTTP_ERROR | head -c 170); fi   # server-side crash reports carry the cause too
