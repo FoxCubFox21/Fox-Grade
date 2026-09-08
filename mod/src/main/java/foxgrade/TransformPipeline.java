@@ -545,6 +545,39 @@ public final class TransformPipeline {
           grew = true;
         }
       }
+      // A mixin config that names a class the jar does not contain can only fail ("The specified mixin ... was not
+      // found"), and it takes the whole config down with it. Mods ship these deliberately — optional compat mixins for
+      // a mod that may not be installed, normally gated by a config plugin that does not survive the port. Drop the
+      // entries that point at nothing; every real mixin in the config keeps applying.
+      {
+        java.util.Set<String> presentClasses = new HashSet<>();
+        for (String k : buffered.keySet()) if (k.endsWith(".class")) presentClasses.add(k.substring(0, k.length() - 6));
+        for (var entry : buffered.entrySet()) {
+          String n = entry.getKey();
+          if (!n.endsWith(".json") || !n.contains("mixin")) continue;
+          try {
+            JsonObject cfg = new Gson().fromJson(new String(entry.getValue(), StandardCharsets.UTF_8), JsonObject.class);
+            if (cfg == null || !cfg.has("package")) continue;
+            String pkg = cfg.get("package").getAsString().replace('.', '/');
+            boolean changed = false;
+            for (String listKey : new String[] {"mixins", "client", "server"}) {
+              if (!cfg.has(listKey) || !cfg.get(listKey).isJsonArray()) continue;
+              com.google.gson.JsonArray kept = new com.google.gson.JsonArray();
+              for (var el : cfg.getAsJsonArray(listKey)) {
+                String cls = pkg + "/" + el.getAsString().replace('.', '/');
+                if (!presentClasses.contains(cls)) {
+                  changed = true;
+                  strippedNames.add(el.getAsString() + " (listed in " + n + " but not in the jar)");
+                  continue;
+                }
+                kept.add(el);
+              }
+              if (changed) cfg.add(listKey, kept);
+            }
+            if (changed) entry.setValue((GSON.toJson(cfg) + "\n").getBytes(StandardCharsets.UTF_8));
+          } catch (Exception notAMixinConfig) { }
+        }
+      }
       if (!fatalMixins.isEmpty()) {
         // FEATURE-level granularity: mixin configs group cohesive features (ferritecore ships
         // one config per feature). A fatally broken member usually cooperates with its config
