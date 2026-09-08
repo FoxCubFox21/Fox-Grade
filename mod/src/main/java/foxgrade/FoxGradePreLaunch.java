@@ -112,11 +112,13 @@ public final class FoxGradePreLaunch implements PreLaunchEntrypoint {
     try {
       if (!Files.isDirectory(inbox)) {
         Files.createDirectories(inbox);
+        QuiltMeta.markIgnoredForQuilt(inbox);
         Files.writeString(inbox.resolve("README.txt"),
             "Drop mods built for OLDER Minecraft versions in here.\n" +
             "On the next launch Fox-Grade ports them, installs the result into mods/,\n" +
             "moves the original into processed/, and restarts the game automatically.\n");
       }
+      QuiltMeta.markIgnoredForQuilt(inbox);   // also for inboxes that predate the marker (Quilt Loader scans mods/ recursively)
       // Zero-configuration path: an old mod dropped straight into mods/ is moved to the inbox now.
       for (Path movedIn : AutoInbox.sweep(modsDir, inbox, mc, FoxGradePreLaunch::log)) { /* logged by the sweep */ }
       java.util.List<Path> inboxJars = new java.util.ArrayList<>();
@@ -157,6 +159,7 @@ public final class FoxGradePreLaunch implements PreLaunchEntrypoint {
           Files.write(modsDir.resolve(outName), o.outputBytes);
           Path processed = inbox.resolve("processed");
           Files.createDirectories(processed);
+          QuiltMeta.markIgnoredForQuilt(processed);
           Files.move(jar, processed.resolve(jar.getFileName()), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
           inboxPorted++;
           FoxGradeStats.recordPort(gameDir, o);
@@ -380,7 +383,15 @@ public final class FoxGradePreLaunch implements PreLaunchEntrypoint {
         full.add(a[i]);
       }
       full.addAll(extraArgs);
-      ProcessBuilder pb = new ProcessBuilder(full);
+      java.util.List<String> launch = full;
+      if (!System.getProperty("os.name", "").toLowerCase(java.util.Locale.ROOT).contains("win")) {
+        // Let this JVM finish exiting before the next one starts: loaders keep caches open (Quilt's transform cache),
+        // and a child that reads them mid-write fails to boot. The wrapper waits on our pid, then execs the real command.
+        launch = new java.util.ArrayList<>(java.util.List.of("/bin/sh", "-c", "while kill -0 \"$0\" 2>/dev/null; do sleep 0.2; done; exec \"$@\"", String.valueOf(ProcessHandle.current().pid())));
+        launch.addAll(full);
+      }
+      if (TransformPipeline.isQuiltHost()) QuiltMeta.clearQuiltTransformCache();   // see QuiltMeta: Quilt 0.31 cannot re-create its cache in place
+      ProcessBuilder pb = new ProcessBuilder(launch);
       pb.environment().put("FOXGRADE_RELAUNCHED", "1");
       pb.inheritIO();
       pb.start();

@@ -39,6 +39,7 @@ public final class AutoInbox {
         if (range == null) range = "an intermediary-mapped version";
         try {
           Files.createDirectories(inbox);
+          QuiltMeta.markIgnoredForQuilt(inbox);
           Path target = inbox.resolve(name);
           Files.move(jar, target, StandardCopyOption.REPLACE_EXISTING);
           moved.add(target);

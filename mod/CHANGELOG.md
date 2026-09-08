@@ -4,7 +4,12 @@
 - **Quilt-only mods.** A jar with a `quilt.mod.json` and no `fabric.mod.json` is ported like any other:
   the manifest becomes a `fabric.mod.json` (ids, entrypoints, mixins, widener, dependencies), and Quilt's
   loader API (`QuiltLoader`, `ModContainer`, `ModMetadata`, `Version`, `MinecraftQuiltLoader`) and the QSL
-  entrypoint interfaces are bridged onto Fabric Loader. QSL's own API modules are not bridged.
+  entrypoint interfaces are bridged onto Fabric Loader, and the port carries a 26.2 `quilt.mod.json` as well.
+  Fox-Grade runs on Quilt Loader 26.2 (0.31 beta): the inbox folders carry Quilt's `quilt_loader_ignored` marker
+  (Quilt scans `mods/` recursively), on a Quilt host the loader's own API classes are never shipped as stand-ins,
+  and the self-relaunch drops Quilt's transform cache and waits for the old JVM to exit first (Quilt 0.31 cannot
+  re-create that cache in place when the mod set changes).
+  QSL's own API modules are not bridged.
 - **Custom render types.** 1.21's `RenderType.create(...)` with a `CompositeState` of shards is rebuilt
   as a 26.2 `RenderSetup` on the nearest pipeline (glint layers on the glint pipeline); cit-resewn boots.
 - **Access wideners by mapped name.** Shipped wideners carry intermediary member names; type changes

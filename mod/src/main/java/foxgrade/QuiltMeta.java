@@ -115,5 +115,66 @@ final class QuiltMeta {
     return GSON.toJson(f) + "\n";
   }
 
+  /** The original quilt.mod.json brought to the ported mod's shape: the port's id and provides, Minecraft pinned to the
+   *  target, Quilt-only dependencies relaxed, and the entrypoints under Fabric's keys — Quilt Loader runs those itself,
+   *  while QSL (which runs the Quilt-keyed ones) has no build for the target. */
+  static String quiltJsonFor(String originalQuiltJson, JsonObject fabricMeta) {
+    JsonElement root = JsonParser.parseString(originalQuiltJson);
+    if (root == null || !root.isJsonObject()) return null;
+    JsonObject q = root.getAsJsonObject().deepCopy();
+    JsonObject ql = obj(q, "quilt_loader");
+    if (ql == null) return null;
+    if (fabricMeta.has("id")) ql.add("id", fabricMeta.get("id"));
+    if (fabricMeta.has("provides")) ql.add("provides", fabricMeta.get("provides"));
+    JsonObject eps = obj(ql, "entrypoints");
+    if (eps != null) {
+      JsonObject out = new JsonObject();
+      for (var en : eps.entrySet()) out.add(ENTRYPOINTS.getOrDefault(en.getKey(), en.getKey()), en.getValue());
+      ql.add("entrypoints", out);
+    }
+    JsonElement mcRange = fabricMeta.has("depends") && fabricMeta.get("depends").isJsonObject() ? fabricMeta.getAsJsonObject("depends").get("minecraft") : null;
+    JsonArray deps = new JsonArray();
+    JsonElement old = ql.get("depends");
+    if (old != null && old.isJsonArray()) for (JsonElement d : old.getAsJsonArray()) {
+      String id = d.isJsonPrimitive() ? d.getAsString() : d.isJsonObject() && d.getAsJsonObject().has("id") ? d.getAsJsonObject().get("id").getAsString() : null;
+      if (id == null) continue;
+      JsonObject o = new JsonObject();
+      if (id.equals("minecraft")) { o.addProperty("id", "minecraft"); o.add("versions", mcRange != null ? mcRange : new com.google.gson.JsonPrimitive("*")); }
+      else if (id.equals("quilt_loader")) { o.addProperty("id", "quilt_loader"); o.addProperty("versions", "*"); }
+      else if (id.equals("quilted_fabric_api") || id.equals("quilt_fabric_api")) { o.addProperty("id", "fabric-api"); o.addProperty("versions", "*"); }
+      else if (id.equals("quilt_base") || id.equals("qsl")) continue;
+      else if (d.isJsonObject()) o = d.getAsJsonObject();
+      else { o.addProperty("id", id); o.addProperty("versions", "*"); }
+      deps.add(o);
+    }
+    ql.add("depends", deps);
+    return GSON.toJson(q) + "\n";
+  }
+
+  /** Quilt Loader scans mods/ recursively; a folder holding a file named quilt_loader_ignored is skipped. The inbox and
+   *  its processed/ folder hold un-ported originals, which must never be loaded as mods on a Quilt host. */
+  static void markIgnoredForQuilt(java.nio.file.Path dir) {
+    try {
+      java.nio.file.Path marker = dir.resolve("quilt_loader_ignored");
+      if (java.nio.file.Files.isDirectory(dir) && !java.nio.file.Files.exists(marker)) java.nio.file.Files.write(marker, new byte[0]);
+    } catch (Exception ignored) { }
+  }
+
+  /** Quilt Loader 0.31 (beta) fails to re-create its transform cache over an existing one on the next launch when the
+   *  mod set changed ("Failed to read the newly written transform cache! … Not in GZIP format"). A port changes the
+   *  mod set by definition, so the cache is dropped before the relaunch; Quilt rebuilds it in a few seconds. */
+  static void clearQuiltTransformCache() {
+    try {
+      java.nio.file.Path dir = net.fabricmc.loader.api.FabricLoader.getInstance().getGameDir().resolve(".cache").resolve("quilt_loader");
+      for (String sub : new String[] {"transform-cache-client", "transform-cache-server"}) {
+        java.nio.file.Path d = dir.resolve(sub);
+        if (!java.nio.file.Files.isDirectory(d)) continue;
+        try (var walk = java.nio.file.Files.walk(d)) {
+          for (java.nio.file.Path f : walk.sorted(java.util.Comparator.reverseOrder()).toList()) java.nio.file.Files.deleteIfExists(f);
+        }
+      }
+    } catch (Exception ignored) { }
+  }
+
   private static JsonObject obj(JsonObject o, String key) { return o.has(key) && o.get(key).isJsonObject() ? o.getAsJsonObject(key) : null; }
 }

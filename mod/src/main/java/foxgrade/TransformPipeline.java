@@ -63,6 +63,11 @@ public final class TransformPipeline {
     }
   }
 
+  /** Quilt Loader hosts register themselves as the mod "quilt_loader" (it also answers the Fabric loader API). */
+  static boolean isQuiltHost() {
+    try { return net.fabricmc.loader.api.FabricLoader.getInstance().isModLoaded("quilt_loader"); } catch (Throwable t) { return false; }
+  }
+
   // Cheap check: does this jar's fabric.mod.json already declare it's been ported for `targetMc`?
   // Used to skip re-porting on a second launch after the first port succeeded.
   public static boolean isAlreadyPortedFor(Path jar, String targetMc) {
@@ -547,6 +552,8 @@ public final class TransformPipeline {
       }
       for (String d : remapper.droppedOverrides()) { strippedNames.add(d + " (final in 26.2)"); autoStripped++; }
       Map<String, String> shimMap = new HashMap<>();
+      // On a Quilt host the loader's own API classes are the real thing; a port must not ship stand-ins for them.
+      if (isQuiltHost()) wanted.removeIf((c) -> c.startsWith("org/quiltmc/loader/api/"));
       for (String shimCls : wanted) {
         String nsName = namespacedShim(shimCls, shimNs);
         if (!nsName.equals(shimCls)) shimMap.put(shimCls, nsName);
@@ -581,6 +588,11 @@ public final class TransformPipeline {
           JsonObject custom = meta.has("custom") && meta.get("custom").isJsonObject() ? meta.getAsJsonObject("custom") : new JsonObject();
           JsonObject fg = custom.has("foxgrade") && custom.get("foxgrade").isJsonObject() ? custom.getAsJsonObject("foxgrade") : new JsonObject();
           fg.addProperty("source", src.getFileName().toString());
+          byte[] quiltOrig = buffered.get("quilt.mod.json.original");
+          if (quiltOrig != null) {   // Quilt-only source: ship a 26.2 quilt.mod.json as well, so Quilt Loader still sees a Quilt mod
+            String qj = QuiltMeta.quiltJsonFor(new String(quiltOrig, StandardCharsets.UTF_8), meta);
+            if (qj != null) { buffered.put("quilt.mod.json", qj.getBytes(StandardCharsets.UTF_8)); buffered.remove("quilt.mod.json.original"); }
+          }
           fg.addProperty("fromMc", fromMcHolder[0]);
           fg.addProperty("summary", String.format("%d classes remapped, %d handler(s) stripped, %d unresolved ref(s)",
               classesRemapped, mixinsStripped + autoStripped, verifier.missing().size()));

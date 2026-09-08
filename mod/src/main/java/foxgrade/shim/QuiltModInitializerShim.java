@@ -5,5 +5,5 @@ package foxgrade.shim;
 public interface QuiltModInitializerShim extends net.fabricmc.api.ModInitializer {
   String ENTRYPOINT_KEY = "init";
   void onInitialize(QuiltModContainerShim mod);
-  @Override default void onInitialize() { onInitialize(QuiltLoaderShim.containerOf(getClass())); }
+  @Override default void onInitialize() { onInitialize(QuiltLoaderShim.getModContainer(getClass()).orElse(null)); }
 }

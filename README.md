@@ -5,8 +5,10 @@ and get told plainly when it doesn't know.
 
 ```bash
 Quilt-only mods (a `quilt.mod.json`, no `fabric.mod.json`) are accepted too: the manifest becomes a
-`fabric.mod.json` and Quilt's loader API and QSL entrypoint interfaces are bridged onto Fabric Loader.
-QSL's own API modules are not.
+`fabric.mod.json`, Quilt's loader API and QSL entrypoint interfaces are bridged, and the port ships a 26.2
+`quilt.mod.json` alongside. Fox-Grade also runs on Quilt Loader 26.2 (0.31 beta): Quilt scans sub-folders of
+`mods/`, so the first jar goes in `fox-grade-inbox/` next to `mods/`; from then on the folders are marked for
+Quilt to skip. QSL's own API modules are not bridged.
 
 # the whole mechanical pipeline, one command, no AI involved
 node port-pipeline.mjs mod.jar --from 26.1 --to 26.2 \
