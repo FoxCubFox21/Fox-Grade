@@ -280,6 +280,10 @@ public final class TransformPipeline {
             byte[] idSrc = strictened != null ? strictened : raw, renamed = DataIdRenames.apply(idSrc);
             if (renamed != idSrc) strictened = renamed;
           }
+          if (BiomeJsonFix.applies(name)) {   // 26.2 flattened a biome's carvers map into a plain carver set
+            byte[] bSrc = strictened != null ? strictened : raw, fixed = BiomeJsonFix.apply(bSrc);
+            if (fixed != bSrc) strictened = fixed;
+          }
           if (strictened != null) { emit = strictened; jsonStrictened++; }
         } else if ((name.toLowerCase().endsWith(".accesswidener") || name.toLowerCase().endsWith(".aw") || name.toLowerCase().endsWith(".ct") || name.toLowerCase().endsWith(".classtweaker")) && !mergedClasses.isEmpty()) {
           try {
