@@ -122,6 +122,33 @@ if [[ -n $FORGE_CP && -d src/forge/java ]]; then
   fi
 fi
 
+# --- the manifest must not be narrower than the supported set ---------------------------------------------------
+# Twice now, a version was added to Targets and the loader refused Fox-Grade before Targets could speak, because
+# fabric.mod.json still named a newer minimum. The two are saying related things and drifted apart both times, so
+# the build compares them instead of trusting anyone to remember.
+python3 - <<'PYCHECK' || exit 1
+import json, pathlib, re, sys
+targets = pathlib.Path("src/main/java/foxgrade/Targets.java").read_text()
+block = re.search(r"SUPPORTED\s*=\s*Set\.of\(([^)]*)\)", targets, re.S)
+supported = re.findall(r'"([^"]+)"', block.group(1)) if block else []
+meta = json.loads(pathlib.Path("src/main/resources/fabric.mod.json").read_text())
+declared = meta.get("depends", {}).get("minecraft", "")
+floor = declared.lstrip(">=").strip()
+
+def key(v):
+    return [int(x) if x.isdigit() else 0 for x in v.split(".")]
+
+if not supported:
+    print("  ! could not read Targets.SUPPORTED; manifest range unchecked", file=sys.stderr)
+elif not declared.startswith(">="):
+    print(f"  manifest pins minecraft {declared!r}; supported targets are {sorted(supported)}")
+elif min(map(key, supported)) < key(floor):
+    oldest = min(supported, key=key)
+    print(f"  ! fabric.mod.json requires minecraft {declared}, but Targets supports {oldest}.", file=sys.stderr)
+    print(f"  ! Fabric Loader would refuse Fox-Grade on {oldest} before Targets is consulted.", file=sys.stderr)
+    sys.exit(1)
+PYCHECK
+
 VERSION=$(grep '"version"' src/main/resources/fabric.mod.json | head -1 | sed -E 's/.*"([^"]+)"[^"]*$/\1/')
 OUT="$PWD/$DIST/foxgrade-${VERSION}.jar"
 rm -f "$OUT"
