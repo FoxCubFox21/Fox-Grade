@@ -291,7 +291,7 @@ public final class TransformPipeline {
             if (fixed != bSrc) strictened = fixed;
           }
           if (strictened != null) { emit = strictened; jsonStrictened++; }
-        } else if ((name.toLowerCase().endsWith(".accesswidener") || name.toLowerCase().endsWith(".aw") || name.toLowerCase().endsWith(".ct") || name.toLowerCase().endsWith(".classtweaker")) && !mergedClasses.isEmpty()) {
+        } else if ((name.toLowerCase().endsWith(".accesswidener") || name.toLowerCase().endsWith(".aw") || name.toLowerCase().endsWith(".ct") || name.toLowerCase().endsWith(".classtweaker") || AccessTransformerRemapper.isTransformer(name)) && !mergedClasses.isEmpty()) {
           try {
             AccessWidenerRemapper.Names names = new AccessWidenerRemapper.Names() {
               @Override public String method(String o, String n, String d) { return remapper.mapMethodName(o, n, d); }
@@ -309,6 +309,16 @@ public final class TransformPipeline {
                 return desc;
               }
             };
+            if (AccessTransformerRemapper.isTransformer(name)) {
+              // NeoForge/Forge access transformer: same job as a widener, different file format.
+              AccessTransformerRemapper.Result at = AccessTransformerRemapper.rewrite(new String(raw, StandardCharsets.UTF_8), names);
+              if (at.owners > 0 || at.members > 0) {
+                emit = at.text.getBytes(StandardCharsets.UTF_8);
+                awFiles++; awOwners += at.owners; awDescs += at.members;
+              }
+              buffered.put(name, emit);
+              continue;
+            }
             AccessWidenerRemapper.Result r = AccessWidenerRemapper.rewrite(new String(raw, StandardCharsets.UTF_8), mergedClasses, names);
             // Even a widener with no member lines needs its header namespace rewritten (Fabric refuses an
             // "intermediary" header on the unobfuscated 26.x runtime), so compare the text, not the hit counts.
