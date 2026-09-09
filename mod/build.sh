@@ -79,7 +79,11 @@ for spec in $ALT_MC_JARS; do
   # Swap the client jar at the head of CP and keep the rest verbatim. Splitting CP on ':' and re-joining would be
   # the obvious way and is wrong: the library paths run through "Application Support", so word splitting eats them.
   alt_cp="$alt_jar${CP#"$MC_JAR"}"
-  alt_out="build/shimset/$alt_ver"; rm -rf "$alt_out"; mkdir -p "$alt_out"
+  # The directory name has to be usable as a Java package segment: a part may not begin with a digit or hold a dot,
+  # and a jar carrying foxgrade/shimset/26.1.2/ is rejected outright by anything that validates module packages.
+  # Forge does, with "Invalid package name: '26' is not a Java identifier", before a single mod loads.
+  alt_dir="v${alt_ver//[^A-Za-z0-9]/_}"
+  alt_out="build/shimset/$alt_dir"; rm -rf "$alt_out"; mkdir -p "$alt_out"
   find src/main/java/foxgrade/shim -name '*.java' > /tmp/fg-shim-sources.txt
   dropped=0
   for round in 1 2 3 4 5 6; do
@@ -95,12 +99,28 @@ for spec in $ALT_MC_JARS; do
   done
   kept=$(find "$alt_out" -name '*.class' | wc -l | tr -d ' ')
   if [[ $kept -gt 0 ]]; then
-    mkdir -p "$BUILD/foxgrade/shimset/$alt_ver"
-    ( cd "$alt_out" && tar cf - . ) | ( cd "$BUILD/foxgrade/shimset/$alt_ver" && tar xf - )
-    sed 's|.*/foxgrade/shim/|foxgrade/shim/|; s|\.java$||' /tmp/fg-shim-bad.txt 2>/dev/null | sort -u > "$BUILD/foxgrade/shimset/$alt_ver/UNAVAILABLE.txt" || true
+    mkdir -p "$BUILD/foxgrade/shimset/$alt_dir"
+    ( cd "$alt_out" && tar cf - . ) | ( cd "$BUILD/foxgrade/shimset/$alt_dir" && tar xf - )
+    sed 's|.*/foxgrade/shim/|foxgrade/shim/|; s|\.java$||' /tmp/fg-shim-bad.txt 2>/dev/null | sort -u > "$BUILD/foxgrade/shimset/$alt_dir/UNAVAILABLE.txt" || true
     echo "  shimset $alt_ver: $kept classes, $dropped source file(s) not available on that version"
   fi
 done
+
+# --- Forge entry point ------------------------------------------------------------------------------------------
+# Same story as the NeoForge locator and a different SPI, because Forge kept the older interface the two share an
+# ancestor in: a locator returns mod files it built itself rather than handing paths to a pipeline. Compiled against
+# Forge, riding in the same jar, loaded only where its service file means something.
+FORGE_CP=""
+for f in libs/forge/*.jar; do [[ -f $f ]] && FORGE_CP="$FORGE_CP:$f"; done
+if [[ -n $FORGE_CP && -d src/forge/java ]]; then
+  find src/forge/java -name '*.java' > /tmp/foxgrade-forge-sources.txt
+  if javac -J-Xmx512m -nowarn -d "$BUILD" -cp "$CP:$BUILD$FORGE_CP" @/tmp/foxgrade-forge-sources.txt 2>/tmp/foxgrade-forge-errors.txt; then
+    echo "  Forge locator compiled"
+  else
+    echo "  Forge locator SKIPPED (see /tmp/foxgrade-forge-errors.txt) — every other loader is unaffected"
+    find "$BUILD/foxgrade/forge" -name '*.class' -delete 2>/dev/null || true
+  fi
+fi
 
 VERSION=$(grep '"version"' src/main/resources/fabric.mod.json | head -1 | sed -E 's/.*"([^"]+)"[^"]*$/\1/')
 OUT="$PWD/$DIST/foxgrade-${VERSION}.jar"
@@ -108,5 +128,6 @@ rm -f "$OUT"
 ( cd "$BUILD" && jar cf "$OUT" . )
 ( cd src/main/resources && jar uf "$OUT" . )
 [[ -d src/neoforge/resources && -f "$BUILD/foxgrade/neoforge/FoxGradeLocator.class" ]] && ( cd src/neoforge/resources && jar uf "$OUT" . )
+[[ -d src/forge/resources && -f "$BUILD/foxgrade/forge/FoxGradeForgeLocator.class" ]] && ( cd src/forge/resources && jar uf "$OUT" . )
 rm -rf "$FA_TMP"
 echo "wrote $OUT ($(wc -c < "$OUT" | tr -d ' ') bytes)"

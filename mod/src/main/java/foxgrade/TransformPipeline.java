@@ -89,6 +89,20 @@ public final class TransformPipeline {
     try { return Loaders.current().name().equals("Quilt"); } catch (Throwable t) { return false; }
   }
 
+  /** Hosts that put every mod jar in its own JPMS module, where a jar owning a package the game also owns is
+   *  rejected before any mod code runs. Forge and NeoForge both do; Fabric and Quilt use a flat classpath and do not.
+   *
+   *  <p>Kept separate from {@link #isNeoForgeHost} because the two questions are different. This one is about how the
+   *  loader arranges classes, and the answer is the same for both Forge families. That one is about whose API the
+   *  mod was written against, and NeoForge's tables mean nothing to a mod built for Forge. */
+  static boolean isModularHost() {
+    String name;
+    try { name = Loaders.current().name(); } catch (Throwable t) { return false; }
+    String forced = System.getProperty("foxgrade.loader", "");
+    if (!forced.isEmpty()) return forced.equalsIgnoreCase("neoforge") || forced.equalsIgnoreCase("forge");
+    return name.equals("NeoForge") || name.equals("Forge");
+  }
+
   static boolean isNeoForgeHost() {
     // The standalone checker has no loader under it, so it cannot answer this by asking. Being able to run the
     // NeoForge path outside the game is what makes NeoForge ports testable without launching one.
@@ -846,12 +860,14 @@ public final class TransformPipeline {
   // NeoForge cannot have that. Its loader puts every mod jar in its own JPMS module, and two modules may not both own
   // a package, so a jar carrying net/minecraft/... or com/mojang/... is rejected before any mod code runs:
   //   Module minecraft contains package com.mojang.blaze3d.vertex, module <mod> exports package ... to minecraft
-  // On that host the MC-named shims move under the port's own namespace as well. Nothing is lost by it: the second
+  // Forge does the same, and was where this was confirmed twice: cloth-config ported for Forge was refused with
+  // "Module cloth_config contains package net.minecraft.world". On either host the MC-named shims move under the
+  // port's own namespace as well. Nothing is lost by it: the second
   // pass below rewrites the mod's call sites to the moved names, and every one of these shims stands in for a class
   // the target deleted, so no vanilla code exists that could still expect the original name.
   private static String namespacedShim(String shimCls, String ns, java.util.Set<String> standIns) {
     if (shimCls.startsWith("foxgrade/shim/")) return "foxgrade/shim/" + ns + "/" + shimCls.substring("foxgrade/shim/".length());
-    if (!isNeoForgeHost()) return shimCls;
+    if (!isModularHost()) return shimCls;
     // Only a class Fox-Grade actually writes into the jar may move. A redirect can also name a class that really
     // exists on the target — NeoForge's own FMLEnvironment is one — and relocating that would rewrite a working call
     // into a reference to a class nobody emits.

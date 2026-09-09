@@ -474,9 +474,18 @@ public final class ShimGenerator implements Opcodes {
   private static final Map<String, Boolean> HAS_SET = new java.util.concurrent.ConcurrentHashMap<>();
 
   /** Whether this target has a shim set of its own, rather than sharing the one built alongside the engine. */
+  /** A version turned into something that can be a Java package segment.
+   *
+   *  <p>"26.1.2" cannot: a package part may not start with a digit or contain a dot, and shipping classes under
+   *  foxgrade/shimset/26.1.2/ makes the jar unreadable to anything that validates module packages. Forge does, and
+   *  refused Fox-Grade outright — "Invalid package name: '26' is not a Java identifier" — before any mod loaded. */
+  private static String setDir(String mc) {
+    return "v" + mc.replaceAll("[^A-Za-z0-9]", "_");
+  }
+
   private static boolean hasOwnSet() {
     if (targetMc.isEmpty()) return false;
-    return HAS_SET.computeIfAbsent(targetMc, (v) -> resource("/foxgrade/shimset/" + v + "/UNAVAILABLE.txt") != null);
+    return HAS_SET.computeIfAbsent(targetMc, (v) -> resource("/foxgrade/shimset/" + setDir(v) + "/UNAVAILABLE.txt") != null);
   }
 
   /** True when this shim has no build for the target version, so the reference must stay unresolved.
@@ -497,7 +506,7 @@ public final class ShimGenerator implements Opcodes {
     if (hasOwnSet()) {
       // A version with its own set is served only from it. Falling back to the set built alongside the engine would
       // put a class compiled against a different Minecraft into the port, which is the failure this exists to avoid.
-      bytes = resource("/foxgrade/shimset/" + targetMc + "/" + path);
+      bytes = resource("/foxgrade/shimset/" + setDir(targetMc) + "/" + path);
       if (bytes == null) throw new IllegalStateException("no " + path + " built for " + targetMc);
     } else {
       bytes = resource("/" + path);

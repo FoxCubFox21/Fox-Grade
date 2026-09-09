@@ -22,6 +22,7 @@ public final class Loaders {
       if (current != null) return current;
       LoaderHost found = FabricHost.detect();          // Fabric, and Quilt via the same API
       if (found == null) found = NeoForgeHost.detect();
+      if (found == null) found = ForgeHost.detect();
       if (found == null) found = new StandaloneHost();
       return current = found;
     }
