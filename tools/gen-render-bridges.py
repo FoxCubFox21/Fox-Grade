@@ -763,6 +763,8 @@ cr.setdefault("net/minecraft/world/food/FoodProperties$Builder", {})["effect(" +
 cr.setdefault("net/minecraft/world/level/block/BeehiveBlock", {})["dropHoneycomb(" + LVL + BP + ")V"] = [BAC, "dropHoneycomb", "(" + LVL + BP + ")V"]
 cr.setdefault("net/minecraft/world/entity/player/PlayerSkin", {})["capeTexture()" + ID] = [SKC, "capeTexture", "(" + PLS + ")" + ID]
 cr.setdefault("net/minecraft/client/renderer/rendertype/RenderType", {})["entityGlintDirect()" + RTY] = ["net/minecraft/client/renderer/rendertype/RenderTypes", "entityGlint", "()" + RTY]
+# Fabric API dropped its umbrella "fabric" mod id; a 1.21-era isModLoaded("fabric") check wrongly reports it missing (REI).
+cr.setdefault("net/fabricmc/loader/api/FabricLoader", {})["isModLoaded(Ljava/lang/String;)Z"] = ["foxgrade/shim/FabricCompat", "isModLoaded", "(Lnet/fabricmc/loader/api/FabricLoader;Ljava/lang/String;)Z"]
 # Fabric API moved the pack activation enum; ModNioPackResources.create now takes the v1 one (towns-and-towers).
 _MNP = "Lnet/fabricmc/fabric/impl/resource/pack/ModNioPackResources;"; _MC_ = "Lnet/fabricmc/loader/api/ModContainer;"
 _PT_ = "Lnet/minecraft/server/packs/PackType;"; _RPAT = "Lnet/fabricmc/fabric/api/resource/ResourcePackActivationType;"

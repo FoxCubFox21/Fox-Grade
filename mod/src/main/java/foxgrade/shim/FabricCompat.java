@@ -18,4 +18,14 @@ public final class FabricCompat {
     } catch (ReflectiveOperationException | RuntimeException e) { System.err.println("[Fox-Grade] built-in resource pack " + id + " not registered: " + e); }
     return false;
   }
+  /** Fabric API used to register an umbrella mod id {@code "fabric"} alongside {@code "fabric-api"}, and dropped it.
+   *  A 1.21-era mod that asks the loader whether {@code "fabric"} is present therefore concludes Fabric API is not
+   *  installed even when it is, and refuses to start (Roughly Enough Items does exactly this and shows a dialog saying
+   *  Fabric API is missing). Answer the umbrella id from the real one; every other id is passed straight through, so a
+   *  mod branching on some other mod's presence still gets the truth. */
+  public static boolean isModLoaded(net.fabricmc.loader.api.FabricLoader loader, String id) {
+    if (loader == null || id == null) return false;
+    if (loader.isModLoaded(id)) return true;
+    return id.equals("fabric") && loader.isModLoaded("fabric-api");
+  }
 }
