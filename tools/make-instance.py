@@ -42,9 +42,15 @@ def fabric_pieces(version):
         f"https://meta.fabricmc.net/v2/versions/loader/{version}", headers=UA), timeout=30))
     if not meta:
         raise SystemExit(f"Fabric publishes no loader for {version}")
+    # Newest first, which is what a launcher would install and what the Fabric API build for a version expects:
+    # 26.1's API declares fabricloader >=0.18.4 and refuses to load under an older one. An older loader is only
+    # wanted for pre-26 games, whose API predates the class-tweaker format that loader 0.19 reads — and those are
+    # blocked on the namespace question anyway, so preferring old by default was wrong for every version that can
+    # actually be measured.
     builds = [m for m in meta]
+    modern = int(version.split(".")[0]) >= 26
     era = [m for m in builds if m["loader"]["version"].startswith("0.16")]
-    chosen = (era or builds)[0]
+    chosen = builds[0] if modern or not era else era[0]
     libs = [chosen["loader"]["maven"], chosen.get("intermediary", {}).get("maven")]
     for group in ("common", "client"):
         libs += [l["name"] for l in chosen["launcherMeta"].get("libraries", {}).get(group, [])]
@@ -79,9 +85,13 @@ def classpath(meta, version):
         collapsed every cached jar to one key and silently kept only the first — which is how the intermediary
         mappings went missing and Fabric could not find the game at all."""
         name = pathlib.Path(path).name
-        m = re.match(r"(.+?)-\d[\d.]*.*\.jar$", name.split("_")[-1] if "_" in name else name)
+        # The classifier is part of the identity. lwjgl-freetype-3.4.1.jar and
+        # lwjgl-freetype-3.4.1-natives-macos.jar are not two builds of one library, they are the library and its
+        # native payload — and treating them as duplicates dropped every natives jar, so the game died on
+        # "Could not initialize class org.lwjgl.system.Library" before a single mod loaded.
+        m = re.match(r"(.+?)-\d[\d.]*(?:-(.+?))?\.jar$", name.split("_")[-1] if "_" in name else name)
         if m:
-            return m.group(1)
+            return m.group(1) + ("-" + m.group(2) if m.group(2) else "")
         parts = pathlib.Path(path).parts
         return parts[-3] if len(parts) >= 3 else pathlib.Path(path).stem
 
