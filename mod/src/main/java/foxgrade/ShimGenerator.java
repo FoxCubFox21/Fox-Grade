@@ -480,7 +480,7 @@ public final class ShimGenerator implements Opcodes {
    *  foxgrade/shimset/26.1.2/ makes the jar unreadable to anything that validates module packages. Forge does, and
    *  refused Fox-Grade outright — "Invalid package name: '26' is not a Java identifier" — before any mod loaded. */
   private static String setDir(String mc) {
-    return "v" + mc.replaceAll("[^A-Za-z0-9]", "_");
+    return "v" + Targets.tables(mc).replaceAll("[^A-Za-z0-9]", "_");
   }
 
   private static boolean hasOwnSet() {

@@ -19,8 +19,31 @@ import java.util.Set;
 public final class Targets {
   private Targets() { }
 
-  /** Measured against a real corpus in a running game. */
-  private static final Set<String> SUPPORTED = Set.of("26.2");
+  /** Measured against a real corpus in a running game.
+   *
+   *  <p>26.2: 86 of 130 mods boot. 26.1.2: 7 of 13, on the h2h corpus, with the tables derived from 26.2's and
+   *  checked against 26.1.2's own class inventory. Both numbers are in docs/compat.md with the reason for every
+   *  failure, which is the point of requiring them — a version is supported when someone can see how well. */
+  private static final Set<String> SUPPORTED = Set.of("26.2", "26.1.2");
+
+  /** Versions whose API is the same as another's, and which therefore share its tables.
+   *
+   *  <p>26.1, 26.1.1 and 26.1.2 declare identical class sets and differ by a single added method between them. The
+   *  rename tables and the intermediary bridge describe that API, so shipping three near-identical copies would add
+   *  four megabytes to every download to say the same thing three times.
+   *
+   *  <p>What is <em>not</em> shared is the class inventory. That file answers "does this member exist here", and it
+   *  is the one place where a single added method matters: told that 26.1 has Checkbox.overflowsRowLimit because
+   *  26.1.2 does, Fox-Grade would ship a port that calls it and fails at runtime, instead of naming it unresolved.
+   *  The inventory stays per version and exact. */
+  private static final java.util.Map<String, String> FAMILY = java.util.Map.of(
+      "26.1", "26.1.2",
+      "26.1.1", "26.1.2");
+
+  /** The version whose tables describe this one's API — itself, unless it belongs to a family. */
+  public static String tables(String mc) {
+    return mc == null ? "" : FAMILY.getOrDefault(mc, mc);
+  }
 
   public static boolean supported(String mc) {
     if (mc == null || mc.isEmpty() || mc.equals("?")) return false;

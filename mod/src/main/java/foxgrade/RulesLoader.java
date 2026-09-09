@@ -34,6 +34,7 @@ public final class RulesLoader {
   public static RulesLoader load(String targetMc) throws IOException { return load(targetMc, null); }
 
   public static RulesLoader load(String targetMc, java.nio.file.Path cacheDir) throws IOException {
+    targetMc = Targets.tables(targetMc);          // a version may share another's tables
     String stamp = TableCache.stamp("/foxgrade/rules.json.gz", targetMc);
     try (java.io.DataInputStream in = TableCache.open(cacheDir, "rules-" + targetMc + ".bin", stamp)) {
       if (in != null) return new RulesLoader(TableCache.readMap(in), TableCache.readMap(in));

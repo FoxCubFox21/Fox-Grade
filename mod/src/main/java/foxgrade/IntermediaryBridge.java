@@ -78,6 +78,7 @@ public final class IntermediaryBridge {
 
   /** With a cache directory, the parsed tables are read from / written to a binary cache (see TableCache). */
   public static IntermediaryBridge load(String targetMc, java.nio.file.Path cacheDir) throws IOException {
+    targetMc = Targets.tables(targetMc);          // a version may share another's tables
     String stamp = TableCache.stamp("/foxgrade/intermediary-to-mojang." + targetMc + ".json.gz", targetMc);
     try (java.io.DataInputStream in = TableCache.open(cacheDir, "intermediary-" + targetMc + ".bin", stamp)) {
       if (in != null) {
