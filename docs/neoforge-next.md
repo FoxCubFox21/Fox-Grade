@@ -42,3 +42,20 @@
    grades it a stall. Both mods are in the loaded-mod list at that point, so discovery and the port itself
    succeeded. Worth reproducing with a visible window and `-verbose:class`, since whatever it is happens before
    anything Fox-Grade writes gets a chance to run.
+
+6. **A mod's language loader is a dependency, and the harness does not know it.** VeinMiner declares
+   `modLoader = "klf"` in its manifest — it is a Kotlin mod — and dies with
+   `Missing language loader klf wanted by ...veinminer`. That string is not in any `[[dependencies]]` table, so
+   reading dependency tables alone misses it, and the mod is failed for a library the harness simply did not hand
+   it. `nf_deps` should also read `modLoader` and treat anything other than `javafml`/`lowcodefml` as a dependency
+   to satisfy from the base set (`klf` is provided by kotlin-for-forge). Affects veinminer and veinminer-client.
+
+7. **The three silent aborts have three different causes, not one.** Worth writing down because they looked
+   identical from the outside:
+   - **modernfix** runs its own mixin config plugin — "Applying Nashorn fix", "Configuring Minecraft's
+     max.bg.threads" — and FML closes on the next line. A startup-optimisation mod doing invasive things during
+     early loading is the least portable thing in the corpus.
+   - **owo-lib** closes while its bundled jars (endec, jankson, gson) are being listed, so the jar-in-jar porting
+     added today is the thing to look at first.
+   - **veinminer** is item 6 above and is not really silent at all; the cause was one line further up than the
+     earlier scan looked.
