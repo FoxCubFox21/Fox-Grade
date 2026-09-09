@@ -29,9 +29,6 @@ builder `tools/h2h-corpus.py`.
 sub(REPO / "mod/README.md", r"## Head-to-head with Retromod\n.*?\n\n(?=## How well does it work\?)", readme_h2h)
 sub(REPO / "mod/README.md", r"Batch-tested against \d+ mods from 1\.21\.x and 26\.1 \(every harness run folded to one row per mod,\nlast verdict wins\): \*\*\d+ port and boot into a world\*\*",
     f"Batch-tested against {A} mods from 1.21.x and 26.1 (every harness run folded to one row per mod,\nlast verdict wins): **{B} port and boot into a world**")
-sub(REPO / "mod/MODRINTH.md", r"\*\*Head-to-head\.\*\* The same \d+ mods through Retromod \(1\.3\.0-snapshot\.10\) and Fox-Grade on one\ninstance: Fox-Grade boots \d+, Retromod boots \d+(?: \(\d+ boot only under Fox-Grade\))?\.",
-    f"**Head-to-head.** The same {T} mods through Retromod (1.3.0-snapshot.10) and Fox-Grade on one\ninstance: Fox-Grade boots {F}, Retromod boots {R} ({FO} boot only under Fox-Grade).")
-sub(REPO / "mod/MODRINTH.md", r"Batch-tested against \d+ mods from 1\.21\.x and 26\.1: \d+ port\nand boot into a world", f"Batch-tested against {A} mods from 1.21.x and 26.1: {B} port\nand boot into a world")
 sub(REPO / "mod/CHANGELOG.md", r"- \*\*Head-to-head with Retromod on \d+ mods: Fox-Grade \d+, Retromod \d+\*\*(?: \(\d+ boot only under Fox-Grade\))?", f"- **Head-to-head with Retromod on {T} mods: Fox-Grade {F}, Retromod {R}** ({FO} boot only under Fox-Grade)")
 rd = W / "publicity/reddit-mod-launch.md"
 sub(rd, r"\*\*Against the other porter:\*\* I ran the same \d+ mods (?:\(Modrinth's most-downloaded Fabric 1\.21\.1 list\)\n)?through Retromod \(the other auto-porter on\s*Modrinth\) and Fox-Grade on one instance\. Fox-Grade boots \d+,\s*Retromod boots \d+(?:; \d+ boot only under Fox-Grade)?\.",
@@ -49,10 +46,22 @@ fail_modrinth = (f"and {NB}\ndo not: renderer-tier internals 26.2 rewrote (entit
   "layer stack, particle render types), API subsystems removed outright (item-model overrides, weighted lists,\n"
   "loot entry types), one mod that is a rewrite rather than a port, the Sodium-dependent add-ons, and a few\n"
   "datapack formats.")
-sub(REPO / "mod/MODRINTH.md", r"and \d+\n(?:crash on internals 26\.2 rewrote that are not bridged yet — block/item model rendering, the\nlow-level texture pipeline, a bundled animation engine, native code, and the last hierarchy changes\nbehind the two creature mods\.|do not: renderer-tier internals.*?datapack formats\.)", fail_modrinth)
 fail_reddit = (f"{NB} don't — 26.2 rewrote internals a\nbytecode port can't paper over: renderer-tier stuff (entity models/textures, the texture stitcher, the HUD\n"
   "layer stack, particle render types), API subsystems that were removed outright (item-model overrides,\n"
   "weighted lists, loot entry types), one mod that's a rewrite rather than a port (Cobblemon), the\n"
   "Sodium-dependent add-ons, and a couple of datapack formats.")
 sub(rd, r"\d+ (?:crash — 26\.2 rewrote internals\nFox-Grade doesn't bridge yet:.*?last hierarchy changes\.|don't — 26\.2 rewrote internals a\nbytecode port can't paper over:.*?datapack formats\.)", fail_reddit)
 print("done:", {k: v for k, v in S.items() if not k.endswith("_names")})
+
+# --- MODRINTH.md ------------------------------------------------------------------------------------------------
+# The page was rewritten much shorter on 2026-09-09; these rules track the shapes it uses now, so the numbers stay
+# generated rather than hand-edited.
+sub(REPO / "mod/MODRINTH.md",
+    r"\d+ mods from 1\.21\.x and 26\.1, every one launched into a real world: \*\*\d+ boot\.\*\*",
+    f"{A} mods from 1.21.x and 26.1, every one launched into a real world: **{B} boot.**")
+sub(REPO / "mod/MODRINTH.md", r"on the same \d+ mods, same pass rule", f"on the same {T} mods, same pass rule")
+sub(REPO / "mod/MODRINTH.md", r"\| \*\*Fox-Grade\*\* \| \*\*\d+\*\* \|", f"| **Fox-Grade** | **{F}** |")
+sub(REPO / "mod/MODRINTH.md", r"\| Retromod \| \d+ \|", f"| Retromod | {R} |")
+sub(REPO / "mod/MODRINTH.md",
+    r"\*\*\d+ mods boot only under Fox-Grade\. None boot only under Retromod\.\*\*",
+    f"**{FO} mods boot only under Fox-Grade. None boot only under Retromod.**")
