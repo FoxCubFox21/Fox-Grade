@@ -4,16 +4,33 @@ Port Minecraft Fabric mods across versions — from source **or straight from th
 and get told plainly when it doesn't know.
 
 ```bash
-Quilt-only mods (a `quilt.mod.json`, no `fabric.mod.json`) are accepted too: the manifest becomes a
-`fabric.mod.json`, Quilt's loader API and QSL entrypoint interfaces are bridged, and the port ships a 26.2
-`quilt.mod.json` alongside. Fox-Grade also runs on Quilt Loader 26.2 (0.31 beta): Quilt scans sub-folders of
-`mods/`, so the first jar goes in `fox-grade-inbox/` next to `mods/`; from then on the folders are marked for
-Quilt to skip. QSL's own API modules are not bridged.
-
 # the whole mechanical pipeline, one command, no AI involved
 node port-pipeline.mjs mod.jar --from 26.1 --to 26.2 \
   --classpath "$(node build-classpath.mjs --version 26.2)" --out ported.jar
 ```
+
+
+## Loaders
+
+**Fabric** is the primary lane and the one the numbers below are measured on.
+
+**Quilt.** Quilt-only mods (a `quilt.mod.json`, no `fabric.mod.json`) are accepted: the manifest becomes a
+`fabric.mod.json`, Quilt's loader API and QSL entrypoint interfaces are bridged, and the port ships a 26.2
+`quilt.mod.json` alongside, so Quilt still sees a Quilt mod. Fox-Grade runs on Quilt Loader 26.2 (0.31 beta) too;
+Quilt scans sub-folders of `mods/`, so the first jar goes in `fox-grade-inbox/` next to `mods/` and from then on
+the folders are marked for Quilt to skip. QSL's own API modules are not bridged.
+
+**NeoForge**, and here NeoForge is the better host. Fabric and Quilt commit to their mod set before any mod code
+runs, so a port only takes effect after a relaunch. NeoForge asks registered locators for candidates while
+discovery is still open, so Fox-Grade ports the inbox and hands the jar straight to the loader — the mod is live
+on the same launch, with no restart at all.
+
+Two things differ on that host and both are handled. Every NeoForge mod jar is its own JPMS module and two modules
+may not own one package, so shims named for the class they stand in for move under the port's own namespace rather
+than shipping a jar the loader rejects before it starts. And NeoForge ships its loader and its modding API as one
+product, reshaping both between Minecraft versions — which Fabric does not — so a NeoForge mod hits NeoForge's own
+moved classes before it reaches a Minecraft one. `tools/gen-neoforge-bridges.py` diffs two NeoForge releases for
+those, and emits only what it can prove, leaving judgement calls to a person.
 
 ## The receipts
 
