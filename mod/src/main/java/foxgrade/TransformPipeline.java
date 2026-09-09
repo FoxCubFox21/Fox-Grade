@@ -205,6 +205,11 @@ public final class TransformPipeline {
     Set<String> droppedNested = new HashSet<>();   // bundled jars left out of the port (and of fabric.mod.json "jars")
     ByteArrayOutputStream sink = new ByteArrayOutputStream();
     try (ZipFile in = new ZipFile(src.toFile()); ZipOutputStream out = new ZipOutputStream(sink)) {
+      // Every name the source jar holds, known before anything is written. The manifest is rewritten while the jar is
+      // still being read, so asking what has been buffered so far would answer "not yet" for a file that is simply
+      // later in the archive — and drop a declaration the jar does back.
+      java.util.Set<String> sourceEntries = new java.util.HashSet<>();
+      for (var it = in.entries(); it.hasMoreElements(); ) sourceEntries.add(it.nextElement().getName());
       boolean quiltOnly = QuiltMeta.isQuiltOnly(in);
       var entries = in.entries();
       while (entries.hasMoreElements()) {
@@ -216,7 +221,7 @@ public final class TransformPipeline {
         if (NeoForgeMetaFixer.isManifest(name)) {
           // A NeoForge/Forge jar: widen its Minecraft and loader gates so the target will load it. Everything else
           // about the port is loader-agnostic, because it is Minecraft that changed, not the loader reading the jar.
-          byte[] widened = NeoForgeMetaFixer.widen(raw, targetMc);
+          byte[] widened = NeoForgeMetaFixer.widen(raw, targetMc, sourceEntries);
           if (widened != raw) { raw = widened; metaFixed++; }
         }
         if (quiltOnly && name.equals("quilt.mod.json")) {

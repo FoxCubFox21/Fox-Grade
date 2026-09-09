@@ -25,12 +25,27 @@ final class NeoForgeMetaFixer {
 
   /** The same array back when nothing needed widening. */
   static byte[] widen(byte[] toml, String targetMc) {
+    return widen(toml, targetMc, null);
+  }
+
+  /** As above, and when {@code present} is given, also drops an access-transformer declaration whose file is not
+   *  actually in the jar.
+   *
+   *  <p>Mods ship that way. pridelib, bundled two levels deep inside LambDynamicLights, declares
+   *  {@code [[accessTransformers]] file = "META-INF/accesstransformer.cfg"} and contains no such file. NeoForge 21.1
+   *  shrugged; 26.2 refuses the mod outright with "Access transformer file ... does not exist!", and the whole tree
+   *  of mods above it fails with it.
+   *
+   *  <p>Removing a claim the jar cannot back is the same kind of edit as widening a version gate, and safer: there is
+   *  no transformer to lose, only a promise of one that was never kept. */
+  static byte[] widen(byte[] toml, String targetMc, java.util.Set<String> present) {
     try {
       List<String> lines = new ArrayList<>(List.of(new String(toml, StandardCharsets.UTF_8).split("\n", -1)));
       boolean changed = false;
       String block = "";                 // the current [[...]] table, lowercased
       int depStart = -1;                 // first line of the dependency table being read
 
+      if (present != null) changed |= dropMissingTransformers(lines, present);
       for (int i = 0; i < lines.size(); i++) {
         String trimmed = lines.get(i).trim();
         if (trimmed.startsWith("[")) {
@@ -59,6 +74,28 @@ final class NeoForgeMetaFixer {
     } catch (RuntimeException notOurShape) {
       return toml;
     }
+  }
+
+  /** Removes every {@code [[accessTransformers]]} table naming a file the jar does not contain. */
+  private static boolean dropMissingTransformers(List<String> lines, java.util.Set<String> present) {
+    boolean changed = false;
+    for (int i = 0; i < lines.size(); i++) {
+      if (!lines.get(i).trim().toLowerCase(Locale.ROOT).startsWith("[[accesstransformers]]")) continue;
+      int end = i + 1;
+      String file = null;
+      while (end < lines.size() && !lines.get(end).trim().startsWith("[")) {
+        String t = lines.get(end).trim();
+        if (t.startsWith("file")) file = quoted(t);
+        end++;
+      }
+      if (file == null) continue;
+      String path = file.startsWith("META-INF/") ? file : "META-INF/" + file;
+      if (present.contains(path) || present.contains(file)) continue;
+      lines.subList(i, end).clear();
+      i--;
+      changed = true;
+    }
+    return changed;
   }
 
   /** The modId of the dependency table starting at {@code from}; the key may sit either side of the versionRange. */
