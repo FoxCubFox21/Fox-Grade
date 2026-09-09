@@ -193,9 +193,9 @@ public final class FoxGradeClient implements ClientModInitializer {
       if (counted == autotestTicks) {
         done = true;
         try {
-          Screenshot.grab(mc, false);
+          ClientCompat.grabScreenshot(mc);
           FoxGradePreLaunch.log("autotest screenshot taken at tick " + counted + " — screen at shot: "
-              + (mc.gui.screen() == null ? "none" : mc.gui.screen().getClass().getName()));
+              + (ClientCompat.screen(mc) == null ? "none" : ClientCompat.screen(mc).getClass().getName()));
         } catch (Throwable t) {
           FoxGradePreLaunch.log("autotest screenshot FAILED: " + t);
         }

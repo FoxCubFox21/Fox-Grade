@@ -68,6 +68,10 @@ public final class TransformPipeline {
     try { return Loaders.current().name().equals("Quilt"); } catch (Throwable t) { return false; }
   }
 
+  static boolean isNeoForgeHost() {
+    try { return Loaders.current().name().equals("NeoForge"); } catch (Throwable t) { return false; }
+  }
+
   // Cheap check: does this jar's fabric.mod.json already declare it's been ported for `targetMc`?
   // Used to skip re-porting on a second launch after the first port succeeded.
   public static boolean isAlreadyPortedFor(Path jar, String targetMc) {
@@ -91,6 +95,8 @@ public final class TransformPipeline {
     // different shim bytes. The suffix comes from the source jar name; sanitised to a valid
     // Java identifier.
     String shimNs = src.getFileName().toString().replaceAll("\\.jar$", "").replaceAll("[^A-Za-z0-9]", "_");
+    // Shims are compiled classes, so which build of them to inject depends on the version being ported for.
+    ShimGenerator.targetVersion(targetMc);
     Map<String, String> mergedClasses = new HashMap<>(bridge.size() + rules.size());
     mergedClasses.putAll(bridge.classTable());
     mergedClasses.putAll(rules.slashTable());
@@ -634,7 +640,11 @@ public final class TransformPipeline {
       // shim-to-shim references point at the namespaced copies as well.
       java.util.LinkedHashSet<String> wanted = new java.util.LinkedHashSet<>();
       for (String missing : new java.util.ArrayList<>(verifier.missing())) {
-        if (ShimGenerator.SHIMS.containsKey(missing)) { wanted.add(missing); verifier.missing().remove(missing); }
+        // A shim with no build for this target stays missing on purpose: the report says so, which a person can act
+        // on, and that beats injecting a class compiled against a different Minecraft.
+        if (ShimGenerator.SHIMS.containsKey(missing) && !ShimGenerator.unavailableHere(missing)) {
+          wanted.add(missing); verifier.missing().remove(missing);
+        }
       }
       wanted.addAll(remapper.usedShims());
       java.util.ArrayDeque<String> queue = new java.util.ArrayDeque<>(wanted);
@@ -656,7 +666,14 @@ public final class TransformPipeline {
         if (shim == null) continue;
         String entryName = shimMap.getOrDefault(shimCls, shimCls) + ".class";
         if (buffered.containsKey(entryName)) continue;
-        byte[] bytes = shim.get();
+        byte[] bytes;
+        try {
+          bytes = shim.get();
+        } catch (RuntimeException noBuildForThisTarget) {
+          // One shim that cannot be produced is a gap in the port, not a reason to abandon it.
+          verifier.missing().add(shimCls);
+          continue;
+        }
         if (!shimMap.isEmpty()) bytes = ShimGenerator.renameClasses(bytes, shimMap);
         buffered.put(entryName, bytes);
       }
@@ -738,12 +755,26 @@ public final class TransformPipeline {
     return o;
   }
 
-  // Only foxgrade/shim/* classes get namespaced; MC-named shims (net/minecraft/util/Tuple) must
-  // keep their exact name to satisfy the mod's references, and identical bytes make their
-  // collisions harmless.
+  // Where an injected shim class is written inside the ported jar.
+  //
+  // foxgrade/shim/* always gets a per-port namespace so two ports never share one copy. A shim named for the class it
+  // stands in for (net/minecraft/util/Tuple, com/mojang/blaze3d/vertex/Tesselator) normally keeps that exact name, so
+  // the mod's existing references resolve with nothing rewritten.
+  //
+  // NeoForge cannot have that. Its loader puts every mod jar in its own JPMS module, and two modules may not both own
+  // a package, so a jar carrying net/minecraft/... or com/mojang/... is rejected before any mod code runs:
+  //   Module minecraft contains package com.mojang.blaze3d.vertex, module <mod> exports package ... to minecraft
+  // On that host the MC-named shims move under the port's own namespace as well. Nothing is lost by it: the second
+  // pass below rewrites the mod's call sites to the moved names, and every one of these shims stands in for a class
+  // the target deleted, so no vanilla code exists that could still expect the original name.
   private static String namespacedShim(String shimCls, String ns) {
-    if (!shimCls.startsWith("foxgrade/shim/")) return shimCls;
-    return "foxgrade/shim/" + ns + "/" + shimCls.substring("foxgrade/shim/".length());
+    if (shimCls.startsWith("foxgrade/shim/")) return "foxgrade/shim/" + ns + "/" + shimCls.substring("foxgrade/shim/".length());
+    if (!isNeoForgeHost()) return shimCls;
+    // Only a class Fox-Grade actually writes into the jar may move. A redirect can also name a class that really
+    // exists on the target — NeoForge's own FMLEnvironment is one — and relocating that would rewrite a working call
+    // into a reference to a class nobody emits.
+    if (!ShimGenerator.SHIMS.containsKey(shimCls)) return shimCls;
+    return "foxgrade/shim/" + ns + "/host/" + shimCls;
   }
 
 

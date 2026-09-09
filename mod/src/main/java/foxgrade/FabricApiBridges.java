@@ -139,6 +139,16 @@ public final class FabricApiBridges {
     try (InputStream shipped = FabricApiBridges.class.getResourceAsStream("/foxgrade/fabric-api-bridges.json")) {
       if (shipped != null) merge(renames, redirects, classRenames, ctorAdapters, inheritedRenames, fieldRedirects, extra, new String(shipped.readAllBytes()));
     }
+    // NeoForge ships its loader and its modding API as one product and reshapes both between Minecraft versions, so a
+    // NeoForge mod hits NeoForge's own moved classes before it reaches a Minecraft one. Its table merges on top.
+    // Gated on the host, not merged everywhere. These entries are written in NeoForge's own naming and describe
+    // NeoForge's own moves; loading them on Fabric would put a second, unrelated set of substitutions in front of a
+    // Fabric port for no benefit. The Fabric results are measured, and nothing here is allowed to disturb them.
+    if (TransformPipeline.isNeoForgeHost()) {
+      try (InputStream neo = FabricApiBridges.class.getResourceAsStream("/foxgrade/neoforge-api-bridges.json")) {
+        if (neo != null) merge(renames, redirects, classRenames, ctorAdapters, inheritedRenames, fieldRedirects, extra, new String(neo.readAllBytes()));
+      }
+    }
     Path user = gameDir.resolve("fox-grade.api-bridges.json");
     if (Files.exists(user)) merge(renames, redirects, classRenames, ctorAdapters, inheritedRenames, fieldRedirects, extra, Files.readString(user));
     FabricApiBridges b = new FabricApiBridges(renames, redirects, classRenames, ctorAdapters, inheritedRenames, fieldRedirects,

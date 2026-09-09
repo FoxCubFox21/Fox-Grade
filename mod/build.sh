@@ -59,6 +59,49 @@ if [[ -n $NF_CP && -d src/neoforge/java ]]; then
   fi
 fi
 
+# --- Shim sets for additional target versions -------------------------------------------------------------------
+# Fox-Grade injects shims as compiled classes, and a shim compiled against one Minecraft is not valid on another. To
+# target a second version, the shim package — which is self-contained, importing nothing from the engine — is compiled
+# again against that version's client jar and shipped under foxgrade/shimset/<version>/.
+#
+# Not every shim can exist on every version, and that is the point of doing it this way. A shim that will not compile
+# against a version is dropped for that version only, and the port report then says the reference is unresolved. The
+# alternative — shipping one set built for the newest game and hoping — is how you get a port that loads and then
+# fails somewhere the report never mentioned.
+#
+# Dropping is iterative because failures cascade: a shim can be fine in itself and fail only because something it uses
+# was dropped a round earlier. Each round removes the files javac named and recompiles, until what is left compiles.
+# ALT_MC_JARS is a space-separated list of version=path/to/<version>.jar.
+ALT_MC_JARS="${ALT_MC_JARS:-}"
+for spec in $ALT_MC_JARS; do
+  alt_ver="${spec%%=*}"; alt_jar="${spec#*=}"
+  [[ -f $alt_jar ]] || { echo "  shimset $alt_ver SKIPPED (no jar at $alt_jar)"; continue; }
+  # Swap the client jar at the head of CP and keep the rest verbatim. Splitting CP on ':' and re-joining would be
+  # the obvious way and is wrong: the library paths run through "Application Support", so word splitting eats them.
+  alt_cp="$alt_jar${CP#"$MC_JAR"}"
+  alt_out="build/shimset/$alt_ver"; rm -rf "$alt_out"; mkdir -p "$alt_out"
+  find src/main/java/foxgrade/shim -name '*.java' > /tmp/fg-shim-sources.txt
+  dropped=0
+  for round in 1 2 3 4 5 6; do
+    if javac -J-Xmx512m -nowarn -Xmaxerrs 10000 -d "$alt_out" -cp "$alt_cp" @/tmp/fg-shim-sources.txt 2>/tmp/fg-shim-errors.txt; then
+      break
+    fi
+    grep -oE "^[^:]+\.java" /tmp/fg-shim-errors.txt | sort -u > /tmp/fg-shim-bad.txt
+    [[ -s /tmp/fg-shim-bad.txt ]] || { echo "  shimset $alt_ver FAILED (see /tmp/fg-shim-errors.txt)"; break; }
+    dropped=$((dropped + $(wc -l < /tmp/fg-shim-bad.txt)))
+    grep -vxF -f /tmp/fg-shim-bad.txt /tmp/fg-shim-sources.txt > /tmp/fg-shim-keep.txt || true
+    mv /tmp/fg-shim-keep.txt /tmp/fg-shim-sources.txt
+    rm -rf "$alt_out"; mkdir -p "$alt_out"
+  done
+  kept=$(find "$alt_out" -name '*.class' | wc -l | tr -d ' ')
+  if [[ $kept -gt 0 ]]; then
+    mkdir -p "$BUILD/foxgrade/shimset/$alt_ver"
+    ( cd "$alt_out" && tar cf - . ) | ( cd "$BUILD/foxgrade/shimset/$alt_ver" && tar xf - )
+    sed 's|.*/foxgrade/shim/|foxgrade/shim/|; s|\.java$||' /tmp/fg-shim-bad.txt 2>/dev/null | sort -u > "$BUILD/foxgrade/shimset/$alt_ver/UNAVAILABLE.txt" || true
+    echo "  shimset $alt_ver: $kept classes, $dropped source file(s) not available on that version"
+  fi
+done
+
 VERSION=$(grep '"version"' src/main/resources/fabric.mod.json | head -1 | sed -E 's/.*"([^"]+)"[^"]*$/\1/')
 OUT="$PWD/$DIST/foxgrade-${VERSION}.jar"
 rm -f "$OUT"

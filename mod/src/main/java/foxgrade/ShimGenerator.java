@@ -420,11 +420,50 @@ public final class ShimGenerator implements Opcodes {
 
   // Shims with real logic are written as normal Java inside Fox-Grade and copied into the ported
   // jar from Fox-Grade's own class resources — no hand-rolled ASM for anything non-trivial.
+  /** The Minecraft version currently being ported for, so shims can be taken from that version's set.
+   *
+   *  <p>A shim is a compiled class, and a class compiled against one Minecraft is not valid on another — it names
+   *  methods and types that version has. Fox-Grade therefore builds the shim package once per target it supports and
+   *  ships each set under {@code foxgrade/shimset/<version>/}. The set for the version Fox-Grade was primarily built
+   *  against is the unprefixed one, so this costs nothing on the common path. */
+  private static volatile String targetMc = "";
+
+  static void targetVersion(String mc) { targetMc = mc == null ? "" : mc; }
+
+  /** True when this shim has no build for the target version, so the reference must stay unresolved.
+   *
+   *  <p>Not every shim can exist on every version — some stand in for a class using API a older Minecraft never had.
+   *  Saying so is the honest answer: the port report lists the reference as unresolved, which is a thing a person can
+   *  act on, rather than injecting a class built for a different game and finding out later. */
+  static boolean unavailableHere(String shimCls) {
+    String set = targetMc;
+    if (set.isEmpty()) return false;
+    java.util.Set<String> gone = UNAVAILABLE.get(set);
+    if (gone == null) {
+      gone = new java.util.HashSet<>();
+      try (var in = ShimGenerator.class.getResourceAsStream("/foxgrade/shimset/" + set + "/UNAVAILABLE.txt")) {
+        if (in != null) for (String l : new String(in.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8).split("\n")) {
+          if (!l.isBlank()) gone.add(l.trim());
+        }
+      } catch (java.io.IOException noList) { }
+      UNAVAILABLE.put(set, gone);
+    }
+    return gone.contains(shimCls);
+  }
+
+  private static final Map<String, java.util.Set<String>> UNAVAILABLE = new java.util.concurrent.ConcurrentHashMap<>();
+
   private static byte[] fromResource(String path) {
-    try (var in = ShimGenerator.class.getResourceAsStream("/" + path)) {
-      if (in == null) throw new IllegalStateException("missing shim resource " + path);
-      return renameClasses(in.readAllBytes(), SHIM_RENAMES);
-    } catch (java.io.IOException e) { throw new RuntimeException(e); }
+    byte[] bytes = resource("/foxgrade/shimset/" + targetMc + "/" + path);   // this target's own build, if there is one
+    if (bytes == null) bytes = resource("/" + path);                          // otherwise the set built with the mod
+    if (bytes == null) throw new IllegalStateException("missing shim resource " + path);
+    return renameClasses(bytes, SHIM_RENAMES);
+  }
+
+  private static byte[] resource(String path) {
+    try (var in = ShimGenerator.class.getResourceAsStream(path)) {
+      return in == null ? null : in.readAllBytes();
+    } catch (java.io.IOException e) { return null; }
   }
 
   // Replacement for cloth-config's removed AutoConfig.getGuiRegistry(Class): returns a fresh

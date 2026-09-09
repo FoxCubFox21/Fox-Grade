@@ -15,16 +15,20 @@ import java.util.Optional;
  *  game down — the porting engine underneath does not depend on any of it. */
 final class NeoForgeHost implements LoaderHost {
 
-  private final Object modList;              // net.neoforged.fml.ModList
   private final Path gameDir;
   private final boolean server;
   private final String mcVersion;
+  private volatile Object modList;           // net.neoforged.fml.ModList, resolved on first use
 
-  private NeoForgeHost(Object modList, Path gameDir, boolean server, String mcVersion) {
-    this.modList = modList; this.gameDir = gameDir; this.server = server; this.mcVersion = mcVersion;
+  private NeoForgeHost(Path gameDir, boolean server, String mcVersion) {
+    this.gameDir = gameDir; this.server = server; this.mcVersion = mcVersion;
   }
 
-  /** null unless NeoForge's FML is present and initialised. */
+  /** null unless NeoForge's FML is present and answering.
+   *
+   *  <p>FML's own API changed shape between the NeoForge line that targets 1.21 and the one that targets 26.2: what
+   *  used to be statics on {@code FMLLoader} now hang off an instance from {@code FMLLoader.getCurrent()}. Every probe
+   *  below therefore tries the current shape first and the older one second, so this host keeps working on both. */
   static NeoForgeHost detect() {
     try {
       Class.forName("net.neoforged.fml.loading.FMLLoader");
@@ -33,18 +37,30 @@ final class NeoForgeHost implements LoaderHost {
     }
     Path dir = gameDirOf();
     if (dir == null) return null;
-    Object list = null;
+    return new NeoForgeHost(dir, serverSide(), mcVersionOf());
+  }
+
+  /** The FMLLoader instance on builds that have one; null on older builds and before startup finishes. */
+  private static Object fml() {
     try {
-      Class<?> ml = Class.forName("net.neoforged.fml.ModList");
-      list = ml.getMethod("get").invoke(null);
-    } catch (Throwable tooEarly) {
-      // Discovery-time: the mod list does not exist yet. That is a valid state for the porter, which runs before it.
+      Class<?> loader = Class.forName("net.neoforged.fml.loading.FMLLoader");
+      return loader.getMethod("getCurrentOrNull").invoke(null);
+    } catch (Throwable olderOrAbsent) {
+      return null;
     }
-    return new NeoForgeHost(list, dir, serverSide(), mcVersionOf());
+  }
+
+  /** {@code method} called on the FMLLoader instance, or null if there is no instance or no such method. */
+  private static Object onLoader(String method) {
+    Object fml = fml();
+    if (fml == null) return null;
+    try { return fml.getClass().getMethod(method).invoke(fml); } catch (Throwable t) { return null; }
   }
 
   private static Path gameDirOf() {
-    try {
+    Object dir = onLoader("getGameDir");
+    if (dir instanceof Path p) return p;
+    try {                                                          // older FML: the FMLPaths enum
       Class<?> paths = Class.forName("net.neoforged.fml.loading.FMLPaths");
       Object gamedir = Enum.valueOf(paths.asSubclass(Enum.class), "GAMEDIR");
       return (Path) paths.getMethod("get").invoke(gamedir);
@@ -54,25 +70,53 @@ final class NeoForgeHost implements LoaderHost {
   }
 
   private static boolean serverSide() {
+    Object dist = onLoader("getDist");
+    if (dist != null) return String.valueOf(dist).contains("SERVER");
     for (String[] probe : new String[][] {
         {"net.neoforged.fml.loading.FMLEnvironment", "dist"},
         {"net.neoforged.api.distmarker.Dist", null}}) {
       try {
-        Object dist = Class.forName(probe[0]).getField(probe[1]).get(null);
-        if (dist != null) return String.valueOf(dist).contains("SERVER");
+        Object d = Class.forName(probe[0]).getField(probe[1]).get(null);
+        if (d != null) return String.valueOf(d).contains("SERVER");
       } catch (Throwable ignored) { }
     }
     return false;
   }
 
   private static String mcVersionOf() {
-    try {
-      Class<?> fml = Class.forName("net.neoforged.fml.loading.FMLLoader");
-      Object info = fml.getMethod("versionInfo").invoke(null);
-      return String.valueOf(info.getClass().getMethod("mcVersion").invoke(info));
-    } catch (Throwable t) {
-      return "?";
+    Object info = onLoader("getVersionInfo");
+    if (info == null) {
+      try {                                                        // older FML: a static of the same name
+        Class<?> loader = Class.forName("net.neoforged.fml.loading.FMLLoader");
+        info = loader.getMethod("versionInfo").invoke(null);
+      } catch (Throwable t) { info = null; }
     }
+    if (info != null) {
+      try { return String.valueOf(info.getClass().getMethod("mcVersion").invoke(info)); } catch (Throwable ignored) { }
+    }
+    // Last resort, and a reliable one: FML is handed the version on the command line as --fml.mcVersion.
+    String[] argv = System.getProperty("sun.java.command", "").split("\\s+");
+    for (int i = 0; i + 1 < argv.length; i++) if (argv[i].equals("--fml.mcVersion")) return argv[i + 1];
+    return "?";
+  }
+
+  /** NeoForge's mod list, resolved lazily.
+   *
+   *  <p>Lazily because of when this host is first asked for: Fox-Grade's locator runs during discovery, before any mod
+   *  list exists, and {@link Loaders} caches the host it finds. Resolving eagerly would pin a null for the whole run
+   *  and leave the in-game panel with nothing to show. */
+  private Object modList() {
+    Object list = modList;
+    if (list != null) return list;
+    for (String[] probe : new String[][] {
+        {"net.neoforged.fml.ModList", "get"},                       // after loading: the real list
+        {"net.neoforged.fml.loading.LoadingModList", "get"}}) {     // during loading: what discovery has so far
+      try {
+        Object found = Class.forName(probe[0]).getMethod(probe[1]).invoke(null);
+        if (found != null) return modList = found;
+      } catch (Throwable notYet) { }
+    }
+    return null;
   }
 
   @Override public String name() { return "NeoForge"; }
@@ -85,10 +129,11 @@ final class NeoForgeHost implements LoaderHost {
 
   @Override public List<Mod> mods() {
     List<Mod> out = new ArrayList<>();
-    if (modList == null) return out;
+    Object list = modList();
+    if (list == null) return out;
     try {
       @SuppressWarnings("unchecked")
-      List<Object> infos = (List<Object>) modList.getClass().getMethod("getMods").invoke(modList);
+      List<Object> infos = (List<Object>) list.getClass().getMethod("getMods").invoke(list);
       for (Object info : infos) out.add(new NeoMod(info));
     } catch (Throwable t) { /* leave the list empty rather than fail a launch */ }
     return out;

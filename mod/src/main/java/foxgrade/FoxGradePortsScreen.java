@@ -408,7 +408,7 @@ public final class FoxGradePortsScreen extends Screen {
       mcClient.execute(() -> {
         MODRINTH.put(id, v);
         if (v == null) return;
-        var scr = mcClient.gui.screen();
+        var scr = ClientCompat.screen(mcClient);
         if (scr instanceof FoxGradePortsScreen s) s.rebuildWidgets();
         else if (scr instanceof DetailsScreen ds && ds.pt.origId.equals(id)) ds.refresh();
       });
@@ -705,7 +705,7 @@ public final class FoxGradePortsScreen extends Screen {
                 + missing.stream().limit(3).reduce((a, c) -> a + ", " + c).orElse("") + (missing.size() > 3 ? " +" + (missing.size() - 3) + " more" : "") + "§r";
           FoxGradePreLaunch.log("panel: live verify of " + pt.origId + ": " + total + " checked, " + missing.size() + " missing"
               + (missing.isEmpty() ? "" : " — " + missing));
-          if (this.minecraft.gui.screen() == this) rebuildWidgets();
+          if (ClientCompat.screen(this.minecraft) == this) rebuildWidgets();
         });
       }, "foxgrade-verify");
       t.setDaemon(true);
