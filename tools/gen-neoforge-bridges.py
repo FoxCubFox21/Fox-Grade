@@ -91,6 +91,30 @@ def candidate_names(field):
     return [f"get{cap}", f"is{cap}", field, f"get{camel}", f"is{camel}", camel]
 
 
+# Renames a person checked against both APIs and the generator will not infer, because inferring them would mean
+# trusting name similarity between siblings — the one thing that produces confident nonsense. Each entry here was
+# read off both versions: the old class is gone, the new one does the same job.
+CURATED = {
+    # 1.21.1 registered client reload listeners; 26.2 adds them. Same event, renamed verb.
+    "net/neoforged/neoforge/client/event/RegisterClientReloadListenersEvent":
+        "net/neoforged/neoforge/client/event/AddClientReloadListenersEvent",
+    # The server-side counterpart, which 26.2 renamed to say which side it is on.
+    "net/neoforged/neoforge/event/AddReloadListenerEvent":
+        "net/neoforged/neoforge/event/AddServerReloadListenersEvent",
+    # 26.2 promoted the nested block events out to their own package and put the verb first.
+    "net/neoforged/neoforge/event/level/BlockEvent$BreakEvent":
+        "net/neoforged/neoforge/event/level/block/BreakBlockEvent",
+    # The container-screen events folded into the general screen events, keeping their nested shape.
+    "net/neoforged/neoforge/client/event/ContainerScreenEvent":
+        "net/neoforged/neoforge/client/event/ScreenEvent",
+    "net/neoforged/neoforge/client/event/ContainerScreenEvent$Render":
+        "net/neoforged/neoforge/client/event/ScreenEvent$Render",
+    # Same event, renamed from what the client did to what it was given.
+    "net/neoforged/neoforge/client/event/RecipesUpdatedEvent":
+        "net/neoforged/neoforge/client/event/RecipesReceivedEvent",
+}
+
+
 def target_classes():
     """Every class the target actually has: Minecraft 26.2 plus NeoForge's own. Used to reject an inferred
     substitution whose source class is still present (nothing to fix) or whose destination is not (a bad guess)."""
@@ -115,19 +139,61 @@ def name_related(a, b):
     that no other reading is sensible. Package is deliberately ignored — this is the test used to separate siblings
     that share a package, where package tells you nothing."""
     import difflib
-    la = a.rsplit("/", 1)[-1].lower().rsplit("$", 1)[-1]
-    lb = b.rsplit("/", 1)[-1].lower().rsplit("$", 1)[-1]
-    if len(la) >= 3 and len(lb) >= 3 and (la.startswith(lb) or lb.startswith(la)):
-        return True                                   # ItemHandler -> Item, EnergyStorage -> Energy
-    return difflib.SequenceMatcher(None, la, lb).ratio() >= 0.7
+    # The whole simple name, nesting included. Comparing only the last $ segment reads
+    # RenderHighlightEvent$Block as "block" and happily matches it to RegisterColorHandlersEvent$BlockTintSources,
+    # which is two unrelated events sharing a word.
+    la = a.rsplit("/", 1)[-1].lower()
+    lb = b.rsplit("/", 1)[-1].lower()
+    # Anonymous inner classes are never part of an API and their names carry no information at all.
+    if re.search(r"\$\d", la) or re.search(r"\$\d", lb):
+        return False
+    # A nested class is not a rename of the class it is nested in, however well the names match. Without this,
+    # "starts with" reads NeoForgeConfig$Client as a rename of NeoForge, and ClientHooks$ClientEvents as one of
+    # ClientHooks. Equal nesting depth is the cheap way to say a rename keeps a type where it was.
+    if la.count("$") != lb.count("$"):
+        return False
+    # Sidedness is meaning, not spelling. ClientPayloadHandler and ServerPayloadHandler are near-identical names for
+    # opposite things, and a client class losing its Client is a different class, not a renamed one.
+    # A client class and a server class are never each other, whatever the spelling. Gaining a side is different:
+    # AddReloadListenerEvent became AddServerReloadListenersEvent by saying out loud which side it was always on.
+    if ("client" in la) != ("client" in lb) and ("server" in la) != ("server" in lb):
+        return False
+    return name_score(la, lb) == 1.0
+
+
+def name_score(la, lb):
+    """How strongly two simple names read as the same type. One name containing the other whole — ItemHandler over
+    Item, ContainerScreenEvent$Render over ScreenEvent$Render — is the strongest signal there is and outranks any
+    amount of incidental overlap, which matters because sibling classes under one outer class overlap heavily by
+    construction: RegisterColorHandlersEvent$Item resembles $BlockTintSources almost as much as $ItemTintSources."""
+    import difflib
+    # Containment, but the shorter name has to be most of the longer one. Without that floor, every class whose name
+    # starts with the mod's own prefix contains every other: NeoForgeConfig "contains" NeoForge, which is a config
+    # holder being mistaken for the mod class.
+    if (len(la) >= 4 and len(lb) >= 4 and min(len(la), len(lb)) / max(len(la), len(lb)) >= 0.6
+            and (la.startswith(lb) or lb.startswith(la) or la.endswith(lb) or lb.endswith(la))):
+        return 1.0
+    return difflib.SequenceMatcher(None, la, lb).ratio()
 
 
 def related(a, b):
-    """Whether two internal names look like the same type before and after an API tidy-up: it stayed in its package,
-    or the names themselves say so."""
+    """Whether two internal names look like the same type before and after an API tidy-up.
+
+    Looser than {@code name_related} on purpose. That one separates siblings inside a package and has to insist a
+    rename keeps a type where it was; this one backs a rename the signatures already voted for, where an API is just
+    as likely to have promoted a nested class out to its own file while moving it down a package:
+    BlockEvent$BreakEvent became block/BreakBlockEvent. Sidedness still holds — client and server are never each
+    other, however the packages move."""
+    la_, lb_ = a.lower(), b.lower()
+    if ("client" in la_) != ("client" in lb_) and ("server" in la_) != ("server" in lb_):
+        return False
     pa = a.rsplit("/", 1)[0] if "/" in a else ""
     pb = b.rsplit("/", 1)[0] if "/" in b else ""
-    return pa == pb or name_related(a, b)
+    if pa == pb or name_related(a, b):
+        return True
+    inner_a = a.rsplit("/", 1)[-1].lower().rsplit("$", 1)[-1]
+    inner_b = b.rsplit("/", 1)[-1].lower().rsplit("$", 1)[-1]
+    return len(inner_a) >= 4 and len(inner_b) >= 4 and name_score(inner_a, inner_b) == 1.0
 
 
 def infer_class_renames(old, new):
@@ -218,14 +284,38 @@ def match_removed_classes(old, new, already):
 
     new_shapes = {c: shape(m[0], m[1]) for c, m in new.items()}
     out, report = {}, []
+
+    def by_name(cls, why):
+        """Fall back to the names when the members cannot decide. Same package, and one candidate clearly ahead of
+        the next — a near-tie among siblings is not an answer, it is three classes that look alike."""
+        pkg = cls.rsplit("/", 1)[0]
+        near = sorted(((name_score(cls.rsplit("/", 1)[-1].lower(), c.rsplit("/", 1)[-1].lower()), c)
+                       for c in new if c.rsplit("/", 1)[0] == pkg and name_related(cls, c)), reverse=True)
+        if near and (len(near) == 1 or near[0][0] - near[1][0] >= 0.05):
+            out[cls] = near[0][1]
+            report.append(f"{cls} -> {near[0][1]} ({why}; best same-package name at {near[0][0]:.2f})")
+            return True
+        if near:
+            report.append(f"{cls} -> ambiguous by name: " + ", ".join(f"{c}({sc:.2f})" for sc, c in near[:3]))
+        return False
     for cls, (ostatics, omethods) in sorted(old.items()):
         if cls in new or cls in already:
             continue
         want = shape(ostatics, omethods)
         if len(want) < MIN_MEMBERS:
+            # Too few members to have a shape worth matching. Events are the common case — a handful of them carry
+            # one accessor and nothing else — and they are also where an API renames most freely. When a class like
+            # that has exactly one same-package neighbour whose name reads as the same thing, the name is the
+            # evidence: RegisterClientReloadListenersEvent -> AddClientReloadListenersEvent, and
+            # RegisterColorHandlersEvent$Item -> $ItemTintSources. More than one neighbour and it stays unmatched.
+            if not by_name(cls, "too few members to match on shape"):
+                pass
             continue
         scored = sorted(((len(want & have) / len(want), c) for c, have in new_shapes.items() if have), reverse=True)
         if not scored or scored[0][0] < MIN_COVER:
+            # Having members is no guarantee they survived. RegisterColorHandlersEvent$Item became $ItemTintSources
+            # and kept not one method, so its shape says nothing while its name says everything.
+            by_name(cls, f"shape matched nothing above {MIN_COVER:.0%}")
             continue
         top = scored[0][0]
         tied = [c for score, c in scored if top - score < 1e-9]
@@ -233,12 +323,13 @@ def match_removed_classes(old, new, already):
             # Sibling classes can have identical shapes — NeoForge's capability holders are three bags of the same
             # three fields — and then only the names separate them. One related name breaks the tie; none or several
             # means this is not a call a generator should be making.
-            byname = [c for c in tied if name_related(cls, c)]
-            if len(byname) != 1:
+            byname = sorted(((name_score(cls.rsplit("/", 1)[-1].lower(), c.rsplit("/", 1)[-1].lower()), c)
+                             for c in tied if name_related(cls, c)), reverse=True)
+            if not byname or (len(byname) > 1 and byname[0][0] - byname[1][0] < 0.05):
                 report.append(f"{cls} -> ambiguous at {top:.2f}: " + ", ".join(tied[:4]))
                 continue
-            out[cls] = byname[0]
-            report.append(f"{cls} -> {byname[0]} (shape tied with {len(tied) - 1} other(s); the names decided)")
+            out[cls] = byname[0][1]
+            report.append(f"{cls} -> {byname[0][1]} (shape tied with {len(tied) - 1} other(s); names decided at {byname[0][0]:.2f})")
             continue
         runner_up = scored[1][0] if len(scored) > 1 else 0.0
         if top - runner_up < MIN_MARGIN:
@@ -257,6 +348,7 @@ def main():
     new = surface([pathlib.Path(p) for p in sys.argv[2].split(",")])
     class_renames = infer_class_renames(old, new)
     class_renames.update(match_removed_classes(old, new, class_renames))
+    class_renames.update(CURATED)                       # hand-verified entries always win over an inference
     field_redirects, renames, unresolved, removed_classes = {}, {}, [], []
 
     for cls, (ofields, omethods) in sorted(old.items()):

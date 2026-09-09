@@ -184,5 +184,51 @@ to load and the game to still be running.
 
 Reproduce with `batch2/run-retromod.sh` next to the Fox-Grade harness scripts.
 """
+
+# --- NeoForge -----------------------------------------------------------------------------------------------------
+# A separate section rather than another column, because it is a separate question. The Fabric table asks whether a
+# 1.21.x Fabric mod runs on 26.2; this asks whether a 1.21.1 *NeoForge* mod does, on a NeoForge 26.2 client, with
+# NeoForge's own libraries alongside it. The mods are different mods and the numbers do not add up with the ones
+# above — presenting them in one table would invite exactly that mistake.
+def read_neoforge_ledger(path):
+    """The NeoForge lane writes verdict/name/why; the Fabric lane writes verdict/name/portline/why."""
+    rows = {}
+    for ln in pathlib.Path(path).read_text().splitlines():
+        parts = ln.split("\t")
+        if len(parts) < 2 or parts[0] not in ("PASS", "CRASH", "HELD", "STALL"):
+            continue
+        rows[parts[1]] = {"verdict": parts[0], "why": parts[2] if len(parts) > 2 else ""}
+    return rows
+
+
+_neo_path = W / "batch2/ledger-neoforge.txt"
+neo = read_neoforge_ledger(_neo_path) if _neo_path.exists() else {}
+if neo:
+    neo_pass = sum(1 for v in neo.values() if v["verdict"] == "PASS")
+    md += f"""
+
+## NeoForge
+
+Fox-Grade ports NeoForge mods too, and on NeoForge it does it without a restart: the loader asks
+registered locators for candidates while the mod set is still open, so a ported jar goes straight
+into the launch that ported it.
+
+{len(neo)} of the most-downloaded mods with a real NeoForge build for 1.21.1, each run on a NeoForge
+26.2 client launched into a world, graded by the same rule as everything above — the world starts
+loading, the game is still up 8 seconds later, and the mod is in the loaded-mod list. NeoForge's own
+26.2 libraries are supplied, except the real 26.2 build of whichever mod is under test.
+
+**{neo_pass} of {len(neo)} boot.**
+
+| Mod | Result | Why not |
+|---|---|---|
+""" + "\n".join(
+        f"| {n} | {label.get(neo[n]['verdict'], neo[n]['verdict'])} | "
+        f"{(neo[n]['why'][:110].replace('|', '/')) if neo[n]['verdict'] != 'PASS' else ''} |"
+        for n in sorted(neo)) + """
+
+Reproduce with `tools/run-neoforge.sh`; the corpus is built by `tools/fetch-nf-corpus.py`.
+"""
+
 (OUT / "compat.md").write_text(md)
 print(f"wrote {OUT/'compat.md'}: {len(rows)} rows, counts {dict(counts)}, shots {len(list(SHOTS.glob('*.png')))}")
