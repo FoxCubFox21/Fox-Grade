@@ -8,7 +8,13 @@
    `FMLEnvironment.isProduction()`, which is still static on the target and returns the same thing. Same shape
    probably applies to the other FMLLoader statics.
 
-2. **Supply only the dependencies the mod under test declares, not all eleven base libraries.** Reading the TOML
+2. ~~Supply only the dependencies the mod under test declares~~ **Done 2026-09-09, and it was not a tidy-up — it was
+   invalidating results.** Chat Heads shut the client down during startup with nothing logged when all eleven base
+   libraries were present, and reaches a world when given only what it declares (which is nothing). The same shape
+   applies to immediatelyfast, modernfix, owo-lib and veinminer, all five of which declare no dependencies at all.
+   Original reasoning below.
+
+   **Supply only the dependencies the mod under test declares, not all eleven base libraries.** Reading the TOML
    dependency tables across the corpus: cloth_config has three real dependents and every other base library has
    none or one. Loading all eleven into all forty runs buys almost nothing and costs startup time on each, plus
    noise — `creativecore` logs `Could not load default style` on every single run. `nf_run` already reads the mod's
@@ -27,7 +33,10 @@
    Fox-Grade Fabric run ever hit that failure, so the capture softening changes nothing there and 86/130 stands.
    Worth noting the other way round: those are six mods Retromod loses to a failure Fox-Grade now survives.
 
-5. **A silent-abort failure mode, cause unknown.** chat-heads and modernfix print their mod list, finish mixin
+5. ~~A silent-abort failure mode, cause unknown.~~ **Explained: it was item 2.** The mods are fine; the harness was
+   loading eleven unrelated libraries into every run. Original note below.
+
+   **A silent-abort failure mode, cause unknown.** chat-heads and modernfix print their mod list, finish mixin
    setup, and then log `Closing FML Loader` about four seconds in with no exception anywhere — `Client.main` appears
    to return normally and the client exits before a window is created. The java process lingers, so the harness
    grades it a stall. Both mods are in the loaded-mod list at that point, so discovery and the port itself

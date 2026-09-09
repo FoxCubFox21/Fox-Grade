@@ -19,6 +19,13 @@ NFVER=26.2.0.82
 cp -f "$(ls -t ~/foxgrade-work/foxgrade-mod/dist/foxgrade-*.jar | head -1)" $PT/fg.jar   # always test the newest build
 
 # The mod id a NeoForge jar declares, read out of its TOML manifest without a TOML parser: the first modId key.
+# Every modId this jar declares a dependency on, minecraft and neoforge excluded.
+nf_deps() {
+  unzip -p "$1" META-INF/neoforge.mods.toml META-INF/mods.toml 2>/dev/null \
+    | awk '/^\s*\[\[dependencies/{d=1} d && /^\s*modId\s*=/{print}' \
+    | sed 's/.*= *"//; s/".*//' | grep -vxE 'minecraft|neoforge|forge' | sort -u | tr '\n' ' '
+}
+
 nf_modid() {
   unzip -p "$1" META-INF/neoforge.mods.toml META-INF/mods.toml 2>/dev/null \
     | grep -m1 -E '^\s*modId\s*=' | sed 's/.*= *"//; s/".*//'
@@ -34,11 +41,25 @@ nf_run() {
 
   local mainjar=$1
   local mainid=$(nf_modid "$mainjar")
-  # Dependencies are supplied, the same concession the Fabric lane makes — except the real target-version build of the
-  # mod under test, which would answer the question for it.
-  for bjar in ~/foxgrade-work/nf-base/*.jar; do
-    [[ -n $mainid && "$(nf_modid "$bjar")" == "$mainid" ]] && continue
-    cp "$bjar" $PT/mods/
+  # Dependencies are supplied, the same concession the Fabric lane makes — but only the ones this mod declares, and
+  # their own dependencies in turn. Loading the whole library shelf into every run is not a kinder test, it is a
+  # different one: with all eleven present, Chat Heads shut the client down during startup with nothing logged, and
+  # with only what it asks for it loads and reaches a world. The real target-version build of the mod under test is
+  # never supplied, since that would answer the question for it.
+  local want=" $(nf_deps "$mainjar") "
+  local added=1
+  while [[ $added == 1 ]]; do
+    added=0
+    for bjar in ~/foxgrade-work/nf-base/*.jar; do
+      local bid=$(nf_modid "$bjar")
+      [[ -z $bid || $bid == $mainid ]] && continue
+      [[ -f $PT/mods/$(basename $bjar) ]] && continue
+      if [[ " $want " == *" $bid "* ]]; then
+        cp "$bjar" $PT/mods/
+        want="$want $(nf_deps "$bjar")"
+        added=1
+      fi
+    done
   done
   for jar in "$@"; do cp "$jar" $PT/fox-grade-inbox/; done
 
