@@ -9,7 +9,9 @@
 setopt NULL_GLOB
 PT="${PT:-$HOME/mc-porttest-nf}"
 B=~/foxgrade-work/batch2
-LEDGER=$B/ledger-neoforge.txt
+# Overridable so a side run on a second instance cannot write into the corpus ledger being measured.
+LEDGER="${LEDGER:-$B/ledger-neoforge.txt}"
+LOGPREFIX="${LOGPREFIX:-log-nf}"
 MC="$HOME/Library/Application Support/minecraft"
 CP=$(cat /tmp/fg-launch-cp-neoforge.txt)
 NFVER=26.2.0.82
@@ -51,7 +53,7 @@ nf_run() {
     --assetsDir "$MC/assets" --assetIndex 32 \
     --uuid 00000000-0000-0000-0000-000000000000 --accessToken dummy --userType msa --versionType release \
     --quickPlaySingleplayer "NFTEST" \
-    > "$B/log-nf-$name.log" 2>&1 &
+    > "$B/$LOGPREFIX-$name.log" 2>&1 &
   # Keep the harness window out of the way, scoped by pid to this instance so the user's own game is never touched.
   ( for i in $(seq 1 120); do sleep 2; for pid in $(pgrep -f "gameDir $PT "); do osascript -e "tell application \"System Events\" to set visible of (every process whose unix id is $pid) to false" >/dev/null 2>&1; done; pgrep -f "gameDir $PT " >/dev/null || break; done ) &
 
@@ -60,7 +62,7 @@ nf_run() {
   while [ $waited -lt 180 ]; do
     sleep 6; waited=$((waited+6))
     pgrep -f "gameDir $PT " >/dev/null || break
-    grep -q "$READY" "$B/log-nf-$name.log" 2>/dev/null && { sleep 8; ready=1; break; }
+    grep -q "$READY" "$B/$LOGPREFIX-$name.log" 2>/dev/null && { sleep 8; ready=1; break; }
   done
 
   local verdict
@@ -69,11 +71,11 @@ nf_run() {
   else verdict=STALL; fi
 
   # NeoForge prints its mod set as "Name Version (modid)" rows; the mod has to be in there for a pass to count.
-  if [[ $verdict == PASS && -n $mainid ]] && ! grep -qE "\($mainid\)" "$B/log-nf-$name.log"; then verdict=HELD; fi
+  if [[ $verdict == PASS && -n $mainid ]] && ! grep -qE "\($mainid\)" "$B/$LOGPREFIX-$name.log"; then verdict=HELD; fi
 
   local why=""
   if [ "$verdict" != PASS ]; then
-    why=$(grep -m1 "NoClassDefFoundError\|NoSuchMethodError\|NoSuchFieldError\|Mixin apply failed\|InjectionError\|ResolutionException\|Missing or unsupported\|has failed to load\|requires .* any version" "$B/log-nf-$name.log" | head -c 170)
+    why=$(grep -m1 "NoClassDefFoundError\|NoSuchMethodError\|NoSuchFieldError\|Mixin apply failed\|InjectionError\|ResolutionException\|Missing or unsupported\|has failed to load\|requires .* any version" "$B/$LOGPREFIX-$name.log" | head -c 170)
   fi
   mkdir -p $B/crashes-nf; for c in $PT/crash-reports/*.txt; do cp "$c" "$B/crashes-nf/$name--$(basename "$c")"; done
   [[ -z $why && $verdict != PASS ]] && why=$(ls -t $PT/crash-reports/*.txt 2>/dev/null | head -1 | xargs -I{} grep -m1 "Caused by\|^java\.\|Exception:" {} 2>/dev/null | head -c 170)

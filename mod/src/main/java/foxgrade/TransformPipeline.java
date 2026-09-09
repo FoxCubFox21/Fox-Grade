@@ -64,6 +64,9 @@ public final class TransformPipeline {
   }
 
   /** Quilt Loader hosts register themselves as the mod "quilt_loader" (it also answers the Fabric loader API). */
+  /** Where the port report lives inside a ported jar, for mods whose manifest cannot carry it. */
+  public static final String PORT_REPORT = "foxgrade/port-report.json";
+
   static boolean isQuiltHost() {
     try { return Loaders.current().name().equals("Quilt"); } catch (Throwable t) { return false; }
   }
@@ -759,6 +762,29 @@ public final class TransformPipeline {
           custom.add("foxgrade", fg);
           meta.add("custom", custom);
           buffered.put("fabric.mod.json", (GSON.toJson(meta) + "\n").getBytes(StandardCharsets.UTF_8));
+          buffered.put(PORT_REPORT, (GSON.toJson(fg) + "\n").getBytes(StandardCharsets.UTF_8));
+        } catch (Exception ignore) { }
+      } else {
+        // A mod with no fabric.mod.json — every NeoForge mod — still gets a report. The panel's promise is that it
+        // says what was changed, what was turned off and why; without this the promise simply is not kept on
+        // NeoForge, where the report had nowhere to live because it was riding inside Fabric's manifest.
+        try {
+          JsonObject fg = new JsonObject();
+          fg.addProperty("source", src.getFileName().toString());
+          fg.addProperty("pastPort", targetMc);
+          fg.addProperty("fromMc", fromMcHolder[0]);
+          fg.addProperty("summary", String.format("%d classes remapped, %d handler(s) stripped, %d unresolved ref(s)",
+              classesRemapped, mixinsStripped + autoStripped, verifier.missing().size()));
+          com.google.gson.JsonArray un = new com.google.gson.JsonArray();
+          verifier.missing().stream().limit(400).forEach((c) -> un.add(c.substring(c.lastIndexOf('/') + 1)));
+          fg.add("unresolved", un);
+          com.google.gson.JsonArray sh = new com.google.gson.JsonArray();
+          strippedNames.stream().limit(40).forEach(sh::add);
+          fg.add("strippedHandlers", sh);
+          com.google.gson.JsonArray dr = new com.google.gson.JsonArray();
+          fatalMixins.stream().limit(20).forEach((c) -> dr.add(c.substring(c.lastIndexOf('/') + 1)));
+          fg.add("disabledMixins", dr);
+          buffered.put(PORT_REPORT, (GSON.toJson(fg) + "\n").getBytes(StandardCharsets.UTF_8));
         } catch (Exception ignore) { }
       }
       if (!relocated.isEmpty()) {

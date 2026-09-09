@@ -188,8 +188,18 @@ final class NeoForgeHost implements LoaderHost {
       }
     }
 
-    /** NeoForge keeps arbitrary metadata in the mods.toml `modproperties` table. */
+    /** NeoForge keeps arbitrary metadata in the mods.toml `modproperties` table — and Fox-Grade's own report in a
+     *  file beside it, because a TOML table is a poor place for a nested document and the report has to survive in a
+     *  jar whose manifest was never Fabric's. The file is checked first: it is the one Fox-Grade wrote. */
     @Override public JsonObject custom(String key) {
+      if ("foxgrade".equals(key)) {
+        java.util.Optional<Path> report = findPath(TransformPipeline.PORT_REPORT);
+        if (report.isPresent()) {
+          try {
+            return com.google.gson.JsonParser.parseString(java.nio.file.Files.readString(report.get())).getAsJsonObject();
+          } catch (Exception unreadable) { /* fall through to the TOML table */ }
+        }
+      }
       try {
         @SuppressWarnings("unchecked")
         java.util.Map<String, Object> props = (java.util.Map<String, Object>) call("getModProperties");
