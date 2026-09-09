@@ -32,9 +32,9 @@ pipeline on a jar without starting the game and lists exactly what the port woul
 ⭐ **Nothing is ever deleted.** Originals are kept, ports are reversible, and every launch writes
 a report of what happened.
 
-**Tested, and honest about the result.** Batch-tested against 130 mods from 1.21.x and 26.1: 82 port
+**Tested, and honest about the result.** Batch-tested against 130 mods from 1.21.x and 26.1: 86 port
 and boot into a world (six also verified on a dedicated server; Mod Menu's mod list opens and
-renders through the GUI bridges; world-drawing mods run on the re-created render events) and 48
+renders through the GUI bridges; world-drawing mods run on the re-created render events) and 44
 do not: renderer-tier internals 26.2 rewrote (entity models and textures, the texture stitcher, the HUD
 layer stack, particle render types), API subsystems removed outright (item-model overrides, weighted lists,
 loot entry types), one mod that is a rewrite rather than a port, the Sodium-dependent add-ons, and a few
@@ -42,7 +42,7 @@ datapack formats. The report lists every class, member and constructor a port st
 references that the game no longer has; the per-mod table lives in the repository.
 
 **Head-to-head.** The same 104 mods through Retromod (1.3.0-snapshot.10) and Fox-Grade on one
-instance: Fox-Grade boots 66, Retromod boots 37 (29 boot only under Fox-Grade). The table with every cause is in the repository.
+instance: Fox-Grade boots 70, Retromod boots 37 (33 boot only under Fox-Grade). The table with every cause is in the repository.
 
 **Quilt too, both ways.** A Quilt-only jar (a `quilt.mod.json` and no `fabric.mod.json`) ports like any other: the manifest becomes a `fabric.mod.json`, Quilt's loader API and QSL entrypoint interfaces are bridged, and the port ships a 26.2 `quilt.mod.json` as well, so it reads as a Quilt mod. Fox-Grade itself runs on Quilt Loader 26.2 (tested on the 0.31 beta, with plain Fabric API). One Quilt difference: Quilt scans sub-folders of `mods/`, so on a Quilt install put the first jar in `fox-grade-inbox/` next to `mods/`; after that first launch Fox-Grade marks its folders for Quilt to skip and `mods/fox-grade-inbox/` works too. QSL's own API modules are not bridged.
 
