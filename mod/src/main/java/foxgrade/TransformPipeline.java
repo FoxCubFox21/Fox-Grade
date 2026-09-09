@@ -64,8 +64,14 @@ public final class TransformPipeline {
   }
 
   /** Quilt Loader hosts register themselves as the mod "quilt_loader" (it also answers the Fabric loader API). */
-  /** Where the port report lives inside a ported jar, for mods whose manifest cannot carry it. */
-  public static final String PORT_REPORT = "foxgrade/port-report.json";
+  /** Where the port report lives inside a ported jar, for mods whose manifest cannot carry it.
+   *
+   *  <p>Under META-INF, and that is not cosmetic. NeoForge puts every mod jar in its own JPMS module and derives the
+   *  module's packages from the directories it contains, resources included. A report at foxgrade/port-report.json
+   *  therefore makes every ported jar claim to own a package called "foxgrade" — harmless for one jar, fatal for a
+   *  mod built from several, which LambDynamicLights is: eleven nested jars, each with the report, and the loader
+   *  refuses the lot with "Module dev.yumi.commons.event contains package foxgrade". META-INF is never a package. */
+  public static final String PORT_REPORT = "META-INF/foxgrade-port-report.json";
 
   /** A mod bundled inside another mod's jar, under whichever directory that loader uses.
    *

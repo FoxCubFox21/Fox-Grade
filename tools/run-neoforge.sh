@@ -38,6 +38,22 @@ nf_modid() {
     | grep -m1 -E '^\s*modId\s*=' | sed 's/.*= *"//; s/".*//'
 }
 
+# Every modId a jar provides, its own and those of the mods nested inside it. kotlin-for-forge's outer jar declares
+# none of its own — kffmod and kfflang are nested — so matching on the outer manifest alone makes the library
+# invisible to the base set and fails anything that needs it.
+nf_provides() {
+  local ids=$(nf_modid "$1")
+  local tmp=$(mktemp -d)
+  unzip -qo "$1" 'META-INF/jarjar/*.jar' 'META-INF/jars/*.jar' -d "$tmp" 2>/dev/null
+  for nested in "$tmp"/META-INF/*/*.jar; do
+    [[ -f $nested ]] && ids="$ids $(nf_modid "$nested")"
+  done
+  rm -rf "$tmp"
+  # The Kotlin library is asked for by the language loader it provides, not by any modId it declares.
+  [[ " $ids " == *" kotlinforforge "* ]] && ids="$ids klf"
+  echo "$ids" | tr ' ' '\n' | grep -v '^$' | sort -u | tr '\n' ' '
+}
+
 nf_run() {
   local name=$1; shift
   pkill -f "gameDir $PT " 2>/dev/null; sleep 2
@@ -58,12 +74,13 @@ nf_run() {
   while [[ $added == 1 ]]; do
     added=0
     for bjar in ~/foxgrade-work/nf-base/*.jar; do
-      local bid=$(nf_modid "$bjar")
-      [[ -z $bid || $bid == $mainid ]] && continue
-      # A library can be wanted under the name of the loader it provides rather than its own modId.
-      [[ $bid == kotlinforforge && " $want " == *" klf "* ]] && want="$want kotlinforforge"
+      local bids=$(nf_provides "$bjar")
+      [[ -z $bids ]] && continue
+      [[ " $bids " == *" $mainid "* ]] && continue
       [[ -f $PT/mods/$(basename $bjar) ]] && continue
-      if [[ " $want " == *" $bid "* ]]; then
+      local match=0
+      for bid in ${=bids}; do [[ " $want " == *" $bid "* ]] && match=1; done
+      if [[ $match == 1 ]]; then
         cp "$bjar" $PT/mods/
         want="$want $(nf_deps "$bjar")"
         added=1

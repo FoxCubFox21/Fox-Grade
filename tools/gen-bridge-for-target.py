@@ -20,6 +20,18 @@ HERE = pathlib.Path(__file__).resolve().parent
 RES = HERE / "foxgrade-mod/src/main/resources/foxgrade"
 
 
+def shim_names():
+    """Every name ShimGenerator can inject a class under, read from its own source.
+
+    A bridge may point at a class the target does not have, but only when something will put that class into the
+    ported jar. That list lives in ShimGenerator's SHIMS table and nowhere else, so it is read from there rather than
+    guessed at or duplicated."""
+    src = HERE / "foxgrade-mod/src/main/java/foxgrade/ShimGenerator.java"
+    if not src.exists():
+        return set()
+    return set(re.findall(r'Map\.entry\("([^"]+)"', src.read_text()))
+
+
 def main():
     if len(sys.argv) < 3:
         print(__doc__); sys.exit(2)
@@ -45,23 +57,30 @@ def main():
 
     stats = {}
 
-    # Classes are carried across whole, for the same reason members are. A name the target does not have is exactly
-    # what needs a name: Minecraft 26.2 has no InteractionResultHolder either, and the shipped 26.2 bridge maps
-    # class_1271 to it anyway, because ShimGenerator then supplies that class inside the port. Dropping the mapping
-    # leaves the call site holding "net/minecraft/class_1271", which no shim and no rename can recognise — which is
-    # how architectury, balm and JEI ported for 26.1.2 and died on NoClassDefFoundError for an intermediary name.
+    # A class mapping is kept when the target has the class, or when Fox-Grade ships a shim under that exact name.
+    # Both halves matter and each was learned by getting it wrong.
     #
-    # The destination is still redirected through the step block, so a class the newer version renamed is named the
-    # way this target knows it. What is no longer done is refusing to say anything at all.
-    classes, redirected = {}, 0
+    # Minecraft 26.2 has no InteractionResultHolder, and the shipped 26.2 bridge maps class_1271 to it anyway,
+    # because ShimGenerator supplies that class inside the port. Filtering purely on the inventory dropped mappings
+    # like that, and architectury, balm and JEI ported for 26.1.2 died on NoClassDefFoundError for a raw
+    # intermediary name the engine cannot recognise.
+    #
+    # Keeping everything is worse. A destination that neither exists nor has a shim turns a working call into a
+    # reference to nothing: AppleSkin and Cloth Config passed on 26.1.2 with the filter and crashed without it, on
+    # MultiBufferSource$BufferSource, which 26.1.2 lacks and no shim covers on that version.
+    shims = shim_names()
+    classes, kept_for_shim, gone = {}, 0, []
     for im, moj in src["classes"].items():
         m = moved(moj)
-        if m != moj:
-            redirected += 1
-        classes[im] = m
-    stats["classes"] = (len(classes), 0)
-    gone = [f"{im} -> {classes[im]} (not in {new_target}; kept for shims and renames to catch)"
-            for im in classes if not has_class(classes[im])]
+        if has_class(m):
+            classes[im] = m
+        elif m.replace(".", "/") in shims:
+            classes[im] = m
+            kept_for_shim += 1
+        else:
+            gone.append(f"{im} -> {m} (not in {new_target}, and no shim supplies it)")
+    stats["classes"] = (len(classes), len(gone))
+    print(f"  {kept_for_shim} of those exist only because a shim supplies them")
 
     # Per-class member maps. Members are NOT filtered by whether the target declares them, and that is the whole
     # point of a bridge rather than a mapping: a name the target no longer has is exactly what needs a name, so a
