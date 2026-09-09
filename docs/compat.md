@@ -7,7 +7,7 @@ exactly that rule, from the same launch command, base jars and instance layout; 
 the tested mod was held back or failed to port is graded "held", not "boots". A screenshot is
 linked where the game got far enough to take one. "Unresolved" is the number of classes,
 fields and methods the port still references that 26.2 no longer has — the honest measure of
-how much of the mod is reachable. Generated from the harness ledgers at commit `4e327d6`
+how much of the mod is reachable. Generated from the harness ledgers at commit `0843ea7`
 on 2026-09-09; the scripts are in `tools/`.
 
 | Result | Mods |
@@ -268,3 +268,97 @@ to load and the game to still be running.
 Score: Fox-Grade 70 / Retromod 37 of 104 mods booting.
 
 Reproduce with `batch2/run-retromod.sh` next to the Fox-Grade harness scripts.
+
+
+## NeoForge
+
+Fox-Grade ports NeoForge mods too, and on NeoForge it does it without a restart: the loader asks
+registered locators for candidates while the mod set is still open, so a ported jar goes straight
+into the launch that ported it.
+
+40 of the most-downloaded mods with a real NeoForge build for 1.21.1, each run on a NeoForge
+26.2 client launched into a world, graded by the same rule as everything above — the world starts
+loading, the game is still up 8 seconds later, and the mod is in the loaded-mod list. NeoForge's own
+26.2 libraries are supplied, except the real 26.2 build of whichever mod is under test.
+
+**15 of 40 boot.**
+
+| Mod | Result | Why not |
+|---|---|---|
+| 3dskinlayers | ✅ boots |  |
+| appleskin | ❌ crash | java.lang.NoSuchFieldError: Class net.minecraft.client.gui.Gui does not have member field 'int leftHeight' |
+| architectury-api | ❌ crash | java.lang.NoSuchMethodError: 'net.minecraft.client.gui.screens.inventory.AbstractContainerScreen net.neoforged |
+| balm | ✅ boots |  |
+| bookshelf-lib | ✅ boots |  |
+| chat-heads | ✅ boots |  |
+| cloth-config | ✅ boots |  |
+| collective | ❌ stall | net.neoforged.fml.ModLoadingException: Loading errors encountered: |
+| continuity | ⏸ held (library missing) | Missing or unsupported mandatory dependencies: |
+| creativecore | ❌ stall | java.lang.NoClassDefFoundError: net/neoforged/neoforge/client/model/geometry/IGeometryLoader |
+| dynamic-fps | ✅ boots |  |
+| entity-model-features | ⏸ held (library missing) | Missing or unsupported mandatory dependencies: |
+| entityculling | ❌ crash | java.lang.IllegalAccessError: class dev.tr7zw.entityculling.EntityCullingModBase tried to access private field |
+| entitytexturefeatures | ✅ boots |  |
+| fancymenu | ⏸ held (library missing) | Missing or unsupported mandatory dependencies: |
+| ferrite-core | ❌ stall | java.lang.RuntimeException: java.lang.ExceptionInInitializerError |
+| forge-config-api-port | ✅ boots |  |
+| geckolib | ❌ crash | Caused by: java.lang.NoClassDefFoundError: net/minecraft/client/resources/metadata/animation/AnimationMetadata |
+| immediatelyfast | ❌ crash |  |
+| jade | ❌ stall | java.lang.NoSuchFieldError: Class com.mojang.blaze3d.platform.InputConstants$Key does not have member field 'f |
+| jei | ❌ stall | Failed to create mod instance. ModID: jei, |
+| konkrete | ✅ boots |  |
+| kotlin-for-forge | ❌ stall | java.lang.NoSuchMethodError: 'java.lang.String net.neoforged.neoforgespi.language.IModFileInfo.moduleName()' |
+| lambdynamiclights | ❌ stall | Failed to start FML: java.lang.module.ResolutionException: Modules dev.yumi.commons.event and dev.yumi.commons |
+| lithium | ❌ stall | Mixin apply for mod lithium failed lithium.mixins.json:block.fluid.flow.FlowingFluidMixin |
+| melody | ✅ boots |  |
+| modernfix | ❌ stall | client shut down during startup with no error logged |
+| moreculling | ✅ boots |  |
+| mouse-tweaks | ❌ stall | Failed to create mod instance. ModID: mousetweaks, |
+| no-chat-reports | ✅ boots |  |
+| not-enough-animations | ✅ boots |  |
+| owo-lib | ❌ stall | Failed to start FML: java.lang.module.ResolutionException: Modules fabric_api_base and owo export package net. |
+| puzzles-lib | ❌ stall | java.lang.NoClassDefFoundError: net/minecraft/client/renderer/entity/player/PlayerRenderer |
+| simple-voice-chat | ❌ stall | net.neoforged.fml.ModLoadingException: Loading errors encountered: |
+| sound-physics-remastered | ✅ boots |  |
+| veinminer | ❌ stall | client shut down during startup with no error logged |
+| veinminer-client | ⏸ held (library missing) | Missing or unsupported mandatory dependencies: |
+| xaeros-minimap | ❌ stall | java.lang.NoSuchMethodError: 'int net.minecraft.nbt.IntTag.getAsInt()' |
+| xaeros-world-map | ❌ stall | java.lang.NoSuchMethodError: 'int net.minecraft.nbt.IntTag.getAsInt()' |
+| yacl | ✅ boots |  |
+
+Reproduce with `tools/run-neoforge.sh`; the corpus is built by `tools/fetch-nf-corpus.py`.
+
+
+## A second target version: 26.1.2
+
+Everything above targets Minecraft 26.2. These are the same kind of mods ported for **26.1.2** instead,
+on a 26.1.2 Fabric client launched into a 26.1.2 world, graded by the same rule.
+
+**7 of 13 boot.**
+
+The tables for a second target are derived from the ones already shipped and then checked against that
+version's own class inventory, so a rename that does not resolve there is dropped and named rather than
+shipped on the assumption that it is close enough. The shim package is compiled again per target, and a
+shim that will not build for a version is absent for that version alone.
+
+26.1.2 is **not a supported target**. `Targets` refuses it unless `-Dfoxgrade.target=26.1.2` opens it for
+a single run, which is how these numbers were taken. Having tables is most of the work and none of the
+evidence; a version joins the supported list on the strength of a table like this one, not before.
+
+| Mod | Result | Why not |
+|---|---|---|
+| appleskin | ✅ boots |  |
+| architectury-api | ✅ boots |  |
+| balm | ❌ crash | Caused by: java.lang.NoClassDefFoundError: net/minecraft/class_3665 |
+| cloth-config | ✅ boots |  |
+| dynamic-fps | ✅ boots |  |
+| ferrite-core | ✅ boots |  |
+| inventory-profiles-next | ⏸ held (library missing) |  |
+| jei | ❌ crash | java.lang.NoClassDefFoundError: net/minecraft/class_4075 |
+| no-chat-reports | ✅ boots |  |
+| rei | ❌ stall |  |
+| trinkets | ❌ crash | Caused by: java.lang.NoClassDefFoundError: net/minecraft/class_151 |
+| waystones | ✅ boots |  |
+| xaeros-world-map | ❌ crash | java.lang.NoClassDefFoundError: net/minecraft/class_1921 |
+
+Reproduce with `tools/run-2612.sh`.

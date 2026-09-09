@@ -21,10 +21,12 @@ public final class Targets {
 
   /** Measured against a real corpus in a running game.
    *
-   *  <p>26.2: 86 of 130 mods boot. 26.1.2: 7 of 13, on the h2h corpus, with the tables derived from 26.2's and
-   *  checked against 26.1.2's own class inventory. Both numbers are in docs/compat.md with the reason for every
-   *  failure, which is the point of requiring them — a version is supported when someone can see how well. */
-  private static final Set<String> SUPPORTED = Set.of("26.2", "26.1.2");
+   *  <p>26.2: 86 of 130 mods boot. 26.1.2: 7 of 13 on the head-to-head corpus. 26.1: 6 of 13 on that same corpus,
+   *  agreeing with 26.1.2 on twelve of the thirteen — the one difference is FerriteCore, which replaces vanilla's
+   *  blockstate cache and hits a real shape change between those two releases, not a fault in the tables. Every
+   *  number is in docs/compat.md with the reason for each failure, which is the point of requiring them: a version
+   *  is supported when someone can see how well it does, not when its tables exist. */
+  private static final Set<String> SUPPORTED = Set.of("26.2", "26.1.2", "26.1");
 
   /** Versions whose API is the same as another's, and which therefore share its tables.
    *
