@@ -149,11 +149,47 @@ elif min(map(key, supported)) < key(floor):
     sys.exit(1)
 PYCHECK
 
+# --- only supported targets ship --------------------------------------------------------------------------------
+# Each target's tables are about three megabytes, and there are a dozen versions worth deriving. Shipping them all
+# would make the download grow with every version anyone has ever considered, most of which are not offered.
+#
+# So the resources directory is where tables are kept and the jar is where supported ones go: a target's files are
+# packaged only if Targets lists it, or if it is the family representative for something Targets lists. Deriving a
+# candidate's tables costs nothing to anyone until it has been measured and turned on.
+python3 - <<'PYPACK'
+import json, pathlib, re, shutil
+res = pathlib.Path("src/main/resources/foxgrade")
+stage = pathlib.Path("build/resources/foxgrade")
+targets = pathlib.Path("src/main/java/foxgrade/Targets.java").read_text()
+supported = set(re.findall(r'"([^"]+)"', re.search(r"SUPPORTED\s*=\s*Set\.of\(([^)]*)\)", targets, re.S).group(1)))
+family = dict(re.findall(r'"([^"]+)",\s*"([^"]+)"', re.search(r"FAMILY\s*=[^;]*?of\(([^)]*)\)", targets, re.S).group(1)))
+# A supported version needs its own inventory and its family's heavy tables.
+keep_inventory = set(supported)
+keep_tables = {family.get(v, v) for v in supported}
+if stage.exists():
+    shutil.rmtree(stage.parent)
+stage.mkdir(parents=True)
+skipped = []
+for f in sorted(res.iterdir()):
+    m = re.fullmatch(r"mc-(.+)\.classes\.json\.gz", f.name)
+    n = re.fullmatch(r"intermediary-to-mojang\.(.+)\.json\.gz", f.name)
+    if m and m.group(1) not in keep_inventory:
+        skipped.append(f.name); continue
+    if n and n.group(1) not in keep_tables:
+        skipped.append(f.name); continue
+    shutil.copy2(f, stage / f.name)
+for sub in res.iterdir():
+    if sub.is_dir():
+        shutil.copytree(sub, stage / sub.name, dirs_exist_ok=True)
+print(f"  packaging tables for {sorted(keep_inventory)}; {len(skipped)} unsupported table file(s) left out")
+PYPACK
+
 VERSION=$(grep '"version"' src/main/resources/fabric.mod.json | head -1 | sed -E 's/.*"([^"]+)"[^"]*$/\1/')
 OUT="$PWD/$DIST/foxgrade-${VERSION}.jar"
 rm -f "$OUT"
 ( cd "$BUILD" && jar cf "$OUT" . )
-( cd src/main/resources && jar uf "$OUT" . )
+( cd src/main/resources && jar uf "$OUT" $(ls | grep -v '^foxgrade$') )
+( cd build/resources && jar uf "$OUT" foxgrade )
 [[ -d src/neoforge/resources && -f "$BUILD/foxgrade/neoforge/FoxGradeLocator.class" ]] && ( cd src/neoforge/resources && jar uf "$OUT" . )
 [[ -d src/forge/resources && -f "$BUILD/foxgrade/forge/FoxGradeForgeLocator.class" ]] && ( cd src/forge/resources && jar uf "$OUT" . )
 rm -rf "$FA_TMP"
