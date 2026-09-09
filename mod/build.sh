@@ -43,10 +43,27 @@ mkdir -p "$BUILD" "$DIST"
 find src/main/java -name '*.java' > /tmp/foxgrade-sources.txt
 javac -J-Xmx512m -nowarn -d "$BUILD" -cp "$CP" @/tmp/foxgrade-sources.txt
 
+# --- NeoForge entry point ---------------------------------------------------------------------------------------
+# Compiled separately, against NeoForge rather than Fabric, and only when its jars are vendored in libs/neoforge.
+# The classes ride in the same jar; Fabric never loads them (nothing reads NeoForge's service file there), and on
+# NeoForge the service registration makes Fox-Grade a mod-file locator, which is what removes the restart step.
+NF_CP=""
+for f in libs/neoforge/*.jar; do [[ -f $f ]] && NF_CP="$NF_CP:$f"; done
+if [[ -n $NF_CP && -d src/neoforge/java ]]; then
+  find src/neoforge/java -name '*.java' > /tmp/foxgrade-nf-sources.txt
+  if javac -J-Xmx512m -nowarn -d "$BUILD" -cp "$CP:$BUILD$NF_CP" @/tmp/foxgrade-nf-sources.txt 2>/tmp/foxgrade-nf-errors.txt; then
+    echo "  NeoForge locator compiled"
+  else
+    echo "  NeoForge locator SKIPPED (see /tmp/foxgrade-nf-errors.txt) — the Fabric build is unaffected"
+    find "$BUILD/foxgrade/neoforge" -name '*.class' -delete 2>/dev/null || true
+  fi
+fi
+
 VERSION=$(grep '"version"' src/main/resources/fabric.mod.json | head -1 | sed -E 's/.*"([^"]+)"[^"]*$/\1/')
 OUT="$PWD/$DIST/foxgrade-${VERSION}.jar"
 rm -f "$OUT"
 ( cd "$BUILD" && jar cf "$OUT" . )
 ( cd src/main/resources && jar uf "$OUT" . )
+[[ -d src/neoforge/resources && -f "$BUILD/foxgrade/neoforge/FoxGradeLocator.class" ]] && ( cd src/neoforge/resources && jar uf "$OUT" . )
 rm -rf "$FA_TMP"
 echo "wrote $OUT ($(wc -c < "$OUT" | tr -d ' ') bytes)"
