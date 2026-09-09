@@ -188,6 +188,12 @@ public final class TransformPipeline {
         if (SIG.matcher(name).matches()) continue;
         if (e.isDirectory()) { buffered.put(name, new byte[0]); continue; }
         byte[] raw = readAll(in, e);
+        if (NeoForgeMetaFixer.isManifest(name)) {
+          // A NeoForge/Forge jar: widen its Minecraft and loader gates so the target will load it. Everything else
+          // about the port is loader-agnostic, because it is Minecraft that changed, not the loader reading the jar.
+          byte[] widened = NeoForgeMetaFixer.widen(raw, targetMc);
+          if (widened != raw) { raw = widened; metaFixed++; }
+        }
         if (quiltOnly && name.equals("quilt.mod.json")) {
           // A Quilt-only mod: its manifest becomes a fabric.mod.json (same ids, entrypoints, mixins, widener), and the port
           // is a plain Fabric mod from here on. The original manifest rides along under another name, for the record.
