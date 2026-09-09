@@ -1,0 +1,13 @@
+# Requirements a jar enforces in its own code instead of declaring in its manifest.
+#
+# Roughly Enough Items ships a nested "error-notifier" that checks for Architectury API and Cloth Config at runtime
+# and puts up a "Startup Errors!" dialog naming both. Its fabric.mod.json declares neither — only minecraft — so
+# reading dependency tables finds nothing and the run is graded a stall while the two jars it wanted sit unused in
+# the same corpus directory. Grading that as a porting failure measures the harness.
+#
+# Curated on purpose and kept short: every line here is a claim that a mod needs another mod, and the evidence is a
+# message the game printed. Anything a manifest already declares belongs in the manifest, not here.
+#
+# Format:  <modid> <required-modid>...
+rei architectury cloth-config
+roughlyenoughitems architectury cloth-config

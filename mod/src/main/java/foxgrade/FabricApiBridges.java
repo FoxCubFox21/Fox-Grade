@@ -174,6 +174,22 @@ public final class FabricApiBridges {
         if (neo != null) merge(renames, redirects, classRenames, ctorAdapters, inheritedRenames, fieldRedirects, extra, new String(neo.readAllBytes()), standInsL);
       }
     }
+    if (targetMc != null && !Targets.namespace(targetMc).equals("official")) {
+      // Every row in these tables was derived against 26.x, and none of it survives the trip to an older target.
+      // The Minecraft rows are written in Mojang names the intermediary runtime has never heard of — a 1.21.2 port
+      // came out carrying GuiGraphicsExtractor and RenderPipelines, which exist only on 26.2. The third-party rows
+      // look portable and are not: Fabric API renamed PayloadTypeRegistry.playS2C to clientboundPlay for 26.2, so
+      // applying that row to a 1.21.2 target rewrote a call the mod had right into one Fabric API does not have.
+      // A mod written for 1.21 needs no bridging to reach 1.21.2; it needs to be left alone.
+      renames.clear();
+      redirects.clear();
+      fieldRedirects.clear();
+      classRenames.clear();
+      standInsL.clear();
+      ctorAdapters.clear();
+      inheritedRenames.clear();
+      extra.clear();
+    }
     // Bridge rows published since the mod was built. Additive like everything else here, and merged before the
     // user's own file so a local override still wins.
     com.google.gson.JsonObject feed = RulesFeed.section(gameDir, "apiBridges");
@@ -192,6 +208,14 @@ public final class FabricApiBridges {
     b.superHooks.addAll(superHooksL); b.synths.addAll(synthsL); b.samRenames.putAll(samL);
     b.standIns.putAll(standInsL);
     return b;
+  }
+
+  private static boolean isMinecraftClass(String name) {
+    return name.startsWith("net/minecraft/") || name.startsWith("com/mojang/");
+  }
+
+  private static <V> void dropMinecraftEntries(Map<String, V> byOwner) {
+    byOwner.keySet().removeIf(FabricApiBridges::isMinecraftClass);
   }
 
   /** Removes redirects whose owner still declares the member being redirected on this target. */
@@ -371,7 +395,13 @@ public final class FabricApiBridges {
   private record Extra(Map<String, Map<String, String>> descWidenings, Map<String, Map<String, String[]>> handleRedirects,
                        Map<String, Map<String, CallAdapter>> callAdapters, java.util.List<OverrideAdapter> overrideAdapters,
                        Map<String, String[]> entryHooks, Map<String, java.util.List<String[]>> byAncestor,
-                       java.util.List<SuperHook> superHooks, java.util.List<Synth> synths, Map<String, Map<String, String>> samRenames) { }
+                       java.util.List<SuperHook> superHooks, java.util.List<Synth> synths, Map<String, Map<String, String>> samRenames) {
+    /** Empties every table at once, for a target none of these rows were derived for. */
+    void clear() {
+      descWidenings.clear(); handleRedirects.clear(); callAdapters.clear(); overrideAdapters.clear();
+      entryHooks.clear(); byAncestor.clear(); superHooks.clear(); synths.clear(); samRenames.clear();
+    }
+  }
 
   private static String[] strs(com.google.gson.JsonElement u) {
     if (!u.isJsonArray()) return new String[]{u.getAsString()};

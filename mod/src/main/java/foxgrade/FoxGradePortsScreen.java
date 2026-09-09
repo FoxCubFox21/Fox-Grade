@@ -533,7 +533,7 @@ public final class FoxGradePortsScreen extends Screen {
 
   @Override public void onClose() {
     this.minecraft.setScreenAndShow(parent);
-    FoxGradeClient.panelOpen = false;
+    ClientPanel.panelOpen = false;
   }
 
   // Turn "SprintParticlesMixin#onSprintStep" into "Sprint Particles — onSprintStep". The mixin

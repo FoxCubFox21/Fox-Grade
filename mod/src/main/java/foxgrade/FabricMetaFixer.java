@@ -91,6 +91,15 @@ public final class FabricMetaFixer {
         o.remove(id); touched = true;
         if (field.equals("depends") && !o.has("fabric-api")) o.addProperty("fabric-api", "*");
       }
+      // A Fabric API floor is a version from the OLD game's API line, and those lines restart: JEI for 1.21.1 asks
+      // for fabric-api >= 0.116.5+1.21.1, while the whole 1.21.2 line tops out around 0.106.x. The floor can never
+      // be satisfied on the target no matter how new the installed API is, so Fabric refuses the mod outright —
+      // "requires 0.116.5+1.21.1 or later, but only the wrong version is present: 0.106.1+1.21.2". The dep only
+      // ever meant "a Fabric API new enough to have what I call", and the bytecode bridge is what actually answers
+      // that; the number is noise from another version line. Presence is kept, the floor is dropped.
+      if (field.equals("depends") && o.has("fabric-api") && !"*".equals(o.get("fabric-api").getAsString())) {
+        o.addProperty("fabric-api", "*"); touched = true;
+      }
       if (!o.has("minecraft")) continue;
       if (field.equals("depends")) { o.addProperty("minecraft", targetMc); touched = true; }
       else { o.remove("minecraft"); touched = true; }

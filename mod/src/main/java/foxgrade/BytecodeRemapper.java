@@ -151,8 +151,18 @@ public final class BytecodeRemapper {
   private final Set<String> usedShims = new HashSet<>();
 
   public BytecodeRemapper(IntermediaryBridge bridge, Map<String, String> rulesClassTable, FabricApiBridges apiBridges) {
+    this(bridge, rulesClassTable, apiBridges, true);
+  }
+
+  /** {@code toMojang} false when the target loads classes through intermediary, which is every version before 26.x:
+   *  the mod already speaks that namespace and rewriting it into Mojang names makes the port unloadable. */
+  public BytecodeRemapper(IntermediaryBridge bridge, Map<String, String> rulesClassTable, FabricApiBridges apiBridges,
+                          boolean toMojang) {
     Map<String, String> mergedClasses = new HashMap<>(bridge.size() + rulesClassTable.size());
-    mergedClasses.putAll(bridge.classTable());
+    // On a target whose runtime namespace is intermediary, the bridge's intermediary-to-Mojang tables are not a
+    // translation the game wants — the mod already speaks the runtime's language. Everything else still applies:
+    // the rules table, the curated renames, the shape fixes.
+    if (toMojang) mergedClasses.putAll(bridge.classTable());
     mergedClasses.putAll(rulesClassTable);       // rules override bridge on class collisions
     mergedClasses.putAll(apiBridges.classRenames());   // curated third-party class renames
     // Compose rules onto bridge VALUES: the bridge maps intermediary → the class's 1.21-era
@@ -161,10 +171,15 @@ public final class BytecodeRemapper {
     // (class_1920 → world/level/BlockAndTintGetter → client/renderer/block/BlockAndTintGetter).
     mergedClasses.replaceAll((k, v) -> rulesClassTable.getOrDefault(v, v));
     mergedClasses.replaceAll((k, v) -> apiBridges.classRenames().getOrDefault(v, v));   // curated moves too
-    this.remapper = new BridgeRemapper(mergedClasses, bridge.methodTable(), bridge.fieldTable(),
-        bridge.globalMethodTable(), bridge.globalFieldTable(), apiBridges.renames(),
-        bridge.mojangMethodTable(), bridge.mojangMethodGlobalTable(),
-        bridge.yarnMethodTable(), bridge.yarnFieldTable(), apiBridges.inheritedRenames());
+    Map<String, Map<String, String>> noPerClass = java.util.Map.of();
+    Map<String, String> noGlobal = java.util.Map.of();
+    this.remapper = new BridgeRemapper(mergedClasses,
+        toMojang ? bridge.methodTable() : noPerClass, toMojang ? bridge.fieldTable() : noPerClass,
+        toMojang ? bridge.globalMethodTable() : noGlobal, toMojang ? bridge.globalFieldTable() : noGlobal,
+        apiBridges.renames(),
+        toMojang ? bridge.mojangMethodTable() : noPerClass, toMojang ? bridge.mojangMethodGlobalTable() : noGlobal,
+        toMojang ? bridge.yarnMethodTable() : noPerClass, toMojang ? bridge.yarnFieldTable() : noPerClass,
+        apiBridges.inheritedRenames());
     this.callRedirects = apiBridges.callRedirects();
     this.fieldRedirects = apiBridges.fieldRedirects();
     this.descWidenings = apiBridges.descWidenings();

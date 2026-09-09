@@ -15,6 +15,7 @@ B=~/foxgrade-work/batch2
 LEDGER="${LEDGER:-$B/ledger-v$SLUG.txt}"
 LOGPREFIX="${LOGPREFIX:-log-v$SLUG}"
 MC="$HOME/Library/Application Support/minecraft"
+CORPUS_DIR="${CORPUS_DIR:-$B/h2h}"
 CP=$(cat /tmp/fg-cp-$TARGET.txt)
 
 cp -f "$(ls -t ~/foxgrade-work/foxgrade-mod/dist/foxgrade-*.jar | head -1)" $PT/fg.jar
@@ -38,6 +39,11 @@ fg_run() {
   cp $PT/fg.jar $PT/mods/foxgrade.jar
   cp $HOME/mc-porttest-v$SLUG-base/*.jar $PT/mods/ 2>/dev/null
   for jar in "$@"; do cp "$jar" $PT/fox-grade-inbox/; done
+  # A mod that hard-depends on another and is launched without it is refused, not broken: Fabric (or the mod's own
+  # checker) puts up a startup-error dialog and never reaches a world, which grades the harness rather than the port.
+  # Only what this jar actually asks for, transitively — loading the whole corpus into every run makes mods collide
+  # and was tried once already. The dependencies are ported alongside it; the verdict is still about this mod alone.
+  for dep in $(python3 $B/deps-closure.py "$1" $CORPUS_DIR 2>/dev/null); do cp "$dep" $PT/fox-grade-inbox/; done
   local log="$B/$LOGPREFIX-$name.log"; : > "$log"
 
   launch "$log"

@@ -34,6 +34,10 @@ public final class AccessWidenerRemapper {
 
   public static Result rewrite(String text, Map<String, String> slashTable) { return rewrite(text, slashTable, null); }
 
+  /** The namespace a rewritten widener should declare. Set per port, because "official" is Mojang names on 26.x
+   *  and the obfuscated names on everything older — the same word meaning two incompatible things. */
+  static volatile String targetNamespace = "official";
+
   public static Result rewrite(String text, Map<String, String> slashTable, Names names) {
     if (slashTable.isEmpty()) return new Result(text, 0, 0);
     StringBuilder out = new StringBuilder(text.length());
@@ -51,7 +55,7 @@ public final class AccessWidenerRemapper {
       // namespace to match — otherwise Fabric refuses the widener with a namespace-mismatch.
       if (stripped.startsWith("accessWidener") || stripped.startsWith("classTweaker")) {
         String[] parts = stripped.split("\\s+");
-        if (parts.length >= 3) parts[2] = "official";
+        if (parts.length >= 3) parts[2] = targetNamespace;
         out.append(String.join(" ", parts));
         continue;
       }

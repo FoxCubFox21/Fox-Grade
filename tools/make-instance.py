@@ -49,7 +49,13 @@ def fabric_pieces(version):
     # actually be measured.
     builds = [m for m in meta]
     modern = int(version.split(".")[0]) >= 26
-    era = [m for m in builds if m["loader"]["version"].startswith("0.16")]
+    # Pre-26 wants a loader old enough to still read the class-tweaker-free Fabric API of its era, but 0.16 was too
+    # old to be a floor: Waystones declares fabricloader >= 0.17.3 and the whole run was graded a stall for a loader
+    # the harness chose, not for anything the port did. Newest below 0.19 keeps the era constraint and clears the
+    # floors real mods actually declare.
+    def parts(m):
+        return tuple(int(x) for x in m["loader"]["version"].split(".")[:3] if x.isdigit())
+    era = sorted((m for m in builds if parts(m) < (0, 19)), key=parts, reverse=True)
     chosen = builds[0] if modern or not era else era[0]
     libs = [chosen["loader"]["maven"], chosen.get("intermediary", {}).get("maven")]
     for group in ("common", "client"):
@@ -111,6 +117,16 @@ def classpath(meta, version):
         art = (lib.get("downloads", {}) or {}).get("artifact")
         if art and art.get("path"):
             q = MC / "libraries" / art["path"]
+            # Only versions the launcher has actually run have their libraries on disk. Skipping the rest silently
+            # produced a classpath that looked complete and failed at runtime on whatever was missing —
+            # NoClassDefFoundError: com/mojang/logging/LogUtils, from a jar nobody had downloaded.
+            if not q.exists() and art.get("url"):
+                try:
+                    q.parent.mkdir(parents=True, exist_ok=True)
+                    q.write_bytes(urllib.request.urlopen(
+                        urllib.request.Request(art["url"], headers=UA), timeout=300).read())
+                except Exception:
+                    pass
             if q.exists() and artifact(q) not in seen:
                 seen.add(artifact(q)); out.append(str(q))
     jar = HERE / f"mc-{version}.jar"

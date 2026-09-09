@@ -11,6 +11,9 @@ public final class FoxGradeMain implements ModInitializer {
     boolean wanted = false;
     for (var mod : Loaders.current().mods()) if (mod.id().endsWith("_fgport")) { wanted = true; break; }
     if (!wanted) return;
+    // Only 26.x lost the component. On an older target it is still there under its own name, the shim is not needed,
+    // and trying anyway just logs a failure that reads like a real one.
+    if (!Targets.namespace(Loaders.current().gameVersion()).equals("official")) return;
     try {
       foxgrade.shim.ItemCompat.hideAdditionalTooltip();
       FoxGradePreLaunch.log("registered foxgrade:hide_additional_tooltip (a port reads DataComponents.HIDE_ADDITIONAL_TOOLTIP)");

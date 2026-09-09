@@ -25,8 +25,11 @@ public final class Targets {
    *  agreeing with 26.1.2 on twelve of the thirteen — the one difference is FerriteCore, which replaces vanilla's
    *  blockstate cache and hits a real shape change between those two releases, not a fault in the tables. Every
    *  number is in docs/compat.md with the reason for each failure, which is the point of requiring them: a version
-   *  is supported when someone can see how well it does, not when its tables exist. */
-  private static final Set<String> SUPPORTED = Set.of("26.2", "26.1.2", "26.1");
+   *  is supported when someone can see how well it does, not when its tables exist.
+   *
+   *  <p>26.1.1: 6 of 13, the same six as 26.1 and mod for mod the same result — which is the family model earning
+   *  its keep rather than being assumed. */
+  private static final Set<String> SUPPORTED = Set.of("26.2", "26.1.2", "26.1", "26.1.1");
 
   /** Versions whose API is the same as another's, and which therefore share its tables.
    *
@@ -41,6 +44,22 @@ public final class Targets {
   private static final java.util.Map<String, String> FAMILY = java.util.Map.of(
       "26.1", "26.1.2",
       "26.1.1", "26.1.2");
+
+  /** The namespace a target loads classes in, which is what a port has to be written in.
+   *
+   *  <p>26.x ships unobfuscated, so its runtime namespace is Mojang's own names and Fabric calls that "official".
+   *  Every older version ships obfuscated and Fabric loads it through intermediary, where Mojang names exist only in
+   *  a development environment and resolve to nothing at runtime. A port emitted in the wrong one of those is not
+   *  slightly wrong, it is unloadable. */
+  public static String namespace(String mc) {
+    if (mc == null || mc.isEmpty()) return "official";
+    String major = mc.split("\\.")[0];
+    try {
+      return Integer.parseInt(major) >= 26 ? "official" : "intermediary";
+    } catch (NumberFormatException notANumber) {
+      return "official";
+    }
+  }
 
   /** The version whose tables describe this one's API — itself, unless it belongs to a family. */
   public static String tables(String mc) {

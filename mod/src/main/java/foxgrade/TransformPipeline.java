@@ -73,6 +73,12 @@ public final class TransformPipeline {
    *  refuses the lot with "Module dev.yumi.commons.event contains package foxgrade". META-INF is never a package. */
   public static final String PORT_REPORT = "META-INF/foxgrade-port-report.json";
 
+  /** The access widener Fox-Grade writes into a port, named so it cannot collide with the mod's own. */
+  public static final String PORT_WIDENER = "foxgrade-port.accesswidener";
+  /** The NeoForge/Forge counterpart of {@link #PORT_WIDENER}. Under META-INF/ because that is where the format lives
+   *  and because a top-level name would claim a package a JPMS module system then refuses. */
+  public static final String PORT_TRANSFORMER = "META-INF/foxgrade-port-at.cfg";
+
   /** A mod bundled inside another mod's jar, under whichever directory that loader uses.
    *
    *  <p>Fabric nests under {@code META-INF/jars/} and NeoForge under {@code META-INF/jarjar/}, and until this knew
@@ -136,10 +142,17 @@ public final class TransformPipeline {
     String shimNs = src.getFileName().toString().replaceAll("\\.jar$", "").replaceAll("[^A-Za-z0-9]", "_");
     // Shims are compiled classes, so which build of them to inject depends on the version being ported for.
     ShimGenerator.targetVersion(targetMc);
+    AccessWidenerRemapper.targetNamespace = Targets.namespace(targetMc);
     Map<String, String> mergedClasses = new HashMap<>(bridge.size() + rules.size());
-    mergedClasses.putAll(bridge.classTable());
+    // The bridge renames intermediary into Mojang names, which is the right thing to do for a 26.x target and
+    // exactly the wrong thing for any older one. Those versions ship obfuscated and Fabric loads them through
+    // intermediary; Mojang names exist there only in a development environment and resolve to nothing at runtime.
+    // A Fabric mod already arrives in intermediary, so on those targets the names are already the ones the game
+    // will look for, and the work is the version's API changes rather than its naming.
+    boolean toMojang = Targets.namespace(targetMc).equals("official");
+    if (toMojang) mergedClasses.putAll(bridge.classTable());
     mergedClasses.putAll(rules.slashTable());
-    BytecodeRemapper remapper = new BytecodeRemapper(bridge, rules.slashTable(), apiBridges);
+    BytecodeRemapper remapper = new BytecodeRemapper(bridge, rules.slashTable(), apiBridges, toMojang);
     // Auto-blocklist: pre-flight every refmap through translation and check each resolved
     // selector against the target MC's class inventory (full signatures). A selector that no
     // longer resolves — the method was removed or its signature changed — will fatal the mixin
@@ -243,6 +256,15 @@ public final class TransformPipeline {
           // about the port is loader-agnostic, because it is Minecraft that changed, not the loader reading the jar.
           byte[] widened = NeoForgeMetaFixer.widen(raw, targetMc, sourceEntries);
           if (widened != raw) { raw = widened; metaFixed++; }
+          // The widenings this port needs, in the format this loader reads. The Fabric branch below writes the same
+          // entries as an access widener; a NeoForge mod has no fabric.mod.json to put them in, so until this was
+          // here they were simply never applied on NeoForge or Forge and a port died on IllegalAccessError instead.
+          String at = PortWidenings.transformerFor(targetMc);
+          if (at != null) {
+            buffered.put(PORT_TRANSFORMER, at.getBytes(StandardCharsets.UTF_8));
+            byte[] declared = NeoForgeMetaFixer.declareTransformer(raw, PORT_TRANSFORMER);
+            if (declared != raw) { raw = declared; metaFixed++; }
+          }
         }
         if (quiltOnly && name.equals("quilt.mod.json")) {
           // A Quilt-only mod: its manifest becomes a fabric.mod.json (same ids, entrypoints, mixins, widener), and the port
@@ -816,6 +838,13 @@ public final class TransformPipeline {
           fg.add("disabledMixins", dr);
           custom.add("foxgrade", fg);
           meta.add("custom", custom);
+          // Widenings the port needs, written into the port. They used to sit in Fox-Grade's own manifest, which
+          // could only ever name one namespace and so made the mod unloadable on any version but 26.x.
+          String widen = PortWidenings.documentFor(targetMc);
+          if (widen != null && !meta.has("accessWidener")) {
+            buffered.put(PORT_WIDENER, widen.getBytes(StandardCharsets.UTF_8));
+            meta.addProperty("accessWidener", PORT_WIDENER);
+          }
           buffered.put("fabric.mod.json", (GSON.toJson(meta) + "\n").getBytes(StandardCharsets.UTF_8));
           buffered.put(PORT_REPORT, (GSON.toJson(fg) + "\n").getBytes(StandardCharsets.UTF_8));
         } catch (Exception ignore) { }

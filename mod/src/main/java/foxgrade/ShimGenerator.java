@@ -497,7 +497,12 @@ public final class ShimGenerator implements Opcodes {
    *  RenderSystem.initRenderer. {@link #fromResource} refuses to serve a version from another version's set, so the
    *  supplier throws, the caller records the reference as unresolved, and the port report names it. */
   static boolean unavailableHere(String shimCls) {
-    return false;
+    // Every shim, whether copied from a resource or generated here, is written in Mojang names, because that is what
+    // 26.x runs in. A target that loads through intermediary resolves none of them: the shim itself would fail to
+    // link, and it would take the mod that needed it down with it. Until there is a shim set built and remapped for
+    // those versions, the reference stays unresolved and the port report names it — which someone can act on, and
+    // which is what Fox-Grade promises to do with anything it cannot prove safe.
+    return !Targets.namespace(targetMc).equals("official");
   }
 
 

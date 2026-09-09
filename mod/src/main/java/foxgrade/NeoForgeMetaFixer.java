@@ -76,6 +76,22 @@ final class NeoForgeMetaFixer {
     }
   }
 
+  /** Adds an {@code [[accessTransformers]]} table for a file Fox-Grade wrote into the port.
+   *
+   *  <p>Appended rather than merged into whatever the mod already declares: NeoForge accepts several of these tables
+   *  and reads them all, so leaving the mod's own untouched is both simpler and safer than editing a file the mod
+   *  author owns. Returns the manifest unchanged if it already names this file, so re-porting is idempotent. */
+  static byte[] declareTransformer(byte[] toml, String file) {
+    String text = new String(toml, StandardCharsets.UTF_8);
+    if (text.contains(file)) return toml;
+    StringBuilder out = new StringBuilder(text);
+    if (out.length() > 0 && out.charAt(out.length() - 1) != '\n') out.append('\n');
+    out.append("\n# Added by Fox-Grade: members this target made private or final that the mod was compiled against.\n");
+    out.append("[[accessTransformers]]\n");
+    out.append("file = \"").append(file).append("\"\n");
+    return out.toString().getBytes(StandardCharsets.UTF_8);
+  }
+
   /** Removes every {@code [[accessTransformers]]} table naming a file the jar does not contain. */
   private static boolean dropMissingTransformers(List<String> lines, java.util.Set<String> present) {
     boolean changed = false;
