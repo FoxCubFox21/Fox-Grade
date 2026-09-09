@@ -19,11 +19,18 @@ NFVER=26.2.0.82
 cp -f "$(ls -t ~/foxgrade-work/foxgrade-mod/dist/foxgrade-*.jar | head -1)" $PT/fg.jar   # always test the newest build
 
 # The mod id a NeoForge jar declares, read out of its TOML manifest without a TOML parser: the first modId key.
-# Every modId this jar declares a dependency on, minecraft and neoforge excluded.
+# Every modId this jar declares a dependency on, minecraft and neoforge excluded — plus its language loader, which
+# is a dependency that never appears in a dependency table. VeinMiner says modLoader = "klf" because it is a Kotlin
+# mod and dies with "Missing language loader klf" if nobody supplies kotlin-for-forge; reading dependency tables
+# alone fails it for a library the harness never handed it.
 nf_deps() {
-  unzip -p "$1" META-INF/neoforge.mods.toml META-INF/mods.toml 2>/dev/null \
+  local toml=$(unzip -p "$1" META-INF/neoforge.mods.toml META-INF/mods.toml 2>/dev/null)
+  local deps=$(echo "$toml" \
     | awk '/^\s*\[\[dependencies/{d=1} d && /^\s*modId\s*=/{print}' \
-    | sed 's/.*= *"//; s/".*//' | grep -vxE 'minecraft|neoforge|forge' | sort -u | tr '\n' ' '
+    | sed 's/.*= *"//; s/".*//' | grep -vxE 'minecraft|neoforge|forge')
+  local lang=$(echo "$toml" | grep -m1 -E '^\s*modLoader\s*=' | sed 's/.*= *"//; s/".*//' \
+    | grep -vxE 'javafml|lowcodefml')
+  echo "$deps $lang" | tr ' ' '\n' | grep -v '^$' | sort -u | tr '\n' ' '
 }
 
 nf_modid() {
@@ -53,6 +60,8 @@ nf_run() {
     for bjar in ~/foxgrade-work/nf-base/*.jar; do
       local bid=$(nf_modid "$bjar")
       [[ -z $bid || $bid == $mainid ]] && continue
+      # A library can be wanted under the name of the loader it provides rather than its own modId.
+      [[ $bid == kotlinforforge && " $want " == *" klf "* ]] && want="$want kotlinforforge"
       [[ -f $PT/mods/$(basename $bjar) ]] && continue
       if [[ " $want " == *" $bid "* ]]; then
         cp "$bjar" $PT/mods/

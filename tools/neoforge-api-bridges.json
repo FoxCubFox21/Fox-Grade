@@ -85,6 +85,13 @@
         "(Ljava/lang/Object;Lnet/minecraft/server/packs/resources/PreparableReloadListener;)V"
       ]
     },
+    "net/neoforged/neoforgespi/language/IModFileInfo": {
+      "moduleName()Ljava/lang/String;": [
+        "foxgrade/shim/FmlCompat",
+        "moduleName",
+        "(Ljava/lang/Object;)Ljava/lang/String;"
+      ]
+    },
     "net/neoforged/fml/loading/FMLLoader": {
       "isProduction()Z": [
         "net/neoforged/fml/loading/FMLEnvironment",

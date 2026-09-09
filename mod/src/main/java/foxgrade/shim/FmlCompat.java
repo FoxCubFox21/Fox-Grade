@@ -14,6 +14,27 @@ import java.nio.file.Path;
 public final class FmlCompat {
   private FmlCompat() { }
 
+  /** The module name of a mod file, which FML 11 stopped exposing.
+   *
+   *  <p>{@code IModFileInfo.moduleName()} is gone with no replacement on that interface, and a language provider
+   *  naming the module it is loading has nowhere else to ask. The mod file's own id is the closest true answer and
+   *  the one FML itself now uses to identify a file.
+   *
+   *  <p>This is what a hollow pass looks like from the other side: kotlin-for-forge "passed" before its bundled
+   *  language provider was ported, because the provider never loaded and so never ran. Porting it made the mod
+   *  actually work, and it hit this immediately. */
+  public static String moduleName(Object modFileInfo) {
+    if (modFileInfo == null) return "";
+    try {
+      Object file = modFileInfo.getClass().getMethod("getFile").invoke(modFileInfo);
+      if (file != null) {
+        Object id = file.getClass().getMethod("getId").invoke(file);
+        if (id != null) return String.valueOf(id);
+      }
+    } catch (Throwable notThisShape) { }
+    return "";
+  }
+
   public static Path getGamePath() {
     try {                                                          // current: FMLLoader.getCurrent().getGameDir()
       Class<?> loader = Class.forName("net.neoforged.fml.loading.FMLLoader");

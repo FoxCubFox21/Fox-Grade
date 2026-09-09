@@ -141,6 +141,11 @@ CURATED_CALLS = {
             ["foxgrade/shim/ReloadListenerCompat", "registerReloadListener",
              "(Ljava/lang/Object;Lnet/minecraft/server/packs/resources/PreparableReloadListener;)V"],
     },
+    # Removed outright in FML 11, with nothing on that interface to replace it.
+    "net/neoforged/neoforgespi/language/IModFileInfo": {
+        "moduleName()Ljava/lang/String;":
+            ["foxgrade/shim/FmlCompat", "moduleName", "(Ljava/lang/Object;)Ljava/lang/String;"],
+    },
     "net/neoforged/fml/loading/FMLLoader": {
         "isProduction()Z": ["net/neoforged/fml/loading/FMLEnvironment", "isProduction", "()Z"],
         "getDist()Lnet/neoforged/api/distmarker/Dist;":
