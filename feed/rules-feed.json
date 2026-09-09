@@ -19,12 +19,7 @@
   ],
   "generated": "2026-09-09",
   "mixinBlocklist": {
-    "entries": [
-      {
-        "mixin": "malte0811.ferritecore.mixin.datacomponents.PatchedDataComponentMapMixin",
-        "_why": "TEMPORARY end-to-end test of the feed, reverted immediately. Not a real anti-rule."
-      }
-    ]
+    "entries": []
   },
   "apiBridges": {}
 }
