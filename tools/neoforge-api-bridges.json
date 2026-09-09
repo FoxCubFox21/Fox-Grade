@@ -71,6 +71,20 @@
     "net/neoforged/neoforge/client/event/RecipesUpdatedEvent": "net/neoforged/neoforge/client/event/RecipesReceivedEvent"
   },
   "callRedirects": {
+    "net/neoforged/neoforge/client/event/AddClientReloadListenersEvent": {
+      "registerReloadListener(Lnet/minecraft/server/packs/resources/PreparableReloadListener;)V": [
+        "foxgrade/shim/ReloadListenerCompat",
+        "registerReloadListener",
+        "(Ljava/lang/Object;Lnet/minecraft/server/packs/resources/PreparableReloadListener;)V"
+      ]
+    },
+    "net/neoforged/neoforge/event/AddServerReloadListenersEvent": {
+      "registerReloadListener(Lnet/minecraft/server/packs/resources/PreparableReloadListener;)V": [
+        "foxgrade/shim/ReloadListenerCompat",
+        "registerReloadListener",
+        "(Ljava/lang/Object;Lnet/minecraft/server/packs/resources/PreparableReloadListener;)V"
+      ]
+    },
     "net/neoforged/fml/loading/FMLLoader": {
       "isProduction()Z": [
         "net/neoforged/fml/loading/FMLEnvironment",

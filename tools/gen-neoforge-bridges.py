@@ -128,6 +128,19 @@ CURATED = {
 # the target, with the identical signature are listed; the rest of FMLLoader's old statics have no static equivalent
 # and are left to the port report to name.
 CURATED_CALLS = {
+    # Registering a reload listener gained a name in 26.2, which sorts listeners into a dependency graph. There is no
+    # id in the old call to carry across, so the shim makes one. Keyed on the *new* owner because the class rename
+    # above has already been applied by the time a call is redirected.
+    "net/neoforged/neoforge/client/event/AddClientReloadListenersEvent": {
+        "registerReloadListener(Lnet/minecraft/server/packs/resources/PreparableReloadListener;)V":
+            ["foxgrade/shim/ReloadListenerCompat", "registerReloadListener",
+             "(Ljava/lang/Object;Lnet/minecraft/server/packs/resources/PreparableReloadListener;)V"],
+    },
+    "net/neoforged/neoforge/event/AddServerReloadListenersEvent": {
+        "registerReloadListener(Lnet/minecraft/server/packs/resources/PreparableReloadListener;)V":
+            ["foxgrade/shim/ReloadListenerCompat", "registerReloadListener",
+             "(Ljava/lang/Object;Lnet/minecraft/server/packs/resources/PreparableReloadListener;)V"],
+    },
     "net/neoforged/fml/loading/FMLLoader": {
         "isProduction()Z": ["net/neoforged/fml/loading/FMLEnvironment", "isProduction", "()Z"],
         "getDist()Lnet/neoforged/api/distmarker/Dist;":
