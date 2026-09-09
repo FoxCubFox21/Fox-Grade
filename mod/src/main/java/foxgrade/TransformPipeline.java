@@ -67,6 +67,18 @@ public final class TransformPipeline {
   /** Where the port report lives inside a ported jar, for mods whose manifest cannot carry it. */
   public static final String PORT_REPORT = "foxgrade/port-report.json";
 
+  /** A mod bundled inside another mod's jar, under whichever directory that loader uses.
+   *
+   *  <p>Fabric nests under {@code META-INF/jars/} and NeoForge under {@code META-INF/jarjar/}, and until this knew
+   *  about the second one every library a NeoForge mod ships inside itself was copied through untouched. That is not
+   *  a cosmetic omission: the bundled jar keeps its own manifest, so Xaero's Minimap shipped a xaerolib still gated
+   *  at {@code minecraft = "[1.21, 1.21.1]"}, NeoForge refused to load it, and the minimap was then held back for a
+   *  dependency it was carrying all along. */
+  static boolean isNestedMod(String entryName) {
+    return entryName.endsWith(".jar")
+        && (entryName.startsWith("META-INF/jars/") || entryName.startsWith("META-INF/jarjar/"));
+  }
+
   static boolean isQuiltHost() {
     try { return Loaders.current().name().equals("Quilt"); } catch (Throwable t) { return false; }
   }
@@ -217,7 +229,7 @@ public final class TransformPipeline {
         // Nested Jar-in-Jar dependencies get the FULL pipeline recursively — an untransformed
         // bundled dep (say, an intermediary-era cloth-config) otherwise ships inside a "ported"
         // jar and crashes the loader the moment no newer copy of that dep is installed.
-        if (name.startsWith("META-INF/jars/") && name.endsWith(".jar")) {
+        if (isNestedMod(name)) {
           try {
             java.nio.file.Path tmp = java.nio.file.Files.createTempFile("fg-nested", ".jar");
             java.nio.file.Files.write(tmp, raw);
