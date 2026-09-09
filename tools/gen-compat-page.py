@@ -190,19 +190,54 @@ Reproduce with `batch2/run-retromod.sh` next to the Fox-Grade harness scripts.
 # 1.21.x Fabric mod runs on 26.2; this asks whether a 1.21.1 *NeoForge* mod does, on a NeoForge 26.2 client, with
 # NeoForge's own libraries alongside it. The mods are different mods and the numbers do not add up with the ones
 # above — presenting them in one table would invite exactly that mistake.
+# Causes the runner's own grep does not catch, read back out of the log. The first entry is not a port failure at
+# all: NeoForge refuses to load a mod whose declared dependency is absent, which is the same "held" case the Fabric
+# lane already reports separately, and counting it as a Fox-Grade failure would be counting someone else's.
+NEO_CAUSES = [
+    (r"Missing or unsupported mandatory dependencies", "HELD", "declares a dependency that has no 26.2 build"),
+    (r"requires (\S+) any", "HELD", None),
+    (r"Failed to create mod instance\. ModID: \S+", None, None),
+    (r"(?:NoClassDefFoundError|NoSuchMethodError|NoSuchFieldError|IncompatibleClassChangeError):.*", None, None),
+    (r"Mixin apply for mod \S+ failed \S+", None, None),
+    # The client shut down seconds into startup with nothing logged: the mod list is printed, mixin setup finishes,
+    # and then "Closing FML Loader" with no exception anywhere. Saying that plainly is better than a blank cell,
+    # which reads as "we did not look".
+    (r"Closing FML Loader", None, "client shut down during startup with no error logged"),
+]
+
+
 def read_neoforge_ledger(path):
     """The NeoForge lane writes verdict/name/why; the Fabric lane writes verdict/name/portline/why."""
     rows = {}
+    logdir = pathlib.Path(path).parent
+    stem = "log-nf2" if path.endswith("-2.txt") else "log-nf"
     for ln in pathlib.Path(path).read_text().splitlines():
         parts = ln.split("\t")
         if len(parts) < 2 or parts[0] not in ("PASS", "CRASH", "HELD", "STALL"):
             continue
-        rows[parts[1]] = {"verdict": parts[0], "why": parts[2] if len(parts) > 2 else ""}
+        verdict, name = parts[0], parts[1]
+        why = parts[2] if len(parts) > 2 else ""
+        if verdict != "PASS":
+            log = logdir / f"{stem}-{name}.log"
+            text = log.read_text(errors="replace") if log.exists() else ""
+            for pattern, regrade, label in NEO_CAUSES:
+                m = re.search(pattern, text)
+                if not m:
+                    continue
+                if regrade:
+                    verdict = regrade
+                if not why:
+                    why = label or m.group(0)[:150]
+                why = re.sub(r"^\[[0-9:]+\] \[[^\]]*\] \[[^\]]*\]: ", "", why)[:150]
+                break
+        rows[name] = {"verdict": verdict, "why": why}
     return rows
 
 
-_neo_path = W / "batch2/ledger-neoforge.txt"
-neo = read_neoforge_ledger(_neo_path) if _neo_path.exists() else {}
+# The NeoForge lane can be split across instances to halve wall-clock; each writes its own ledger.
+neo = {}
+for _p in sorted(glob.glob(str(W / "batch2/ledger-neoforge*.txt"))):
+    neo.update(read_neoforge_ledger(_p))
 if neo:
     neo_pass = sum(1 for v in neo.values() if v["verdict"] == "PASS")
     md += f"""

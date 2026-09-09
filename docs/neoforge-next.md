@@ -26,3 +26,10 @@
    rm-enchantment-descriptions, rm-enhancedvisuals, rm-sound, rm-supplementaries and their Quilt equivalents. No
    Fox-Grade Fabric run ever hit that failure, so the capture softening changes nothing there and 86/130 stands.
    Worth noting the other way round: those are six mods Retromod loses to a failure Fox-Grade now survives.
+
+5. **A silent-abort failure mode, cause unknown.** chat-heads and modernfix print their mod list, finish mixin
+   setup, and then log `Closing FML Loader` about four seconds in with no exception anywhere — `Client.main` appears
+   to return normally and the client exits before a window is created. The java process lingers, so the harness
+   grades it a stall. Both mods are in the loaded-mod list at that point, so discovery and the port itself
+   succeeded. Worth reproducing with a visible window and `-verbose:class`, since whatever it is happens before
+   anything Fox-Grade writes gets a chance to run.
