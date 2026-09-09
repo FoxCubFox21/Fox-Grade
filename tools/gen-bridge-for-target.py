@@ -32,6 +32,29 @@ def shim_names():
     return set(re.findall(r'Map\.entry\("([^"]+)"', src.read_text()))
 
 
+def redirect_names():
+    """Every member name a bridge table redirects, as (owner, name) pairs and as bare names.
+
+    A member mapping may point at something the target does not declare, but only when a redirect will catch the call
+    and send it somewhere real. FoodData.getExhaustionLevel is the case: 26.2 has no such method and the bridge names
+    it anyway, because callRedirects routes it to a shim. Anything not covered that way has to resolve on the target
+    or it is a mapping to nothing."""
+    path = HERE / "foxgrade-mod/src/main/resources/foxgrade/fabric-api-bridges.json"
+    if not path.exists():
+        return set(), set()
+    table = json.load(path.open())
+    pairs, bare = set(), set()
+    for section in ("callRedirects", "fieldRedirects", "renames"):
+        for owner, members in (table.get(section) or {}).items():
+            if not isinstance(members, dict):
+                continue
+            for key in members:
+                name = re.split(r"[(:]", key.split(" ")[-1], maxsplit=1)[0]
+                pairs.add((owner.replace(".", "/"), name))
+                bare.add(name)
+    return pairs, bare
+
+
 def main():
     if len(sys.argv) < 3:
         print(__doc__); sys.exit(2)
@@ -92,27 +115,51 @@ def main():
     #
     # Classes are still checked, above: a class rename pointing at a class that is not there helps nobody, since
     # there is no call to redirect, only a type that will not resolve.
+    # A member is kept when the target declares it, or when a redirect covers it. Both halves were learned by getting
+    # it wrong. Dropping everything the target lacks deleted FoodData.getExhaustionLevel, which exists only to be
+    # redirected, and a 26.1.2 port died on the raw intermediary name. Keeping everything mapped
+    # MultiBufferSource.immediateWithBuffers to its 26.2 signature, which 26.1.2 does not have, and AppleSkin,
+    # Cloth Config and FerriteCore went from passing to crashing.
+    redir_pairs, redir_bare = redirect_names()
     members, drop_m = {}, 0
     for im_cls, groups in src["members"].items():
-        if im_cls not in classes:
+        target_cls = classes.get(im_cls)
+        if target_cls is None:
             drop_m += sum(len(g) for g in groups.values())
             continue                                   # the owning class itself is gone; its members name nothing
-        kept = {k: dict(v) for k, v in groups.items() if v}
+        owner = target_cls.replace(".", "/")
+        owned = per_class.get(owner, set())
+        kept = {}
+        for kind, mapping in groups.items():
+            good = {k: v for k, v in mapping.items()
+                    if v in owned or v.startswith("lambda$") or (owner, v) in redir_pairs}
+            drop_m += len(mapping) - len(good)
+            if good:
+                kept[kind] = good
         if kept:
             members[im_cls] = kept
     stats["members"] = (sum(len(g) for v in members.values() for g in v.values()), drop_m)
 
     def filter_global(mapping):
-        # Same reasoning as the per-class maps: a global member name is kept whether or not the target still has it.
-        return dict(mapping), 0
+        # Same rule as the per-class maps, minus the owner: a global name is kept if the target has it anywhere, or
+        # if some redirect names it.
+        good = {k: v for k, v in mapping.items() if v in anywhere or v.startswith("lambda$") or v in redir_bare}
+        return good, len(mapping) - len(good)
 
     global_methods, dm = filter_global(src["globalMethods"])
     global_fields, df = filter_global(src["globalFields"])
     stats["globals"] = (len(global_methods) + len(global_fields), dm + df)
 
     def filter_values(byowner, allowed):
-        """Carried across whole: these name members, and a member name is kept whether or not the target has it."""
-        return {o: dict(m) for o, m in byowner.items() if m}, 0
+        """Keep by destination name only, leaving owner keys untouched; same rule as the maps above."""
+        out, dropped = {}, 0
+        for owner, mapping in byowner.items():
+            good = {k: v for k, v in mapping.items()
+                    if v in allowed or v.startswith("lambda$") or v == "<clinit>" or v in redir_bare}
+            dropped += len(mapping) - len(good)
+            if good:
+                out[owner] = good
+        return out, dropped
 
     def filter_by_owner(byclass):
         out, dropped = {}, 0
@@ -121,8 +168,11 @@ def main():
             owned = per_class.get(target_owner)
             if owned is None:
                 dropped += len(mapping); continue
-            if mapping:
-                out[target_owner] = dict(mapping)
+            good = {k: v for k, v in mapping.items()
+                    if v in owned or v.startswith("lambda$") or v == "<clinit>" or (target_owner, v) in redir_pairs}
+            dropped += len(mapping) - len(good)
+            if good:
+                out[target_owner] = good
         return out, dropped
 
     # mojangMethods is keyed by the target's own class names, so the owner moves with the step and can be checked

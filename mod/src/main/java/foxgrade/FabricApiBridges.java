@@ -130,6 +130,22 @@ public final class FabricApiBridges {
   // Loads the shipped table plus, if present, a user extension at
   // <gamedir>/fox-grade.api-bridges.json (same shape). Entries in the user file win on collision.
   public static FabricApiBridges load(Path gameDir) throws IOException {
+    return load(gameDir, null);
+  }
+
+  /** As above, and when {@code targetMc} is given, drops any redirect the target does not need.
+   *
+   *  <p>These tables were written for one version. A redirect exists because that version removed something — a
+   *  class, a method — and the call has to go somewhere else instead. Aimed at a version that still has the thing,
+   *  the redirect is not a repair but damage: it takes a call that would have worked and sends it to a stand-in.
+   *
+   *  <p>MultiBufferSource is the case. 26.2 deleted it, so the tables redirect its calls into shims; 26.1.2 still has
+   *  it, complete with the immediateWithBuffers the mod is asking for, and redirecting anyway is what turned AppleSkin,
+   *  Cloth Config and FerriteCore from passing on 26.1.2 into NoSuchMethodError.
+   *
+   *  <p>On the version the tables were written for this changes nothing, which is the point: every member a redirect
+   *  names is one that version has already removed, so none of them survive the check there. */
+  public static FabricApiBridges load(Path gameDir, String targetMc) throws IOException {
     Map<String, Map<String, String>> renames = new HashMap<>();
     Map<String, Map<String, String[]>> redirects = new HashMap<>();
     Map<String, String> classRenames = new HashMap<>();
@@ -160,11 +176,43 @@ public final class FabricApiBridges {
     }
     Path user = gameDir.resolve("fox-grade.api-bridges.json");
     if (Files.exists(user)) merge(renames, redirects, classRenames, ctorAdapters, inheritedRenames, fieldRedirects, extra, Files.readString(user));
+    if (targetMc != null) {
+      Map<String, java.util.Set<String>> present = TargetInventory.membersByClass(targetMc);
+      if (!present.isEmpty()) {
+        dropRedirectsTargetDoesNotNeed(redirects, present);
+        dropRedirectsTargetDoesNotNeed(fieldRedirects, present);
+      }
+    }
     FabricApiBridges b = new FabricApiBridges(renames, redirects, classRenames, ctorAdapters, inheritedRenames, fieldRedirects,
         descWidenings, handleRedirects, callAdapters, overrideAdapters, entryHooks, byAncestor);
     b.superHooks.addAll(superHooksL); b.synths.addAll(synthsL); b.samRenames.putAll(samL);
     b.standIns.putAll(standInsL);
     return b;
+  }
+
+  /** Removes redirects whose owner still declares the member being redirected on this target. */
+  private static void dropRedirectsTargetDoesNotNeed(Map<String, Map<String, String[]>> table,
+                                                     Map<String, java.util.Set<String>> present) {
+    for (var owner : new java.util.ArrayList<>(table.keySet())) {
+      java.util.Set<String> declared = present.get(owner);
+      if (declared == null) continue;                    // the owner itself is gone: every redirect on it is needed
+      Map<String, String[]> members = table.get(owner);
+      members.keySet().removeIf((key) -> declared.contains(memberSignatureOf(key)));
+      if (members.isEmpty()) table.remove(owner);
+    }
+  }
+
+  /** The member signature a redirect key names, in the inventory's own shape.
+   *
+   *  <p>The comparison has to be on the whole signature, not the name. A redirect is not only for a member that
+   *  vanished — it is also for one whose shape changed, and those keep their name. Matching by name alone dropped
+   *  a redirect that a 26.2 port needed and silently stopped shipping the shim behind it.
+   *
+   *  <p>Field keys carry a verb ("get noCulling:Z", "getstatic SUCCESS:Lx;"); method keys do not. Strip the verb and
+   *  what is left is exactly what the inventory records. */
+  private static String memberSignatureOf(String key) {
+    int space = key.indexOf(' ');
+    return space < 0 ? key : key.substring(space + 1);
   }
 
   private static void merge(Map<String, Map<String, String>> into, Map<String, Map<String, String[]>> redirects,

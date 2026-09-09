@@ -70,7 +70,7 @@ public final class FoxGradeLocator implements IModFileCandidateLocator {
     Path cacheDir = gameDir.resolve(".fox-grade").resolve("cache");
     RulesLoader rules = RulesLoader.load(mc, cacheDir);
     IntermediaryBridge bridge = IntermediaryBridge.load(mc, cacheDir);
-    FabricApiBridges apiBridges = FabricApiBridges.load(gameDir);
+    FabricApiBridges apiBridges = FabricApiBridges.load(gameDir, mc);
     Map<String, Set<String>> blocklist;
     try { blocklist = MixinBlocklistLoader.load(gameDir); } catch (IOException noBlocklist) { blocklist = Map.of(); }
 

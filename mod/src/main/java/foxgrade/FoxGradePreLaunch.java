@@ -78,7 +78,7 @@ public final class FoxGradePreLaunch implements PreLaunchEntrypoint {
     }
 
     FabricApiBridges apiBridges;
-    try { apiBridges = FabricApiBridges.load(gameDir); }
+    try { apiBridges = FabricApiBridges.load(gameDir, mc); }
     catch (IOException e) {
       log("  ! could not load api bridges: " + e.getMessage());
       try { apiBridges = FabricApiBridges.load(gameDir.resolve("does-not-exist")); } catch (IOException ignored) { return; }
