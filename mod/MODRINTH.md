@@ -39,6 +39,18 @@ Tested on Quilt Loader for 26.2 (the 0.31 beta) with plain Fabric API — there 
 
 Quilt-only mods — a `quilt.mod.json` and no `fabric.mod.json` — port like any other, and come out carrying a 26.2 `quilt.mod.json` of their own, so Quilt still sees a Quilt mod. QSL's own API modules are not bridged.
 
+## What it sends
+
+One request, and only when the panel is open: Modrinth's public read-only API, asking whether the author has published
+a build of that mod for the version you are running. It carries the mod id, the Minecraft version and a Fox-Grade
+user-agent — and, as any request does, your IP. One query per mod per session, four-second timeout, gives up quietly.
+If you click to install an official build, that downloads it from Modrinth too, checksum-verified.
+
+Nothing else leaves your machine. There is no telemetry, no account, no usage reporting, and nothing is uploaded —
+not your mod list, not your worlds, not the ports. The translation tables ship inside the jar rather than being
+fetched, so porting itself needs no connection at all; unplug the network and everything except the update check
+still works. GitHub appears in the mod's metadata as its homepage, source and issue tracker, and is never contacted.
+
 ## Honest about the limits
 
 Heavyweight rendering mods are out of scope. Anything Fox-Grade cannot prove safe is disabled and **listed by name** — never guessed at. Originals are never deleted, every port is reversible, and a port that crashes your game retires itself, so it can never take you down twice.

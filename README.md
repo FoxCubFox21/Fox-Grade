@@ -32,6 +32,16 @@ product, reshaping both between Minecraft versions — which Fabric does not —
 moved classes before it reaches a Minecraft one. `tools/gen-neoforge-bridges.py` diffs two NeoForge releases for
 those, and emits only what it can prove, leaving judgement calls to a person.
 
+## What it sends
+
+One request, and only when the panel is open: Modrinth's public read-only API, asking whether the author has
+published a build of that mod for the version you are running. It carries the mod id, the Minecraft version and a
+Fox-Grade user-agent, plus the IP any request carries. One query per mod per session, four-second timeout, gives up
+quietly. Clicking to install an official build downloads it from Modrinth, checksum-verified.
+
+Nothing else leaves the machine: no telemetry, no account, no usage reporting, nothing uploaded. The translation
+tables ship inside the jar rather than being fetched, so porting needs no connection at all.
+
 ## The receipts
 
 Everything below is measured, versioned in this repo, and was falsified-then-fixed in public
