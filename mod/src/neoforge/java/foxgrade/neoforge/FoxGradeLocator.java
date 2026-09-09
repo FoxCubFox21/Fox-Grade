@@ -61,6 +61,10 @@ public final class FoxGradeLocator implements IModFileCandidateLocator {
       }
     }
     if (inbox.isEmpty()) return;
+    if (!foxgrade.Targets.supported(mc)) {
+      System.err.println("[Fox-Grade] " + foxgrade.Targets.refusal(mc));
+      return;
+    }
 
     System.err.println("[Fox-Grade] " + inbox.size() + " jar(s) in the inbox; porting for " + mc + " before discovery closes");
     Path cacheDir = gameDir.resolve(".fox-grade").resolve("cache");

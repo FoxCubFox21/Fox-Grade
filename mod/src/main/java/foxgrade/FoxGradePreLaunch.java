@@ -40,6 +40,7 @@ public final class FoxGradePreLaunch implements PreLaunchEntrypoint {
     String mc = host.gameVersion();
 
     log("Fox-Grade " + VERSION + " — target MC " + mc);
+    if (!Targets.supported(mc)) { log("  " + Targets.refusal(mc)); return; }
     if (!Files.isDirectory(modsDir)) { log("  no mods folder; nothing to do."); return; }
 
     Config cfg;
