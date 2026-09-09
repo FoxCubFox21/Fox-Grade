@@ -689,10 +689,21 @@ public final class TransformPipeline {
       // shim-to-shim references point at the namespaced copies as well.
       java.util.LinkedHashSet<String> wanted = new java.util.LinkedHashSet<>();
       java.util.LinkedHashSet<String> standIns = new java.util.LinkedHashSet<>();
+      // A shim named for a Minecraft class stands in for one the target removed. Injected into a target that still
+      // has that class, it does not stand in for anything — it shadows the real one, and on a flat classpath the
+      // game itself then breaks: Xaero's World Map ported for 26.1.2 shipped RenderStateShard, and vanilla's own
+      // RenderBuffers died on a method the shim does not have, before any mod ran.
+      //
+      // On the version the tables were written for this never fires, because every MC-named shim there is a class
+      // that version has already deleted. It is only aiming those tables at another version that needs the check.
+      java.util.Set<String> targetHas = TargetInventory.membersByClass(targetMc).keySet();
+      java.util.function.Predicate<String> shadowsRealClass =
+          (name) -> !name.startsWith("foxgrade/shim/") && targetHas.contains(name);
       for (String missing : new java.util.ArrayList<>(verifier.missing())) {
         // A shim with no build for this target stays missing on purpose: the report says so, which a person can act
         // on, and that beats injecting a class compiled against a different Minecraft.
-        if (ShimGenerator.SHIMS.containsKey(missing) && !ShimGenerator.unavailableHere(missing)) {
+        if (ShimGenerator.SHIMS.containsKey(missing) && !ShimGenerator.unavailableHere(missing)
+            && !shadowsRealClass.test(missing)) {
           wanted.add(missing); verifier.missing().remove(missing);
         } else if (apiBridges.standIns().containsKey(missing)) {
           // No reviewed shim, but the target deleted this type outright and its supertype survives, so an empty
@@ -701,7 +712,7 @@ public final class TransformPipeline {
           strippedNames.add(missing.substring(missing.lastIndexOf('/') + 1) + " (deleted in " + targetMc + "; stood in empty)");
         }
       }
-      wanted.addAll(remapper.usedShims());
+      for (String used : remapper.usedShims()) if (!shadowsRealClass.test(used)) wanted.add(used);
       // Stand-ins are found by looking, not by asking the verifier. The verifier compares against Minecraft's class
       // inventory, so it has no opinion about NeoForge's own API and never reports a deleted event class as missing.
       // The stand-in table is only ever built from classes the target definitely does not have, so a mod mentioning
@@ -721,8 +732,15 @@ public final class TransformPipeline {
       java.util.ArrayDeque<String> queue = new java.util.ArrayDeque<>(wanted);
       while (!queue.isEmpty()) {
         String w = queue.poll();
-        for (String dep : ShimGenerator.SHIM_DEPS.getOrDefault(w, java.util.List.of())) if (wanted.add(dep)) queue.add(dep);
-        for (String k : ShimGenerator.SHIMS.keySet()) if (k.startsWith(w + "$") && wanted.add(k)) queue.add(k);   // inner shims travel with their outer
+        // The closure needs the same guard as the entry points. A shim can depend on another shim named for a
+        // Minecraft class, and pulling that one in regardless is how MultiBufferSource kept reaching a 26.1.2 port
+        // after both ways of asking for it directly had been closed off.
+        for (String dep : ShimGenerator.SHIM_DEPS.getOrDefault(w, java.util.List.of())) {
+          if (!shadowsRealClass.test(dep) && wanted.add(dep)) queue.add(dep);
+        }
+        for (String k : ShimGenerator.SHIMS.keySet()) {                        // inner shims travel with their outer
+          if (k.startsWith(w + "$") && !shadowsRealClass.test(k) && wanted.add(k)) queue.add(k);
+        }
       }
       for (String d : remapper.droppedOverrides()) { strippedNames.add(d + " (final in 26.2)"); autoStripped++; }
       Map<String, String> shimMap = new HashMap<>();
