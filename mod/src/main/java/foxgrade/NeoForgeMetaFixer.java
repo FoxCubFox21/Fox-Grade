@@ -76,18 +76,44 @@ final class NeoForgeMetaFixer {
     }
   }
 
+  /** The first access-transformer file the manifest declares, or null when it declares none.
+   *
+   *  <p>Which decides whether Fox-Grade may add a table of its own. NeoForge reads as many
+   *  {@code [[accessTransformers]]} tables as a manifest carries; Forge reads exactly one and refuses the mod
+   *  outright when it finds a second — "The configuration path [accessTransformers] is invalid. I wasn't expecting
+   *  a multi-object list". Cloth Config already declares one, so a second took down every mod in the Forge lane. */
+  static String declaredTransformer(byte[] toml) {
+    String[] lines = new String(toml, StandardCharsets.UTF_8).split("\n", -1);
+    for (int i = 0; i < lines.length; i++) {
+      if (!lines[i].trim().toLowerCase(Locale.ROOT).startsWith("[[accesstransformers]]")) continue;
+      for (int j = i + 1; j < lines.length && !lines[j].trim().startsWith("["); j++) {
+        String t = lines[j].trim();
+        if (!t.startsWith("file")) continue;
+        String v = quoted(t);
+        if (v == null) return null;
+        return v.startsWith("META-INF/") ? v : "META-INF/" + v;
+      }
+    }
+    return null;
+  }
+
   /** Adds an {@code [[accessTransformers]]} table for a file Fox-Grade wrote into the port.
    *
    *  <p>Appended rather than merged into whatever the mod already declares: NeoForge accepts several of these tables
    *  and reads them all, so leaving the mod's own untouched is both simpler and safer than editing a file the mod
    *  author owns. Returns the manifest unchanged if it already names this file, so re-porting is idempotent. */
-  static byte[] declareTransformer(byte[] toml, String file) {
+  static byte[] declareTransformer(byte[] toml, String file, boolean forge) {
     String text = new String(toml, StandardCharsets.UTF_8);
     if (text.contains(file)) return toml;
     StringBuilder out = new StringBuilder(text);
     if (out.length() > 0 && out.charAt(out.length() - 1) != '\n') out.append('\n');
     out.append("\n# Added by Fox-Grade: members this target made private or final that the mod was compiled against.\n");
-    out.append("[[accessTransformers]]\n");
+    // The two loaders spell this differently and neither tolerates the other's spelling. NeoForge reads an array of
+    // tables, [[accessTransformers]], and reads as many as it finds. Forge 26.2 wants a single table,
+    // [accessTransformers], and rejects the mod outright on the array form — "I wasn't expecting a multi-object
+    // list - remove one of the [[ ]]" — which took down every mod in the Forge lane while the file itself was
+    // perfectly valid and contained exactly one entry.
+    out.append(forge ? "[accessTransformers]\n" : "[[accessTransformers]]\n");
     out.append("file = \"").append(file).append("\"\n");
     return out.toString().getBytes(StandardCharsets.UTF_8);
   }

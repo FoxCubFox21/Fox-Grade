@@ -121,6 +121,17 @@ public final class FabricApiBridges {
   /** Deleted API types that get an empty stand-in so the rest of the mod can load: name -> {super, interfaces,
    *  methods}. See the {@code standIns} note in the NeoForge bridge table. */
   public Map<String, StandIn> standIns() { return standIns; }
+
+  /** A Minecraft constant named in Mojang terms, resolved to this target's own {@code name:descriptor}.
+   *
+   *  <p>Read from the same per-target fixups file as the field retypes, so a shim Fox-Grade builds is built from
+   *  what the version declares rather than from anything assumed about it. Null when the target has no such entry,
+   *  which is the signal not to build the shim at all. */
+  public String constant(String targetMc, String mojangName) {
+    return constants.getOrDefault(targetMc, Map.of()).get(mojangName);
+  }
+
+  private final Map<String, Map<String, String>> constants = new HashMap<>();
   public int size() {
     int n = 0;
     for (var m : renames.values()) n += m.size();
@@ -159,6 +170,7 @@ public final class FabricApiBridges {
     Map<String, String[]> entryHooks = new HashMap<>();
     Map<String, java.util.List<String[]>> byAncestor = new HashMap<>();
     Map<String, StandIn> standInsL = new HashMap<>();
+    Map<String, Map<String, String>> constantsL = new HashMap<>();
     java.util.List<SuperHook> superHooksL = new java.util.ArrayList<>(); java.util.List<Synth> synthsL = new java.util.ArrayList<>(); Map<String, Map<String, String>> samL = new HashMap<>();
     Extra extra = new Extra(descWidenings, handleRedirects, callAdapters, overrideAdapters, entryHooks, byAncestor, superHooksL, synthsL, samL);
     try (InputStream shipped = FabricApiBridges.class.getResourceAsStream("/foxgrade/fabric-api-bridges.json")) {
@@ -190,6 +202,39 @@ public final class FabricApiBridges {
       inheritedRenames.clear();
       extra.clear();
     }
+    // Rows derived for THIS target, in the namespace it actually loads in. The tables above were all written
+    // against 26.x and are cleared just now on an older target; these replace them for the one thing that is both
+    // common and silent — a field that kept its name and changed its type. The JVM resolves a field by name and
+    // descriptor together, so a mod reading InteractionResult.PASS as class_1269 dies on a version that declares it
+    // as class_1269$class_9859, with nothing renamed wrongly anywhere. Derived by tools/gen-intermediary-fixups.py
+    // from the two versions' own intermediary mappings, and only where the new type is a subtype of the old.
+    if (targetMc != null && !Targets.namespace(targetMc).equals("official")) {
+      try (InputStream fx = FabricApiBridges.class.getResourceAsStream("/foxgrade/intermediary-fixups.json")) {
+        if (fx != null) {
+          com.google.gson.JsonObject all = com.google.gson.JsonParser
+              .parseString(new String(fx.readAllBytes())).getAsJsonObject();
+          if (all.has(targetMc)) {
+            com.google.gson.JsonObject forTarget = all.getAsJsonObject(targetMc);
+            if (forTarget.has("constants")) {
+              com.google.gson.JsonObject cs = forTarget.getAsJsonObject("constants");
+              for (String k : cs.keySet()) constantsL.computeIfAbsent(targetMc, (x) -> new HashMap<>())
+                  .put(k, cs.get(k).getAsString());
+            }
+            if (forTarget.has("fieldRetypes")) {
+              com.google.gson.JsonObject byOwner = forTarget.getAsJsonObject("fieldRetypes");
+              for (String owner : byOwner.keySet()) {
+                com.google.gson.JsonObject rows = byOwner.getAsJsonObject(owner);
+                Map<String, String[]> into = fieldRedirects.computeIfAbsent(owner, (k) -> new HashMap<>());
+                for (String key : rows.keySet()) into.put(key, strs(rows.get(key)));
+              }
+            }
+          }
+        }
+      } catch (RuntimeException notOurShape) {
+        // A malformed fixups file must not stop a port; without it the reference is simply reported unresolved.
+      }
+    }
+
     // Bridge rows published since the mod was built. Additive like everything else here, and merged before the
     // user's own file so a local override still wins.
     com.google.gson.JsonObject feed = RulesFeed.section(gameDir, "apiBridges");
@@ -205,6 +250,7 @@ public final class FabricApiBridges {
     }
     FabricApiBridges b = new FabricApiBridges(renames, redirects, classRenames, ctorAdapters, inheritedRenames, fieldRedirects,
         descWidenings, handleRedirects, callAdapters, overrideAdapters, entryHooks, byAncestor);
+    b.constants.putAll(constantsL);
     b.superHooks.addAll(superHooksL); b.synths.addAll(synthsL); b.samRenames.putAll(samL);
     b.standIns.putAll(standInsL);
     return b;

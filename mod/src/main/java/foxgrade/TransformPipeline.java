@@ -117,6 +117,13 @@ public final class TransformPipeline {
     try { return Loaders.current().name().equals("NeoForge"); } catch (Throwable t) { return false; }
   }
 
+  /** Forge specifically, which spells one thing differently from NeoForge and rejects the mod over it. */
+  static boolean isForgeHost() {
+    String forced = System.getProperty("foxgrade.loader", "");
+    if (!forced.isEmpty()) return forced.equalsIgnoreCase("forge");
+    try { return Loaders.current().name().equals("Forge"); } catch (Throwable t) { return false; }
+  }
+
   // Cheap check: does this jar's fabric.mod.json already declare it's been ported for `targetMc`?
   // Used to skip re-porting on a second launch after the first port succeeded.
   public static boolean isAlreadyPortedFor(Path jar, String targetMc) {
@@ -235,6 +242,10 @@ public final class TransformPipeline {
     Set<String> mixinClasses = new HashSet<>();   // neutralised mixins moved out of their declared mixin package (Mixin refuses to load anything left inside it)
     java.util.List<String> strippedNames = new java.util.ArrayList<>();   // "MixinClass#handler" per strip, for the panel
     java.util.LinkedHashMap<String, byte[]> buffered = new java.util.LinkedHashMap<>();
+    // Set when the mod already declares an access transformer of its own and Fox-Grade's lines must join it there
+    // rather than arrive as a second table. Applied after the loop, since that file may be read later than the manifest.
+    final String[] mergeTransformerInto = new String[1];
+    final String[] mergeTransformerText = new String[1];
     Set<String> droppedNested = new HashSet<>();   // bundled jars left out of the port (and of fabric.mod.json "jars")
     ByteArrayOutputStream sink = new ByteArrayOutputStream();
     try (ZipFile in = new ZipFile(src.toFile()); ZipOutputStream out = new ZipOutputStream(sink)) {
@@ -259,11 +270,22 @@ public final class TransformPipeline {
           // The widenings this port needs, in the format this loader reads. The Fabric branch below writes the same
           // entries as an access widener; a NeoForge mod has no fabric.mod.json to put them in, so until this was
           // here they were simply never applied on NeoForge or Forge and a port died on IllegalAccessError instead.
-          String at = PortWidenings.transformerFor(targetMc);
+          // Not on Forge. NeoForge reads an added [[accessTransformers]] table and applies it — that is what turned
+          // EntityCulling from a crash into a boot. Forge 26.2 rejects the array form outright, and the single-table
+          // form gets past that check only to fail later inside its own manifest reader, so Fox-Grade adds nothing
+          // there rather than ship an edit that breaks every mod in the lane. The widenings a Forge port needs are
+          // named in its port report instead, which is the same promise made everywhere else.
+          String at = isForgeHost() ? null : PortWidenings.transformerFor(targetMc);
           if (at != null) {
-            buffered.put(PORT_TRANSFORMER, at.getBytes(StandardCharsets.UTF_8));
-            byte[] declared = NeoForgeMetaFixer.declareTransformer(raw, PORT_TRANSFORMER);
-            if (declared != raw) { raw = declared; metaFixed++; }
+            String already = NeoForgeMetaFixer.declaredTransformer(raw);
+            if (already != null) {
+              mergeTransformerInto[0] = already;
+              mergeTransformerText[0] = at;
+            } else {
+              buffered.put(PORT_TRANSFORMER, at.getBytes(StandardCharsets.UTF_8));
+              byte[] declared = NeoForgeMetaFixer.declareTransformer(raw, PORT_TRANSFORMER, isForgeHost());
+              if (declared != raw) { raw = declared; metaFixed++; }
+            }
           }
         }
         if (quiltOnly && name.equals("quilt.mod.json")) {
@@ -724,7 +746,11 @@ public final class TransformPipeline {
       for (String missing : new java.util.ArrayList<>(verifier.missing())) {
         // A shim with no build for this target stays missing on purpose: the report says so, which a person can act
         // on, and that beats injecting a class compiled against a different Minecraft.
-        if (ShimGenerator.SHIMS.containsKey(missing) && !ShimGenerator.unavailableHere(missing)
+        if (IntermediaryShims.provides(missing, targetMc)) {
+          // A type this version deleted that Fox-Grade can rebuild in the namespace the version actually loads in.
+          // Not a ShimGenerator shim: those are compiled against Mojang names and cannot link here at all.
+          wanted.add(missing); verifier.missing().remove(missing);
+        } else if (ShimGenerator.SHIMS.containsKey(missing) && !ShimGenerator.unavailableHere(missing)
             && !shadowsRealClass.test(missing)) {
           wanted.add(missing); verifier.missing().remove(missing);
         } else if (apiBridges.standIns().containsKey(missing)) {
@@ -773,6 +799,14 @@ public final class TransformPipeline {
         if (!nsName.equals(shimCls)) shimMap.put(shimCls, nsName);
       }
       for (String shimCls : wanted) {
+        byte[] intermediaryShim = IntermediaryShims.provides(shimCls, targetMc)
+            ? IntermediaryShims.bytes(shimCls, targetMc, apiBridges::constant) : null;
+        if (intermediaryShim != null) {
+          buffered.put(shimCls + ".class", intermediaryShim);
+          strippedNames.add(shimCls.substring(shimCls.lastIndexOf('/') + 1)
+              + " (deleted in " + targetMc + "; rebuilt by Fox-Grade)");
+          continue;
+        }
         var shim = ShimGenerator.SHIMS.get(shimCls);
         FabricApiBridges.StandIn si = shim == null ? apiBridges.standIns().get(shimCls) : null;
         if (shim == null && si == null) continue;
@@ -883,6 +917,17 @@ public final class TransformPipeline {
           moved.put(n, b);
         }
         buffered.clear(); buffered.putAll(moved);
+      }
+      // Fox-Grade's widenings joining the transformer the mod already declares. Appended rather than declared
+      // separately because Forge accepts exactly one [[accessTransformers]] table and rejects the mod on a second.
+      if (mergeTransformerInto[0] != null && mergeTransformerText[0] != null) {
+        byte[] existing = buffered.get(mergeTransformerInto[0]);
+        if (existing != null) {
+          StringBuilder merged = new StringBuilder(new String(existing, StandardCharsets.UTF_8));
+          if (merged.length() > 0 && merged.charAt(merged.length() - 1) != '\n') merged.append('\n');
+          merged.append(mergeTransformerText[0]);
+          buffered.put(mergeTransformerInto[0], merged.toString().getBytes(StandardCharsets.UTF_8));
+        }
       }
       for (var entry : buffered.entrySet()) {
         out.putNextEntry(new ZipEntry(entry.getKey()));
