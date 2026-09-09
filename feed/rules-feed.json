@@ -18,6 +18,13 @@
     "Every entry here should say why it exists. A rule nobody can check is one nobody can remove."
   ],
   "generated": "2026-09-09",
-  "mixinBlocklist": { "entries": [] },
+  "mixinBlocklist": {
+    "entries": [
+      {
+        "mixin": "malte0811.ferritecore.mixin.datacomponents.PatchedDataComponentMapMixin",
+        "_why": "TEMPORARY end-to-end test of the feed, reverted immediately. Not a real anti-rule."
+      }
+    ]
+  },
   "apiBridges": {}
 }
