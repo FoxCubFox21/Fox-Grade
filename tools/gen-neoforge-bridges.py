@@ -122,6 +122,21 @@ CURATED = {
         "net/neoforged/neoforge/client/event/RecipesReceivedEvent",
 }
 
+# Static calls that stopped being static. FML 11 moved most of FMLLoader's statics onto an instance reached through
+# getCurrent(), which is not a rename and not a field, so nothing above can see it — a mod calling
+# FMLLoader.isProduction() simply gets "Expected static method". Only redirects to a method that is still static, on
+# the target, with the identical signature are listed; the rest of FMLLoader's old statics have no static equivalent
+# and are left to the port report to name.
+CURATED_CALLS = {
+    "net/neoforged/fml/loading/FMLLoader": {
+        "isProduction()Z": ["net/neoforged/fml/loading/FMLEnvironment", "isProduction", "()Z"],
+        "getDist()Lnet/neoforged/api/distmarker/Dist;":
+            ["net/neoforged/fml/loading/FMLEnvironment", "getDist", "()Lnet/neoforged/api/distmarker/Dist;"],
+        "getLoadingModList()Lnet/neoforged/fml/loading/LoadingModList;":
+            ["net/neoforged/fml/loading/LoadingModList", "get", "()Lnet/neoforged/fml/loading/LoadingModList;"],
+    },
+}
+
 
 def target_classes():
     """Every class the target actually has: Minecraft 26.2 plus NeoForge's own. Used to reject an inferred
@@ -463,6 +478,7 @@ def main():
                      "emitted. Anything needing a judgement call is left out and shows up in the port report as an "
                      "unresolved reference."),
         "classRenames": class_renames,
+        "callRedirects": CURATED_CALLS,
         "standIns": stand_ins,
         "fieldRedirects": field_redirects,
         "renames": renames,

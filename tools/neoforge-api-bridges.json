@@ -70,6 +70,25 @@
     "net/neoforged/neoforge/client/event/ContainerScreenEvent": "net/neoforged/neoforge/client/event/ScreenEvent",
     "net/neoforged/neoforge/client/event/RecipesUpdatedEvent": "net/neoforged/neoforge/client/event/RecipesReceivedEvent"
   },
+  "callRedirects": {
+    "net/neoforged/fml/loading/FMLLoader": {
+      "isProduction()Z": [
+        "net/neoforged/fml/loading/FMLEnvironment",
+        "isProduction",
+        "()Z"
+      ],
+      "getDist()Lnet/neoforged/api/distmarker/Dist;": [
+        "net/neoforged/fml/loading/FMLEnvironment",
+        "getDist",
+        "()Lnet/neoforged/api/distmarker/Dist;"
+      ],
+      "getLoadingModList()Lnet/neoforged/fml/loading/LoadingModList;": [
+        "net/neoforged/fml/loading/LoadingModList",
+        "get",
+        "()Lnet/neoforged/fml/loading/LoadingModList;"
+      ]
+    }
+  },
   "standIns": {
     "net/neoforged/fml/common/asm/RuntimeDistCleaner$LambdaGatherer": {
       "super": "org/objectweb/asm/MethodVisitor",
