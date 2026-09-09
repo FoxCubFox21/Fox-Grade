@@ -29,8 +29,16 @@ Fox-Grade remaps a mod's references to **Mojang names**. On 26.x that is exactly
 unobfuscated, and Mojang names are what Fabric loads at runtime. On every older version Fabric's runtime namespace
 is **intermediary**, and Mojang names are a development convenience that resolves to nothing.
 
-This is not a theory. A port built for 1.21.1 contains 622 Mojang-named references and no intermediary ones —
-correct by the engine's own model, and unloadable on the version it was built for.
+This is not a theory, and both halves were checked. A Fabric mod arrives in intermediary: AppleSkin for 1.21.1
+contains 88 intermediary references and no Mojang-named ones, which is how Fabric mods ship. A port built for 1.21.1
+comes out the other side with 622 Mojang-named references and no intermediary ones — correct by the engine's own
+model, and unloadable on the version it was built for.
+
+Which also says what the fix is, and that it is not a translation table. For a 26.x target the job is genuinely
+"rewrite intermediary into Mojang names", because that is the runtime namespace. For an older target the input and
+the output namespace are the same one, and the job is a different job: leave the names alone except where an
+intermediary id was actually retired, and spend the effort on the API shape changes instead. The engine currently
+has one mode and it is the 26.x one.
 
 The access widener is the same fault seen from closer up. It declares the `official` namespace, which is Mojang
 names on 26.x and obfuscated names everywhere else, so Fabric rejects the mod outright on 1.21.2 before anything
