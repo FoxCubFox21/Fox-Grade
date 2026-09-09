@@ -436,7 +436,12 @@ public final class TransformPipeline {
           }
           // A mixin whose target class no longer exists cannot apply at all; Mixin would then refuse
           // every later load of the mixin class. Deregister it from its config.
-          if (!mixinTargets.isEmpty()) { emit = MixinRequireZeroer.zero(emit); mixinClasses.add(slashClass); }   // failed injections become warnings, not crashes
+          if (!mixinTargets.isEmpty()) {                                       // failed injections become warnings, not crashes
+            java.util.List<String> softened = new java.util.ArrayList<>();
+            emit = MixinRequireZeroer.zero(emit, softened);
+            for (String h : softened) strippedNames.add(slashClass.substring(slashClass.lastIndexOf('/') + 1) + "." + h);
+            mixinClasses.add(slashClass);
+          }
           org.objectweb.asm.ClassReader mixinReader = mixinTargets.isEmpty() ? null : new org.objectweb.asm.ClassReader(emit);
           boolean mixinIsInterface = mixinReader != null && (mixinReader.getAccess() & org.objectweb.asm.Opcodes.ACC_INTERFACE) != 0;
           String mixinSuper = mixinReader == null ? null : mixinReader.getSuperName();
