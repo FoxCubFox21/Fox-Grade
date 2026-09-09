@@ -221,6 +221,11 @@ public final class FoxGradePreLaunch implements PreLaunchEntrypoint {
               try {
                 Path moved = new BackupService(backupDir).moveToBackup(m.jar);
                 retiredJars.add(moved);
+                // Retiring the jar stops the bleeding and forgets the lesson: reinstall the mod and it would be
+                // ported the same way into the same crash. Writing the verdict down is what makes this an
+                // installation that learns rather than one that keeps rescuing itself.
+                KnowledgeBase.recordCrash(gameDir, badId.replaceAll("_fgport$", ""), mc,
+                    firstBlameLine(scanned.toString(), badId));
                 log("  CRASH GUARD    last launch crashed because of '" + badId + "' — retired its jar to " + moved.getFileName());
               } catch (IOException e) {
                 log("  ! crash guard could not retire " + m.jar.getFileName() + ": " + e.getMessage());
@@ -400,6 +405,15 @@ public final class FoxGradePreLaunch implements PreLaunchEntrypoint {
       log("  ! self-relaunch failed: " + e.getMessage());
       return false;
     }
+  }
+
+  /** The first line of a crash report that names this mod: the closest thing to a reason a log can give. */
+  private static String firstBlameLine(String report, String modId) {
+    for (String line : report.split("\n")) {
+      String t = line.strip();
+      if (t.contains(modId)) return t.substring(0, Math.min(200, t.length()));
+    }
+    return "";
   }
 
   static void log(String msg) { System.out.println("[FOX-GRADE] " + msg); }

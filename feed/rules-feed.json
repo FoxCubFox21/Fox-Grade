@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "_comment": [
+    "Rules and anti-rules published after a release, so an installed Fox-Grade keeps improving without waiting for",
+    "one. Fetched at most once every twenty hours, cached, and merged on top of the tables that ship in the jar.",
+    "",
+    "It can only add. The bundled tables load first and are never replaced, so a feed that is empty, stale,",
+    "unreachable or malformed leaves Fox-Grade exactly as it was built. It carries data, not code: blocklist entries",
+    "and bridge-table rows, parsed into the same structures the bundled files parse into.",
+    "",
+    "Turn it off with \"rulesFeed\": false in fox-grade.config.json, which stops the request rather than ignoring",
+    "the answer.",
+    "",
+    "mixinBlocklist takes the same shape as the bundled mixin-blocklist.json: entries of {mixin, methods}, where an",
+    "absent or empty methods list means the whole mixin is disabled. apiBridges takes the same shape as",
+    "fabric-api-bridges.json.",
+    "",
+    "Every entry here should say why it exists. A rule nobody can check is one nobody can remove."
+  ],
+  "generated": "2026-09-09",
+  "mixinBlocklist": { "entries": [] },
+  "apiBridges": {}
+}

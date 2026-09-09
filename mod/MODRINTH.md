@@ -21,6 +21,16 @@ Head-to-head against [Retromod](https://modrinth.com/mod/retromod) on 104 of the
 
 Every ported mod with its icon and a health check. What was changed, what was turned off, and **why — in plain English, not stack traces**. Verify a port live against the game you are running. Boot-test it in a throwaway copy of your world. Disable, retire or re-port with one click.
 
+## It learns
+
+What breaks a port is found by someone running it, and the fix is almost always a table entry — a mixin to disable
+for one mod, a call to redirect — not new code. Fox-Grade writes down what its own crashes taught it, in
+`.fox-grade/learned.json`, so a mod that took the game down once is not ported into the same crash the next time you
+install it. And it picks up rules and anti-rules published since it was built, so a copy installed today gets better
+without being updated.
+
+Both only ever add to what shipped. Unreachable, stale or empty, Fox-Grade behaves exactly as it was built.
+
 ## It knows when to step aside
 
 Fox-Grade watches Modrinth for the author's real update. The moment it lands: one click, checksum-verified, port retired. Install the official build yourself and the port retires on its own at next launch. **The author's build always beats a port.**
@@ -45,6 +55,11 @@ One request, and only when the panel is open: Modrinth's public read-only API, a
 a build of that mod for the version you are running. It carries the mod id, the Minecraft version and a Fox-Grade
 user-agent — and, as any request does, your IP. One query per mod per session, four-second timeout, gives up quietly.
 If you click to install an official build, that downloads it from Modrinth too, checksum-verified.
+
+Second request, once a day at most: a rules feed published in this project's repository — anti-rules and bridge
+rows found since the build, so an installed copy keeps improving without waiting for a release. It is a download and
+carries nothing about you beyond the request itself. It can only add to what shipped, it is cached so porting works
+offline, and `"rulesFeed": false` in `fox-grade.config.json` stops it being made at all.
 
 Nothing else leaves your machine. There is no telemetry, no account, no usage reporting, and nothing is uploaded —
 not your mod list, not your worlds, not the ports. The translation tables ship inside the jar rather than being

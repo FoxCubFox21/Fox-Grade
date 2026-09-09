@@ -26,6 +26,10 @@ public final class MixinBlocklistLoader {
     try (InputStream shipped = MixinBlocklistLoader.class.getResourceAsStream("/foxgrade/mixin-blocklist.json")) {
       if (shipped != null) merge(map, new String(shipped.readAllBytes()));
     }
+    // Anti-rules learned on this machine and published since the mod was built, merged on top of what shipped and
+    // under the user's own file, which stays the last word.
+    String learned = KnowledgeBase.blocklistDocument(gameDir);
+    if (learned != null) merge(map, learned);
     Path user = gameDir.resolve("fox-grade.mixin-blocklist.json");
     if (Files.exists(user)) merge(map, Files.readString(user));
     return map;

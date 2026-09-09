@@ -174,6 +174,10 @@ public final class FabricApiBridges {
         if (neo != null) merge(renames, redirects, classRenames, ctorAdapters, inheritedRenames, fieldRedirects, extra, new String(neo.readAllBytes()), standInsL);
       }
     }
+    // Bridge rows published since the mod was built. Additive like everything else here, and merged before the
+    // user's own file so a local override still wins.
+    com.google.gson.JsonObject feed = RulesFeed.section(gameDir, "apiBridges");
+    if (feed != null) merge(renames, redirects, classRenames, ctorAdapters, inheritedRenames, fieldRedirects, extra, feed.toString());
     Path user = gameDir.resolve("fox-grade.api-bridges.json");
     if (Files.exists(user)) merge(renames, redirects, classRenames, ctorAdapters, inheritedRenames, fieldRedirects, extra, Files.readString(user));
     if (targetMc != null) {

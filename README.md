@@ -39,6 +39,11 @@ published a build of that mod for the version you are running. It carries the mo
 Fox-Grade user-agent, plus the IP any request carries. One query per mod per session, four-second timeout, gives up
 quietly. Clicking to install an official build downloads it from Modrinth, checksum-verified.
 
+Second request, once a day at most: a rules feed published in this project's repository — anti-rules and bridge
+rows found since the build, so an installed copy keeps improving without waiting for a release. It is a download and
+carries nothing about you beyond the request itself. It can only add to what shipped, it is cached so porting works
+offline, and `"rulesFeed": false` in `fox-grade.config.json` stops it being made at all.
+
 Nothing else leaves the machine: no telemetry, no account, no usage reporting, nothing uploaded. The translation
 tables ship inside the jar rather than being fetched, so porting needs no connection at all.
 
