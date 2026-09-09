@@ -411,6 +411,45 @@ public final class ShimGenerator implements Opcodes {
       Map.entry("foxgrade/shim/WorldRenderContextImpl", java.util.List.of("foxgrade/shim/WorldRenderContextImpl$1", "foxgrade/shim/RecordingBufferSource", "net/fabricmc/fabric/api/client/rendering/v1/WorldRenderContext")),
       Map.entry("net/fabricmc/fabric/api/client/rendering/v1/WorldRenderEvents", java.util.List.of("foxgrade/shim/WorldRenderContextImpl", "net/fabricmc/fabric/api/client/rendering/v1/WorldRenderContext")));
 
+  /** An empty class standing in for a type the target deleted outright.
+   *
+   *  <p>Some deletions have no successor: 26.2 replaced NeoForge's "hand the handler two lists of strings" debug
+   *  overlay event with "register debug entries", which is a different idea rather than a renamed class. A mod built
+   *  against the old one then dies before it starts — not inside the feature that went away, but at class load,
+   *  because the loader reflects over the mod looking for handlers and one parameter type will not resolve.
+   *
+   *  <p>This is the smallest thing that lets the rest of the mod run. The type resolves, the loader finishes reading
+   *  the class, and the handler is never called, because nothing posts an event of a type the game no longer has.
+   *  There is no constructor, so nothing can make one by accident, and the methods return nothing of their own —
+   *  they exist so a call site verifies, not so it works. The port report names the feature that went inert.
+   *
+   *  <p>The supertype is real and checked by the generator. An event bus asks what you register to extend Event, and
+   *  a stand-in that only claimed to would be the loads-and-misbehaves case this project refuses. */
+  static byte[] standIn(String name, String superName, java.util.List<String> interfaces, java.util.List<String> methods) {
+    ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
+    cw.visit(V17, ACC_PUBLIC | ACC_SUPER, name, null, superName, interfaces.toArray(new String[0]));
+    for (String sig : methods) {
+      int paren = sig.indexOf('(');
+      if (paren <= 0) continue;
+      String desc = sig.substring(paren);
+      MethodVisitor mv = cw.visitMethod(ACC_PUBLIC, sig.substring(0, paren), desc, null, null);
+      mv.visitCode();
+      org.objectweb.asm.Type ret = org.objectweb.asm.Type.getReturnType(desc);
+      switch (ret.getSort()) {
+        case org.objectweb.asm.Type.VOID -> mv.visitInsn(RETURN);
+        case org.objectweb.asm.Type.LONG -> { mv.visitInsn(LCONST_0); mv.visitInsn(LRETURN); }
+        case org.objectweb.asm.Type.FLOAT -> { mv.visitInsn(FCONST_0); mv.visitInsn(FRETURN); }
+        case org.objectweb.asm.Type.DOUBLE -> { mv.visitInsn(DCONST_0); mv.visitInsn(DRETURN); }
+        case org.objectweb.asm.Type.OBJECT, org.objectweb.asm.Type.ARRAY -> { mv.visitInsn(ACONST_NULL); mv.visitInsn(ARETURN); }
+        default -> { mv.visitInsn(ICONST_0); mv.visitInsn(IRETURN); }
+      }
+      mv.visitMaxs(0, 0);
+      mv.visitEnd();
+    }
+    cw.visitEnd();
+    return cw.toByteArray();
+  }
+
   static byte[] renameClasses(byte[] bytes, Map<String, String> map) {
     org.objectweb.asm.ClassReader r = new org.objectweb.asm.ClassReader(bytes);
     ClassWriter w = new ClassWriter(ClassWriter.COMPUTE_MAXS);

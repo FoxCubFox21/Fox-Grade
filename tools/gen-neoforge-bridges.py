@@ -29,6 +29,9 @@ ACC_PUBLIC, ACC_STATIC = 0x0001, 0x0008
 # Only these package roots. NeoForge's jars also carry relocated third-party code that is not its API to promise.
 API_ROOTS = ("net/neoforged/",)
 
+# class -> (superclass, interfaces), filled in as classes are parsed; used to build stand-ins for deleted types.
+HIERARCHY = {}
+
 
 def parse_class(data):
     """(internal name, {static fields}, {methods}) from a class file, without javap, which fails on large classes."""
@@ -48,9 +51,12 @@ def parse_class(data):
         else: raise ValueError(f"tag {t}")
         k += 1
     i += 2                                                     # access_flags
-    this_class = struct.unpack(">H", data[i:i + 2])[0]; i += 4  # this_class + super_class
+    this_class, super_class = struct.unpack(">HH", data[i:i + 4]); i += 4
     name = utf.get(refs.get(this_class), "?")
-    ifc = struct.unpack(">H", data[i:i + 2])[0]; i += 2 + 2 * ifc
+    supername = utf.get(refs.get(super_class)) if super_class else None
+    ifc = struct.unpack(">H", data[i:i + 2])[0]
+    interfaces = [utf.get(refs.get(x)) for x in struct.unpack(f">{ifc}H", data[i + 2:i + 2 + 2 * ifc])] if ifc else []
+    i += 2 + 2 * ifc
 
     def members():
         nonlocal i
@@ -65,7 +71,9 @@ def parse_class(data):
 
     fields, methods = members(), members()
     statics = {k: a for k, a in fields.items() if a & ACC_PUBLIC and a & ACC_STATIC}
-    return name, statics, {k: a for k, a in methods.items() if a & ACC_PUBLIC}
+    pub = {k: a for k, a in methods.items() if a & ACC_PUBLIC}
+    HIERARCHY[name] = (supername, [x for x in interfaces if x])
+    return name, statics, pub
 
 
 def surface(jars):
@@ -121,6 +129,31 @@ def target_classes():
     import gzip
     p = HERE / "foxgrade-mod/src/main/resources/foxgrade/mc-26.2.classes.json.gz"
     return set(json.load(gzip.open(p))) if p.exists() else set()
+
+
+def library_classes(new_jars):
+    """Everything else on the target's launch classpath. The event bus, the dist markers, Brigadier and DataFixerUpper
+    all ship as their own jars, and a supertype living in one of them is no less present for that — without this,
+    every event whose parent is net/neoforged/bus/api/Event looks unsupportable.
+
+    The launcher's library tree also holds the *source* version's NeoForge, installed alongside for its own profile.
+    Those jars are excluded by version: counting them as present would declare the classes this port exists to fix
+    already fine."""
+    lib = pathlib.Path.home() / "Library/Application Support/minecraft/libraries"
+    if not lib.is_dir():
+        return set()
+    keep_versions = {j.parent.name for j in new_jars}
+    out = set()
+    for jar in lib.rglob("*.jar"):
+        parts = str(jar)
+        if ("/neoforge/" in parts or "/fancymodloader/" in parts) and jar.parent.name not in keep_versions:
+            continue
+        try:
+            with zipfile.ZipFile(jar) as z:
+                out |= {e[:-6] for e in z.namelist() if e.endswith(".class")}
+        except Exception:
+            pass
+    return out
 
 
 def param_types(desc):
@@ -341,6 +374,50 @@ def match_removed_classes(old, new, already):
     return out
 
 
+def build_stand_ins(old, new, renamed, present):
+    """Descriptors for deleted API types that a mod can still be compiled against.
+
+    Some classes an API deletes have no successor at all. NeoForge's CustomizeGuiOverlayEvent$DebugText is one: 26.2
+    replaced "hand the handler two lists of strings" with "register debug entries", which is a different idea, not a
+    renamed class. No rename can be honest about that, and the mod dies before it starts — not inside the feature that
+    was removed, but at class load, because the loader reflects over the mod looking for its event handlers and one
+    parameter type will not resolve.
+
+    A stand-in is the smallest thing that lets the rest of the mod run: an empty class under the deleted name,
+    extending whatever the deleted class extended, if that supertype still exists. The type resolves, the loader
+    finishes reading the class, and the handler is simply never called, because nothing in the game posts an event of
+    a type the game no longer has. The mod comes up with one feature inert and the port report says which.
+
+    Only classes whose supertype survives get one. Without a real supertype the stand-in would not be the deleted
+    type in any sense the loader cares about — an event bus checks that what you register extends Event — and an
+    empty class pretending otherwise is the kind of thing that loads and then misbehaves."""
+    out = {}
+    for cls, (_, methods) in sorted(old.items()):
+        if cls in new or cls in renamed:
+            continue
+        sup, ifaces = HIERARCHY.get(cls, (None, []))
+        if not sup:
+            continue
+        sup = renamed.get(sup, sup)
+        if sup not in present:
+            continue                                   # no surviving supertype: a stand-in would be a lie
+        keep_ifaces = [renamed.get(i, i) for i in ifaces]
+        keep_ifaces = [i for i in keep_ifaces if i in present]
+        # Only methods every type in the signature still resolves to; one that mentions another deleted class would
+        # stop the stand-in itself from loading, which defeats the point.
+        sigs = []
+        for (mname, mdesc) in sorted(methods):
+            if mname == "<init>":
+                continue
+            mapped = mdesc
+            for t in set(param_types(mdesc)):
+                mapped = mapped.replace(f"L{t};", f"L{renamed.get(t, t)};")
+            if all(t in present for t in param_types(mapped)):
+                sigs.append(mname + mapped)
+        out[cls] = {"super": sup, "interfaces": keep_ifaces, "methods": sigs}
+    return out
+
+
 def main():
     if len(sys.argv) < 3:
         print(__doc__); sys.exit(2)
@@ -349,6 +426,8 @@ def main():
     class_renames = infer_class_renames(old, new)
     class_renames.update(match_removed_classes(old, new, class_renames))
     class_renames.update(CURATED)                       # hand-verified entries always win over an inference
+    new_jars = [pathlib.Path(x) for x in sys.argv[2].split(",")]
+    stand_ins = build_stand_ins(old, new, class_renames, target_classes() | set(new) | library_classes(new_jars))
     field_redirects, renames, unresolved, removed_classes = {}, {}, [], []
 
     for cls, (ofields, omethods) in sorted(old.items()):
@@ -384,11 +463,13 @@ def main():
                      "emitted. Anything needing a judgement call is left out and shows up in the port report as an "
                      "unresolved reference."),
         "classRenames": class_renames,
+        "standIns": stand_ins,
         "fieldRedirects": field_redirects,
         "renames": renames,
     }
     OUT.write_text(json.dumps(table, indent=2) + "\n")
     print(f"{len(class_renames)} type substitutions inferred from signature alignment")
+    print(f"{len(stand_ins)} stand-ins for deleted types whose supertype survives")
     nf = sum(len(v) for v in field_redirects.values())
     nr = sum(len(v) for v in renames.values())
     print(f"{len(old)} API classes in the source version, {len(new)} in the target")

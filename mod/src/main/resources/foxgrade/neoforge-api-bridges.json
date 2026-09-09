@@ -70,6 +70,416 @@
     "net/neoforged/neoforge/client/event/ContainerScreenEvent": "net/neoforged/neoforge/client/event/ScreenEvent",
     "net/neoforged/neoforge/client/event/RecipesUpdatedEvent": "net/neoforged/neoforge/client/event/RecipesReceivedEvent"
   },
+  "standIns": {
+    "net/neoforged/fml/common/asm/RuntimeDistCleaner$LambdaGatherer": {
+      "super": "org/objectweb/asm/MethodVisitor",
+      "interfaces": [],
+      "methods": [
+        "accept(Lorg/objectweb/asm/tree/MethodNode;)V"
+      ]
+    },
+    "net/neoforged/fml/loading/mixin/FMLMixinPlatformAgent": {
+      "super": "org/spongepowered/asm/launch/platform/MixinPlatformAgentAbstract",
+      "interfaces": [],
+      "methods": [
+        "accept(Lorg/spongepowered/asm/launch/platform/MixinPlatformManager;Lorg/spongepowered/asm/launch/platform/container/IContainerHandle;)Lorg/spongepowered/asm/launch/platform/IMixinPlatformAgent$AcceptResult;",
+        "prepare()V"
+      ]
+    },
+    "net/neoforged/fml/loading/moddiscovery/ModFileParser$1": {
+      "super": "com/google/gson/reflect/TypeToken",
+      "interfaces": [],
+      "methods": []
+    },
+    "net/neoforged/fml/lowcodemod/LowCodeModContainer": {
+      "super": "net/neoforged/fml/ModContainer",
+      "interfaces": [],
+      "methods": [
+        "getEventBus()Lnet/neoforged/bus/api/IEventBus;"
+      ]
+    },
+    "net/neoforged/fml/lowcodemod/LowCodeModLanguageProvider": {
+      "super": "net/neoforged/fml/loading/BuiltInLanguageLoader",
+      "interfaces": [],
+      "methods": []
+    },
+    "net/neoforged/neoforge/client/NeoForgeRenderTypes$CustomizableTextureState": {
+      "super": "net/minecraft/client/renderer/RenderStateShard$TextureStateShard",
+      "interfaces": [],
+      "methods": [
+        "setupRenderState()V"
+      ]
+    },
+    "net/neoforged/neoforge/client/event/CustomizeGuiOverlayEvent$DebugText": {
+      "super": "net/neoforged/neoforge/client/event/CustomizeGuiOverlayEvent",
+      "interfaces": [],
+      "methods": []
+    },
+    "net/neoforged/neoforge/client/event/ModelEvent$RegisterAdditional": {
+      "super": "net/neoforged/neoforge/client/event/ModelEvent",
+      "interfaces": [
+        "net/neoforged/fml/event/IModBusEvent"
+      ],
+      "methods": [
+        "register(Lnet/minecraft/client/resources/model/ModelResourceLocation;)V"
+      ]
+    },
+    "net/neoforged/neoforge/client/event/ModelEvent$RegisterGeometryLoaders": {
+      "super": "net/neoforged/neoforge/client/event/ModelEvent",
+      "interfaces": [
+        "net/neoforged/fml/event/IModBusEvent"
+      ],
+      "methods": []
+    },
+    "net/neoforged/neoforge/client/event/RegisterDimensionSpecialEffectsEvent": {
+      "super": "net/neoforged/bus/api/Event",
+      "interfaces": [
+        "net/neoforged/fml/event/IModBusEvent"
+      ],
+      "methods": [
+        "register(Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/client/renderer/DimensionSpecialEffects;)V"
+      ]
+    },
+    "net/neoforged/neoforge/client/event/RegisterMaterialAtlasesEvent": {
+      "super": "net/neoforged/bus/api/Event",
+      "interfaces": [
+        "net/neoforged/fml/event/IModBusEvent"
+      ],
+      "methods": [
+        "register(Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;)V"
+      ]
+    },
+    "net/neoforged/neoforge/client/event/RegisterNamedRenderTypesEvent": {
+      "super": "net/neoforged/bus/api/Event",
+      "interfaces": [
+        "net/neoforged/fml/event/IModBusEvent"
+      ],
+      "methods": [
+        "register(Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/client/renderer/RenderType;Lnet/minecraft/client/renderer/RenderType;)V",
+        "register(Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/client/renderer/RenderType;Lnet/minecraft/client/renderer/RenderType;Lnet/minecraft/client/renderer/RenderType;)V"
+      ]
+    },
+    "net/neoforged/neoforge/client/event/RegisterRecipeBookCategoriesEvent": {
+      "super": "net/neoforged/bus/api/Event",
+      "interfaces": [
+        "net/neoforged/fml/event/IModBusEvent"
+      ],
+      "methods": []
+    },
+    "net/neoforged/neoforge/client/event/RegisterRenderBuffersEvent": {
+      "super": "net/neoforged/bus/api/Event",
+      "interfaces": [
+        "net/neoforged/fml/event/IModBusEvent"
+      ],
+      "methods": [
+        "registerRenderBuffer(Lnet/minecraft/client/renderer/RenderType;)V",
+        "registerRenderBuffer(Lnet/minecraft/client/renderer/RenderType;Lcom/mojang/blaze3d/vertex/ByteBufferBuilder;)V"
+      ]
+    },
+    "net/neoforged/neoforge/client/event/RegisterShadersEvent": {
+      "super": "net/neoforged/bus/api/Event",
+      "interfaces": [
+        "net/neoforged/fml/event/IModBusEvent"
+      ],
+      "methods": [
+        "getResourceProvider()Lnet/minecraft/server/packs/resources/ResourceProvider;"
+      ]
+    },
+    "net/neoforged/neoforge/client/event/RegisterSpriteSourceTypesEvent": {
+      "super": "net/neoforged/bus/api/Event",
+      "interfaces": [
+        "net/neoforged/fml/event/IModBusEvent"
+      ],
+      "methods": [
+        "register(Lnet/minecraft/resources/ResourceLocation;Lcom/mojang/serialization/MapCodec;)Lnet/minecraft/client/renderer/texture/atlas/SpriteSourceType;",
+        "register(Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/client/renderer/texture/atlas/SpriteSourceType;)V"
+      ]
+    },
+    "net/neoforged/neoforge/client/event/RenderHighlightEvent": {
+      "super": "net/neoforged/bus/api/Event",
+      "interfaces": [],
+      "methods": [
+        "getCamera()Lnet/minecraft/client/Camera;",
+        "getDeltaTracker()Lnet/minecraft/client/DeltaTracker;",
+        "getLevelRenderer()Lnet/minecraft/client/renderer/LevelRenderer;",
+        "getMultiBufferSource()Lnet/minecraft/client/renderer/SubmitNodeCollector;",
+        "getPoseStack()Lcom/mojang/blaze3d/vertex/PoseStack;",
+        "getTarget()Lnet/minecraft/world/phys/HitResult;"
+      ]
+    },
+    "net/neoforged/neoforge/client/event/RenderLevelStageEvent$RegisterStageEvent": {
+      "super": "net/neoforged/bus/api/Event",
+      "interfaces": [
+        "net/neoforged/fml/event/IModBusEvent"
+      ],
+      "methods": []
+    },
+    "net/neoforged/neoforge/client/event/RenderTooltipEvent$Color": {
+      "super": "net/neoforged/neoforge/client/event/RenderTooltipEvent",
+      "interfaces": [],
+      "methods": [
+        "getBackgroundEnd()I",
+        "getBackgroundStart()I",
+        "getBorderEnd()I",
+        "getBorderStart()I",
+        "getOriginalBackgroundEnd()I",
+        "getOriginalBackgroundStart()I",
+        "getOriginalBorderEnd()I",
+        "getOriginalBorderStart()I",
+        "setBackground(I)V",
+        "setBackgroundEnd(I)V",
+        "setBackgroundStart(I)V",
+        "setBorderEnd(I)V",
+        "setBorderStart(I)V"
+      ]
+    },
+    "net/neoforged/neoforge/client/event/ScreenEvent$BackgroundRendered": {
+      "super": "net/neoforged/neoforge/client/event/ScreenEvent",
+      "interfaces": [],
+      "methods": [
+        "getGuiGraphics()Lnet/minecraft/client/gui/GuiGraphicsExtractor;"
+      ]
+    },
+    "net/neoforged/neoforge/client/gui/ModListScreen": {
+      "super": "net/minecraft/client/gui/screens/Screen",
+      "interfaces": [],
+      "methods": [
+        "getFontRenderer()Lnet/minecraft/client/gui/Font;",
+        "getMinecraftInstance()Lnet/minecraft/client/Minecraft;",
+        "init()V",
+        "onClose()V",
+        "render(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IIF)V",
+        "resize(Lnet/minecraft/client/Minecraft;II)V",
+        "tick()V"
+      ]
+    },
+    "net/neoforged/neoforge/client/gui/ModListScreen$1": {
+      "super": "net/minecraft/client/renderer/texture/DynamicTexture",
+      "interfaces": [],
+      "methods": [
+        "upload()V"
+      ]
+    },
+    "net/neoforged/neoforge/client/gui/ModListScreen$InfoPanel": {
+      "super": "net/neoforged/neoforge/client/gui/widget/ScrollPanel",
+      "interfaces": [],
+      "methods": [
+        "getContentHeight()I",
+        "mouseClicked(DDI)Z",
+        "narrationPriority()Lnet/minecraft/client/gui/narration/NarratableEntry$NarrationPriority;",
+        "updateNarration(Lnet/minecraft/client/gui/narration/NarrationElementOutput;)V"
+      ]
+    },
+    "net/neoforged/neoforge/client/gui/ScrollableExperimentsScreen": {
+      "super": "net/minecraft/client/gui/screens/worldselection/ExperimentsScreen",
+      "interfaces": [],
+      "methods": []
+    },
+    "net/neoforged/neoforge/client/gui/ScrollableExperimentsScreen$ExperimentSelectionList": {
+      "super": "net/minecraft/client/gui/components/ContainerObjectSelectionList",
+      "interfaces": [],
+      "methods": [
+        "getRowWidth()I"
+      ]
+    },
+    "net/neoforged/neoforge/client/gui/ScrollableExperimentsScreen$ExperimentSelectionList$ExperimentEntry": {
+      "super": "net/minecraft/client/gui/components/ContainerObjectSelectionList$Entry",
+      "interfaces": [],
+      "methods": [
+        "render(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IIIIIIIZF)V"
+      ]
+    },
+    "net/neoforged/neoforge/client/gui/widget/ModListWidget": {
+      "super": "net/minecraft/client/gui/components/ObjectSelectionList",
+      "interfaces": [],
+      "methods": [
+        "getRowWidth()I",
+        "refreshList()V"
+      ]
+    },
+    "net/neoforged/neoforge/client/gui/widget/ModListWidget$ModEntry": {
+      "super": "net/minecraft/client/gui/components/ObjectSelectionList$Entry",
+      "interfaces": [],
+      "methods": [
+        "getContainer()Lnet/neoforged/fml/ModContainer;",
+        "getInfo()Lnet/neoforged/neoforgespi/language/IModInfo;",
+        "getNarration()Lnet/minecraft/network/chat/Component;",
+        "isFocused()Z",
+        "mouseClicked(DDI)Z",
+        "render(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IIIIIIIZF)V",
+        "setFocused(Z)V"
+      ]
+    },
+    "net/neoforged/neoforge/client/loading/NeoForgeLoadingOverlay": {
+      "super": "net/minecraft/client/gui/screens/LoadingOverlay",
+      "interfaces": [],
+      "methods": [
+        "render(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IIF)V"
+      ]
+    },
+    "net/neoforged/neoforge/client/model/DynamicFluidContainerModel$ContainedFluidOverrideHandler": {
+      "super": "net/minecraft/client/renderer/block/model/ItemOverrides",
+      "interfaces": [],
+      "methods": [
+        "resolve(Lnet/minecraft/client/resources/model/BakedModel;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/client/multiplayer/ClientLevel;Lnet/minecraft/world/entity/LivingEntity;I)Lnet/minecraft/client/resources/model/BakedModel;"
+      ]
+    },
+    "net/neoforged/neoforge/client/model/EmptyModel$Baked": {
+      "super": "net/minecraft/client/resources/model/SimpleBakedModel",
+      "interfaces": [],
+      "methods": [
+        "getParticleIcon()Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;"
+      ]
+    },
+    "net/neoforged/neoforge/client/model/ExtendedBlockModelDeserializer": {
+      "super": "net/minecraft/client/renderer/block/model/BlockModel$Deserializer",
+      "interfaces": [],
+      "methods": []
+    },
+    "net/neoforged/neoforge/client/model/RegistryAwareItemModelShaper": {
+      "super": "net/minecraft/client/renderer/ItemModelShaper",
+      "interfaces": [],
+      "methods": [
+        "getItemModel(Lnet/minecraft/world/item/Item;)Lnet/minecraft/client/resources/model/BakedModel;",
+        "getLocation(Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/client/resources/model/ModelResourceLocation;",
+        "rebuildCache()V",
+        "register(Lnet/minecraft/world/item/Item;Lnet/minecraft/client/resources/model/ModelResourceLocation;)V"
+      ]
+    },
+    "net/neoforged/neoforge/client/model/generators/loaders/DynamicFluidContainerModelBuilder": {
+      "super": "net/neoforged/neoforge/client/model/generators/template/CustomLoaderBuilder",
+      "interfaces": [],
+      "methods": [
+        "toJson(Lcom/google/gson/JsonObject;)Lcom/google/gson/JsonObject;"
+      ]
+    },
+    "net/neoforged/neoforge/client/model/generators/loaders/ItemLayerModelBuilder": {
+      "super": "net/neoforged/neoforge/client/model/generators/template/CustomLoaderBuilder",
+      "interfaces": [],
+      "methods": [
+        "toJson(Lcom/google/gson/JsonObject;)Lcom/google/gson/JsonObject;"
+      ]
+    },
+    "net/neoforged/neoforge/client/model/generators/loaders/SeparateTransformsModelBuilder": {
+      "super": "net/neoforged/neoforge/client/model/generators/template/CustomLoaderBuilder",
+      "interfaces": [],
+      "methods": [
+        "toJson(Lcom/google/gson/JsonObject;)Lcom/google/gson/JsonObject;"
+      ]
+    },
+    "net/neoforged/neoforge/client/model/lighting/LightPipelineAwareModelBlockRenderer": {
+      "super": "net/minecraft/client/renderer/block/ModelBlockRenderer",
+      "interfaces": [],
+      "methods": [
+        "tesselateWithAO(Lnet/minecraft/world/level/BlockAndTintGetter;Lnet/minecraft/client/resources/model/BakedModel;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;ZLnet/minecraft/util/RandomSource;JILnet/neoforged/neoforge/model/data/ModelData;Lnet/minecraft/client/renderer/RenderType;)V",
+        "tesselateWithoutAO(Lnet/minecraft/world/level/BlockAndTintGetter;Lnet/minecraft/client/resources/model/BakedModel;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;ZLnet/minecraft/util/RandomSource;JILnet/neoforged/neoforge/model/data/ModelData;Lnet/minecraft/client/renderer/RenderType;)V"
+      ]
+    },
+    "net/neoforged/neoforge/common/DeferredSpawnEggItem": {
+      "super": "net/minecraft/world/item/SpawnEggItem",
+      "interfaces": [],
+      "methods": [
+        "deferredOnlyById(Lnet/minecraft/world/entity/EntityType;)Lnet/minecraft/world/item/SpawnEggItem;"
+      ]
+    },
+    "net/neoforged/neoforge/common/data/AdvancementProvider": {
+      "super": "net/minecraft/data/advancements/AdvancementProvider",
+      "interfaces": [],
+      "methods": []
+    },
+    "net/neoforged/neoforge/common/data/SpriteSourceProvider": {
+      "super": "net/neoforged/neoforge/common/data/JsonCodecProvider",
+      "interfaces": [],
+      "methods": []
+    },
+    "net/neoforged/neoforge/common/data/internal/NeoForgeDamageTypeTagsProvider$2": {
+      "super": "net/minecraft/tags/TagBuilder",
+      "interfaces": [],
+      "methods": [
+        "add(Lnet/minecraft/tags/TagEntry;)Lnet/minecraft/tags/TagBuilder;"
+      ]
+    },
+    "net/neoforged/neoforge/common/data/internal/NeoForgeDamageTypeTagsProvider$3": {
+      "super": "net/minecraft/data/tags/TagAppender",
+      "interfaces": [],
+      "methods": []
+    },
+    "net/neoforged/neoforge/common/util/DummySavedData": {
+      "super": "net/minecraft/world/level/saveddata/SavedData",
+      "interfaces": [],
+      "methods": [
+        "save(Lnet/minecraft/nbt/CompoundTag;Lnet/minecraft/core/HolderLookup$Provider;)Lnet/minecraft/nbt/CompoundTag;"
+      ]
+    },
+    "net/neoforged/neoforge/event/AddReloadListenerEvent$WrappedStateAwareListener": {
+      "super": "net/neoforged/neoforge/resource/ContextAwareReloadListener",
+      "interfaces": [
+        "net/minecraft/server/packs/resources/PreparableReloadListener"
+      ],
+      "methods": [
+        "injectContext(Lnet/neoforged/neoforge/common/conditions/ICondition$IContext;Lnet/minecraft/core/HolderLookup$Provider;)V"
+      ]
+    },
+    "net/neoforged/neoforge/event/entity/EntityTeleportEvent$ChorusFruit": {
+      "super": "net/neoforged/neoforge/event/entity/EntityTeleportEvent",
+      "interfaces": [
+        "net/neoforged/bus/api/ICancellableEvent"
+      ],
+      "methods": [
+        "getEntityLiving()Lnet/minecraft/world/entity/LivingEntity;"
+      ]
+    },
+    "net/neoforged/neoforge/event/entity/player/AnvilRepairEvent": {
+      "super": "net/neoforged/neoforge/event/entity/player/PlayerEvent",
+      "interfaces": [],
+      "methods": [
+        "getBreakChance()F",
+        "getLeft()Lnet/minecraft/world/item/ItemStack;",
+        "getOutput()Lnet/minecraft/world/item/ItemStack;",
+        "getRight()Lnet/minecraft/world/item/ItemStack;",
+        "setBreakChance(F)V"
+      ]
+    },
+    "net/neoforged/neoforge/event/village/VillagerTradesEvent": {
+      "super": "net/neoforged/bus/api/Event",
+      "interfaces": [],
+      "methods": [
+        "getRegistryAccess()Lnet/minecraft/core/RegistryAccess;",
+        "getTrades()Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;",
+        "getType()Lnet/minecraft/world/entity/npc/VillagerProfession;"
+      ]
+    },
+    "net/neoforged/neoforge/event/village/WandererTradesEvent": {
+      "super": "net/neoforged/bus/api/Event",
+      "interfaces": [],
+      "methods": [
+        "getRegistryAccess()Lnet/minecraft/core/RegistryAccess;"
+      ]
+    },
+    "net/neoforged/neoforge/fluids/DispenseFluidContainer": {
+      "super": "net/minecraft/core/dispenser/DefaultDispenseItemBehavior",
+      "interfaces": [],
+      "methods": [
+        "execute(Lnet/minecraft/core/dispenser/BlockSource;Lnet/minecraft/world/item/ItemStack;)Lnet/minecraft/world/item/ItemStack;"
+      ]
+    },
+    "net/neoforged/neoforge/items/VanillaHopperItemHandler": {
+      "super": "net/neoforged/neoforge/items/wrapper/InvWrapper",
+      "interfaces": [],
+      "methods": [
+        "insertItem(ILnet/minecraft/world/item/ItemStack;Z)Lnet/minecraft/world/item/ItemStack;"
+      ]
+    },
+    "net/neoforged/neoforge/registries/IdMappingEvent": {
+      "super": "net/neoforged/bus/api/Event",
+      "interfaces": [],
+      "methods": [
+        "getRegistries()Lcom/google/common/collect/ImmutableSet;",
+        "getRemaps(Lnet/minecraft/resources/ResourceLocation;)Lcom/google/common/collect/ImmutableList;",
+        "isFrozen()Z"
+      ]
+    }
+  },
   "fieldRedirects": {
     "net/neoforged/fml/loading/FMLEnvironment": {
       "getstatic dist:Lnet/neoforged/api/distmarker/Dist;": [

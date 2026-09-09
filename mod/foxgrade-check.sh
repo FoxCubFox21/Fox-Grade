@@ -29,4 +29,4 @@ for f in "$LIB"/net/fabricmc/fabric-loader/*/fabric-loader-*.jar "$LIB"/com/goog
   [[ -f $f ]] && CP="$CP:$f"
 done
 export FOXGRADE_FABRIC_MODULES="$FA_TMP/META-INF/jars"
-exec java -Xmx1g -cp "$CP" foxgrade.CheckMain "$MC" "$MC_DIR" "$@"
+exec java -Xmx1g ${FG_LOADER:+-Dfoxgrade.loader=$FG_LOADER} -cp "$CP" foxgrade.CheckMain "$MC" "$MC_DIR" "$@"

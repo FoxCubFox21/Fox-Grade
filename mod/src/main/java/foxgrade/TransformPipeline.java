@@ -69,6 +69,10 @@ public final class TransformPipeline {
   }
 
   static boolean isNeoForgeHost() {
+    // The standalone checker has no loader under it, so it cannot answer this by asking. Being able to run the
+    // NeoForge path outside the game is what makes NeoForge ports testable without launching one.
+    String forced = System.getProperty("foxgrade.loader", "");
+    if (!forced.isEmpty()) return forced.equalsIgnoreCase("neoforge");
     try { return Loaders.current().name().equals("NeoForge"); } catch (Throwable t) { return false; }
   }
 
@@ -644,14 +648,36 @@ public final class TransformPipeline {
       // is injected, and every injected class is rewritten with the full rename map so
       // shim-to-shim references point at the namespaced copies as well.
       java.util.LinkedHashSet<String> wanted = new java.util.LinkedHashSet<>();
+      java.util.LinkedHashSet<String> standIns = new java.util.LinkedHashSet<>();
       for (String missing : new java.util.ArrayList<>(verifier.missing())) {
         // A shim with no build for this target stays missing on purpose: the report says so, which a person can act
         // on, and that beats injecting a class compiled against a different Minecraft.
         if (ShimGenerator.SHIMS.containsKey(missing) && !ShimGenerator.unavailableHere(missing)) {
           wanted.add(missing); verifier.missing().remove(missing);
+        } else if (apiBridges.standIns().containsKey(missing)) {
+          // No reviewed shim, but the target deleted this type outright and its supertype survives, so an empty
+          // stand-in lets the rest of the mod load with just this feature inert.
+          wanted.add(missing); standIns.add(missing); verifier.missing().remove(missing);
+          strippedNames.add(missing.substring(missing.lastIndexOf('/') + 1) + " (deleted in " + targetMc + "; stood in empty)");
         }
       }
       wanted.addAll(remapper.usedShims());
+      // Stand-ins are found by looking, not by asking the verifier. The verifier compares against Minecraft's class
+      // inventory, so it has no opinion about NeoForge's own API and never reports a deleted event class as missing.
+      // The stand-in table is only ever built from classes the target definitely does not have, so a mod mentioning
+      // one at all is a mod that will not load.
+      if (!apiBridges.standIns().isEmpty()) {
+        for (var entry : buffered.entrySet()) {
+          if (!entry.getKey().endsWith(".class")) continue;
+          String pool = new String(entry.getValue(), java.nio.charset.StandardCharsets.ISO_8859_1);
+          for (String deleted : apiBridges.standIns().keySet()) {
+            if (!wanted.contains(deleted) && pool.contains(deleted)) {
+              wanted.add(deleted); standIns.add(deleted);
+              strippedNames.add(deleted.substring(deleted.lastIndexOf('/') + 1) + " (deleted in " + targetMc + "; stood in empty)");
+            }
+          }
+        }
+      }
       java.util.ArrayDeque<String> queue = new java.util.ArrayDeque<>(wanted);
       while (!queue.isEmpty()) {
         String w = queue.poll();
@@ -663,17 +689,19 @@ public final class TransformPipeline {
       // On a Quilt host the loader's own API classes are the real thing; a port must not ship stand-ins for them.
       if (isQuiltHost()) wanted.removeIf((c) -> c.startsWith("org/quiltmc/loader/api/"));
       for (String shimCls : wanted) {
-        String nsName = namespacedShim(shimCls, shimNs);
+        String nsName = namespacedShim(shimCls, shimNs, standIns);
         if (!nsName.equals(shimCls)) shimMap.put(shimCls, nsName);
       }
       for (String shimCls : wanted) {
         var shim = ShimGenerator.SHIMS.get(shimCls);
-        if (shim == null) continue;
+        FabricApiBridges.StandIn si = shim == null ? apiBridges.standIns().get(shimCls) : null;
+        if (shim == null && si == null) continue;
         String entryName = shimMap.getOrDefault(shimCls, shimCls) + ".class";
         if (buffered.containsKey(entryName)) continue;
         byte[] bytes;
         try {
-          bytes = shim.get();
+          bytes = shim != null ? shim.get()
+              : ShimGenerator.standIn(shimMap.getOrDefault(shimCls, shimCls), si.superName(), si.interfaces(), si.methods());
         } catch (RuntimeException noBuildForThisTarget) {
           // One shim that cannot be produced is a gap in the port, not a reason to abandon it.
           verifier.missing().add(shimCls);
@@ -772,13 +800,13 @@ public final class TransformPipeline {
   // On that host the MC-named shims move under the port's own namespace as well. Nothing is lost by it: the second
   // pass below rewrites the mod's call sites to the moved names, and every one of these shims stands in for a class
   // the target deleted, so no vanilla code exists that could still expect the original name.
-  private static String namespacedShim(String shimCls, String ns) {
+  private static String namespacedShim(String shimCls, String ns, java.util.Set<String> standIns) {
     if (shimCls.startsWith("foxgrade/shim/")) return "foxgrade/shim/" + ns + "/" + shimCls.substring("foxgrade/shim/".length());
     if (!isNeoForgeHost()) return shimCls;
     // Only a class Fox-Grade actually writes into the jar may move. A redirect can also name a class that really
     // exists on the target — NeoForge's own FMLEnvironment is one — and relocating that would rewrite a working call
     // into a reference to a class nobody emits.
-    if (!ShimGenerator.SHIMS.containsKey(shimCls)) return shimCls;
+    if (!ShimGenerator.SHIMS.containsKey(shimCls) && !standIns.contains(shimCls)) return shimCls;
     return "foxgrade/shim/" + ns + "/host/" + shimCls;
   }
 

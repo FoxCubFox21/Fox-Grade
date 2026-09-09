@@ -77,6 +77,10 @@ public final class FabricApiBridges {
   private final Map<String, java.util.List<String[]>> inheritedRenamesByAncestor = new HashMap<>();
   public Map<String, java.util.List<String[]>> inheritedRenamesByAncestor() { return inheritedRenamesByAncestor; }
   private final Map<String, String> classRenames;    // third-party class renames (slash form)
+  private final Map<String, StandIn> standIns = new HashMap<>();
+
+  /** A deleted type Fox-Grade can supply an empty replacement for, because its supertype still exists. */
+  public record StandIn(String superName, java.util.List<String> interfaces, java.util.List<String> methods) { }
   // owner → oldCtorDesc → adapter: same-arity constructor signature changes, adapted per-slot.
   public record CtorTransform(int slot, String viaOwner, String viaName, String viaDesc) { }
   // args: full argument recipes ("oN" / ["static",o,n,d,src…] / ["conv",src,op] / ["cast",src,type]) replacing the
@@ -113,6 +117,10 @@ public final class FabricApiBridges {
   public Map<String, Map<String, String[]>> callRedirects() { return callRedirects; }
   public Map<String, Map<String, String[]>> fieldRedirects() { return fieldRedirects; }
   public Map<String, String> classRenames() { return classRenames; }
+
+  /** Deleted API types that get an empty stand-in so the rest of the mod can load: name -> {super, interfaces,
+   *  methods}. See the {@code standIns} note in the NeoForge bridge table. */
+  public Map<String, StandIn> standIns() { return standIns; }
   public int size() {
     int n = 0;
     for (var m : renames.values()) n += m.size();
@@ -134,6 +142,7 @@ public final class FabricApiBridges {
     java.util.List<OverrideAdapter> overrideAdapters = new java.util.ArrayList<>();
     Map<String, String[]> entryHooks = new HashMap<>();
     Map<String, java.util.List<String[]>> byAncestor = new HashMap<>();
+    Map<String, StandIn> standInsL = new HashMap<>();
     java.util.List<SuperHook> superHooksL = new java.util.ArrayList<>(); java.util.List<Synth> synthsL = new java.util.ArrayList<>(); Map<String, Map<String, String>> samL = new HashMap<>();
     Extra extra = new Extra(descWidenings, handleRedirects, callAdapters, overrideAdapters, entryHooks, byAncestor, superHooksL, synthsL, samL);
     try (InputStream shipped = FabricApiBridges.class.getResourceAsStream("/foxgrade/fabric-api-bridges.json")) {
@@ -146,7 +155,7 @@ public final class FabricApiBridges {
     // Fabric port for no benefit. The Fabric results are measured, and nothing here is allowed to disturb them.
     if (TransformPipeline.isNeoForgeHost()) {
       try (InputStream neo = FabricApiBridges.class.getResourceAsStream("/foxgrade/neoforge-api-bridges.json")) {
-        if (neo != null) merge(renames, redirects, classRenames, ctorAdapters, inheritedRenames, fieldRedirects, extra, new String(neo.readAllBytes()));
+        if (neo != null) merge(renames, redirects, classRenames, ctorAdapters, inheritedRenames, fieldRedirects, extra, new String(neo.readAllBytes()), standInsL);
       }
     }
     Path user = gameDir.resolve("fox-grade.api-bridges.json");
@@ -154,14 +163,32 @@ public final class FabricApiBridges {
     FabricApiBridges b = new FabricApiBridges(renames, redirects, classRenames, ctorAdapters, inheritedRenames, fieldRedirects,
         descWidenings, handleRedirects, callAdapters, overrideAdapters, entryHooks, byAncestor);
     b.superHooks.addAll(superHooksL); b.synths.addAll(synthsL); b.samRenames.putAll(samL);
+    b.standIns.putAll(standInsL);
     return b;
   }
 
   private static void merge(Map<String, Map<String, String>> into, Map<String, Map<String, String[]>> redirects,
                             Map<String, String> classRenames, Map<String, Map<String, CtorAdapter>> ctorAdapters,
                             Map<String, String> inheritedRenames, Map<String, Map<String, String[]>> fieldRedirects, Extra extra, String json) {
+    merge(into, redirects, classRenames, ctorAdapters, inheritedRenames, fieldRedirects, extra, json, new HashMap<>());
+  }
+
+  private static void merge(Map<String, Map<String, String>> into, Map<String, Map<String, String[]>> redirects,
+                            Map<String, String> classRenames, Map<String, Map<String, CtorAdapter>> ctorAdapters,
+                            Map<String, String> inheritedRenames, Map<String, Map<String, String[]>> fieldRedirects, Extra extra, String json,
+                            Map<String, StandIn> standIns) {
     JsonObject o = new Gson().fromJson(json, JsonObject.class);
     if (o == null) return;
+    if (o.has("standIns") && o.get("standIns").isJsonObject()) {
+      for (var e : o.getAsJsonObject("standIns").entrySet()) {
+        if (!e.getValue().isJsonObject()) continue;
+        JsonObject v = e.getValue().getAsJsonObject();
+        java.util.List<String> ifaces = new java.util.ArrayList<>(), methods = new java.util.ArrayList<>();
+        if (v.has("interfaces")) for (com.google.gson.JsonElement x : v.getAsJsonArray("interfaces")) ifaces.add(x.getAsString());
+        if (v.has("methods")) for (com.google.gson.JsonElement x : v.getAsJsonArray("methods")) methods.add(x.getAsString());
+        standIns.put(e.getKey().replace('.', '/'), new StandIn(v.get("super").getAsString(), ifaces, methods));
+      }
+    }
     if (o.has("renames") && o.get("renames").isJsonObject()) {
       for (var ownerEntry : o.getAsJsonObject("renames").entrySet()) {
         String owner = ownerEntry.getKey().replace('.', '/');
