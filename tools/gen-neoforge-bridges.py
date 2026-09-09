@@ -147,6 +147,9 @@ CURATED_CALLS = {
             ["net/neoforged/fml/loading/FMLEnvironment", "getDist", "()Lnet/neoforged/api/distmarker/Dist;"],
         "getLoadingModList()Lnet/neoforged/fml/loading/LoadingModList;":
             ["net/neoforged/fml/loading/LoadingModList", "get", "()Lnet/neoforged/fml/loading/LoadingModList;"],
+        # No static equivalent for this one: the game directory hangs off the loader instance now, so it needs a shim.
+        "getGamePath()Ljava/nio/file/Path;":
+            ["foxgrade/shim/FmlCompat", "getGamePath", "()Ljava/nio/file/Path;"],
     },
 }
 

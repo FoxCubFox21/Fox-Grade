@@ -23,6 +23,7 @@ public final class ShimGenerator implements Opcodes {
       Map.entry("foxgrade/shim/AutoConfigCompat", ShimGenerator::autoConfigCompat),
       Map.entry("foxgrade/shim/FoodDataCompat", () -> fromResource("foxgrade/shim/FoodDataCompat.class")),
       Map.entry("foxgrade/shim/ReloadListenerCompat", () -> fromResource("foxgrade/shim/ReloadListenerCompat.class")),
+      Map.entry("foxgrade/shim/FmlCompat", () -> fromResource("foxgrade/shim/FmlCompat.class")),
       Map.entry("foxgrade/shim/OptionInstanceCompat", () -> fromResource("foxgrade/shim/OptionInstanceCompat.class")),
       Map.entry("foxgrade/shim/CtorShims", () -> fromResource("foxgrade/shim/CtorShims.class")),
       Map.entry("foxgrade/shim/HudRenderCallback", () -> fromResource("foxgrade/shim/HudRenderCallback.class")),

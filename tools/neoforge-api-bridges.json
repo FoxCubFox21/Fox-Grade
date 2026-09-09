@@ -100,6 +100,11 @@
         "net/neoforged/fml/loading/LoadingModList",
         "get",
         "()Lnet/neoforged/fml/loading/LoadingModList;"
+      ],
+      "getGamePath()Ljava/nio/file/Path;": [
+        "foxgrade/shim/FmlCompat",
+        "getGamePath",
+        "()Ljava/nio/file/Path;"
       ]
     }
   },
