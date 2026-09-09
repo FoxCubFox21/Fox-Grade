@@ -55,17 +55,41 @@ def redirect_names():
     return pairs, bare
 
 
+def back_map(rules, step_names):
+    """One "call it what this version called it" map, composed from a chain of adjacent steps.
+
+    Going down more than one release means walking back through each in turn: a name is what 26.2 calls it, then
+    what 1.21.1 called it, then what 1.20.4 did. Steps are given newest-first and applied in that order, so a class
+    renamed twice ends up under the oldest name rather than a halfway one.
+
+    Names that no step mentions pass through untouched, which is the common case — most classes were not renamed."""
+    back = {}
+    for name in step_names:
+        block = rules.get(name)
+        if block is None:
+            raise SystemExit(f"rules.json has no step block {name!r}")
+        step = {r["toFqcn"]: r["fromFqcn"] for r in block.get("renames", [])}
+        if not back:
+            back = dict(step)
+            continue
+        # Send everything already mapped one release further back, then add names this step is the first to touch.
+        back = {new: step.get(old, old) for new, old in back.items()}
+        for new, old in step.items():
+            back.setdefault(new, old)
+    return back
+
+
 def main():
     if len(sys.argv) < 3:
         print(__doc__); sys.exit(2)
-    new_target, step_name = sys.argv[1], sys.argv[2]
+    new_target, step_names = sys.argv[1], sys.argv[2].split(",")
     src_target = sys.argv[3] if len(sys.argv) > 3 else "26.2"
 
     src = json.load(gzip.open(RES / f"intermediary-to-mojang.{src_target}.json.gz"))
     rules = json.load(gzip.open(RES / "rules.json.gz"))
     inv = json.load(gzip.open(RES / f"mc-{new_target}.classes.json.gz"))
 
-    back = {r["toFqcn"]: r["fromFqcn"] for r in rules[step_name].get("renames", [])}
+    back = back_map(rules, step_names)
     # Member names the target declares, per class and in aggregate. Descriptors are dropped: the bridge answers
     # "what is this called now", and a descriptor that moved with a renamed type would reject a correct answer.
     per_class = {c: {re.split(r"[(:]", m, maxsplit=1)[0] for m in v["m"]} | {f.split(":", 1)[0] for f in v["f"]}
@@ -188,7 +212,7 @@ def main():
     out = {
         "schema": src["schema"],
         "targetMc": new_target,
-        "sources": src["sources"] + [f"derived from {src_target} via rules[{step_name}], verified against mc-{new_target}"],
+        "sources": src["sources"] + [f"derived from {src_target} via rules[{",".join(step_names)}], verified against mc-{new_target}"],
         "generated": datetime.date.today().isoformat(),
         "classes": classes,
         "members": members,

@@ -22,15 +22,39 @@ HERE = pathlib.Path(__file__).resolve().parent
 RES = HERE / "foxgrade-mod/src/main/resources/foxgrade"
 
 
+def back_map(rules, step_names):
+    """One "call it what this version called it" map, composed from a chain of adjacent steps.
+
+    Going down more than one release means walking back through each in turn: a name is what 26.2 calls it, then
+    what 1.21.1 called it, then what 1.20.4 did. Steps are given newest-first and applied in that order, so a class
+    renamed twice ends up under the oldest name rather than a halfway one.
+
+    Names that no step mentions pass through untouched, which is the common case — most classes were not renamed."""
+    back = {}
+    for name in step_names:
+        block = rules.get(name)
+        if block is None:
+            raise SystemExit(f"rules.json has no step block {name!r}")
+        step = {r["toFqcn"]: r["fromFqcn"] for r in block.get("renames", [])}
+        if not back:
+            back = dict(step)
+            continue
+        # Send everything already mapped one release further back, then add names this step is the first to touch.
+        back = {new: step.get(old, old) for new, old in back.items()}
+        for new, old in step.items():
+            back.setdefault(new, old)
+    return back
+
+
 def main():
     if len(sys.argv) < 3:
         print(__doc__); sys.exit(2)
-    new_target, step_name = sys.argv[1], sys.argv[2]
+    new_target, step_names = sys.argv[1], sys.argv[2].split(",")
     src_target = sys.argv[3] if len(sys.argv) > 3 else "26.2"
 
     rules_path = RES / "rules.json.gz"
     rules = json.load(gzip.open(rules_path))
-    for needed in (src_target, step_name):
+    for needed in (src_target, *step_names):
         if needed not in rules:
             print(f"rules.json has no block {needed!r}"); sys.exit(1)
     inv_path = RES / f"mc-{new_target}.classes.json.gz"
@@ -38,8 +62,7 @@ def main():
         print(f"no class inventory at {inv_path.name} — run gen-mc-classes.py first"); sys.exit(1)
     present = set(json.load(gzip.open(inv_path)))
 
-    step = {r["fromFqcn"]: r["toFqcn"] for r in rules[step_name].get("renames", [])}
-    back = {v: k for k, v in step.items()}                     # 26.2 name -> what 26.1 called it
+    back = back_map(rules, step_names)                         # target name -> what this version calls it
 
     def exists(fqcn):
         return fqcn.replace(".", "/") in present
@@ -74,7 +97,7 @@ def main():
               + ["", "== 'deleted' entries dropped: the class still exists on this target =="]
               + [d["fqcn"] for d in undeleted])
     pathlib.Path(f"/tmp/rules-{new_target}-report.txt").write_text("\n".join(report) + "\n")
-    print(f"{new_target}: {len(kept)} renames kept ({rewritten} redirected through {step_name}), "
+    print(f"{new_target}: {len(kept)} renames kept ({rewritten} redirected through {",".join(step_names)}), "
           f"{len(dropped)} dropped; {len(deleted)} deletions kept, {len(undeleted)} dropped as still present")
     print(f"detail: /tmp/rules-{new_target}-report.txt")
 
