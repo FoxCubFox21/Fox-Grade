@@ -8,7 +8,7 @@ Fox-Grade rewrites old Fabric and Quilt mods to run on Minecraft 26.2 — automa
 
 130 mods from 1.21.x and 26.1, every one launched into a real world: **86 boot.**
 
-Head-to-head against [Retromod](https://modrinth.com/mod/retromod) on the same 104 mods, same pass rule for both — the game reaches world load, stays up, and the mod is really in the loaded-mod list:
+Head-to-head against [Retromod](https://modrinth.com/mod/retromod) on 104 of them, every mod both tools were run against. Same pass rule for both: the game reaches world load, stays up, and the mod is really in the loaded-mod list.
 
 | | boots |
 |---|---|
@@ -25,15 +25,25 @@ Every ported mod with its icon and a health check. What was changed, what was tu
 
 Fox-Grade watches Modrinth for the author's real update. The moment it lands: one click, checksum-verified, port retired. Install the official build yourself and the port retires on its own at next launch. **The author's build always beats a port.**
 
+## On Fabric
+
+Fox-Grade and Fabric API in `mods/`. Drop the old mod's jar in too and launch — it ports, installs, and restarts straight into it, so the mod is live on the same click.
+
+Client or dedicated server. On a server it ports at startup and asks the operator to restart, rather than forking a process that systemd or a hosting panel owns. The panel is client-only; porting, the dependency pre-check and the crash guard work on both.
+
+## On Quilt
+
+Tested on Quilt Loader for 26.2 (the 0.31 beta) with plain Fabric API — there is no Quilted Fabric API or QSL for 26.2 yet.
+
+**Put your first jar in `fox-grade-inbox/` next to `mods/`.** Quilt scans sub-folders of `mods/`, so on that first launch Fox-Grade marks its own folders for Quilt to skip; after that `mods/fox-grade-inbox/` works too.
+
+Quilt-only mods — a `quilt.mod.json` and no `fabric.mod.json` — port like any other, and come out carrying a 26.2 `quilt.mod.json` of their own, so Quilt still sees a Quilt mod. QSL's own API modules are not bridged.
+
 ## Honest about the limits
 
 Heavyweight rendering mods are out of scope. Anything Fox-Grade cannot prove safe is disabled and **listed by name** — never guessed at. Originals are never deleted, every port is reversible, and a port that crashes your game retires itself, so it can never take you down twice.
 
-## How
-
-Fox-Grade and Fabric API in `mods/`. Drop the old mod's jar in too. Launch. It ports, installs, and restarts straight into it. *(On Quilt, put that first jar in `fox-grade-inbox/` next to `mods/`.)*
-
-Fabric or Quilt. Client or dedicated server. **Minecraft 26.2 only** — the translation tables are built for one version, and on anything else Fox-Grade refuses to run rather than produce a port it cannot verify.
+**Minecraft 26.2 only** — the translation tables are built for one version, and on anything else Fox-Grade refuses to run rather than produce a port it cannot verify.
 
 ---
 

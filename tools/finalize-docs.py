@@ -59,7 +59,7 @@ print("done:", {k: v for k, v in S.items() if not k.endswith("_names")})
 sub(REPO / "mod/MODRINTH.md",
     r"\d+ mods from 1\.21\.x and 26\.1, every one launched into a real world: \*\*\d+ boot\.\*\*",
     f"{A} mods from 1.21.x and 26.1, every one launched into a real world: **{B} boot.**")
-sub(REPO / "mod/MODRINTH.md", r"on the same \d+ mods, same pass rule", f"on the same {T} mods, same pass rule")
+sub(REPO / "mod/MODRINTH.md", r"on \d+ of them, every mod both tools", f"on {T} of them, every mod both tools")
 sub(REPO / "mod/MODRINTH.md", r"\| \*\*Fox-Grade\*\* \| \*\*\d+\*\* \|", f"| **Fox-Grade** | **{F}** |")
 sub(REPO / "mod/MODRINTH.md", r"\| Retromod \| \d+ \|", f"| Retromod | {R} |")
 sub(REPO / "mod/MODRINTH.md",
