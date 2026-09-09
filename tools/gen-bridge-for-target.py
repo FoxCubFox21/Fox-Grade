@@ -54,41 +54,37 @@ def main():
             gone.append(f"{im} -> {moj}")
     stats["classes"] = (len(classes), len(gone))
 
-    # Per-class member maps: keep a name only when the class it belongs to really declares it on this target.
+    # Per-class member maps. Members are NOT filtered by whether the target declares them, and that is the whole
+    # point of a bridge rather than a mapping: a name the target no longer has is exactly what needs a name, so a
+    # redirect can recognise the call and send it somewhere that works. Minecraft 26.2's FoodData has no
+    # getExhaustionLevel, and the shipped 26.2 bridge maps method_35219 to it anyway, because callRedirects then
+    # routes that call to a shim. Filtering members by presence deletes precisely the entries redirects depend on,
+    # leaving the call site holding an intermediary name nothing can match — which is how a 26.1.2 port reached a
+    # world and then died on 'float FoodData.method_35219()'.
+    #
+    # Classes are still checked, above: a class rename pointing at a class that is not there helps nobody, since
+    # there is no call to redirect, only a type that will not resolve.
     members, drop_m = {}, 0
     for im_cls, groups in src["members"].items():
-        target_cls = classes.get(im_cls)
-        if target_cls is None:
+        if im_cls not in classes:
             drop_m += sum(len(g) for g in groups.values())
-            continue
-        owned = per_class.get(target_cls.replace(".", "/"), set())
-        kept = {}
-        for kind, mapping in groups.items():
-            good = {k: v for k, v in mapping.items() if v in owned or v.startswith("lambda$")}
-            drop_m += len(mapping) - len(good)
-            if good:
-                kept[kind] = good
+            continue                                   # the owning class itself is gone; its members name nothing
+        kept = {k: dict(v) for k, v in groups.items() if v}
         if kept:
             members[im_cls] = kept
     stats["members"] = (sum(len(g) for v in members.values() for g in v.values()), drop_m)
 
     def filter_global(mapping):
-        good = {k: v for k, v in mapping.items() if v in anywhere or v.startswith("lambda$")}
-        return good, len(mapping) - len(good)
+        # Same reasoning as the per-class maps: a global member name is kept whether or not the target still has it.
+        return dict(mapping), 0
 
     global_methods, dm = filter_global(src["globalMethods"])
     global_fields, df = filter_global(src["globalFields"])
     stats["globals"] = (len(global_methods) + len(global_fields), dm + df)
 
     def filter_values(byowner, allowed):
-        """Keep a nested map's entries by destination name only, leaving the owner keys untouched."""
-        out, dropped = {}, 0
-        for owner, mapping in byowner.items():
-            good = {k: v for k, v in mapping.items() if v in allowed or v.startswith("lambda$") or v == "<clinit>"}
-            dropped += len(mapping) - len(good)
-            if good:
-                out[owner] = good
-        return out, dropped
+        """Carried across whole: these name members, and a member name is kept whether or not the target has it."""
+        return {o: dict(m) for o, m in byowner.items() if m}, 0
 
     def filter_by_owner(byclass):
         out, dropped = {}, 0
@@ -97,10 +93,8 @@ def main():
             owned = per_class.get(target_owner)
             if owned is None:
                 dropped += len(mapping); continue
-            good = {k: v for k, v in mapping.items() if v in owned or v.startswith("lambda$") or v == "<clinit>"}
-            dropped += len(mapping) - len(good)
-            if good:
-                out[target_owner] = good
+            if mapping:
+                out[target_owner] = dict(mapping)
         return out, dropped
 
     # mojangMethods is keyed by the target's own class names, so the owner moves with the step and can be checked

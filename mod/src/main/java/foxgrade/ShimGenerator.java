@@ -471,33 +471,38 @@ public final class ShimGenerator implements Opcodes {
 
   static void targetVersion(String mc) { targetMc = mc == null ? "" : mc; }
 
-  /** True when this shim has no build for the target version, so the reference must stay unresolved.
-   *
-   *  <p>Not every shim can exist on every version — some stand in for a class using API a older Minecraft never had.
-   *  Saying so is the honest answer: the port report lists the reference as unresolved, which is a thing a person can
-   *  act on, rather than injecting a class built for a different game and finding out later. */
-  static boolean unavailableHere(String shimCls) {
-    String set = targetMc;
-    if (set.isEmpty()) return false;
-    java.util.Set<String> gone = UNAVAILABLE.get(set);
-    if (gone == null) {
-      gone = new java.util.HashSet<>();
-      try (var in = ShimGenerator.class.getResourceAsStream("/foxgrade/shimset/" + set + "/UNAVAILABLE.txt")) {
-        if (in != null) for (String l : new String(in.readAllBytes(), java.nio.charset.StandardCharsets.UTF_8).split("\n")) {
-          if (!l.isBlank()) gone.add(l.trim());
-        }
-      } catch (java.io.IOException noList) { }
-      UNAVAILABLE.put(set, gone);
-    }
-    return gone.contains(shimCls);
+  private static final Map<String, Boolean> HAS_SET = new java.util.concurrent.ConcurrentHashMap<>();
+
+  /** Whether this target has a shim set of its own, rather than sharing the one built alongside the engine. */
+  private static boolean hasOwnSet() {
+    if (targetMc.isEmpty()) return false;
+    return HAS_SET.computeIfAbsent(targetMc, (v) -> resource("/foxgrade/shimset/" + v + "/UNAVAILABLE.txt") != null);
   }
 
-  private static final Map<String, java.util.Set<String>> UNAVAILABLE = new java.util.concurrent.ConcurrentHashMap<>();
+  /** True when this shim has no build for the target version, so the reference must stay unresolved.
+   *
+   *  <p>Answered by trying, not by consulting a list. The build writes out the source files it could not compile for
+   *  a version, but a shim's source file is not the name it is injected under — VertexFormatModeShim.java is emitted
+   *  as com/mojang/blaze3d/vertex/VertexFormat$Mode — and matching those two by hand is how a shim built against 26.2,
+   *  referencing a class 26.1.2 never had, ended up inside a 26.1.2 port and took the game down inside
+   *  RenderSystem.initRenderer. {@link #fromResource} refuses to serve a version from another version's set, so the
+   *  supplier throws, the caller records the reference as unresolved, and the port report names it. */
+  static boolean unavailableHere(String shimCls) {
+    return false;
+  }
+
 
   private static byte[] fromResource(String path) {
-    byte[] bytes = resource("/foxgrade/shimset/" + targetMc + "/" + path);   // this target's own build, if there is one
-    if (bytes == null) bytes = resource("/" + path);                          // otherwise the set built with the mod
-    if (bytes == null) throw new IllegalStateException("missing shim resource " + path);
+    byte[] bytes;
+    if (hasOwnSet()) {
+      // A version with its own set is served only from it. Falling back to the set built alongside the engine would
+      // put a class compiled against a different Minecraft into the port, which is the failure this exists to avoid.
+      bytes = resource("/foxgrade/shimset/" + targetMc + "/" + path);
+      if (bytes == null) throw new IllegalStateException("no " + path + " built for " + targetMc);
+    } else {
+      bytes = resource("/" + path);
+      if (bytes == null) throw new IllegalStateException("missing shim resource " + path);
+    }
     return renameClasses(bytes, SHIM_RENAMES);
   }
 
