@@ -122,11 +122,24 @@ if [[ -n $FORGE_CP && -d src/forge/java ]]; then
   fi
 fi
 
+# --- measurement builds -----------------------------------------------------------------------------------------
+# A version cannot be measured until Fox-Grade will load on it, and cannot be supported until it is measured. The
+# manifest floor is what makes that circular: it tracks the oldest supported version, so the harness cannot get in.
+#
+# MEASURE_FLOOR=<version> breaks the circle for the harness alone. The built jar declares that floor and carries
+# every target's tables, so a lane can open a version with -Dfoxgrade.target and find out how it does. The sources
+# are untouched, so nothing about what ships changes, and the build says loudly which kind of jar it made — a jar
+# that loads where it has not been measured is a fine thing to test with and not a thing to publish.
+MEASURE_FLOOR="${MEASURE_FLOOR:-}"
+if [[ -n $MEASURE_FLOOR ]]; then
+  echo "  ** MEASUREMENT BUILD: floor $MEASURE_FLOOR, all targets packaged — do not ship this jar **"
+fi
+
 # --- the manifest must not be narrower than the supported set ---------------------------------------------------
 # Twice now, a version was added to Targets and the loader refused Fox-Grade before Targets could speak, because
 # fabric.mod.json still named a newer minimum. The two are saying related things and drifted apart both times, so
 # the build compares them instead of trusting anyone to remember.
-python3 - <<'PYCHECK' || exit 1
+[[ -z $MEASURE_FLOOR ]] && python3 - <<'PYCHECK'
 import json, pathlib, re, sys
 targets = pathlib.Path("src/main/java/foxgrade/Targets.java").read_text()
 block = re.search(r"SUPPORTED\s*=\s*Set\.of\(([^)]*)\)", targets, re.S)
@@ -157,11 +170,12 @@ PYCHECK
 # packaged only if Targets lists it, or if it is the family representative for something Targets lists. Deriving a
 # candidate's tables costs nothing to anyone until it has been measured and turned on.
 python3 - <<'PYPACK'
-import json, pathlib, re, shutil
+import json, os, pathlib, re, shutil
 res = pathlib.Path("src/main/resources/foxgrade")
 stage = pathlib.Path("build/resources/foxgrade")
 targets = pathlib.Path("src/main/java/foxgrade/Targets.java").read_text()
 supported = set(re.findall(r'"([^"]+)"', re.search(r"SUPPORTED\s*=\s*Set\.of\(([^)]*)\)", targets, re.S).group(1)))
+measure = os.environ.get("MEASURE_FLOOR", "")
 family = dict(re.findall(r'"([^"]+)",\s*"([^"]+)"', re.search(r"FAMILY\s*=[^;]*?of\(([^)]*)\)", targets, re.S).group(1)))
 # A supported version needs its own inventory and its family's heavy tables.
 keep_inventory = set(supported)
@@ -173,10 +187,11 @@ skipped = []
 for f in sorted(res.iterdir()):
     m = re.fullmatch(r"mc-(.+)\.classes\.json\.gz", f.name)
     n = re.fullmatch(r"intermediary-to-mojang\.(.+)\.json\.gz", f.name)
-    if m and m.group(1) not in keep_inventory:
-        skipped.append(f.name); continue
-    if n and n.group(1) not in keep_tables:
-        skipped.append(f.name); continue
+    if not measure:
+        if m and m.group(1) not in keep_inventory:
+            skipped.append(f.name); continue
+        if n and n.group(1) not in keep_tables:
+            skipped.append(f.name); continue
     shutil.copy2(f, stage / f.name)
 for sub in res.iterdir():
     if sub.is_dir():
@@ -188,7 +203,19 @@ VERSION=$(grep '"version"' src/main/resources/fabric.mod.json | head -1 | sed -E
 OUT="$PWD/$DIST/foxgrade-${VERSION}.jar"
 rm -f "$OUT"
 ( cd "$BUILD" && jar cf "$OUT" . )
-( cd src/main/resources && jar uf "$OUT" $(ls | grep -v '^foxgrade$') )
+if [[ -n $MEASURE_FLOOR ]]; then
+  mkdir -p build/meta
+  python3 -c "
+import json, pathlib, sys
+m = json.loads(pathlib.Path('src/main/resources/fabric.mod.json').read_text())
+m.setdefault('depends', {})['minecraft'] = '>=' + sys.argv[1]
+pathlib.Path('build/meta/fabric.mod.json').write_text(json.dumps(m, indent=2) + '\n')
+" "$MEASURE_FLOOR"
+  ( cd src/main/resources && jar uf "$OUT" $(ls | grep -vE '^(foxgrade|fabric.mod.json)$') )
+  ( cd build/meta && jar uf "$OUT" fabric.mod.json )
+else
+  ( cd src/main/resources && jar uf "$OUT" $(ls | grep -v '^foxgrade$') )
+fi
 ( cd build/resources && jar uf "$OUT" foxgrade )
 [[ -d src/neoforge/resources && -f "$BUILD/foxgrade/neoforge/FoxGradeLocator.class" ]] && ( cd src/neoforge/resources && jar uf "$OUT" . )
 [[ -d src/forge/resources && -f "$BUILD/foxgrade/forge/FoxGradeForgeLocator.class" ]] && ( cd src/forge/resources && jar uf "$OUT" . )
