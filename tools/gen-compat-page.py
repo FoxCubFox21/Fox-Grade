@@ -206,11 +206,20 @@ NEO_CAUSES = [
 ]
 
 
+# Which log files a lane's ledger is paired with. Guessing from the ledger's own name worked while there was one
+# lane and broke the moment there were three, so the pairing is written down.
+LANE_LOGS = {
+    "ledger-neoforge.txt": "log-nf",
+    "ledger-neoforge-2.txt": "log-nf2",
+    "ledger-2612.txt": "log-2612",
+}
+
+
 def read_neoforge_ledger(path):
-    """The NeoForge lane writes verdict/name/why; the Fabric lane writes verdict/name/portline/why."""
+    """A lane ledger: verdict/name/why. (The Fabric lane writes verdict/name/portline/why and is read separately.)"""
     rows = {}
     logdir = pathlib.Path(path).parent
-    stem = "log-nf2" if path.endswith("-2.txt") else "log-nf"
+    stem = LANE_LOGS.get(pathlib.Path(path).name, "log-nf")
     for ln in pathlib.Path(path).read_text().splitlines():
         parts = ln.split("\t")
         if len(parts) < 2 or parts[0] not in ("PASS", "CRASH", "HELD", "STALL"):
@@ -263,6 +272,40 @@ loading, the game is still up 8 seconds later, and the mod is in the loaded-mod 
         for n in sorted(neo)) + """
 
 Reproduce with `tools/run-neoforge.sh`; the corpus is built by `tools/fetch-nf-corpus.py`.
+"""
+
+
+# --- second target version -----------------------------------------------------------------------------------------
+_v_path = W / "batch2/ledger-2612.txt"
+ver = read_neoforge_ledger(_v_path) if _v_path.exists() else {}
+if ver:
+    ver_pass = sum(1 for v in ver.values() if v["verdict"] == "PASS")
+    md += f"""
+
+## A second target version: 26.1.2
+
+Everything above targets Minecraft 26.2. These are the same kind of mods ported for **26.1.2** instead,
+on a 26.1.2 Fabric client launched into a 26.1.2 world, graded by the same rule.
+
+**{ver_pass} of {len(ver)} boot.**
+
+The tables for a second target are derived from the ones already shipped and then checked against that
+version's own class inventory, so a rename that does not resolve there is dropped and named rather than
+shipped on the assumption that it is close enough. The shim package is compiled again per target, and a
+shim that will not build for a version is absent for that version alone.
+
+26.1.2 is **not a supported target**. `Targets` refuses it unless `-Dfoxgrade.target=26.1.2` opens it for
+a single run, which is how these numbers were taken. Having tables is most of the work and none of the
+evidence; a version joins the supported list on the strength of a table like this one, not before.
+
+| Mod | Result | Why not |
+|---|---|---|
+""" + "\n".join(
+        f"| {n} | {label.get(ver[n]['verdict'], ver[n]['verdict'])} | "
+        f"{(ver[n]['why'][:110].replace('|', '/')) if ver[n]['verdict'] != 'PASS' else ''} |"
+        for n in sorted(ver)) + """
+
+Reproduce with `tools/run-2612.sh`.
 """
 
 (OUT / "compat.md").write_text(md)
