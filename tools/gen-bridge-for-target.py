@@ -45,14 +45,23 @@ def main():
 
     stats = {}
 
-    classes, gone = {}, []
+    # Classes are carried across whole, for the same reason members are. A name the target does not have is exactly
+    # what needs a name: Minecraft 26.2 has no InteractionResultHolder either, and the shipped 26.2 bridge maps
+    # class_1271 to it anyway, because ShimGenerator then supplies that class inside the port. Dropping the mapping
+    # leaves the call site holding "net/minecraft/class_1271", which no shim and no rename can recognise — which is
+    # how architectury, balm and JEI ported for 26.1.2 and died on NoClassDefFoundError for an intermediary name.
+    #
+    # The destination is still redirected through the step block, so a class the newer version renamed is named the
+    # way this target knows it. What is no longer done is refusing to say anything at all.
+    classes, redirected = {}, 0
     for im, moj in src["classes"].items():
         m = moved(moj)
-        if has_class(m):
-            classes[im] = m
-        else:
-            gone.append(f"{im} -> {moj}")
-    stats["classes"] = (len(classes), len(gone))
+        if m != moj:
+            redirected += 1
+        classes[im] = m
+    stats["classes"] = (len(classes), 0)
+    gone = [f"{im} -> {classes[im]} (not in {new_target}; kept for shims and renames to catch)"
+            for im in classes if not has_class(classes[im])]
 
     # Per-class member maps. Members are NOT filtered by whether the target declares them, and that is the whole
     # point of a bridge rather than a mapping: a name the target no longer has is exactly what needs a name, so a
