@@ -31,20 +31,43 @@ trap 'rmdir "$LOCK" 2>/dev/null; exit 130' INT TERM   # cleanup alone would let 
 # A lane can only grade Fox-Grade if the game itself can start. Minecraft up to 1.18.2 ships LWJGL 3.2.x, which has
 # no arm64 macOS natives, so on Apple Silicon it dies at "Failed to locate library: liblwjgl.dylib" before a mod
 # loads -- and every mod in the corpus is then recorded as a porting failure. 1.17.1 read 0 of 14 that way. That is
-# a fact about this machine, not about the port, and it must not reach a ledger.
-# The pass rule is "a world starts loading", and this lane reaches a world with --quickPlaySingleplayer. That
-# argument arrived in 1.20. An older client prints "Completely ignored arguments: [--quickPlaySingleplayer, ...]",
-# sits at the main menu, and never loads anything -- so every mod is recorded STALL no matter how well it ported.
-# 1.19.2 and 1.17.1 both read as total failures for this reason alone. Until there is another way into a world on
-# those versions, a lane there measures nothing and must not write a ledger.
+# a fact about this machine, not about the port, and it must not reach a ledger. Checked before anything is started.
+if [[ $(uname -m) == arm64 ]] && ! grep -q "natives-macos-arm64" /tmp/fg-cp-$TARGET.txt; then
+  echo "[$TARGET] SKIPPED: no arm64 macOS natives on this classpath (LWJGL 3.2.x). The game cannot start here," >&2
+  echo "[$TARGET] so any result would measure the machine. Measure this version on x86, or under an x86 JDK." >&2
+  exit 3
+fi
+
+# How this lane reaches a world. --quickPlaySingleplayer arrived in 1.20; an older client prints "Completely
+# ignored arguments" and sits at the main menu, which is why every pre-1.20 lane read as a total failure. Those
+# clients do honour --server and --port, which predate quickPlay by years, so on them the way into a world is to
+# join one: a dedicated server of the same version, offline mode, flat world, on a port derived from the version.
+# The mod under test still runs in the client, in a real world, which is what the pass rule is about.
 if python3 -c "
 import sys
 key = lambda v: [int(x) if x.isdigit() else 0 for x in v.split('.')]
 sys.exit(0 if key('$TARGET') < key('1.20') else 1)
 "; then
-  echo "[$TARGET] SKIPPED: --quickPlaySingleplayer arrived in 1.20, so this client never loads a world and every" >&2
-  echo "[$TARGET] mod would be recorded STALL regardless of its port. That is a fact about the harness." >&2
-  exit 5
+  SRVDIR="$HOME/mc-porttest-srv-${SLUG}"
+  [[ -f $SRVDIR/server.jar ]] || python3 ~/foxgrade-work/make-server.py "$TARGET" >&2 || exit 5
+  SRVPORT=$(grep '^server-port=' "$SRVDIR/server.properties" | cut -d= -f2)
+  SRVLOG="$B/srv-v$SLUG.log"; : > "$SRVLOG"
+  # -Dfoxgrade.srv puts the version on the server's command line. Without it there is nothing there to match on:
+  # the jar is called server.jar in every version's directory and pkill -f reads the command line, not the cwd,
+  # so a trap aimed at the directory would kill nothing and leave a server holding its port after the lane ended.
+  ( cd "$SRVDIR" && exec /usr/bin/java -Dfoxgrade.srv="$SLUG" -Xmx1500M -jar server.jar nogui ) >> "$SRVLOG" 2>&1 &
+  SRVPID=$!
+  for i in $(seq 1 60); do sleep 2; grep -q 'Done (' "$SRVLOG" && break; done
+  if ! grep -q 'Done (' "$SRVLOG"; then
+    echo "[$TARGET] SKIPPED: the $TARGET server never finished starting; see $SRVLOG" >&2
+    exit 5
+  fi
+  ENTER_WORLD=(--server 127.0.0.1 --port "$SRVPORT")
+  trap 'kill $SRVPID 2>/dev/null; pkill -f "foxgrade.srv=$SLUG" 2>/dev/null; rmdir "$LOCK" 2>/dev/null' EXIT
+  trap 'kill $SRVPID 2>/dev/null; pkill -f "foxgrade.srv=$SLUG" 2>/dev/null; rmdir "$LOCK" 2>/dev/null; exit 130' INT TERM
+  echo "[$TARGET] joining a local $TARGET server on port $SRVPORT (quickPlay does not exist before 1.20)" >&2
+else
+  ENTER_WORLD=(--quickPlaySingleplayer TESTWORLD)
 fi
 
 if [[ $(uname -m) == arm64 ]] && ! grep -q "natives-macos-arm64" /tmp/fg-cp-$TARGET.txt; then
@@ -107,13 +130,13 @@ fg_run() {
   done
   sleep 3; pkill -f "gameDir $PT " 2>/dev/null; sleep 2
 
-  launch "$log" --quickPlaySingleplayer "TESTWORLD"
+  launch "$log" "${ENTER_WORLD[@]}"
   ( for i in $(seq 1 80); do sleep 2; for pid in $(pgrep -f "gameDir $PT"); do osascript -e "tell application \"System Events\" to set visible of (every process whose unix id is $pid) to false" >/dev/null 2>&1; done; pgrep -f "gameDir $PT" >/dev/null || break; done ) &
   local waited=0 ready=0
   while [ $waited -lt 150 ]; do
     sleep 6; waited=$((waited+6))
     pgrep -f "gameDir $PT" >/dev/null || break
-    grep -qE "Preparing spawn area|Time elapsed|joined the game" "$log" 2>/dev/null && { sleep 8; ready=1; break; }
+    grep -qE "Preparing spawn area|Time elapsed|joined the game|Loaded [0-9]+ advancements" "$log" 2>/dev/null && { sleep 8; ready=1; break; }
   done
 
   local verdict

@@ -7,8 +7,8 @@
 # API at all and only the 26.x-only panel does.
 set -u
 cd ~/foxgrade-work/batch2
-# 1.17.1, 1.18.2, 1.16.5 and 1.15.2 are LWJGL 3.2.x and have no arm64 macOS natives: the game cannot start on
-# this machine at all, so a lane there grades the hardware. run-version.sh refuses them; they are out of the chain
-# until there is an x86 runtime to measure them on.
+# 1.19.x reaches a world by joining a local server of its own version, because --quickPlaySingleplayer arrived in
+# 1.20 and older clients ignore it. 1.17.1, 1.18.2, 1.16.5 and 1.15.2 stay out for a different reason: LWJGL 3.2.x
+# has no arm64 macOS natives, so the game cannot start on this machine however it is asked to.
 ./measure-all.sh 1.19.2 1.19.4 1.20.4
 echo "[rest2] DONE"
