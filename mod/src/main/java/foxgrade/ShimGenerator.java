@@ -23,6 +23,7 @@ public final class ShimGenerator implements Opcodes {
       Map.entry("foxgrade/shim/AutoConfigCompat", ShimGenerator::autoConfigCompat),
       Map.entry("foxgrade/shim/FoodDataCompat", () -> fromResource("foxgrade/shim/FoodDataCompat.class")),
       Map.entry("foxgrade/shim/ReloadListenerCompat", () -> fromResource("foxgrade/shim/ReloadListenerCompat.class")),
+      Map.entry("foxgrade/shim/ScreenEventCompat", () -> fromResource("foxgrade/shim/ScreenEventCompat.class")),
       Map.entry("foxgrade/shim/FmlCompat", () -> fromResource("foxgrade/shim/FmlCompat.class")),
       Map.entry("foxgrade/shim/OptionInstanceCompat", () -> fromResource("foxgrade/shim/OptionInstanceCompat.class")),
       Map.entry("foxgrade/shim/CtorShims", () -> fromResource("foxgrade/shim/CtorShims.class")),
@@ -590,6 +591,18 @@ public final class ShimGenerator implements Opcodes {
     mv.visitFieldInsn(PUTFIELD, name, "factory", "Ljava/util/function/Supplier;");
     mv.visitInsn(RETURN);
     mv.visitMaxs(0, 0); mv.visitEnd();
+    // A vanilla field that used to be typed LazyLoadedValue is a Supplier on 26.2 — InputConstants.Key.displayName
+    // is the one that matters, because Jade reads it. The field redirect reads it at its real type and calls this
+    // to hand back something the mod's own code still understands, rather than rewriting the field to a shim type
+    // the class does not declare and failing with NoSuchFieldError.
+    MethodVisitor wrap = cw.visitMethod(ACC_PUBLIC | ACC_STATIC, "wrap",
+        "(Ljava/util/function/Supplier;)Lnet/minecraft/util/LazyLoadedValue;", null, null);
+    wrap.visitCode();
+    wrap.visitTypeInsn(NEW, name); wrap.visitInsn(DUP);
+    wrap.visitVarInsn(ALOAD, 0);
+    wrap.visitMethodInsn(INVOKESPECIAL, name, "<init>", "(Ljava/util/function/Supplier;)V", false);
+    wrap.visitInsn(ARETURN); wrap.visitMaxs(0, 0); wrap.visitEnd();
+
     mv = cw.visitMethod(ACC_PUBLIC, "get", "()Ljava/lang/Object;", "()TT;", null);
     mv.visitCode();
     org.objectweb.asm.Label done = new org.objectweb.asm.Label();

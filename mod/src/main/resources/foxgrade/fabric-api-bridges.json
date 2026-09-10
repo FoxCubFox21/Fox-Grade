@@ -11370,6 +11370,15 @@
     "frameBufferId",
     "(Lcom/mojang/blaze3d/pipeline/RenderTarget;)I"
    ]
+  },
+  "com/mojang/blaze3d/platform/InputConstants$Key": {
+   "get displayName:Lnet/minecraft/util/LazyLoadedValue;": [
+    "holder",
+    "Ljava/util/function/Supplier;",
+    "net/minecraft/util/LazyLoadedValue",
+    "wrap",
+    "(Ljava/util/function/Supplier;)Lnet/minecraft/util/LazyLoadedValue;"
+   ]
   }
  },
  "descWidenings": {
