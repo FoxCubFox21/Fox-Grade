@@ -30,6 +30,13 @@ final class PortWidenings {
       {"accessible field", "net/minecraft/server/level/ServerPlayer", "server", "Lnet/minecraft/server/MinecraftServer;"},
       {"accessible field", "net/minecraft/client/gui/screens/Screen", "children", "Ljava/util/List;"},
       {"accessible field", "net/minecraft/world/level/block/ChestBlock", "SHAPE", "Lnet/minecraft/world/phys/shapes/VoxelShape;"},
+      // Made private in 26.2, and read by an injected mixin from inside a vanilla class: EntityTextureFeatures'
+      // handler runs in ModelPart and touches BufferBuilder.building, so the caller is vanilla and the widening is
+      // the only thing that can let it through.
+      {"accessible field", "com/mojang/blaze3d/vertex/BufferBuilder", "building", "Z"},
+      // A private METHOD, which is why this list needed a third kind. LambDynamicLights' foundation calls it while
+      // building a crash report.
+      {"accessible method", "net/minecraft/SystemReport", "putSpaceForPath", "(Ljava/lang/String;Ljava/util/function/Supplier;)V"},
   };
 
   /** The same widenings as an access transformer, for a NeoForge or Forge port, or null when none apply.
@@ -53,8 +60,13 @@ final class PortWidenings {
       // NeoForge refused to start at all: "Invalid fieldname 'net/minecraft/world/level/ChunkPos' at line 3".
       String[] e = l.split(" ");
       String dotted = e[2].replace('/', '.');
-      // "extendable" is about final, not visibility; public-f is the transformer that says both.
-      out.append(e[1].equals("class") ? "public-f " + dotted : "public " + dotted + " " + e[3]).append('\n');
+      // Three shapes, and the format spells each differently: a class alone (public-f, because "extendable" is about
+      // final rather than visibility), a field as a bare name, and a method as name and descriptor written joined
+      // with no space — which is the format's own rule and the reason the descriptor is carried here at all.
+      if (e[1].equals("class")) out.append("public-f ").append(dotted);
+      else if (e[1].equals("method")) out.append("public ").append(dotted).append(' ').append(e[3]).append(e[4]);
+      else out.append("public ").append(dotted).append(' ').append(e[3]);
+      out.append('\n');
     }
     return out.toString();
   }
@@ -67,7 +79,11 @@ final class PortWidenings {
     for (String[] e : ENTRIES) {
       var members = present.get(e[1]);
       if (members == null) continue;                    // the class itself is gone here
-      if (!e[2].isEmpty() && !members.contains(e[2] + ":" + e[3])) continue;
+      // The inventory writes a field as "name:descriptor" and a method as "name(args)return", so the key has to be
+      // built the way the kind is stored. Asking for a method under the field spelling matches nothing, and the
+      // entry is then dropped in silence — present in the list, absent from every port.
+      String key = e[0].endsWith("method") ? e[2] + e[3] : e[2] + ":" + e[3];
+      if (!e[2].isEmpty() && !members.contains(key)) continue;
       lines.add(e[2].isEmpty() ? e[0] + " " + e[1] : e[0] + " " + e[1] + " " + e[2] + " " + e[3]);
     }
     return lines.isEmpty() ? null : lines;
