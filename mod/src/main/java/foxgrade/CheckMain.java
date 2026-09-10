@@ -42,6 +42,18 @@ public final class CheckMain {
         }
       } catch (Exception ignore) { }
     }
+    // Without Fabric API on the classpath every Fabric API class a mod touches is reported unresolved, and the
+    // verdict then describes the checker's setup rather than the port. That mistake is easy to make and quiet: a
+    // run of this corpus reported 369 unresolved references and 217 missing classes, of which 176 were Fabric API
+    // classes that exist perfectly well and were simply not visible here. With the modules present the same corpus
+    // reports 89 and 47. Say so rather than let the number be believed.
+    boolean fabricApiVisible = CheckMain.class.getClassLoader()
+        .getResource("net/fabricmc/fabric/api/event/lifecycle/v1/ServerTickEvents.class") != null;
+    if (!fabricApiVisible) {
+      System.out.println("NOTE: Fabric API is not on this checker's classpath, so every Fabric API class a mod uses");
+      System.out.println("      will be listed as unresolved. Add the modules (or set FOXGRADE_FABRIC_MODULES and");
+      System.out.println("      put them on -cp) before reading the unresolved counts as a porting result.");
+    }
     RulesLoader rules = RulesLoader.load(mc, gameDir.resolve(".fox-grade").resolve("cache"));
     IntermediaryBridge bridge = IntermediaryBridge.load(mc, gameDir.resolve(".fox-grade").resolve("cache"));
     FabricApiBridges api = FabricApiBridges.load(gameDir, mc);

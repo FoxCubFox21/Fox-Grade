@@ -908,7 +908,13 @@ public final class TransformPipeline {
           fg.addProperty("summary", String.format("%d classes remapped, %d handler(s) stripped, %d unresolved ref(s)",
               classesRemapped, mixinsStripped + autoStripped, verifier.missing().size()));
           com.google.gson.JsonArray un = new com.google.gson.JsonArray();
-          verifier.missing().stream().limit(400).forEach((c) -> un.add(c.substring(c.lastIndexOf('/') + 1)));
+          // The whole name, not the last segment of it. Shortening here threw the package away before anything
+          // could use it: the report said "AttachmentRegistry" where the useful fact was that it lives in
+          // net/fabricmc/fabric/api/attachment/v1, which is what says whether this is a Minecraft change, a Fabric
+          // API change, or a class that merely moved. Two classes can share a simple name, and a report that cannot
+          // tell them apart cannot be analysed by anything but a person reading it. The panel can shorten for
+          // display; the record should not.
+          verifier.missing().stream().limit(400).forEach(un::add);
           fg.add("unresolved", un);
           com.google.gson.JsonArray sh = new com.google.gson.JsonArray();
           strippedNames.stream().limit(40).forEach(sh::add);
@@ -940,7 +946,13 @@ public final class TransformPipeline {
           fg.addProperty("summary", String.format("%d classes remapped, %d handler(s) stripped, %d unresolved ref(s)",
               classesRemapped, mixinsStripped + autoStripped, verifier.missing().size()));
           com.google.gson.JsonArray un = new com.google.gson.JsonArray();
-          verifier.missing().stream().limit(400).forEach((c) -> un.add(c.substring(c.lastIndexOf('/') + 1)));
+          // The whole name, not the last segment of it. Shortening here threw the package away before anything
+          // could use it: the report said "AttachmentRegistry" where the useful fact was that it lives in
+          // net/fabricmc/fabric/api/attachment/v1, which is what says whether this is a Minecraft change, a Fabric
+          // API change, or a class that merely moved. Two classes can share a simple name, and a report that cannot
+          // tell them apart cannot be analysed by anything but a person reading it. The panel can shorten for
+          // display; the record should not.
+          verifier.missing().stream().limit(400).forEach(un::add);
           fg.add("unresolved", un);
           com.google.gson.JsonArray sh = new com.google.gson.JsonArray();
           strippedNames.stream().limit(40).forEach(sh::add);

@@ -24,7 +24,25 @@ def classpath():
     extra = [sorted(glob.glob(str(MCLIB / f"org/ow2/asm/asm-{k}/*/asm-{k}-*.jar")))[-1]
              for k in ("tree", "commons", "analysis")]
     gson = sorted(glob.glob(str(MCLIB / "com/google/code/gson/gson/*/gson-*.jar")))[-1]
-    return ":".join([JAR, gson, asm] + extra)
+    # Fabric API modules too. Without them every Fabric API class a mod touches counts as unresolved and the suite
+    # measures its own classpath instead of the port — the mistake that made a corpus look four times worse than it
+    # is. Extracted once from the umbrella jar, whose modules live in META-INF/jars.
+    return ":".join([JAR, gson, asm] + extra + fabric_modules())
+
+
+def fabric_modules():
+    import io, zipfile
+    out = W / "regress-fabric-modules"
+    if not out.is_dir() or not list(out.glob("*.jar")):
+        out.mkdir(exist_ok=True)
+        umbrella = sorted(glob.glob(str(W / "batch121/base/fabric-api-*.jar")))
+        if not umbrella:
+            return []
+        with zipfile.ZipFile(umbrella[-1]) as z:
+            for e in z.namelist():
+                if e.startswith("META-INF/jars/") and e.endswith(".jar"):
+                    (out / e.split("/")[-1]).write_bytes(z.read(e))
+    return [str(p) for p in sorted(out.glob("*.jar"))]
 
 
 def port(jars, loader=None, out=None):
