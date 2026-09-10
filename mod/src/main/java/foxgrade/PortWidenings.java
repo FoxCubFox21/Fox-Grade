@@ -37,6 +37,8 @@ final class PortWidenings {
       // A private METHOD, which is why this list needed a third kind. LambDynamicLights' foundation calls it while
       // building a crash report.
       {"accessible method", "net/minecraft/SystemReport", "putSpaceForPath", "(Ljava/lang/String;Ljava/util/function/Supplier;)V"},
+      // Lithium reads Mth's precomputed sine table directly to build its own; 26.2 made the array private.
+      {"accessible field", "net/minecraft/util/Mth", "SIN", "[F"},
   };
 
   /** The same widenings as an access transformer, for a NeoForge or Forge port, or null when none apply.
