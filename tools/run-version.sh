@@ -32,6 +32,21 @@ trap 'rmdir "$LOCK" 2>/dev/null; exit 130' INT TERM   # cleanup alone would let 
 # no arm64 macOS natives, so on Apple Silicon it dies at "Failed to locate library: liblwjgl.dylib" before a mod
 # loads -- and every mod in the corpus is then recorded as a porting failure. 1.17.1 read 0 of 14 that way. That is
 # a fact about this machine, not about the port, and it must not reach a ledger.
+# The pass rule is "a world starts loading", and this lane reaches a world with --quickPlaySingleplayer. That
+# argument arrived in 1.20. An older client prints "Completely ignored arguments: [--quickPlaySingleplayer, ...]",
+# sits at the main menu, and never loads anything -- so every mod is recorded STALL no matter how well it ported.
+# 1.19.2 and 1.17.1 both read as total failures for this reason alone. Until there is another way into a world on
+# those versions, a lane there measures nothing and must not write a ledger.
+if python3 -c "
+import sys
+key = lambda v: [int(x) if x.isdigit() else 0 for x in v.split('.')]
+sys.exit(0 if key('$TARGET') < key('1.20') else 1)
+"; then
+  echo "[$TARGET] SKIPPED: --quickPlaySingleplayer arrived in 1.20, so this client never loads a world and every" >&2
+  echo "[$TARGET] mod would be recorded STALL regardless of its port. That is a fact about the harness." >&2
+  exit 5
+fi
+
 if [[ $(uname -m) == arm64 ]] && ! grep -q "natives-macos-arm64" /tmp/fg-cp-$TARGET.txt; then
   echo "[$TARGET] SKIPPED: no arm64 macOS natives on this classpath (LWJGL 3.2.x). The game cannot start here," >&2
   echo "[$TARGET] so any result would measure the machine. Measure this version on x86, or under an x86 JDK." >&2
