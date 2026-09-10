@@ -74,6 +74,10 @@ public final class TransformPipeline {
   public static final String PORT_REPORT = "META-INF/foxgrade-port-report.json";
 
   /** The access widener Fox-Grade writes into a port, named so it cannot collide with the mod's own. */
+  /** 1980-01-01 00:00 local, the earliest a zip entry can record. Fixed so ports are reproducible. */
+  private static final long ZIP_EPOCH =
+      java.time.LocalDateTime.of(1980, 1, 1, 0, 0, 0).atZone(java.time.ZoneId.systemDefault()).toInstant().toEpochMilli();
+
   public static final String PORT_WIDENER = "foxgrade-port.accesswidener";
   /** The NeoForge/Forge counterpart of {@link #PORT_WIDENER}. Under META-INF/ because that is where the format lives
    *  and because a top-level name would claim a package a JPMS module system then refuses. */
@@ -300,7 +304,13 @@ public final class TransformPipeline {
         // jar and crashes the loader the moment no newer copy of that dep is installed.
         if (isNestedMod(name)) {
           try {
-            java.nio.file.Path tmp = java.nio.file.Files.createTempFile("fg-nested", ".jar");
+            // The nested jar keeps its own name, in a temp DIRECTORY rather than a temp FILE. createTempFile appends
+            // random digits, and the recursive call derives this port's shim namespace from the file name it is
+            // handed — so a mod with bundled jars came out with a package called fg_nested3121656004435305014, a
+            // different one every single time. The port worked, but no two ports of the same mod were ever alike,
+            // which makes a port impossible to verify by checksum and impossible to reproduce on another machine.
+            java.nio.file.Path tmpDir = java.nio.file.Files.createTempDirectory("fg-nested");
+            java.nio.file.Path tmp = tmpDir.resolve(name.substring(name.lastIndexOf('/') + 1));
             java.nio.file.Files.write(tmp, raw);
             // Quilt Loader ships MixinExtras itself and rejects a mod's bundled copy as a duplicate mod ("The solver returned a
             // solution with duplicate mods"); Fabric Loader merely picks the newer one. On a Quilt host the bundled copy is dropped.
@@ -311,12 +321,14 @@ public final class TransformPipeline {
             boolean bundledFabricModule = nestedId != null && (nestedId.equals("fabric-api") || FabricMetaFixer.isFabricModuleId(nestedId));
             if (isQuiltHost() && (bundledMixinExtras || bundledFabricModule)) {
               java.nio.file.Files.deleteIfExists(tmp);
+              java.nio.file.Files.deleteIfExists(tmpDir);
               droppedNested.add(name);
               System.err.println("[Fox-Grade] bundled " + name + " left out: the loader already provides " + (bundledMixinExtras ? "mixinextras" : nestedId) + " on Quilt");
               continue;
             }
             Outcome inner = transform(tmp, targetMc, rules, bridge, apiBridges, blocklist);
             java.nio.file.Files.deleteIfExists(tmp);
+            java.nio.file.Files.deleteIfExists(tmpDir);
             emit = inner.outputBytes;
             classesRemapped += inner.classesRemapped;
             awFiles += inner.awFiles; awOwners += inner.awOwners; awDescs += inner.awDescs;
@@ -930,7 +942,14 @@ public final class TransformPipeline {
         }
       }
       for (var entry : buffered.entrySet()) {
-        out.putNextEntry(new ZipEntry(entry.getKey()));
+        ZipEntry ze = new ZipEntry(entry.getKey());
+        // A fixed timestamp, so the same mod ported twice gives byte-identical jars. Without it every entry carries
+        // the moment it was written, two ports of one mod never match, and the difference multiplies through nested
+        // jars: a bundled dependency re-zipped a second later changes its own bytes, which changes its parent's.
+        // Ports are then impossible to compare by checksum, on one machine or between two. 1980-01-01 is the zip
+        // format's own epoch and what reproducible builds conventionally use; plenty of mod jars already ship it.
+        ze.setTime(ZIP_EPOCH);
+        out.putNextEntry(ze);
         out.write(entry.getValue());
         out.closeEntry();
       }

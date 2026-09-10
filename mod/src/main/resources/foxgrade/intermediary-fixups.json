@@ -1,4 +1,821 @@
 {
+ "1.15.2": {
+  "constants": {
+   "CONSUME": "field_21466:Lnet/minecraft/class_1269;",
+   "FAIL": "field_5814:Lnet/minecraft/class_1269;",
+   "PASS": "field_5811:Lnet/minecraft/class_1269;",
+   "SUCCESS": "field_5812:Lnet/minecraft/class_1269;"
+  },
+  "fieldRetypes": {
+   "net/minecraft/class_1055$class_1056": {
+    "getstatic field_5249:Lnet/minecraft/class_1058;": [
+     "retype",
+     "Lnet/minecraft/class_1058$class_4727;",
+     "net/minecraft/class_1058"
+    ]
+   }
+  },
+  "source": "1.14.4"
+ },
+ "1.16.5": {
+  "constants": {
+   "CONSUME": "field_21466:Lnet/minecraft/class_1269;",
+   "FAIL": "field_5814:Lnet/minecraft/class_1269;",
+   "PASS": "field_5811:Lnet/minecraft/class_1269;",
+   "SUCCESS": "field_5812:Lnet/minecraft/class_1269;"
+  },
+  "fieldRetypes": {
+   "net/minecraft/class_196$class_198": {
+    "getstatic field_1275:Lnet/minecraft/class_2048;": [
+     "retype",
+     "Lnet/minecraft/class_2048$class_5258;",
+     "net/minecraft/class_2048"
+    ],
+    "getstatic field_1276:Lnet/minecraft/class_2048;": [
+     "retype",
+     "Lnet/minecraft/class_2048$class_5258;",
+     "net/minecraft/class_2048"
+    ],
+    "getstatic field_1277:Lnet/minecraft/class_2048;": [
+     "retype",
+     "Lnet/minecraft/class_2048$class_5258;",
+     "net/minecraft/class_2048"
+    ]
+   },
+   "net/minecraft/class_2014$class_2016": {
+    "getstatic field_9518:Lnet/minecraft/class_2048;": [
+     "retype",
+     "Lnet/minecraft/class_2048$class_5258;",
+     "net/minecraft/class_2048"
+    ],
+    "getstatic field_9519:Lnet/minecraft/class_2048;": [
+     "retype",
+     "Lnet/minecraft/class_2048$class_5258;",
+     "net/minecraft/class_2048"
+    ]
+   },
+   "net/minecraft/class_2080$class_2083": {
+    "getstatic field_9668:Lnet/minecraft/class_2048;": [
+     "retype",
+     "Lnet/minecraft/class_2048$class_5258;",
+     "net/minecraft/class_2048"
+    ]
+   },
+   "net/minecraft/class_2115$class_2117": {
+    "getstatic field_9737:Lnet/minecraft/class_2048;": [
+     "retype",
+     "Lnet/minecraft/class_2048$class_5258;",
+     "net/minecraft/class_2048"
+    ]
+   },
+   "net/minecraft/class_2128$class_2130": {
+    "getstatic field_9752:Lnet/minecraft/class_2048;": [
+     "retype",
+     "Lnet/minecraft/class_2048$class_5258;",
+     "net/minecraft/class_2048"
+    ]
+   },
+   "net/minecraft/class_2131$class_2133": {
+    "getstatic field_9757:Lnet/minecraft/class_2048;": [
+     "retype",
+     "Lnet/minecraft/class_2048$class_5258;",
+     "net/minecraft/class_2048"
+    ]
+   },
+   "net/minecraft/class_2140$class_2142": {
+    "getstatic field_9767:Lnet/minecraft/class_2048;": [
+     "retype",
+     "Lnet/minecraft/class_2048$class_5258;",
+     "net/minecraft/class_2048"
+    ]
+   },
+   "net/minecraft/class_3481": {
+    "getstatic field_15458:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15459:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15460:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15461:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15462:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15463:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15465:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15466:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15467:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15468:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15469:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15470:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15471:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15472:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15474:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15475:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15476:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15477:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15478:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15479:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15480:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15481:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15482:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15483:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15485:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15486:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15487:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15488:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15489:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15490:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15491:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15492:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15493:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15494:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15495:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15496:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15497:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15498:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15499:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15500:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15501:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15502:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15503:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15504:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_16443:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_16584:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_17619:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_17753:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_17754:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_20338:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_20339:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_20340:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_20341:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_20342:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_21490:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_21780:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ]
+   },
+   "net/minecraft/class_3483": {
+    "getstatic field_15507:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_19168:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_20631:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_21508:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ]
+   },
+   "net/minecraft/class_3486": {
+    "getstatic field_15517:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15518:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ]
+   },
+   "net/minecraft/class_3489": {
+    "getstatic field_15525:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15526:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15527:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15528:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15529:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15531:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15532:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15533:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15534:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15535:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15536:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15537:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15538:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15539:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15540:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15541:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15542:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15543:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15544:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15545:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15546:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15547:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15548:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15549:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15550:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15551:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15552:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15553:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15554:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15555:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15556:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15557:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15558:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_15560:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_16444:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_16585:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_17487:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_17620:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_18317:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_20343:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_20344:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ],
+    "getstatic field_21465:Lnet/minecraft/class_3494;": [
+     "retype",
+     "Lnet/minecraft/class_3494$class_5123;",
+     "net/minecraft/class_3494"
+    ]
+   }
+  },
+  "source": "1.15.2"
+ },
+ "1.17.1": {
+  "constants": {
+   "CONSUME": "field_21466:Lnet/minecraft/class_1269;",
+   "FAIL": "field_5814:Lnet/minecraft/class_1269;",
+   "PASS": "field_5811:Lnet/minecraft/class_1269;",
+   "SUCCESS": "field_5812:Lnet/minecraft/class_1269;"
+  },
+  "fieldRetypes": {},
+  "source": "1.16.5"
+ },
+ "1.18.2": {
+  "constants": {
+   "CONSUME": "field_21466:Lnet/minecraft/class_1269;",
+   "FAIL": "field_5814:Lnet/minecraft/class_1269;",
+   "PASS": "field_5811:Lnet/minecraft/class_1269;",
+   "SUCCESS": "field_5812:Lnet/minecraft/class_1269;"
+  },
+  "fieldRetypes": {
+   "net/minecraft/class_634": {
+    "getstatic field_25063:Lnet/minecraft/class_5455;": [
+     "retype",
+     "Lnet/minecraft/class_5455$class_6890;",
+     "net/minecraft/class_5455"
+    ]
+   }
+  },
+  "source": "1.17.1"
+ },
+ "1.19.2": {
+  "constants": {
+   "CONSUME": "field_21466:Lnet/minecraft/class_1269;",
+   "FAIL": "field_5814:Lnet/minecraft/class_1269;",
+   "PASS": "field_5811:Lnet/minecraft/class_1269;",
+   "SUCCESS": "field_5812:Lnet/minecraft/class_1269;"
+  },
+  "fieldRetypes": {},
+  "source": "1.18.2"
+ },
+ "1.19.4": {
+  "constants": {
+   "CONSUME": "field_21466:Lnet/minecraft/class_1269;",
+   "FAIL": "field_5814:Lnet/minecraft/class_1269;",
+   "PASS": "field_5811:Lnet/minecraft/class_1269;",
+   "SUCCESS": "field_5812:Lnet/minecraft/class_1269;"
+  },
+  "fieldRetypes": {
+   "net/minecraft/class_2348": {
+    "getstatic field_11015:Lnet/minecraft/class_6880;": [
+     "retype",
+     "Lnet/minecraft/class_6880$class_6883;",
+     "net/minecraft/class_6880"
+    ]
+   }
+  },
+  "source": "1.18.2"
+ },
+ "1.20.1": {
+  "constants": {
+   "CONSUME": "field_21466:Lnet/minecraft/class_1269;",
+   "FAIL": "field_5814:Lnet/minecraft/class_1269;",
+   "PASS": "field_5811:Lnet/minecraft/class_1269;",
+   "SUCCESS": "field_5812:Lnet/minecraft/class_1269;"
+  },
+  "fieldRetypes": {
+   "net/minecraft/class_2348": {
+    "getstatic field_11015:Lnet/minecraft/class_6880;": [
+     "retype",
+     "Lnet/minecraft/class_6880$class_6883;",
+     "net/minecraft/class_6880"
+    ]
+   },
+   "net/minecraft/class_5350": {
+    "getstatic field_38051:Lnet/minecraft/class_7157;": [
+     "retype",
+     "Lnet/minecraft/class_7157$class_7870;",
+     "net/minecraft/class_7157"
+    ]
+   },
+   "net/minecraft/class_7617": {
+    "getstatic comp_938:Lnet/minecraft/class_7469;": [
+     "retype",
+     "Lnet/minecraft/class_7469$class_7819;",
+     "net/minecraft/class_7469"
+    ]
+   }
+  },
+  "source": "1.19.2"
+ },
+ "1.20.2": {
+  "constants": {
+   "CONSUME": "field_21466:Lnet/minecraft/class_1269;",
+   "FAIL": "field_5814:Lnet/minecraft/class_1269;",
+   "PASS": "field_5811:Lnet/minecraft/class_1269;",
+   "SUCCESS": "field_5812:Lnet/minecraft/class_1269;"
+  },
+  "fieldRetypes": {
+   "net/minecraft/class_7543": {
+    "getstatic field_39588:Lnet/minecraft/class_7566;": [
+     "retype",
+     "Lnet/minecraft/class_7566$class_8772;",
+     "net/minecraft/class_7566"
+    ]
+   }
+  },
+  "source": "1.19.4"
+ },
+ "1.20.4": {
+  "constants": {
+   "CONSUME": "field_21466:Lnet/minecraft/class_1269;",
+   "FAIL": "field_5814:Lnet/minecraft/class_1269;",
+   "PASS": "field_5811:Lnet/minecraft/class_1269;",
+   "SUCCESS": "field_5812:Lnet/minecraft/class_1269;"
+  },
+  "fieldRetypes": {
+   "net/minecraft/class_7543": {
+    "getstatic field_39588:Lnet/minecraft/class_7566;": [
+     "retype",
+     "Lnet/minecraft/class_7566$class_8772;",
+     "net/minecraft/class_7566"
+    ]
+   }
+  },
+  "source": "1.19.4"
+ },
+ "1.20.5": {
+  "constants": {
+   "CONSUME": "field_21466:Lnet/minecraft/class_1269;",
+   "FAIL": "field_5814:Lnet/minecraft/class_1269;",
+   "PASS": "field_5811:Lnet/minecraft/class_1269;",
+   "SUCCESS": "field_5812:Lnet/minecraft/class_1269;"
+  },
+  "fieldRetypes": {
+   "net/minecraft/class_7543": {
+    "getstatic field_39588:Lnet/minecraft/class_7566;": [
+     "retype",
+     "Lnet/minecraft/class_7566$class_8772;",
+     "net/minecraft/class_7566"
+    ]
+   }
+  },
+  "source": "1.20.1"
+ },
+ "1.20.6": {
+  "constants": {
+   "CONSUME": "field_21466:Lnet/minecraft/class_1269;",
+   "FAIL": "field_5814:Lnet/minecraft/class_1269;",
+   "PASS": "field_5811:Lnet/minecraft/class_1269;",
+   "SUCCESS": "field_5812:Lnet/minecraft/class_1269;"
+  },
+  "fieldRetypes": {
+   "net/minecraft/class_7543": {
+    "getstatic field_39588:Lnet/minecraft/class_7566;": [
+     "retype",
+     "Lnet/minecraft/class_7566$class_8772;",
+     "net/minecraft/class_7566"
+    ]
+   }
+  },
+  "source": "1.20.1"
+ },
+ "1.21": {
+  "constants": {
+   "CONSUME": "field_21466:Lnet/minecraft/class_1269;",
+   "FAIL": "field_5814:Lnet/minecraft/class_1269;",
+   "PASS": "field_5811:Lnet/minecraft/class_1269;",
+   "SUCCESS": "field_5812:Lnet/minecraft/class_1269;"
+  },
+  "fieldRetypes": {
+   "net/minecraft/class_7543": {
+    "getstatic field_39588:Lnet/minecraft/class_7566;": [
+     "retype",
+     "Lnet/minecraft/class_7566$class_8772;",
+     "net/minecraft/class_7566"
+    ]
+   }
+  },
+  "source": "1.20.1"
+ },
+ "1.21.1": {
+  "constants": {
+   "CONSUME": "field_21466:Lnet/minecraft/class_1269;",
+   "FAIL": "field_5814:Lnet/minecraft/class_1269;",
+   "PASS": "field_5811:Lnet/minecraft/class_1269;",
+   "SUCCESS": "field_5812:Lnet/minecraft/class_1269;"
+  },
+  "fieldRetypes": {
+   "net/minecraft/class_7543": {
+    "getstatic field_39588:Lnet/minecraft/class_7566;": [
+     "retype",
+     "Lnet/minecraft/class_7566$class_8772;",
+     "net/minecraft/class_7566"
+    ]
+   }
+  },
+  "source": "1.20.1"
+ },
  "1.21.10": {
   "constants": {
    "CONSUME": "field_21466:Lnet/minecraft/class_1269$class_9860;",

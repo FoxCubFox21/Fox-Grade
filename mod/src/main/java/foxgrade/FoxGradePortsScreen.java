@@ -370,19 +370,32 @@ public final class FoxGradePortsScreen extends Screen {
   }
 
   // Best-effort async: does the author ship an official build for this MC on Modrinth?
-  // Read-only public API, one query per mod id per session, quietly gives up on any failure.
+  // Read-only public API, one query per mod id per session.
+  //
+  // "Gives up quietly" used to mean recording null, which the panel reads as "the author has no build for this
+  // version" — and the id was marked asked before the request even ran, so it was never tried again. One launch
+  // with no network therefore answered "no update available" for every mod, confidently and wrongly, and kept
+  // answering it after the network came back. A lookup that could not be made is not an answer: the mod stays
+  // unknown and the id is released, so the next time the panel asks — which is the next time someone opens it —
+  // the question is actually put. Fox-Grade has to work offline; that means deferring the lookup, not inventing
+  // its result.
   static void askModrinth(String id) {
     if (!MODRINTH_ASKED.add(id)) return;
     String mc = Loaders.current().gameVersion();
     Thread t = new Thread(() -> {
       Official found = null;
+      // Whether Modrinth actually answered, as opposed to the request failing. Only a real answer is recorded.
+      final boolean[] answered = {false};
       try {
         var url = java.net.URI.create("https://api.modrinth.com/v2/project/" + id
             + "/version?game_versions=%5B%22" + mc + "%22%5D&loaders=%5B%22fabric%22%5D").toURL();
         var conn = (java.net.HttpURLConnection) url.openConnection();
         conn.setConnectTimeout(4000); conn.setReadTimeout(4000);
         conn.setRequestProperty("User-Agent", "Fox-Grade/" + FoxGradePreLaunch.VERSION);
-        if (conn.getResponseCode() == 200) {
+        int code = conn.getResponseCode();
+        // A 404 is Modrinth saying it has no such project, which is an answer. A 5xx or a timeout is not.
+        answered[0] = code == 200 || code == 404;
+        if (code == 200) {
           try (var in = conn.getInputStream()) {
             var arr = new com.google.gson.Gson().fromJson(new String(in.readAllBytes()), com.google.gson.JsonArray.class);
             if (arr != null && !arr.isEmpty()) {
@@ -402,10 +415,18 @@ public final class FoxGradePortsScreen extends Screen {
             }
           }
         }
-      } catch (Exception ignored) { }
+      } catch (Exception couldNotReachModrinth) {
+        answered[0] = false;
+      }
       Official v = found;
+      boolean real = answered[0];
       var mcClient = net.minecraft.client.Minecraft.getInstance();
       mcClient.execute(() -> {
+        if (!real) {
+          // Unreachable, not absent. Forget that we asked so a later open can ask again.
+          MODRINTH_ASKED.remove(id);
+          return;
+        }
         MODRINTH.put(id, v);
         if (v == null) return;
         var scr = ClientCompat.screen(mcClient);

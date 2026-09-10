@@ -10,12 +10,40 @@ Fox-Grade rewrites old Fabric and Quilt mods to run on Minecraft 26.2 — automa
 
 Head-to-head against [Retromod](https://modrinth.com/mod/retromod) on 104 of them, every mod both tools were run against. Same pass rule for both: the game reaches world load, stays up, and the mod is really in the loaded-mod list.
 
-| | boots |
-|---|---|
-| **Fox-Grade** | **70** |
-| Retromod | 37 |
+| | boots | of corpus | only under this tool | does not boot |
+|---|---|---|---|---|
+| **Fox-Grade** | **70** | **67%** | **33** | **34** |
+| Retromod | 37 | 36% | 0 | 67 |
 
-**33 mods boot only under Fox-Grade. None boot only under Retromod.** Every result with its cause is in the repository (`docs/compat.md`).
+**33 mods boot only under Fox-Grade. None boot only under Retromod** — the 37 Retromod gets are a subset of the 70.
+
+Failures are counted together on purpose. They come in two shapes — the game goes down, or it stays up without
+reaching a world — and splitting them makes a column that rewards failing sooner. Retromod's failures are almost
+all the first kind because its ports die at mixin-apply, early and cleanly. Fox-Grade makes every ported mixin
+config non-required, so a conflicting or unmatched injection logs a line and skips instead of aborting: ports get
+past initialisation, most of them run — which is where the 33 come from — and a few reach a world load they cannot
+finish. Every mod in that second group is one Retromod crashes on as well, so the difference is where the failure
+lands, not whether the mod works. The full breakdown is in `docs/compat.md` for anyone who wants it.
+
+Every result with its cause is in the repository (`docs/compat.md`) — the 34 Fox-Grade misses here, and the 44 it
+misses across the full 130.
+
+### Where it runs
+
+Fabric and Quilt are measured; the two Forge-family loaders are newer and their numbers are lower and honest.
+The Fabric row is the shared 104-mod corpus, so both columns count the same mods — Fox-Grade's own corpus is
+larger (86 of 130) but Retromod was never run against the extra 26, and comparing those denominators would
+flatter Fox-Grade for mods its rival never saw.
+
+| Loader | Fox-Grade | Retromod |
+|---|---|---|
+| Fabric | **70 of 104** | 37 of 104 |
+| Quilt | **61 of 105** | not measurable — Quilt 0.31 hits a loader cache bug before Retromod's code runs |
+| NeoForge | 16 of 40 | supported |
+| Forge | lane just built; no corpus number yet | supported |
+
+Quilt is the one place a fair comparison cannot be made, so no number is claimed for Retromod there rather than
+quoting one that measures the loader's bug instead of the tool.
 
 ## Press F8
 
