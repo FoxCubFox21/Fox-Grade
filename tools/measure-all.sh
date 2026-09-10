@@ -12,6 +12,17 @@
 #
 # Usage: measure-all.sh <version>...        Stop it with:  pkill -f measure-all.sh
 set -u
+
+# One chain at a time. Two of these ran concurrently over the same version list and both wrote the same ledger,
+# so a 14-mod corpus came out as 28 rows and every number in it was wrong.
+CHAINLOCK=/tmp/fg-measure-all.lock
+if ! mkdir "$CHAINLOCK" 2>/dev/null; then
+  echo "[measure-all] another chain is already running (lock $CHAINLOCK); refusing to double up." >&2
+  exit 4
+fi
+trap 'rmdir "$CHAINLOCK" 2>/dev/null' EXIT
+trap 'rmdir "$CHAINLOCK" 2>/dev/null; exit 130' INT TERM   # cleanup alone would let the script resume
+
 setopt NULL_GLOB
 B=$HOME/foxgrade-work/batch2
 cd $B

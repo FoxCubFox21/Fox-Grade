@@ -18,6 +18,16 @@ MC="$HOME/Library/Application Support/minecraft"
 CORPUS_DIR="${CORPUS_DIR:-$B/h2h}"
 CP=$(cat /tmp/fg-cp-$TARGET.txt)
 
+LOCK="$PT/.lane.lock"
+if ! mkdir "$LOCK" 2>/dev/null; then
+  echo "[$TARGET] SKIPPED: another lane already owns $PT (lock $LOCK)." >&2
+  echo "[$TARGET] Two lanes in one game dir wipe each other's mods and kill each other's game; the numbers that" >&2
+  echo "[$TARGET] come out are not about porting. Remove the lock by hand if no lane is really running." >&2
+  exit 4
+fi
+trap 'rmdir "$LOCK" 2>/dev/null' EXIT
+trap 'rmdir "$LOCK" 2>/dev/null; exit 130' INT TERM   # cleanup alone would let the script resume
+
 # A lane can only grade Fox-Grade if the game itself can start. Minecraft up to 1.18.2 ships LWJGL 3.2.x, which has
 # no arm64 macOS natives, so on Apple Silicon it dies at "Failed to locate library: liblwjgl.dylib" before a mod
 # loads -- and every mod in the corpus is then recorded as a porting failure. 1.17.1 read 0 of 14 that way. That is
@@ -61,7 +71,7 @@ launch() {
 
 fg_run() {
   local name=$1; shift
-  pkill -f "gameDir $PT" 2>/dev/null; sleep 2
+  pkill -f "gameDir $PT " 2>/dev/null; sleep 2
   rm -f $PT/mods/*.jar $PT/fox-grade-inbox/*.jar; rm -rf $PT/crash-reports
   cp $PT/fg.jar $PT/mods/foxgrade.jar
   cp $HOME/mc-porttest-v$SLUG-base/*.jar $PT/mods/ 2>/dev/null
@@ -80,7 +90,7 @@ fg_run() {
     grep -qE "INBOX PORTED|INBOX ERROR|INBOX HELD|Incompatible mods|not been measured" "$log" 2>/dev/null && break
     pgrep -f "gameDir $PT" >/dev/null || break
   done
-  sleep 3; pkill -f "gameDir $PT" 2>/dev/null; sleep 2
+  sleep 3; pkill -f "gameDir $PT " 2>/dev/null; sleep 2
 
   launch "$log" --quickPlaySingleplayer "TESTWORLD"
   ( for i in $(seq 1 80); do sleep 2; for pid in $(pgrep -f "gameDir $PT"); do osascript -e "tell application \"System Events\" to set visible of (every process whose unix id is $pid) to false" >/dev/null 2>&1; done; pgrep -f "gameDir $PT" >/dev/null || break; done ) &
@@ -104,7 +114,7 @@ fg_run() {
   elif [[ $verdict == PASS ]] && ! grep -qE "${mainid}(_fgport)?" "$log"; then verdict=HELD; fi
   local why=""
   [ "$verdict" != PASS ] && why=$(grep -m1 -E "NoClassDefFoundError|NoSuchMethodError|NoSuchFieldError|Mixin apply|Incompatible mods|requires" "$log" | sed 's/^\[[0-9:]*\] \[[^]]*\]: //' | head -c 150)
-  pkill -f "gameDir $PT" 2>/dev/null; sleep 2
+  pkill -f "gameDir $PT " 2>/dev/null; sleep 2
   echo "$verdict\t$name\t$why" >> $LEDGER
   echo "$verdict	$name"
 }
