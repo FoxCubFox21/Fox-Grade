@@ -41,6 +41,13 @@ public final class PortVerifier {
 
   private final Set<String> known;
   private final Set<String> missing = new TreeSet<>();
+  /** Class names used as a superclass, an interface, or the type of a field.
+   *
+   *  <p>The JVM resolves these when it loads the class. A name that only appears inside a method body is resolved
+   *  when that instruction first runs, which for most mods is often never — so the two cannot honestly be reported
+   *  the same way. Architectury's MixinBlockEntityExtension implements a Fabric API interface 1.20.6 does not have:
+   *  that class fails the moment anything touches it, while the port report called it "crashes if reached". */
+  private final Set<String> structural = new HashSet<>();
 
   public PortVerifier(AutoBlocklistFromRefmap inventory) { this.known = inventory.classNames(); }
 
@@ -113,6 +120,12 @@ public final class PortVerifier {
       }
     }, ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
     shapes.put(r.getClassName(), new Shape(r.getSuperName(), r.getInterfaces(), declF, declM, fin, abs, (r.getAccess() & Opcodes.ACC_INTERFACE) != 0, (r.getAccess() & Opcodes.ACC_FINAL) != 0));
+    if (r.getSuperName() != null) structural.add(r.getSuperName());
+    if (r.getInterfaces() != null) java.util.Collections.addAll(structural, r.getInterfaces());
+    for (String fd : declF) {
+      int l = fd.indexOf(":L");
+      if (l >= 0 && fd.endsWith(";")) structural.add(fd.substring(l + 2, fd.length() - 1));
+    }
     settled = false;
     r.accept(new ClassRemapper(new ClassWriter(0), new Remapper() {
       @Override public String map(String internalName) {
@@ -167,6 +180,13 @@ public final class PortVerifier {
   }
 
   public Set<String> missing() { settle(); return missing; }
+
+  /** The subset of {@link #missing()} that the JVM resolves at class load rather than on first use. */
+  public Set<String> loadBearing() {
+    Set<String> both = new TreeSet<>(missing());
+    both.retainAll(structural);
+    return both;
+  }
 
   // Member checks are deferred until every class of the jar has been scanned, so a reference
   // through a mod class that appears later in the jar still resolves up its real chain.

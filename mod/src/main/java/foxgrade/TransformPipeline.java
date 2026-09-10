@@ -49,6 +49,8 @@ public final class TransformPipeline {
     public final java.util.List<String> deregisteredMixins = new java.util.ArrayList<>();   // removed from configs
     /** Set after construction: what the quality summary is computed from. */
     int classCount; int strippedCount; java.util.List<String> auditFindings = java.util.List.of();
+    /** Of {@link #unresolvedRefs}, the ones the JVM resolves at class load rather than on first use. */
+    java.util.Set<String> loadBearingRefs = java.util.Set.of();
     Outcome(byte[] b, int mf, int aw, int awo, int awd, int rf, int rh, int cr, int ms, int as, java.util.Set<String> ur) {
       this.outputBytes = b; this.metaFixed = mf; this.awFiles = aw; this.awOwners = awo; this.awDescs = awd;
       this.refmapFiles = rf; this.refmapHits = rh; this.classesRemapped = cr; this.mixinsStripped = ms; this.autoStripped = as;
@@ -64,9 +66,20 @@ public final class TransformPipeline {
           metaFixed, awFiles, awOwners, awDescs, refmapFiles, refmapHits, classesRemapped, mixinsStripped, autoStripped);
       if (!deregisteredMixins.isEmpty()) base += String.format(", mixinsDeregistered=%d", deregisteredMixins.size());
       if (unresolvedRefs.isEmpty()) return base;
+      // Two different fates, and saying "crashes if reached" for both is not true of either half. A name used as a
+      // superclass, an interface or a field's type is resolved when the class loads, so that class is dead on
+      // arrival; a name used only inside a method body may never be reached at all. Name the load-bearing ones
+      // first, because those are the ones worth acting on.
       var sample = unresolvedRefs.stream().limit(3).map((c) -> c.substring(c.lastIndexOf('/') + 1)).toList();
-      return base + String.format("; ⚠ %d UNRESOLVED ref(s) — crashes if reached (%s%s)",
-          unresolvedRefs.size(), String.join(", ", sample), unresolvedRefs.size() > 3 ? ", …" : "");
+      String tail = String.format(" (%s%s)", String.join(", ", sample), unresolvedRefs.size() > 3 ? ", …" : "");
+      if (loadBearingRefs.isEmpty()) {
+        return base + String.format("; ⚠ %d UNRESOLVED ref(s) — crashes only if reached%s", unresolvedRefs.size(), tail);
+      }
+      var hard = loadBearingRefs.stream().limit(3).map((c) -> c.substring(c.lastIndexOf('/') + 1)).toList();
+      return base + String.format("; ⚠ %d UNRESOLVED ref(s), %d of them load-bearing — those classes fail as soon as "
+          + "they are loaded (%s%s); the rest crash only if reached%s",
+          unresolvedRefs.size(), loadBearingRefs.size(), String.join(", ", hard),
+          loadBearingRefs.size() > 3 ? ", …" : "", tail);
     }
   }
 
@@ -1058,6 +1071,9 @@ public final class TransformPipeline {
     o.classCount = portClassCount[0];
     o.strippedCount = strippedNames.size();
     o.auditFindings = auditOut[0];
+    // Which unresolved names sit in a superclass, an interface or a field type -- the ones that decide whether a
+    // class can load at all, rather than whether one method works.
+    o.loadBearingRefs = verifier.loadBearing();
     o.deregisteredMixins.addAll(fatalMixins);
     return o;
   }
