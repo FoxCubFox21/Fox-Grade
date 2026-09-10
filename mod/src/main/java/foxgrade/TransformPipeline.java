@@ -47,11 +47,18 @@ public final class TransformPipeline {
     public final int metaFixed, awFiles, awOwners, awDescs, refmapFiles, refmapHits, classesRemapped, mixinsStripped, autoStripped;
     public final java.util.Set<String> unresolvedRefs;   // MC classes referenced but absent in target
     public final java.util.List<String> deregisteredMixins = new java.util.ArrayList<>();   // removed from configs
+    /** Set after construction: what the quality summary is computed from. */
+    int classCount; int strippedCount; java.util.List<String> auditFindings = java.util.List.of();
     Outcome(byte[] b, int mf, int aw, int awo, int awd, int rf, int rh, int cr, int ms, int as, java.util.Set<String> ur) {
       this.outputBytes = b; this.metaFixed = mf; this.awFiles = aw; this.awOwners = awo; this.awDescs = awd;
       this.refmapFiles = rf; this.refmapHits = rh; this.classesRemapped = cr; this.mixinsStripped = ms; this.autoStripped = as;
       this.unresolvedRefs = ur;
     }
+    /** How much of the mod survived, for a caller comparing one port against another. */
+    public PortQuality.Score quality() {
+      return PortQuality.of(classCount, unresolvedRefs.size(), strippedCount, mixinsStripped, auditFindings);
+    }
+
     public String oneLine() {
       String base = String.format("meta=%d, aw=%d(%do/%dd), refmap=%d(%dr), classes=%d, mixinsStripped=%d, autoStripped=%d",
           metaFixed, awFiles, awOwners, awDescs, refmapFiles, refmapHits, classesRemapped, mixinsStripped, autoStripped);
@@ -246,6 +253,8 @@ public final class TransformPipeline {
     Set<String> mixinClasses = new HashSet<>();   // neutralised mixins moved out of their declared mixin package (Mixin refuses to load anything left inside it)
     java.util.List<String> strippedNames = new java.util.ArrayList<>();   // "MixinClass#handler" per strip, for the panel
     java.util.LinkedHashMap<String, byte[]> buffered = new java.util.LinkedHashMap<>();
+    final int[] portClassCount = {0};
+    final java.util.List<String>[] auditOut = new java.util.List[]{java.util.List.of()};
     // Set when the mod already declares an access transformer of its own and Fox-Grade's lines must join it there
     // rather than arrive as a second table. Applied after the loop, since that file may be read later than the manifest.
     final String[] mergeTransformerInto = new String[1];
@@ -974,6 +983,8 @@ public final class TransformPipeline {
       // troubled ones — a person deciding whether to trust a port needs it most when nothing looks wrong.
       int classCount = 0;
       for (String n : buffered.keySet()) if (n.endsWith(".class")) classCount++;
+      portClassCount[0] = classCount;
+      auditOut[0] = auditFindings;
       PortQuality.Score quality = PortQuality.of(classCount, verifier.missing().size(),
           strippedNames.size(), fatalMixins.size(), auditFindings);
       for (String reportEntry : new String[]{PORT_REPORT, "foxgrade/port-report.json"}) {
@@ -1029,6 +1040,9 @@ public final class TransformPipeline {
     long tEnd = System.nanoTime();
     lastTimings = String.format("prescan %dms, classes %dms, post+shims %dms, meta+write %dms", (tPrescan - tStart) / 1_000_000, (tClasses - tPrescan) / 1_000_000, (tShims - tClasses) / 1_000_000, (tEnd - tShims) / 1_000_000);
     Outcome o = new Outcome(sink.toByteArray(), metaFixed, awFiles, awOwners, awDescs, refmapFiles, refmapHits, classesRemapped, mixinsStripped, autoStripped, verifier.missing());
+    o.classCount = portClassCount[0];
+    o.strippedCount = strippedNames.size();
+    o.auditFindings = auditOut[0];
     o.deregisteredMixins.addAll(fatalMixins);
     return o;
   }

@@ -140,7 +140,13 @@ public final class FoxGradePreLaunch implements PreLaunchEntrypoint {
         satisfiable.addAll(JarDeps.providesOf(jar));
         satisfiable.addAll(JarDeps.nestedIds(jar));   // bundled (jar-in-jar) libraries travel with the mod
       }
-      for (Path jar : inboxJars) {
+      // Ported in dependency order, so a library is rewritten before whatever needs it. The pre-check above already
+      // refuses to install a mod whose dependencies cannot resolve; this decides the order of the ones that can,
+      // and names anything nothing in the folder or the install provides — with the mod that wants it, which is the
+      // half that makes the message actionable.
+      DependencyPlan.Plan plan = DependencyPlan.of(inboxJars, DependencyPlan.jarsIn(modsDir));
+      for (String unmet : plan.messages()) log("  " + unmet);
+      for (Path jar : plan.order()) {
         try {
           long tJar = System.nanoTime();
           TransformPipeline.Outcome o = TransformPipeline.transform(jar, mc, rules, bridge, apiBridges, blocklist);
