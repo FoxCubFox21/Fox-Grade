@@ -46,19 +46,9 @@ for V in "$@"; do
       echo "[measure-all] $V: instance build failed, skipping"; continue
     fi
   fi
-  ASSET=$(python3 - "$V" <<'PY'
-import json, pathlib, sys
-# The asset index a version wants, read from the version json make-instance.py already fetched, so the two can
-# never disagree about it.
-v = sys.argv[1]
-for p in (pathlib.Path.home()/".minecraft"/"versions"/v/f"{v}.json",
-          pathlib.Path.home()/"Library/Application Support/minecraft/versions"/v/f"{v}.json"):
-    if p.exists():
-        print(json.loads(p.read_text()).get("assetIndex", {}).get("id", "")); break
-else:
-    print("")
-PY
-)
+  # Written by make-instance.py alongside the classpath, so the two can never disagree and a version does not get
+  # skipped for a file the launcher happens not to have.
+  ASSET=$(cat "/tmp/fg-asset-$V.txt" 2>/dev/null)
   if [ -z "$ASSET" ]; then echo "[measure-all] $V: no assetIndex, skipping"; continue; fi
   CORPUS_DIR=$(era_for "$V")
   if [ -z "$CORPUS_DIR" ] || [ ! -d "$CORPUS_DIR" ]; then
@@ -70,6 +60,6 @@ PY
   echo "[measure-all] === $V (assetIndex $ASSET, ${#CORPUS} mods from $(basename $CORPUS_DIR)) ==="
   rm -f "$LEDGER" $B/log-v$SLUG-*.log
   ./run-version.sh "$V" "$ASSET" $CORPUS
-  echo "[measure-all] $V done: $(grep -c '^PASS' $LEDGER) pass of $(grep -cE '^(PASS|CRASH|STALL|HELD)' $LEDGER)"
+  echo "[measure-all] $V done: $(grep -c '^PASS' $LEDGER) pass of $(grep -cE '^(PASS|CRASH|STALL|HELD|NOTFABRIC|NOMODID)' $LEDGER)"
 done
 echo "[measure-all] all versions finished"

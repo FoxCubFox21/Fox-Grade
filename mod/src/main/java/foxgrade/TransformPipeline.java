@@ -969,9 +969,28 @@ public final class TransformPipeline {
       // Look at what is about to be written, and say so in the report if it is structurally unsound. A port that a
       // loader cannot read looks perfectly fine from in here otherwise — that is exactly how every Forge port came
       // out unloadable while the report claimed success.
-      for (String problem : PortAudit.audit(buffered, targetMc)) {
-        strippedNames.add("PORT AUDIT: " + problem);
+      java.util.List<String> auditFindings = PortAudit.audit(buffered, targetMc);
+      for (String problem : auditFindings) {
         System.err.println("[Fox-Grade] audit: " + src.getFileName() + ": " + problem);
+      }
+      // Their own field, not the stripped-handlers list. "A feature was turned off" and "this jar may not load at
+      // all" are different things for whoever reads the panel, and the stripped list is capped at forty entries —
+      // a structural problem does not deserve to be the one that falls off the end.
+      if (!auditFindings.isEmpty()) {
+        for (String reportEntry : new String[]{PORT_REPORT, "foxgrade/port-report.json"}) {
+          byte[] existing = buffered.get(reportEntry);
+          if (existing == null) continue;
+          try {
+            JsonObject report = new Gson().fromJson(new String(existing, StandardCharsets.UTF_8), JsonObject.class);
+            if (report == null) continue;
+            com.google.gson.JsonArray arr = new com.google.gson.JsonArray();
+            auditFindings.forEach(arr::add);
+            report.add("audit", arr);
+            buffered.put(reportEntry, (GSON.toJson(report) + "\n").getBytes(StandardCharsets.UTF_8));
+          } catch (RuntimeException notOurShape) {
+            // A report we cannot re-read is not worth failing a port over; the log line above still carries it.
+          }
+        }
       }
       for (var entry : buffered.entrySet()) {
         ZipEntry ze = new ZipEntry(entry.getKey());

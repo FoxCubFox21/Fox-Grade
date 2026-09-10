@@ -118,7 +118,12 @@ nf_run() {
   else verdict=STALL; fi
 
   # NeoForge prints its mod set as "Name Version (modid)" rows; the mod has to be in there for a pass to count.
-  if [[ $verdict == PASS && -n $mainid ]] && ! grep -qE "\($mainid\)" "$B/$LOGPREFIX-$name.log"; then verdict=HELD; fi
+  # A jar whose mod id cannot be read is not a mod this lane can grade. Guarding the "was it really loaded" check on
+  # a non-empty id meant the check was SKIPPED exactly when it mattered — a jar of the wrong loader entirely scored a
+  # clean pass, because the game came up and nothing ever asked whether the mod was in it. That is how eight version
+  # results were recorded against corpora full of Forge jars. No id, no verdict.
+  if [[ -z $mainid ]]; then verdict=NOMODID
+  elif [[ $verdict == PASS ]] && ! grep -qE "\($mainid\)" "$B/$LOGPREFIX-$name.log"; then verdict=HELD; fi
 
   local why=""
   if [ "$verdict" != PASS ]; then
