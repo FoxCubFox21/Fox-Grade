@@ -11,10 +11,10 @@ layer below that: the things that are never acceptable, checked cheaply enough t
 Usage: regress.py [--quick]
 Exit 0 = all assertions hold.
 """
-import glob, hashlib, json, os, pathlib, shutil, struct, subprocess, sys, tempfile, zipfile
+import glob, hashlib, json, os, pathlib, re, shutil, struct, subprocess, sys, tempfile, zipfile
 
 W = pathlib.Path.home() / "foxgrade-work"
-JAR = sorted(glob.glob(str(W / "foxgrade-mod/dist/foxgrade-*.jar")), key=os.path.getmtime)[-1]
+JAR = sorted([g for g in glob.glob(str(W / "foxgrade-mod/dist/foxgrade-*.jar")) if "-measure" not in g], key=os.path.getmtime)[-1]
 MCLIB = pathlib.Path.home() / "Library/Application Support/minecraft/libraries"
 MAX_MAJOR = 65
 
@@ -45,17 +45,150 @@ def fabric_modules():
     return [str(p) for p in sorted(out.glob("*.jar"))]
 
 
-def port(jars, loader=None, out=None):
+def port(jars, loader=None, out=None, target="26.2"):
     """Run the real pipeline over these jars; returns (outdir, stderr)."""
     out = out or tempfile.mkdtemp(prefix="fg-regress-")
     game = tempfile.mkdtemp(prefix="fg-game-")
     cmd = ["java"]
     if loader:
         cmd.append(f"-Dfoxgrade.loader={loader}")
-    cmd += ["-cp", classpath(), "foxgrade.CheckMain", "26.2", game, "--out", out] + [str(j) for j in jars]
+    cmd += ["-cp", classpath(), "foxgrade.CheckMain", target, game, "--out", out] + [str(j) for j in jars]
     r = subprocess.run(cmd, capture_output=True, text=True, timeout=900)
     shutil.rmtree(game, ignore_errors=True)
     return out, r.stdout + r.stderr
+
+
+def class_refs(data):
+    """(owner, name) for every method/field reference in a class file."""
+    n, i, k, raw = struct.unpack(">H", data[8:10])[0], 10, 1, {}
+    while k < n and i < len(data):
+        t = data[i]
+        if t == 1:
+            L = struct.unpack(">H", data[i + 1:i + 3])[0]
+            raw[k] = ("utf", data[i + 3:i + 3 + L].decode("utf-8", "replace")); i += 3 + L
+        elif t == 7: raw[k] = ("cls", struct.unpack(">H", data[i + 1:i + 3])[0]); i += 3
+        elif t == 12: raw[k] = ("nat", struct.unpack(">HH", data[i + 1:i + 5])); i += 5
+        elif t in (9, 10, 11): raw[k] = ("ref", struct.unpack(">HH", data[i + 1:i + 5])); i += 5
+        elif t in (8, 16, 19, 20): i += 3
+        elif t in (3, 4, 17, 18): i += 5
+        elif t in (5, 6): i += 9; k += 1
+        elif t == 15: i += 4
+        else: return
+        k += 1
+    def utf(x):
+        return raw.get(x, ("utf", ""))[1]
+    for kind, v in raw.values():
+        if kind != "ref":
+            continue
+        ci, nti = v
+        if raw.get(ci, ("", ""))[0] != "cls" or raw.get(nti, ("", ""))[0] != "nat":
+            continue
+        yield utf(raw[ci][1]), utf(raw[nti][1][0])
+
+
+GSON_280 = str(MCLIB / "com/google/code/gson/gson/2.8.0/gson-2.8.0.jar")
+
+
+def _declared(jarpath):
+    """owner -> ({name+desc}, superclass) for every class in a jar."""
+    import zipfile
+    out = {}
+    with zipfile.ZipFile(jarpath) as z:
+        for e in z.namelist():
+            if not e.endswith(".class"):
+                continue
+            d = z.read(e)
+            names, i, k, n = {}, 10, 1, struct.unpack(">H", d[8:10])[0]
+            cls_ref = {}
+            while k < n and i < len(d):
+                t = d[i]
+                if t == 1:
+                    L = struct.unpack(">H", d[i + 1:i + 3])[0]
+                    names[k] = d[i + 3:i + 3 + L].decode("utf-8", "replace"); i += 3 + L
+                elif t == 7:
+                    cls_ref[k] = struct.unpack(">H", d[i + 1:i + 3])[0]; i += 3
+                elif t in (8, 16, 19, 20): i += 3
+                elif t == 15: i += 4
+                elif t in (3, 4, 9, 10, 11, 12, 17, 18): i += 5
+                elif t in (5, 6): i += 9; k += 1
+                else: break
+                k += 1
+            i += 2                                   # access
+            i += 2                                   # this
+            sup_idx = struct.unpack(">H", d[i:i + 2])[0]; i += 2
+            sup = names.get(cls_ref.get(sup_idx), "java/lang/Object")
+            i += 2 + 2 * struct.unpack(">H", d[i:i + 2])[0]
+            members = set()
+            for _ in range(2):
+                cnt = struct.unpack(">H", d[i:i + 2])[0]; i += 2
+                for _ in range(cnt):
+                    acc, nm, ds = struct.unpack(">HHH", d[i:i + 6]); i += 6
+                    att = struct.unpack(">H", d[i:i + 2])[0]; i += 2
+                    for _ in range(att):
+                        al = struct.unpack(">I", d[i + 2:i + 6])[0]; i += 6 + al
+                    members.add(names.get(nm, "?") + names.get(ds, "?"))
+            out[e[:-6]] = (members, sup)
+    return out
+
+
+def gson_too_new():
+    """Gson calls Fox-Grade makes that Gson 2.8.0 cannot answer, inheritance included."""
+    import zipfile
+    if not os.path.exists(GSON_280):
+        return []
+    have = _declared(GSON_280)
+
+    def resolves(owner, sig, depth=0):
+        # Anything not in the jar (Object, Iterable, …) is a JDK type and fine.
+        if owner not in have or depth > 8:
+            return True
+        members, sup = have[owner]
+        return sig in members or resolves(sup, sig, depth + 1)
+
+    bad = set()
+    with zipfile.ZipFile(JAR) as z:
+        for e in z.namelist():
+            if not e.endswith(".class") or not e.startswith("foxgrade/"):
+                continue
+            # Forge-family hosts only ever run on 26.x-era loaders, which carry a modern Gson.
+            if "ForgeHost" in e:
+                continue
+            try:
+                for owner, name, desc in class_refs_full(z.read(e)):
+                    if owner.startswith("com/google/gson/") and not resolves(owner, name + desc):
+                        bad.add(f"{e[:-6]} calls {owner.split('/')[-1]}.{name}")
+            except Exception:
+                pass
+    return sorted(bad)
+
+
+def class_refs_full(data):
+    """(owner, name, descriptor) for every method/field reference in a class file."""
+    n, i, k, raw = struct.unpack(">H", data[8:10])[0], 10, 1, {}
+    while k < n and i < len(data):
+        t = data[i]
+        if t == 1:
+            L = struct.unpack(">H", data[i + 1:i + 3])[0]
+            raw[k] = ("utf", data[i + 3:i + 3 + L].decode("utf-8", "replace")); i += 3 + L
+        elif t == 7: raw[k] = ("cls", struct.unpack(">H", data[i + 1:i + 3])[0]); i += 3
+        elif t == 12: raw[k] = ("nat", struct.unpack(">HH", data[i + 1:i + 5])); i += 5
+        elif t in (9, 10, 11): raw[k] = ("ref", struct.unpack(">HH", data[i + 1:i + 5])); i += 5
+        elif t in (8, 16, 19, 20): i += 3
+        elif t in (3, 4, 17, 18): i += 5
+        elif t in (5, 6): i += 9; k += 1
+        elif t == 15: i += 4
+        else: return
+        k += 1
+    def utf(x):
+        return raw.get(x, ("utf", ""))[1]
+    for kind, v in raw.values():
+        if kind != "ref":
+            continue
+        ci, nti = v
+        if raw.get(ci, ("", ""))[0] != "cls" or raw.get(nti, ("", ""))[0] != "nat":
+            continue
+        nt = raw[nti][1]
+        yield utf(raw[ci][1]), utf(nt[0]), utf(nt[1])
 
 
 FAILURES = []
@@ -116,14 +249,43 @@ def main():
     print("Fabric corpus")
     out_a, log_a = port(fab)
     check("[fabric] pipeline reported no audit findings", "audit:" not in log_a,
-          log_a[log_a.find("audit:"):][:110] if "audit:" in log_a else "")
+          log_a[log_a.find("audit:"):].split("\n")[0] if "audit:" in log_a else "")
     structural(out_a, "fabric")
 
     print("\nNeoForge corpus")
     out_n, log_n = port(nf, loader="neoforge")
     check("[neoforge] pipeline reported no audit findings", "audit:" not in log_n,
-          log_n[log_n.find("audit:"):][:110] if "audit:" in log_n else "")
+          log_n[log_n.find("audit:"):].split("\n")[0] if "audit:" in log_n else "")
     structural(out_n, "neoforge")
+
+    print("\nIntermediary targets")
+    inter = sorted(glob.glob(str(W / "era-corpus/1.20.1/*.jar")))[: 4 if quick else 10]
+    if inter:
+        out_i, _ = port(inter, target="1.21.1")
+        offenders = []
+        for jar in sorted(glob.glob(out_i + "/*.jar")):
+            with zipfile.ZipFile(jar) as z:
+                for n in z.namelist():
+                    if not n.startswith("foxgrade/shim/") or not n.endswith(".class"):
+                        continue
+                    moj = {m.decode() for m in re.findall(rb"net/minecraft/[a-zA-Z0-9_/$]+", z.read(n))
+                           if b"/class_" not in m}
+                    if moj:
+                        offenders.append(f"{pathlib.Path(jar).name}:{n.split('/')[-1][:-6]} -> {sorted(moj)[0]}")
+        check("no Mojang-named shim in a port built for an intermediary target", not offenders,
+              "; ".join(offenders[:2]))
+
+    print("\nDocumented coverage")
+    # Every version claim a reader acts on. Writing this section by hand put 1.20 and 1.20.3 on the Modrinth page
+    # as supported when they are only family entries -- a user on 1.20 would install Fox-Grade and be refused.
+    targets = (W / "repo/mod/src/main/java/foxgrade/Targets.java").read_text()
+    supported = set(re.findall(r'"([^"]+)"', re.search(r"SUPPORTED\s*=\s*Set\.of\(([^)]*)\)", targets, re.S).group(1)))
+    doc = (W / "repo/docs/versions.md").read_text()
+    listed = {row.split("|")[1].strip() for row in doc.splitlines()
+              if row.startswith("|") and re.match(r"^\|\s*(\d|26)", row)}
+    listed = {v for v in listed if re.fullmatch(r"[\d.]+", v)}
+    check("docs/versions.md lists no version Targets refuses",
+          listed <= supported, f"documented but unsupported: {sorted(listed - supported)}")
 
     print("\nDeterminism")
     out_b, _ = port(fab[:2])
@@ -132,6 +294,19 @@ def main():
         b = pathlib.Path(out_c) / pathlib.Path(a).name
         same = b.exists() and hashlib.sha256(pathlib.Path(a).read_bytes()).digest() == hashlib.sha256(b.read_bytes()).digest()
         check(f"[determinism] {pathlib.Path(a).name[:38]} byte-identical across two ports", same)
+
+    print("\nOld-Gson safety")
+    # Minecraft ships its own Gson and old versions ship an old one. The oldest currently supported target
+    # carries 2.10, so 2.8.0 is a floor held deliberately rather than the version in play: the pre-1.20 targets
+    # being measured need it, and holding it now means adding one of them is not a fresh round of this. Three
+    # separate crashes today
+    # were Fox-Grade calling Gson methods that did not exist yet (JsonParser.parseString, JsonObject.keySet,
+    # JsonArray.isEmpty), each landing in preLaunch where the porter takes the game down before it can report
+    # anything. A hand-written list of banned names missed two of the three, so this asks the real 2.8.0 jar what it
+    # declares instead of guessing — and walks superclasses, because JsonArray.forEach comes from Iterable and
+    # JsonObject.toString from Object, and calling those is perfectly fine.
+    offenders = gson_too_new()
+    check("no Gson call newer than the 2.8.0 floor", not offenders, "; ".join(offenders[:3]))
 
     print("\nKnown rewrites")
     def refs(outdir, needle, jarpart):
@@ -166,4 +341,5 @@ def main():
     print("all assertions hold")
 
 
-main()
+if __name__ == "__main__":
+    main()

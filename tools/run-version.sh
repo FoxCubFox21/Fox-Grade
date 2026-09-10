@@ -18,7 +18,34 @@ MC="$HOME/Library/Application Support/minecraft"
 CORPUS_DIR="${CORPUS_DIR:-$B/h2h}"
 CP=$(cat /tmp/fg-cp-$TARGET.txt)
 
-cp -f "$(ls -t ~/foxgrade-work/foxgrade-mod/dist/foxgrade-*.jar | head -1)" $PT/fg.jar
+# A lane can only grade Fox-Grade if the game itself can start. Minecraft up to 1.18.2 ships LWJGL 3.2.x, which has
+# no arm64 macOS natives, so on Apple Silicon it dies at "Failed to locate library: liblwjgl.dylib" before a mod
+# loads -- and every mod in the corpus is then recorded as a porting failure. 1.17.1 read 0 of 14 that way. That is
+# a fact about this machine, not about the port, and it must not reach a ledger.
+if [[ $(uname -m) == arm64 ]] && ! grep -q "natives-macos-arm64" /tmp/fg-cp-$TARGET.txt; then
+  echo "[$TARGET] SKIPPED: no arm64 macOS natives on this classpath (LWJGL 3.2.x). The game cannot start here," >&2
+  echo "[$TARGET] so any result would measure the machine. Measure this version on x86, or under an x86 JDK." >&2
+  exit 3
+fi
+
+# Only ever a measurement build. The shipping jar declares the floor it has actually earned, so on any version
+# below that Fabric refuses Fox-Grade before it runs and the whole lane reads as the mods failing -- a wrong number
+# that looks exactly like a real one. Build it with:  MEASURE_FLOOR=1.15.2 ./build.sh
+FGJAR="$(ls -t ~/foxgrade-work/foxgrade-mod/dist/foxgrade-*-measure.jar 2>/dev/null | head -1)"
+if [[ -z $FGJAR ]]; then
+  echo "[$TARGET] NO MEASUREMENT JAR -- run: cd ~/foxgrade-work/foxgrade-mod && MEASURE_FLOOR=1.15.2 ./build.sh" >&2
+  exit 2
+fi
+FLOOR=$(unzip -p "$FGJAR" fabric.mod.json | python3 -c "import json,sys;print(json.load(sys.stdin)['depends']['minecraft'])")
+python3 - "$FLOOR" "$TARGET" <<'PYFLOOR' || exit 2
+import sys
+key = lambda v: [int(x) if x.isdigit() else 0 for x in v.split(".")]
+floor, target = sys.argv[1].lstrip(">=").strip(), sys.argv[2]
+if key(target) < key(floor):
+    print(f"  ! measurement jar floor is {floor}; it cannot load on {target}", file=sys.stderr)
+    raise SystemExit(1)
+PYFLOOR
+cp -f "$FGJAR" $PT/fg.jar
 
 launch() {
   local log=$1; shift
@@ -69,7 +96,12 @@ fg_run() {
   elif ! pgrep -f "gameDir $PT" >/dev/null; then verdict=CRASH
   else verdict=STALL; fi
   local mainid=$(unzip -p "$1" fabric.mod.json 2>/dev/null | /usr/bin/python3 -c 'import json,sys; print(json.load(sys.stdin).get("id",""))' 2>/dev/null)
-  if [[ $verdict == PASS && -n $mainid ]] && ! grep -qE "${mainid}(_fgport)?" "$log"; then verdict=HELD; fi
+  # A jar with no fabric.mod.json is not a Fabric mod, and Fabric simply ignores it: the vanilla world loads, the
+  # game stays up, and every check below passes. Guarding the "was the mod really loaded" test on a non-empty modid
+  # meant that test was SKIPPED exactly when it mattered, so a Forge jar in the inbox scored a clean pass. It is
+  # not a pass and not a failure of the port either — it is a corpus that should never have contained the jar.
+  if [[ -z $mainid ]]; then verdict=NOTFABRIC
+  elif [[ $verdict == PASS ]] && ! grep -qE "${mainid}(_fgport)?" "$log"; then verdict=HELD; fi
   local why=""
   [ "$verdict" != PASS ] && why=$(grep -m1 -E "NoClassDefFoundError|NoSuchMethodError|NoSuchFieldError|Mixin apply|Incompatible mods|requires" "$log" | sed 's/^\[[0-9:]*\] \[[^]]*\]: //' | head -c 150)
   pkill -f "gameDir $PT" 2>/dev/null; sleep 2

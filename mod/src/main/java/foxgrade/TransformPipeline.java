@@ -366,7 +366,7 @@ public final class TransformPipeline {
                 }
               }
             }
-            boolean touched = FabricMetaFixer.rewriteMeta(meta, targetMc);
+            boolean touched = FabricMetaFixer.rewriteMeta(meta, targetMc, apiBridges.apiId());
             // Idempotency marker — this jar has been transformed for targetMc, don't do it again.
             JsonObject custom = meta.has("custom") && meta.get("custom").isJsonObject() ? meta.getAsJsonObject("custom") : new JsonObject();
             JsonObject fg = custom.has("foxgrade") && custom.get("foxgrade").isJsonObject() ? custom.getAsJsonObject("foxgrade") : new JsonObject();

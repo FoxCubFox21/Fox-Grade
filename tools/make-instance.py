@@ -105,6 +105,7 @@ def classpath(meta, version):
         key = artifact(p)
         if key not in seen:
             seen.add(key); out.append(p)
+    missing = []
     for lib in meta.get("libraries", []):
         rules = lib.get("rules")
         if rules:
@@ -121,14 +122,24 @@ def classpath(meta, version):
             # produced a classpath that looked complete and failed at runtime on whatever was missing —
             # NoClassDefFoundError: com/mojang/logging/LogUtils, from a jar nobody had downloaded.
             if not q.exists() and art.get("url"):
-                try:
-                    q.parent.mkdir(parents=True, exist_ok=True)
-                    q.write_bytes(urllib.request.urlopen(
-                        urllib.request.Request(art["url"], headers=UA), timeout=300).read())
-                except Exception:
-                    pass
+                for attempt in range(3):
+                    try:
+                        q.parent.mkdir(parents=True, exist_ok=True)
+                        q.write_bytes(urllib.request.urlopen(
+                            urllib.request.Request(art["url"], headers=UA), timeout=300).read())
+                        break
+                    except Exception as why:
+                        if attempt == 2:
+                            # Swallowing this is how 1.20.4 got a classpath with no LWJGL in it at all. The lane
+                            # started, the game died on "Could not initialize class RenderSystem", and every mod in
+                            # the corpus was recorded as a Fox-Grade failure -- 0 of 15, from a download that
+                            # quietly did not happen. A classpath missing a library is not a classpath.
+                            missing.append(f"{art['path']} ({why})")
             if q.exists() and artifact(q) not in seen:
                 seen.add(artifact(q)); out.append(str(q))
+    if missing:
+        raise SystemExit(f"{version}: {len(missing)} librar(y/ies) could not be fetched, so this instance would "
+                         f"measure its own classpath rather than Fox-Grade:\n  " + "\n  ".join(missing[:8]))
     jar = HERE / f"mc-{version}.jar"
     out.append(str(jar))
     return out
@@ -194,6 +205,11 @@ def main():
             shutil.copy2(opts, pt / "options.txt")     # carries onboardAccessibility:false
         cp = classpath(meta, version)
         pathlib.Path(f"/tmp/fg-cp-{version}.txt").write_text(":".join(cp))
+        # The asset index, written next to the classpath rather than only printed. A lane that has to rediscover it
+        # by guessing at launcher paths finds nothing for a version the launcher never installed, and skips a
+        # version whose instance is sitting right there, built and ready — which is how a night's breadth run
+        # measured one version instead of ten.
+        pathlib.Path(f"/tmp/fg-asset-{version}.txt").write_text(str(asset))
         api = fabric_api(version, pt / "mods")
         base = HOME / f"mc-porttest-v{version.replace('.', '_')}-base"
         base.mkdir(exist_ok=True)

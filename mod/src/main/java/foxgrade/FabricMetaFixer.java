@@ -67,16 +67,21 @@ public final class FabricMetaFixer {
   // (recommends/suggests/breaks/conflicts) have their minecraft claim removed — a jar we've
   // ported to 26.2 has no informed opinion on what breaks on 26.3.
   public static boolean rewriteMeta(JsonObject meta, String targetMc) {
+    return rewriteMeta(meta, targetMc, "fabric-api");
+  }
+
+  /** As above, naming the Fabric API by the id the installed one actually declares. */
+  public static boolean rewriteMeta(JsonObject meta, String targetMc, String apiId) {
     boolean touched = false;
     for (String field : new String[]{"depends", "recommends", "suggests", "breaks", "conflicts"}) {
       if (!meta.has(field) || !meta.get(field).isJsonObject()) continue;
       JsonObject o = meta.getAsJsonObject(field);
-      if (field.equals("depends") && o.has("fabric")) {
+      if (field.equals("depends") && o.has("fabric") && !"fabric".equals(apiId)) {
         // Legacy Fabric-API id: mods built before ~1.19.2 depend on "fabric"; the modern
         // fabric-api jar no longer provides that alias, so the dep can never resolve. Swap it
         // for the current id, any version — the bytecode bridge handles actual API drift.
         o.remove("fabric");
-        if (!o.has("fabric-api")) o.addProperty("fabric-api", "*");
+        if (!o.has(apiId)) o.addProperty(apiId, "*");
         touched = true;
       }
       // A pinned Java range ("java": "21") is a build-time fact about the OLD game, not a requirement of
@@ -89,7 +94,7 @@ public final class FabricMetaFixer {
       for (String id : Json.keys(o)) {
         if (!isFabricModuleId(id) || CURRENT_FABRIC_MODULES.contains(id)) continue;
         o.remove(id); touched = true;
-        if (field.equals("depends") && !o.has("fabric-api")) o.addProperty("fabric-api", "*");
+        if (field.equals("depends") && !o.has(apiId)) o.addProperty(apiId, "*");
       }
       // A Fabric API floor is a version from the OLD game's API line, and those lines restart: JEI for 1.21.1 asks
       // for fabric-api >= 0.116.5+1.21.1, while the whole 1.21.2 line tops out around 0.106.x. The floor can never
@@ -97,8 +102,8 @@ public final class FabricMetaFixer {
       // "requires 0.116.5+1.21.1 or later, but only the wrong version is present: 0.106.1+1.21.2". The dep only
       // ever meant "a Fabric API new enough to have what I call", and the bytecode bridge is what actually answers
       // that; the number is noise from another version line. Presence is kept, the floor is dropped.
-      if (field.equals("depends") && o.has("fabric-api") && !"*".equals(o.get("fabric-api").getAsString())) {
-        o.addProperty("fabric-api", "*"); touched = true;
+      if (field.equals("depends") && o.has(apiId) && !"*".equals(o.get(apiId).getAsString())) {
+        o.addProperty(apiId, "*"); touched = true;
       }
       if (!o.has("minecraft")) continue;
       if (field.equals("depends")) { o.addProperty("minecraft", targetMc); touched = true; }

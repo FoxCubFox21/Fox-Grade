@@ -253,7 +253,32 @@ public final class FabricApiBridges {
     b.constants.putAll(constantsL);
     b.superHooks.addAll(superHooksL); b.synths.addAll(synthsL); b.samRenames.putAll(samL);
     b.standIns.putAll(standInsL);
+    b.apiId = detectApiId(gameDir);
     return b;
+  }
+
+  /** The mod id the installed Fabric API declares, which is not the same on every version.
+   *
+   *  <p>It was plain {@code fabric} up to 1.17 and {@code fabric-api} from 1.18 on. A ported mod's dependency has to
+   *  name whichever one is actually there, and a rename in the wrong direction is what stopped every 1.17.1 port
+   *  loading: Fabric refused each of them for requiring "fabric-api, which is missing" while the API sat in mods/
+   *  under its old name. Read from the jar rather than derived from the version, because the id belongs to the API's
+   *  own release line and a table of boundaries is one more thing to keep true. */
+  private String apiId = "fabric-api";
+
+  public String apiId() { return apiId; }
+
+  private static String detectApiId(Path gameDir) {
+    if (gameDir == null) return "fabric-api";
+    Path mods = gameDir.resolve("mods");
+    if (!Files.isDirectory(mods)) return "fabric-api";
+    try (java.util.stream.Stream<Path> jars = Files.list(mods)) {
+      for (Path jar : jars.filter((f) -> f.getFileName().toString().endsWith(".jar")).toList()) {
+        String id = JarDeps.idOf(jar);
+        if ("fabric".equals(id) || "fabric-api".equals(id)) return id;
+      }
+    } catch (IOException noneReadable) { /* fall through to the modern name */ }
+    return "fabric-api";
   }
 
   private static boolean isMinecraftClass(String name) {
