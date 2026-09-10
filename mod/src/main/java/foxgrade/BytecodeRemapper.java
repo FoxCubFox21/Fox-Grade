@@ -441,6 +441,7 @@ public final class BytecodeRemapper {
               if (isI != null) itf = isI;
             }
             String[] to = mname.equals("<init>") ? null : lookup(callRedirects, owner, mname + mdesc);
+            if (to != null && ShimGenerator.unavailableHere(to[0])) to = null;   // no shim, no redirect to it
             if (to != null) {
               usedShims.add(to[0]);
               super.visitMethodInsn(Opcodes.INVOKESTATIC, to[0], to[1], to[2], false);
@@ -448,8 +449,14 @@ public final class BytecodeRemapper {
             }
             // A Fabric API accessor returning an Event that the target dropped (ModelLoadingPlugin.Context.modifyModelBeforeBake()):
             // hand back a dead event, so the mod's registrations become no-ops instead of a NoSuchMethodError at init.
+            // Only where the dead-event shim can actually link. It is compiled against Mojang names, so on a target
+            // that loads through intermediary it resolves nothing — and this substitution fires whenever the
+            // target's Fabric API cannot be confirmed to declare the method, which on those versions is every such
+            // call. Architectury came out of a 1.21.1 port with working event registrations replaced by a class
+            // that could not load. Left alone, the mod's own call stands a good chance of being right already.
             if (opcode != Opcodes.INVOKESTATIC && !mname.equals("<init>") && owner.startsWith("net/fabricmc/fabric/api/")
                 && mdesc.endsWith(")Lnet/fabricmc/fabric/api/event/Event;") && mdesc.startsWith("()")
+                && !ShimGenerator.unavailableHere("foxgrade/shim/FabricEventsCompat")
                 && !ShimGenerator.SHIMS.containsKey(owner) && !declaredInChain.test(owner, mname + mdesc)) {
               super.visitInsn(Opcodes.POP);
               usedShims.add("foxgrade/shim/FabricEventsCompat");

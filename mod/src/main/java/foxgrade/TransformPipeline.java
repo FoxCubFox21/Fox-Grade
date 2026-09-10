@@ -452,7 +452,9 @@ public final class TransformPipeline {
           if (remapped != raw) { emit = remapped; classesRemapped++; }
           {
             ClassLoader cl = TransformPipeline.class.getClassLoader();
-            byte[] after = RemovedEventSynth.collect(emit,
+            // Synthesising a removed event type means calling the dead-event shim, so it is only honest where that
+            // shim links. Elsewhere the reference stays unresolved and the port report names it.
+            byte[] after = ShimGenerator.unavailableHere(RemovedEventSynth.DEAD_OWNER) ? emit : RemovedEventSynth.collect(emit,
                 c -> verifier.knows(c) || ShimGenerator.SHIMS.containsKey(c) || cl.getResource(c + ".class") != null,
                 (o, f) -> { try { Class.forName(o.replace('/', '.'), false, cl).getDeclaredField(f); return true; } catch (NoSuchFieldException nsf) { return false; } catch (Throwable t) { return true; } },
                 removedEvents);
@@ -608,6 +610,7 @@ public final class TransformPipeline {
       for (var re : removedEvents.entrySet()) {
         String cls = re.getKey();
         if (buffered.containsKey(cls + ".class")) continue;
+        if (ShimGenerator.unavailableHere(RemovedEventSynth.DEAD_OWNER)) continue;   // see above: no shim, no synthesis
         buffered.put(cls + ".class", remapper.remap(RemovedEventSynth.synthesize(cls, re.getValue())));
         remapper.usedShims().add(RemovedEventSynth.DEAD_OWNER);
         strippedNames.add(cls.substring(cls.lastIndexOf('/') + 1) + " (event removed from Fabric API; its listeners never fire)");
