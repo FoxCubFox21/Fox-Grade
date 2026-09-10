@@ -970,6 +970,26 @@ public final class TransformPipeline {
       // loader cannot read looks perfectly fine from in here otherwise — that is exactly how every Forge port came
       // out unloadable while the report claimed success.
       java.util.List<String> auditFindings = PortAudit.audit(buffered, targetMc);
+      // A one-line answer to "how much of this mod survived", written into every report rather than only the
+      // troubled ones — a person deciding whether to trust a port needs it most when nothing looks wrong.
+      int classCount = 0;
+      for (String n : buffered.keySet()) if (n.endsWith(".class")) classCount++;
+      PortQuality.Score quality = PortQuality.of(classCount, verifier.missing().size(),
+          strippedNames.size(), fatalMixins.size(), auditFindings);
+      for (String reportEntry : new String[]{PORT_REPORT, "foxgrade/port-report.json"}) {
+        byte[] existing = buffered.get(reportEntry);
+        if (existing == null) continue;
+        try {
+          JsonObject report = new Gson().fromJson(new String(existing, StandardCharsets.UTF_8), JsonObject.class);
+          if (report == null) continue;
+          JsonObject q = new JsonObject();
+          q.addProperty("percent", quality.percent());
+          q.addProperty("verdict", quality.verdict());
+          q.addProperty("detail", quality.detail());
+          report.add("quality", q);
+          buffered.put(reportEntry, (GSON.toJson(report) + "\n").getBytes(StandardCharsets.UTF_8));
+        } catch (RuntimeException notOurShape) { }
+      }
       for (String problem : auditFindings) {
         System.err.println("[Fox-Grade] audit: " + src.getFileName() + ": " + problem);
       }
