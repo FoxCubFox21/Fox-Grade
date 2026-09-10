@@ -1,8 +1,20 @@
-# Draft launch post — not published
+# Draft launch post
 
-For r/feedthebeast or r/fabricmc. Written to be posted by the author; nothing here has been sent anywhere.
+Posted to r/feedthebeast on 2026-09-10 and removed within seconds by Reddit's SITEWIDE automated filter, twice.
+No rule was cited and no moderator was involved. Removing the external link entirely did not change the outcome,
+so it is the account rather than the content: a new account with no history in the sub. Modmail also refuses with
+"You can't message that user", which points the same way.
+
+Two lessons for whoever posts this next:
+
+  * Reddit's editor mangles markdown tables. A five-column table lost its first header cell AND its last data cell,
+    which silently moved "only under this tool" into "does not boot" and published a table claiming Retromod fails
+    zero mods. Use bullet lists. The version below does.
+  * Let the account earn some history first, and ideally wait for the Modrinth listing so there is a real download
+    link. Both change how the filter treats it far more than anything in the text.
 
 ---
+
 
 **Title:** Fox-Grade — a mod that ports your dead mods to newer Minecraft, at launch, on your own machine
 
@@ -59,7 +71,7 @@ that crashes your game retires itself so it can't take you down twice.
 
 ## Where to get it
 
-Source and every test result: <GITHUB LINK>
+Source and every test result: https://github.com/FoxCubFox21/Fox-Grade
 
 A Modrinth release is in review. Until it lands you can build it yourself with `mod/build.sh` — so for now this
 is really for people happy to compile a jar. I'd rather say that than pretend there's a download button.
