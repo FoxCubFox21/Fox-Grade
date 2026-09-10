@@ -29,7 +29,9 @@ public final class Targets {
    *
    *  <p>26.1.1: 6 of 13, the same six as 26.1 and mod for mod the same result — which is the family model earning
    *  its keep rather than being assumed. */
-  private static final Set<String> SUPPORTED = Set.of("26.2", "26.1.2", "26.1", "26.1.1");
+  private static final Set<String> SUPPORTED = Set.of("26.2", "26.1.2", "26.1", "26.1.1",
+      "1.21.11", "1.21.10", "1.21.9", "1.21.8", "1.21.7", "1.21.6", "1.21.5", "1.21.4", "1.21.3", "1.21.2",
+      "1.21.1", "1.21", "1.20.6");
 
   /** Versions whose API is the same as another's, and which therefore share its tables.
    *
@@ -43,7 +45,15 @@ public final class Targets {
    *  The inventory stays per version and exact. */
   private static final java.util.Map<String, String> FAMILY = java.util.Map.of(
       "26.1", "26.1.2",
-      "26.1.1", "26.1.2");
+      "26.1.1", "26.1.2",
+      // Three versions that shipped no API change at all from the release before them: each declares exactly the
+      // same class set as its host, checked rather than assumed — 7927 classes for 1.21 against 1.21.1, 7123 for
+      // 1.20 against 1.20.1, 7460 for 1.20.3 against 1.20.4, with nothing on either side that the other lacks.
+      // Without this Fox-Grade refuses them for want of a table that would be a byte-for-byte copy of one it has,
+      // and a lane measuring 1.21 recorded that refusal as thirteen failures.
+      "1.21", "1.21.1",
+      "1.20", "1.20.1",
+      "1.20.3", "1.20.4");
 
   /** The namespace a target loads classes in, which is what a port has to be written in.
    *

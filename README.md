@@ -1,7 +1,27 @@
 # Fox-Grade
 
-Port Minecraft Fabric mods across versions — from source **or straight from the compiled jar** —
-and get told plainly when it doesn't know.
+**That mod you love that died two versions ago? Drop its jar in `mods/` and launch the game.**
+
+Fox-Grade is a Minecraft mod that ports *other* mods. It rewrites old Fabric, Quilt, NeoForge and
+Forge mods to run on a newer Minecraft — automatically, at launch, on your own machine. Nothing is
+uploaded, nothing is redistributed, and the moment the original author publishes a real build for
+your version, the port retires itself and gets out of the way.
+
+**130 mods tested on a real client launched into a real world: 86 boot.** Every result, with the
+reason for each failure, is in [`docs/compat.md`](docs/compat.md) — including the ones that don't
+work.
+
+- [What it does and where it runs](mod/MODRINTH.md)
+- [Per-mod results](docs/compat.md) · [Version coverage](docs/versions.md)
+
+Status: open source and working. A Modrinth release is in review; until it lands, build from source
+with `mod/build.sh`.
+
+---
+
+## The command-line pipeline
+
+The same engine runs outside the game, for porting a jar (or a source tree) by hand:
 
 ```bash
 # the whole mechanical pipeline, one command, no AI involved
