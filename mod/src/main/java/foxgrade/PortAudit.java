@@ -46,9 +46,14 @@ final class PortAudit {
     if (toml == null) toml = entries.get("META-INF/mods.toml");
     if (toml == null) return;
     Set<String> declared = new java.util.LinkedHashSet<>();
+    // Only the ids under [[mods]]. A dependency table names modId too, and that id belongs to a DIFFERENT jar —
+    // demanding an annotated class for it inside this one reports every mod with a dependency as broken. Entity
+    // Model Features depends on Entity Texture Features and was failed for not containing it.
+    boolean inMods = false;
     for (String line : new String(toml, java.nio.charset.StandardCharsets.UTF_8).split("\n")) {
       String t = line.trim();
-      if (!t.startsWith("modId")) continue;
+      if (t.startsWith("[")) { inMods = t.toLowerCase(java.util.Locale.ROOT).startsWith("[[mods]]"); continue; }
+      if (!inMods || !t.startsWith("modId")) continue;
       int a = t.indexOf('"');
       int b = a < 0 ? -1 : t.indexOf('"', a + 1);
       if (b > a) declared.add(t.substring(a + 1, b));
@@ -86,7 +91,7 @@ final class PortAudit {
       if (!name.endsWith(".json") || !name.contains("mixin") || name.startsWith("META-INF/")) continue;
       com.google.gson.JsonObject cfg;
       try {
-        cfg = com.google.gson.JsonParser.parseString(
+        cfg = Json.parse(
             new String(e.getValue(), java.nio.charset.StandardCharsets.UTF_8)).getAsJsonObject();
       } catch (RuntimeException notJson) {
         continue;

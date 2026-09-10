@@ -17,7 +17,7 @@ MC="$HOME/Library/Application Support/minecraft"
 CP=$(cat /tmp/fg-launch-cp-2612.txt)
 TARGET=26.1.2
 
-cp -f "$(ls -t ~/foxgrade-work/foxgrade-mod/dist/foxgrade-*.jar | head -1)" $PT/fg.jar
+cp -f "$(ls -t ~/foxgrade-work/foxgrade-mod/dist/foxgrade-*.jar | grep -v -- -measure | head -1)" $PT/fg.jar
 
 launch() {   # $1 = log file, $2... = extra args
   local log=$1; shift

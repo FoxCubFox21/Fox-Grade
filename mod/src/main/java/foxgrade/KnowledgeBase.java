@@ -84,7 +84,7 @@ public final class KnowledgeBase {
     JsonObject local = read(gameDir);
     appendEntries(local.has("mixinBlocklist") && local.get("mixinBlocklist").isJsonObject()
         ? local.getAsJsonObject("mixinBlocklist") : null, entries);
-    if (entries.isEmpty()) return null;
+    if (entries.size() == 0) return null;   // JsonArray.isEmpty is Gson 2.8.7; 1.17.1 ships 2.8.0
     JsonObject doc = new JsonObject();
     doc.add("entries", entries);
     return GSON.toJson(doc);

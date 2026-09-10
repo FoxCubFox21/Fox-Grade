@@ -398,7 +398,7 @@ public final class FoxGradePortsScreen extends Screen {
         if (code == 200) {
           try (var in = conn.getInputStream()) {
             var arr = new com.google.gson.Gson().fromJson(new String(in.readAllBytes()), com.google.gson.JsonArray.class);
-            if (arr != null && !arr.isEmpty()) {
+            if (arr != null && arr.size() != 0) {
               var ver = arr.get(0).getAsJsonObject();
               var files = ver.getAsJsonArray("files");
               com.google.gson.JsonObject file = null;
@@ -406,7 +406,7 @@ public final class FoxGradePortsScreen extends Screen {
                 var fo = f.getAsJsonObject();
                 if (fo.has("primary") && fo.get("primary").getAsBoolean()) { file = fo; break; }
               }
-              if (file == null && !files.isEmpty()) file = files.get(0).getAsJsonObject();
+              if (file == null && files.size() != 0) file = files.get(0).getAsJsonObject();
               if (file != null) {
                 found = new Official(file.get("url").getAsString(), file.get("filename").getAsString(),
                     file.getAsJsonObject("hashes").get("sha1").getAsString(),

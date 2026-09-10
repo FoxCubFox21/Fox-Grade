@@ -16,7 +16,7 @@ final class TemplatePoolFix {
   /** The same array back when nothing needed changing. */
   static byte[] clamp(byte[] json) {
     try {
-      JsonElement root = JsonParser.parseString(new String(json, StandardCharsets.UTF_8));
+      JsonElement root = Json.parse(new String(json, StandardCharsets.UTF_8));
       if (root == null || !root.isJsonObject()) return json;
       JsonElement els = root.getAsJsonObject().get("elements");
       if (els == null || !els.isJsonArray()) return json;

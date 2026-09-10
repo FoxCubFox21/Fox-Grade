@@ -13,6 +13,20 @@ import net.fabricmc.api.ClientModInitializer;
 
 public final class FoxGradeClient implements ClientModInitializer {
   @Override public void onInitializeClient() {
+    // A porter must never be the reason a game will not start. Everything below reports and steps aside:
+    // a defect in Fox-Grade costs the user its features for one launch, never the launch itself.
+    try {
+      initializeClient();
+    } catch (Throwable foxGradeFailedButTheGameShouldNot) {
+      FoxGradePreLaunch.log("! Fox-Grade " + FoxGradePreLaunch.VERSION + " hit an internal error in its client stage and stopped there.");
+      FoxGradePreLaunch.log("  " + foxGradeFailedButTheGameShouldNot);
+      FoxGradePreLaunch.log("  The game is starting normally; the F8 panel may be unavailable.");
+      FoxGradePreLaunch.log("  Please report this at https://github.com/FoxCubFox21/fox-grade/issues — the trace follows.");
+      foxGradeFailedButTheGameShouldNot.printStackTrace();
+    }
+  }
+
+  private void initializeClient() {
     String mc = Loaders.current().gameVersion();
     if (!Targets.namespace(mc).equals("official")) {
       System.err.println("[Fox-Grade] panel and in-game autotest are 26.x-only; on " + mc

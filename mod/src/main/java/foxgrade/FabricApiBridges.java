@@ -211,21 +211,21 @@ public final class FabricApiBridges {
     if (targetMc != null && !Targets.namespace(targetMc).equals("official")) {
       try (InputStream fx = FabricApiBridges.class.getResourceAsStream("/foxgrade/intermediary-fixups.json")) {
         if (fx != null) {
-          com.google.gson.JsonObject all = com.google.gson.JsonParser
-              .parseString(new String(fx.readAllBytes())).getAsJsonObject();
+          com.google.gson.JsonObject all = Json.parseObject(new String(fx.readAllBytes()));
+          if (all == null) throw new com.google.gson.JsonParseException("fixups not an object");
           if (all.has(targetMc)) {
             com.google.gson.JsonObject forTarget = all.getAsJsonObject(targetMc);
             if (forTarget.has("constants")) {
               com.google.gson.JsonObject cs = forTarget.getAsJsonObject("constants");
-              for (String k : cs.keySet()) constantsL.computeIfAbsent(targetMc, (x) -> new HashMap<>())
+              for (String k : Json.keys(cs)) constantsL.computeIfAbsent(targetMc, (x) -> new HashMap<>())
                   .put(k, cs.get(k).getAsString());
             }
             if (forTarget.has("fieldRetypes")) {
               com.google.gson.JsonObject byOwner = forTarget.getAsJsonObject("fieldRetypes");
-              for (String owner : byOwner.keySet()) {
+              for (String owner : Json.keys(byOwner)) {
                 com.google.gson.JsonObject rows = byOwner.getAsJsonObject(owner);
                 Map<String, String[]> into = fieldRedirects.computeIfAbsent(owner, (k) -> new HashMap<>());
-                for (String key : rows.keySet()) into.put(key, strs(rows.get(key)));
+                for (String key : Json.keys(rows)) into.put(key, strs(rows.get(key)));
               }
             }
           }

@@ -25,7 +25,7 @@ final class DataIdRenames {
     Map<String, String> m = new LinkedHashMap<>();
     try (InputStream in = DataIdRenames.class.getResourceAsStream("/foxgrade/data-id-renames.json")) {
       if (in != null) {
-        JsonElement root = JsonParser.parseString(new String(in.readAllBytes(), StandardCharsets.UTF_8));
+        JsonElement root = Json.parse(new String(in.readAllBytes(), StandardCharsets.UTF_8));
         if (root.isJsonObject()) for (var e : root.getAsJsonObject().entrySet()) m.put(e.getKey(), e.getValue().getAsString());
       }
     } catch (Exception ignored) { }
@@ -37,7 +37,7 @@ final class DataIdRenames {
     Map<String, String> t = table();
     if (t.isEmpty()) return json;
     try {
-      JsonElement root = JsonParser.parseString(new String(json, StandardCharsets.UTF_8));
+      JsonElement root = Json.parse(new String(json, StandardCharsets.UTF_8));
       boolean[] changed = {false};
       JsonElement out = walk(root, t, changed);
       if (!changed[0]) return json;

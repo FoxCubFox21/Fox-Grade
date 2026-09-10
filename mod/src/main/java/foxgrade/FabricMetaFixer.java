@@ -86,7 +86,7 @@ public final class FabricMetaFixer {
       // creative-tab, screen-handler → menu, blockrenderlayer gone). A dep on a module the installed
       // Fabric API no longer ships can never resolve, even though the bytecode bridge already maps the
       // module's classes. The dep only ever meant "Fabric API is present", so say that instead.
-      for (String id : new java.util.ArrayList<>(o.keySet())) {
+      for (String id : Json.keys(o)) {
         if (!isFabricModuleId(id) || CURRENT_FABRIC_MODULES.contains(id)) continue;
         o.remove(id); touched = true;
         if (field.equals("depends") && !o.has("fabric-api")) o.addProperty("fabric-api", "*");

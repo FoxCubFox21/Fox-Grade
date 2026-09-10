@@ -16,7 +16,7 @@ MC="$HOME/Library/Application Support/minecraft"
 CP=$(cat /tmp/fg-launch-cp-neoforge.txt)
 NFVER=26.2.0.82
 
-cp -f "$(ls -t ~/foxgrade-work/foxgrade-mod/dist/foxgrade-*.jar | head -1)" $PT/fg.jar   # always test the newest build
+cp -f "$(ls -t ~/foxgrade-work/foxgrade-mod/dist/foxgrade-*.jar | grep -v -- -measure | head -1)" $PT/fg.jar   # always test the newest build
 
 # The mod id a NeoForge jar declares, read out of its TOML manifest without a TOML parser: the first modId key.
 # Every modId this jar declares a dependency on, minecraft and neoforge excluded — plus its language loader, which

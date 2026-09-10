@@ -31,7 +31,7 @@ final class TargetInventory {
     try (InputStream raw = TargetInventory.class.getResourceAsStream("/foxgrade/mc-" + targetMc + ".classes.json.gz")) {
       if (raw == null) return out;
       try (var in = new GZIPInputStream(raw)) {
-        JsonObject all = JsonParser.parseReader(new java.io.InputStreamReader(in, java.nio.charset.StandardCharsets.UTF_8))
+        JsonObject all = Json.parse(new java.io.InputStreamReader(in, java.nio.charset.StandardCharsets.UTF_8))
             .getAsJsonObject();
         for (var e : all.entrySet()) {
           JsonObject v = e.getValue().getAsJsonObject();

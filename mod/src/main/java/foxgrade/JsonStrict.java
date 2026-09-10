@@ -21,7 +21,7 @@ public final class JsonStrict {
     } catch (RuntimeException | java.io.IOException notStrict) { /* fall through */ }
     try {
       JsonReader lenient = new JsonReader(new StringReader(text)); lenient.setLenient(true);
-      JsonElement e = com.google.gson.JsonParser.parseReader(lenient);
+      JsonElement e = Json.parse(lenient);
       if (e == null || e.isJsonNull()) return null;
       return (new Gson().toJson(e) + "\n").getBytes(StandardCharsets.UTF_8);
     } catch (RuntimeException notJson) { return null; }

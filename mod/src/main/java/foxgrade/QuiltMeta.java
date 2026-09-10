@@ -35,7 +35,7 @@ final class QuiltMeta {
 
   /** quilt.mod.json (schema 1) → fabric.mod.json (schema 1); null when the text is not a Quilt manifest. */
   static String fabricJsonFrom(String quiltJson) {
-    JsonElement root = JsonParser.parseString(quiltJson);
+    JsonElement root = Json.parse(quiltJson);
     if (root == null || !root.isJsonObject()) return null;
     JsonObject q = root.getAsJsonObject();
     JsonObject ql = obj(q, "quilt_loader");
@@ -52,7 +52,7 @@ final class QuiltMeta {
         JsonArray authors = new JsonArray();
         if (c.isJsonObject()) for (var en : c.getAsJsonObject().entrySet()) authors.add(en.getKey());
         else if (c.isJsonArray()) for (JsonElement x : c.getAsJsonArray()) authors.add(x.isJsonPrimitive() ? x.getAsString() : x.toString());
-        if (!authors.isEmpty()) f.add("authors", authors);
+        if (authors.size() != 0) f.add("authors", authors);   // see KnowledgeBase: JsonArray.isEmpty is 2.8.7
       }
       if (md.has("contact") && md.get("contact").isJsonObject()) f.add("contact", md.get("contact"));
     }
@@ -119,7 +119,7 @@ final class QuiltMeta {
    *  target, Quilt-only dependencies relaxed, and the entrypoints under Fabric's keys — Quilt Loader runs those itself,
    *  while QSL (which runs the Quilt-keyed ones) has no build for the target. */
   static String quiltJsonFor(String originalQuiltJson, JsonObject fabricMeta) {
-    JsonElement root = JsonParser.parseString(originalQuiltJson);
+    JsonElement root = Json.parse(originalQuiltJson);
     if (root == null || !root.isJsonObject()) return null;
     JsonObject q = root.getAsJsonObject().deepCopy();
     JsonObject ql = obj(q, "quilt_loader");

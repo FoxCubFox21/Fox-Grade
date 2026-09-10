@@ -28,7 +28,7 @@ final class BiomeJsonFix {
   /** The same array back when nothing needed changing. */
   static byte[] apply(byte[] json) {
     try {
-      JsonElement root = JsonParser.parseString(new String(json, StandardCharsets.UTF_8));
+      JsonElement root = Json.parse(new String(json, StandardCharsets.UTF_8));
       if (root == null || !root.isJsonObject()) return json;
       JsonObject o = root.getAsJsonObject();
       JsonElement carvers = o.get("carvers");

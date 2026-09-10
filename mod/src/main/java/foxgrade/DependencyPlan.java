@@ -106,7 +106,7 @@ public final class DependencyPlan {
     Set<String> out = new LinkedHashSet<>();
     JsonObject m = manifest(jar);
     if (m == null || !m.has("depends") || !m.get("depends").isJsonObject()) return out;
-    for (String k : m.getAsJsonObject("depends").keySet()) {
+    for (String k : Json.keys(m.getAsJsonObject("depends"))) {
       // Fabric API ships as dozens of modules; a dependency on any one of them is a dependency on Fabric API, and
       // sending someone to look for "fabric-block-api-v1" by name helps nobody.
       if (AMBIENT.contains(k) || k.startsWith("fabric-")) continue;

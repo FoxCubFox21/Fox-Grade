@@ -33,6 +33,20 @@ public final class FoxGradePreLaunch implements PreLaunchEntrypoint {
   static final String VERSION = "1.1.0";
 
   @Override public void onPreLaunch() {
+    // A porter must never be the reason a game will not start. Everything below reports and steps aside:
+    // a defect in Fox-Grade costs the user its features for one launch, never the launch itself.
+    try {
+      port();
+    } catch (Throwable foxGradeFailedButTheGameShouldNot) {
+      log("! Fox-Grade " + VERSION + " hit an internal error in its porting stage and stopped there.");
+      log("  " + foxGradeFailedButTheGameShouldNot);
+      log("  Your mods have not been changed and the game is starting normally.");
+      log("  Please report this at https://github.com/FoxCubFox21/fox-grade/issues — the trace follows.");
+      foxGradeFailedButTheGameShouldNot.printStackTrace();
+    }
+  }
+
+  private void port() {
     LoaderHost host = Loaders.current();
     Path gameDir = host.gameDir();
     Path modsDir = gameDir.resolve("mods");

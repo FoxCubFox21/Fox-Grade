@@ -2,7 +2,7 @@
 # Head-to-head: the same old mods through Retromod, on the same instance and base jars as the
 # Fox-Grade harness. Retromod ports on one launch and asks for a restart; the second launch loads
 # what it produced (mods/ is left exactly as Retromod arranged it).
-cp -f "$(ls -t ~/foxgrade-work/foxgrade-mod/dist/foxgrade-*.jar | head -1)" ~/foxgrade-work/batch121/base/foxgrade-1.1.0.jar   # FRESH JAR: the harness tests the newest build
+cp -f "$(ls -t ~/foxgrade-work/foxgrade-mod/dist/foxgrade-*.jar | grep -v -- -measure | head -1)" ~/foxgrade-work/batch121/base/foxgrade-1.1.0.jar   # FRESH JAR: the harness tests the newest build
 setopt NULL_GLOB
 PT="${PT:-$HOME/mc-porttest}"   # instance dir; a second instance lets two harnesses run side by side
 B=~/foxgrade-work/batch2

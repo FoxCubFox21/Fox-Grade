@@ -1,5 +1,5 @@
 #!/bin/zsh
-cp -f "$(ls -t ~/foxgrade-work/foxgrade-mod/dist/foxgrade-*.jar | head -1)" ~/foxgrade-work/batch121/base/foxgrade-1.1.0.jar   # FRESH JAR: the harness tests the newest build
+cp -f "$(ls -t ~/foxgrade-work/foxgrade-mod/dist/foxgrade-*.jar | grep -v -- -measure | head -1)" ~/foxgrade-work/batch121/base/foxgrade-1.1.0.jar   # FRESH JAR: the harness tests the newest build
 setopt NULL_GLOB
 PT="${PT:-$HOME/mc-porttest}"   # instance dir; a second instance lets two harnesses run side by side
 B=~/foxgrade-work/batch2

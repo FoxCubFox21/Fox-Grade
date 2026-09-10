@@ -147,6 +147,7 @@ fi
 [[ -z $MEASURE_FLOOR ]] && python3 - <<'PYCHECK'
 import json, pathlib, re, sys
 targets = pathlib.Path("src/main/java/foxgrade/Targets.java").read_text()
+RELEASE = "21"
 block = re.search(r"SUPPORTED\s*=\s*Set\.of\(([^)]*)\)", targets, re.S)
 supported = re.findall(r'"([^"]+)"', block.group(1)) if block else []
 meta = json.loads(pathlib.Path("src/main/resources/fabric.mod.json").read_text())
@@ -164,6 +165,14 @@ elif min(map(key, supported)) < key(floor):
     oldest = min(supported, key=key)
     print(f"  ! fabric.mod.json requires minecraft {declared}, but Targets supports {oldest}.", file=sys.stderr)
     print(f"  ! Fabric Loader would refuse Fox-Grade on {oldest} before Targets is consulted.", file=sys.stderr)
+    sys.exit(1)
+
+# The java gate is the same kind of promise, about the class files rather than the target. javac is told
+# --release 21, so claiming a higher floor strands users on older Minecraft for no reason, and claiming a
+# lower one hands them a jar their JVM cannot read. Neither is caught until someone's game will not start.
+declared_java = meta.get("depends", {}).get("java", "")
+if declared_java.lstrip(">=").strip() != RELEASE:
+    print(f"  ! fabric.mod.json requires java {declared_java}, but javac is told --release {RELEASE}.", file=sys.stderr)
     sys.exit(1)
 PYCHECK
 
@@ -205,7 +214,16 @@ print(f"  packaging tables for {sorted(keep_inventory)}; {len(skipped)} unsuppor
 PYPACK
 
 VERSION=$(grep '"version"' src/main/resources/fabric.mod.json | head -1 | sed -E 's/.*"([^"]+)"[^"]*$/\1/')
-OUT="$PWD/$DIST/foxgrade-${VERSION}.jar"
+# A measurement jar and a shipping jar are very different things wearing the same name: one declares a floor it has
+# not earned and carries every target table, the other declares only what is measured. run-version.sh takes the
+# newest dist jar, so a plain build between two lanes silently handed the harness a shipping jar -- which refuses to
+# load on the version being measured and records that refusal as the mod failing. Separate names, so neither can be
+# picked up as the other.
+if [[ -n $MEASURE_FLOOR ]]; then
+  OUT="$PWD/$DIST/foxgrade-${VERSION}-measure.jar"
+else
+  OUT="$PWD/$DIST/foxgrade-${VERSION}.jar"
+fi
 rm -f "$OUT"
 ( cd "$BUILD" && jar cf "$OUT" . )
 if [[ -n $MEASURE_FLOOR ]]; then
@@ -214,6 +232,14 @@ if [[ -n $MEASURE_FLOOR ]]; then
 import json, pathlib, sys
 m = json.loads(pathlib.Path('src/main/resources/fabric.mod.json').read_text())
 m.setdefault('depends', {})['minecraft'] = '>=' + sys.argv[1]
+# Fabric APIs mod id was plain fabric before ~1.19 and fabric-api after. A hard dependency on either name refuses
+# Fox-Grade outright on the other era: on 1.17.1 the loader said it requires any version of fabric-api and found
+# none, while the API sat in mods/ under its old id. A Fabric manifest cannot express either-of-these, and porting
+# needs no Fabric API at all, only the panel does, and the panel is 26.x-only. So it is a recommendation rather
+# than a requirement, which loads everywhere and still tells a user they want it.
+dep = m.setdefault('depends', {})
+if 'fabric-api' in dep:
+    m.setdefault('recommends', {})['fabric-api'] = dep.pop('fabric-api')
 pathlib.Path('build/meta/fabric.mod.json').write_text(json.dumps(m, indent=2) + '\n')
 " "$MEASURE_FLOOR"
   ( cd src/main/resources && jar uf "$OUT" $(ls | grep -vE '^(foxgrade|fabric.mod.json)$') )
