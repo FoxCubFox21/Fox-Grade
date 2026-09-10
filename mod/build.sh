@@ -2,7 +2,7 @@
 # Fox-Grade mod build. No gradle — plain javac + jar against the jars a normal Fabric install
 # already has on disk. Run from a machine that has launched Fabric 26.2 at least once.
 #
-# Compiled with --release 21, not the build JDK's own version. Fox-Grade's shims are injected INTO other people's
+# Compiled with --release 17, not the build JDK's own version. Fox-Grade's shims are injected INTO other people's
 # mods, so their class-file version becomes that mod's problem: built on javac 25 they came out major 69, and
 # Forge's annotation scanner cannot parse those — it then found no @Mod class in any port and refused every mod in
 # the lane with "the following classes are missing, but are reported in the mods.toml". 21 is what Minecraft 26.2
@@ -46,7 +46,7 @@ rm -rf "$BUILD"
 mkdir -p "$BUILD" "$DIST"
 
 find src/main/java -name '*.java' > /tmp/foxgrade-sources.txt
-javac -J-Xmx512m --release 21 -nowarn -d "$BUILD" -cp "$CP" @/tmp/foxgrade-sources.txt
+javac -J-Xmx512m --release 17 -nowarn -d "$BUILD" -cp "$CP" @/tmp/foxgrade-sources.txt
 
 # --- NeoForge entry point ---------------------------------------------------------------------------------------
 # Compiled separately, against NeoForge rather than Fabric, and only when its jars are vendored in libs/neoforge.
@@ -56,7 +56,7 @@ NF_CP=""
 for f in libs/neoforge/*.jar; do [[ -f $f ]] && NF_CP="$NF_CP:$f"; done
 if [[ -n $NF_CP && -d src/neoforge/java ]]; then
   find src/neoforge/java -name '*.java' > /tmp/foxgrade-nf-sources.txt
-  if javac -J-Xmx512m --release 21 -nowarn -d "$BUILD" -cp "$CP:$BUILD$NF_CP" @/tmp/foxgrade-nf-sources.txt 2>/tmp/foxgrade-nf-errors.txt; then
+  if javac -J-Xmx512m --release 17 -nowarn -d "$BUILD" -cp "$CP:$BUILD$NF_CP" @/tmp/foxgrade-nf-sources.txt 2>/tmp/foxgrade-nf-errors.txt; then
     echo "  NeoForge locator compiled"
   else
     echo "  NeoForge locator SKIPPED (see /tmp/foxgrade-nf-errors.txt) — the Fabric build is unaffected"
@@ -92,7 +92,7 @@ for spec in $ALT_MC_JARS; do
   find src/main/java/foxgrade/shim -name '*.java' > /tmp/fg-shim-sources.txt
   dropped=0
   for round in 1 2 3 4 5 6; do
-    if javac -J-Xmx512m --release 21 -nowarn -Xmaxerrs 10000 -d "$alt_out" -cp "$alt_cp" @/tmp/fg-shim-sources.txt 2>/tmp/fg-shim-errors.txt; then
+    if javac -J-Xmx512m --release 17 -nowarn -Xmaxerrs 10000 -d "$alt_out" -cp "$alt_cp" @/tmp/fg-shim-sources.txt 2>/tmp/fg-shim-errors.txt; then
       break
     fi
     grep -oE "^[^:]+\.java" /tmp/fg-shim-errors.txt | sort -u > /tmp/fg-shim-bad.txt
@@ -119,7 +119,7 @@ FORGE_CP=""
 for f in libs/forge/*.jar; do [[ -f $f ]] && FORGE_CP="$FORGE_CP:$f"; done
 if [[ -n $FORGE_CP && -d src/forge/java ]]; then
   find src/forge/java -name '*.java' > /tmp/foxgrade-forge-sources.txt
-  if javac -J-Xmx512m --release 21 -nowarn -d "$BUILD" -cp "$CP:$BUILD$FORGE_CP" @/tmp/foxgrade-forge-sources.txt 2>/tmp/foxgrade-forge-errors.txt; then
+  if javac -J-Xmx512m --release 17 -nowarn -d "$BUILD" -cp "$CP:$BUILD$FORGE_CP" @/tmp/foxgrade-forge-sources.txt 2>/tmp/foxgrade-forge-errors.txt; then
     echo "  Forge locator compiled"
   else
     echo "  Forge locator SKIPPED (see /tmp/foxgrade-forge-errors.txt) — every other loader is unaffected"
@@ -147,7 +147,7 @@ fi
 [[ -z $MEASURE_FLOOR ]] && python3 - <<'PYCHECK'
 import json, pathlib, re, sys
 targets = pathlib.Path("src/main/java/foxgrade/Targets.java").read_text()
-RELEASE = "21"
+RELEASE = "17"
 block = re.search(r"SUPPORTED\s*=\s*Set\.of\(([^)]*)\)", targets, re.S)
 supported = re.findall(r'"([^"]+)"', block.group(1)) if block else []
 meta = json.loads(pathlib.Path("src/main/resources/fabric.mod.json").read_text())
@@ -168,7 +168,7 @@ elif min(map(key, supported)) < key(floor):
     sys.exit(1)
 
 # The java gate is the same kind of promise, about the class files rather than the target. javac is told
-# --release 21, so claiming a higher floor strands users on older Minecraft for no reason, and claiming a
+# --release 17, so claiming a higher floor strands users on older Minecraft for no reason, and claiming a
 # lower one hands them a jar their JVM cannot read. Neither is caught until someone's game will not start.
 declared_java = meta.get("depends", {}).get("java", "")
 if declared_java.lstrip(">=").strip() != RELEASE:

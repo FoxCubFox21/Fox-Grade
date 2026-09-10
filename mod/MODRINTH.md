@@ -45,6 +45,23 @@ flatter Fox-Grade for mods its rival never saw.
 Quilt is the one place a fair comparison cannot be made, so no number is claimed for Retromod there rather than
 quoting one that measures the loader's bug instead of the tool.
 
+### Which Minecraft versions
+
+| Minecraft | mods that boot | corpus |
+|---|---|---|
+| 26.2 | **86** | 130 |
+| 26.1.1 | **6** | 13 |
+| 1.20.2 | **11** | 14 |
+| 1.21.4, 1.20.5, 1.20.6 | **9** | 14 |
+| 1.20.1 | **8** | 14 |
+| 1.21.2, 1.21.3 | **8** | 14 |
+| 1.21.1, 1.21.5 – 1.21.11 | **7** | 14 |
+
+26.1, 26.1.2 and 1.21 are supported too, sharing the tables of a release that declares an identical class set —
+checked, not assumed. The older lanes use 13–14 mods built for the version before them, because Fox-Grade ports forward and a
+target has to be measured with mods older than itself — a 7/14 and an 86/130 are both honest and are not the same
+measurement. Every row, and the reason behind each failure, is in `docs/versions.md`.
+
 ## Press F8
 
 Every ported mod with its icon and a health check. What was changed, what was turned off, and **why — in plain English, not stack traces**. Verify a port live against the game you are running. Boot-test it in a throwaway copy of your world. Disable, retire or re-port with one click.
@@ -98,7 +115,11 @@ still works. GitHub appears in the mod's metadata as its homepage, source and is
 
 Heavyweight rendering mods are out of scope. Anything Fox-Grade cannot prove safe is disabled and **listed by name** — never guessed at. Originals are never deleted, every port is reversible, and a port that crashes your game retires itself, so it can never take you down twice.
 
-**Minecraft 26.2 only** — the translation tables are built for one version, and on anything else Fox-Grade refuses to run rather than produce a port it cannot verify.
+**Twenty Minecraft versions, and nothing outside them.** 26.2, 26.1.x and 1.20.1 through 1.21.11: Fox-Grade
+carries translation tables for each, and on any version it has no measured tables for it refuses to run rather than
+produce a port it cannot verify. Each one was measured by launching a real client into a real world, and the
+per-version results — including the ones that do poorly — are in `docs/versions.md`. The corpora differ in size
+between versions and the numbers there are not comparable across rows; the file says so where it says the numbers.
 
 ---
 

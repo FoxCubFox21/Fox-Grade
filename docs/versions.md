@@ -25,6 +25,9 @@ and are not the same measurement.
 | 1.21.2 | **8** | 14 |
 | 1.21.1 | **7** | 14 |
 | 1.20.6 | **9** | 14 |
+| 1.20.5 | **9** | 14 |
+| 1.20.2 | **11** | 14 |
+| 1.20.1 | **8** | 14 |
 
 ## Shares another version's tables
 
@@ -36,8 +39,6 @@ inventory is where a single added method would matter.
 |---|---|
 | 26.1, 26.1.1 | 26.1.2 |
 | 1.21 | 1.21.1 |
-| 1.20 | 1.20.1 |
-| 1.20.3 | 1.20.4 |
 
 ## Not supported
 

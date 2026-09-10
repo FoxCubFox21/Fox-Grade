@@ -31,7 +31,11 @@ public final class Targets {
    *  its keep rather than being assumed. */
   private static final Set<String> SUPPORTED = Set.of("26.2", "26.1.2", "26.1", "26.1.1",
       "1.21.11", "1.21.10", "1.21.9", "1.21.8", "1.21.7", "1.21.6", "1.21.5", "1.21.4", "1.21.3", "1.21.2",
-      "1.21.1", "1.21", "1.20.6");
+      "1.21.1", "1.21", "1.20.6",
+      // Measured on the same 14-mod corpus as the rows above and then left out of this set, so Fox-Grade refused
+      // three versions it ports as well as ones it offers -- 1.20.2 at 11 of 14 is the best result of any version
+      // below 26.2, better than every 1.21.x lane, and a user on it was told they were not supported.
+      "1.20.5", "1.20.2", "1.20.1");
 
   /** Versions whose API is the same as another's, and which therefore share its tables.
    *
