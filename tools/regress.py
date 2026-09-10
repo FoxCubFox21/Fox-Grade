@@ -229,6 +229,9 @@ def structural(outdir, label):
         for n, b in es.items():
             if not n.endswith(".class") or len(b) < 8 or b[:2] != b"\xca\xfe":
                 continue
+            # Multi-release payload: only read by a JVM at least that new, inert on anything older. See PortAudit.
+            if n.startswith("META-INF/versions/"):
+                continue
             if ((b[6] << 8) | b[7]) > MAX_MAJOR:
                 too_new.append(n)
             for s in pool_strings(b):

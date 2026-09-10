@@ -121,6 +121,11 @@ final class PortAudit {
     for (var e : entries.entrySet()) {
       byte[] b = e.getValue();
       if (!e.getKey().endsWith(".class") || b.length < 8) continue;
+      // A multi-release jar keeps newer-than-baseline classes under META-INF/versions/<n>/, and the JVM reads them
+      // only when it is at least version n -- on anything older they are inert. Reporting them is reporting a mod
+      // for being built correctly, and this check has to stay believable: it is the one that catches shims compiled
+      // too new for Forge's scanner, which took down every Forge port while the annotation was there all along.
+      if (e.getKey().startsWith("META-INF/versions/")) continue;
       if ((b[0] & 0xFF) != 0xCA || (b[1] & 0xFF) != 0xFE) continue;
       int major = ((b[6] & 0xFF) << 8) | (b[7] & 0xFF);
       if (major <= MAX_MAJOR) continue;
