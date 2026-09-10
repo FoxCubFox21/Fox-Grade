@@ -773,6 +773,20 @@ public final class TransformPipeline {
         }
       }
       for (String used : remapper.usedShims()) if (!shadowsRealClass.test(used)) wanted.add(used);
+      // And every shim the rewritten classes actually name. The three routes above each answer a different question
+      // — what the verifier missed, what a redirect used, what a stand-in replaced — and a plain class rename
+      // answers none of them: HudRenderCallback was renamed into every reference in Architectury and then never
+      // injected, because nothing had asked for it by the names those routes understand. What the output refers to
+      // is the question that actually matters, so ask that too.
+      for (var entry : buffered.entrySet()) {
+        if (!entry.getKey().endsWith(".class")) continue;
+        for (String ref : ConstantPool.strings(entry.getValue())) {
+          if (!ref.startsWith("foxgrade/shim/") || ref.endsWith(";") || wanted.contains(ref)) continue;
+          if (ShimGenerator.SHIMS.containsKey(ref) || ShimGenerator.hasResource(ref)) {
+            if (!ShimGenerator.unavailableHere(ref) && !shadowsRealClass.test(ref)) wanted.add(ref);
+          }
+        }
+      }
       // Stand-ins are found by looking, not by asking the verifier. The verifier compares against Minecraft's class
       // inventory, so it has no opinion about NeoForge's own API and never reports a deleted event class as missing.
       // The stand-in table is only ever built from classes the target definitely does not have, so a mod mentioning
@@ -798,6 +812,13 @@ public final class TransformPipeline {
         for (String dep : ShimGenerator.SHIM_DEPS.getOrDefault(w, java.util.List.of())) {
           if (!shadowsRealClass.test(dep) && wanted.add(dep)) queue.add(dep);
         }
+        // And whatever the shim's own bytecode actually mentions, which is the half a hand-written table keeps
+        // missing. GuiCompat calls FrameCompat and ChunkCompat has an anonymous inner class; neither was listed, so
+        // both were left out of every port that used them — a NoClassDefFoundError waiting for the code path to run,
+        // invisible until it did. Reading the dependency out of the class removes the chance to forget.
+        for (String ref : ShimGenerator.shimRefsOf(w)) {
+          if (!shadowsRealClass.test(ref) && wanted.add(ref)) queue.add(ref);
+        }
         for (String k : ShimGenerator.SHIMS.keySet()) {                        // inner shims travel with their outer
           if (k.startsWith(w + "$") && !shadowsRealClass.test(k) && wanted.add(k)) queue.add(k);
         }
@@ -820,6 +841,10 @@ public final class TransformPipeline {
           continue;
         }
         var shim = ShimGenerator.SHIMS.get(shimCls);
+        // An inner class of a shim is not a shim in its own right and is not in SHIMS, so it was wanted, relocated
+        // and then never written — ChunkCompat's anonymous inner class reached no port at all while every reference
+        // to it was faithfully renamed. Serve anything Fox-Grade ships as a resource, registered or not.
+        if (shim == null && ShimGenerator.hasResource(shimCls)) shim = () -> ShimGenerator.resourceBytes(shimCls);
         FabricApiBridges.StandIn si = shim == null ? apiBridges.standIns().get(shimCls) : null;
         if (shim == null && si == null) continue;
         String entryName = shimMap.getOrDefault(shimCls, shimCls) + ".class";
@@ -940,6 +965,13 @@ public final class TransformPipeline {
           merged.append(mergeTransformerText[0]);
           buffered.put(mergeTransformerInto[0], merged.toString().getBytes(StandardCharsets.UTF_8));
         }
+      }
+      // Look at what is about to be written, and say so in the report if it is structurally unsound. A port that a
+      // loader cannot read looks perfectly fine from in here otherwise — that is exactly how every Forge port came
+      // out unloadable while the report claimed success.
+      for (String problem : PortAudit.audit(buffered, targetMc)) {
+        strippedNames.add("PORT AUDIT: " + problem);
+        System.err.println("[Fox-Grade] audit: " + src.getFileName() + ": " + problem);
       }
       for (var entry : buffered.entrySet()) {
         ZipEntry ze = new ZipEntry(entry.getKey());

@@ -497,6 +497,46 @@ public final class ShimGenerator implements Opcodes {
    *  referencing a class 26.1.2 never had, ended up inside a 26.1.2 port and took the game down inside
    *  RenderSystem.initRenderer. {@link #fromResource} refuses to serve a version from another version's set, so the
    *  supplier throws, the caller records the reference as unresolved, and the port report names it. */
+  /** Every {@code foxgrade/shim/...} class this shim's own bytecode names, plus its inner classes.
+   *
+   *  <p>SHIM_DEPS is written by hand and therefore incomplete by nature — it listed GuiPoseStack for GuiCompat and
+   *  not FrameCompat, and had no way at all to mention ChunkCompat's anonymous inner class, which is not a shim in
+   *  its own right. Both were referenced by injected shims and present in Fox-Grade's jar as resources, and neither
+   *  reached a single port. Asking the class file what it refers to cannot forget. */
+  /** Whether Fox-Grade ships this exact class as a resource, registered as a shim or not. */
+  static boolean hasResource(String cls) {
+    return cls.startsWith("foxgrade/shim/") && resource("/" + cls + ".class") != null;
+  }
+
+  /** Those bytes, with the standard shim renames applied, ready to inject. */
+  static byte[] resourceBytes(String cls) {
+    byte[] b = resource("/" + cls + ".class");
+    if (b == null) throw new IllegalStateException("no resource for " + cls);
+    return renameClasses(b, SHIM_RENAMES);
+  }
+
+  static java.util.Set<String> shimRefsOf(String shimCls) {
+    java.util.Set<String> out = new java.util.LinkedHashSet<>();
+    byte[] bytes;
+    try {
+      bytes = SHIMS.containsKey(shimCls) ? SHIMS.get(shimCls).get() : resource("/" + shimCls + ".class");
+    } catch (RuntimeException notAvailable) {
+      return out;
+    }
+    if (bytes == null) return out;
+    for (String s : ConstantPool.strings(bytes)) {
+      if (!s.startsWith("foxgrade/shim/") || s.equals(shimCls) || s.endsWith(";")) continue;
+      // Only names Fox-Grade can actually supply; anything else would add a reference rather than resolve one.
+      if (SHIMS.containsKey(s) || resource("/" + s + ".class") != null) out.add(s);
+    }
+    // An inner class is not referenced by name from its outer in every case, so ask for it directly.
+    for (int i = 1; i <= 8; i++) {
+      String inner = shimCls + "$" + i;
+      if (!SHIMS.containsKey(inner) && resource("/" + inner + ".class") != null) out.add(inner);
+    }
+    return out;
+  }
+
   static boolean unavailableHere(String shimCls) {
     // Every shim, whether copied from a resource or generated here, is written in Mojang names, because that is what
     // 26.x runs in. A target that loads through intermediary resolves none of them: the shim itself would fail to
