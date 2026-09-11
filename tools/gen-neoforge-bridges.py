@@ -21,13 +21,17 @@ because a wrong redirect fails later and less legibly than an unresolved referen
 Usage: gen-neoforge-bridges.py OLD_JAR[,OLD_JAR...] NEW_JAR[,NEW_JAR...]
 Output: foxgrade-mod/src/main/resources/foxgrade/neoforge-api-bridges.json
 """
-import json, pathlib, re, struct, sys, zipfile
+import json, os, pathlib, re, struct, sys, zipfile
 
 HERE = pathlib.Path(__file__).resolve().parent
-OUT = HERE / "foxgrade-mod/src/main/resources/foxgrade/neoforge-api-bridges.json"
+# The same diff answers the same question for Forge, whose API roots and output file are the only things that
+# differ: NeoForge ships net/neoforged/*, Forge ships net/minecraftforge/*, and both reshape their loader API
+# between Minecraft versions in ways that break a mod before it reaches a Minecraft class at all.
+OUT = pathlib.Path(os.environ.get("BRIDGE_OUT") or
+                   HERE / "foxgrade-mod/src/main/resources/foxgrade/neoforge-api-bridges.json")
 ACC_PUBLIC, ACC_STATIC = 0x0001, 0x0008
 # Only these package roots. NeoForge's jars also carry relocated third-party code that is not its API to promise.
-API_ROOTS = ("net/neoforged/",)
+API_ROOTS = tuple(r for r in (os.environ.get("BRIDGE_ROOTS") or "net/neoforged/").split(",") if r)
 
 # class -> (superclass, interfaces), filled in as classes are parsed; used to build stand-ins for deleted types.
 HIERARCHY = {}

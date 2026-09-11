@@ -186,6 +186,16 @@ public final class FabricApiBridges {
         if (neo != null) merge(renames, redirects, classRenames, ctorAdapters, inheritedRenames, fieldRedirects, extra, new String(neo.readAllBytes()), standInsL);
       }
     }
+    // Forge is the same situation under a different package root, and until now it had no table at all. A Forge mod
+    // calls net.minecraftforge.* and reached 26.2 with none of it translated, so the lane scored zero of nineteen on
+    // Forge's own API -- ModList's accessors moved, IEventExceptionHandler is gone entirely -- before any Minecraft
+    // class was in question. Separate file from NeoForge's: the two loaders' APIs share a history but not a
+    // namespace, and merging them would aim each loader's moves at the other's classes.
+    if (TransformPipeline.isForgeHost()) {
+      try (InputStream fg = FabricApiBridges.class.getResourceAsStream("/foxgrade/forge-api-bridges.json")) {
+        if (fg != null) merge(renames, redirects, classRenames, ctorAdapters, inheritedRenames, fieldRedirects, extra, new String(fg.readAllBytes()), standInsL);
+      }
+    }
     if (targetMc != null && !Targets.namespace(targetMc).equals("official")) {
       // Every row in these tables was derived against 26.x, and none of it survives the trip to an older target.
       // The Minecraft rows are written in Mojang names the intermediary runtime has never heard of — a 1.21.2 port
