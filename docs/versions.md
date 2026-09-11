@@ -25,9 +25,24 @@ and are not the same measurement.
 | 1.21.2 | **8** | 14 |
 | 1.21.1 | **7** | 14 |
 | 1.20.6 | **9** | 14 |
+| 1.20.4 | **11** | 14 |
 | 1.20.5 | **9** | 14 |
 | 1.20.2 | **11** | 14 |
 | 1.20.1 | **8** | 14 |
+| 1.19.4 | **10** | 14 |
+| 1.19.2 | **9** | 14 |
+
+## How a version reaches a world
+
+`--quickPlaySingleplayer`, which opens a singleplayer world straight from the command line, arrived in 1.20. Rows
+from 1.20 upward are measured that way. An older client ignores the argument and sits at the main menu, so 1.19.2
+and 1.19.4 are measured by joining a dedicated server of their own version instead — offline mode, flat world. The
+mod still runs in a real client in a real world, which is what the pass rule asks, but the world is flat and
+server-generated rather than the singleplayer test world, so a fault that only shows during singleplayer world
+generation would not be caught on those two rows.
+
+Below 1.19.2 nothing is measured at all: Minecraft up to 1.18.2 ships LWJGL 3.2.x, which has no arm64 macOS
+natives, so the client cannot start on the machine these lanes run on.
 
 ## Shares another version's tables
 

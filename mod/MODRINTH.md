@@ -51,8 +51,10 @@ quoting one that measures the loader's bug instead of the tool.
 |---|---|---|
 | 26.2 | **86** | 130 |
 | 26.1.1 | **6** | 13 |
-| 1.20.2 | **11** | 14 |
+| 1.20.2, 1.20.4 | **11** | 14 |
+| 1.19.4 | **10** | 14 |
 | 1.21.4, 1.20.5, 1.20.6 | **9** | 14 |
+| 1.19.2 | **9** | 14 |
 | 1.20.1 | **8** | 14 |
 | 1.21.2, 1.21.3 | **8** | 14 |
 | 1.21.1, 1.21.5 – 1.21.11 | **7** | 14 |
@@ -115,7 +117,7 @@ still works. GitHub appears in the mod's metadata as its homepage, source and is
 
 Heavyweight rendering mods are out of scope. Anything Fox-Grade cannot prove safe is disabled and **listed by name** — never guessed at. Originals are never deleted, every port is reversible, and a port that crashes your game retires itself, so it can never take you down twice.
 
-**Twenty Minecraft versions, and nothing outside them.** 26.2, 26.1.x and 1.20.1 through 1.21.11: Fox-Grade
+**Twenty-three Minecraft versions, and nothing outside them.** 26.2, 26.1.x and 1.19.2 through 1.21.11: Fox-Grade
 carries translation tables for each, and on any version it has no measured tables for it refuses to run rather than
 produce a port it cannot verify. Each one was measured by launching a real client into a real world, and the
 per-version results — including the ones that do poorly — are in `docs/versions.md`. The corpora differ in size

@@ -35,7 +35,12 @@ public final class Targets {
       // Measured on the same 14-mod corpus as the rows above and then left out of this set, so Fox-Grade refused
       // three versions it ports as well as ones it offers -- 1.20.2 at 11 of 14 is the best result of any version
       // below 26.2, better than every 1.21.x lane, and a user on it was told they were not supported.
-      "1.20.5", "1.20.2", "1.20.1");
+      "1.20.5", "1.20.4", "1.20.2", "1.20.1",
+      // 1.19.x is measured by joining a local server of its own version: --quickPlaySingleplayer arrived in 1.20 and
+      // an older client ignores it, which is why every lane here used to read as fourteen stalls. 1.19.4 boots ten
+      // of fourteen, better than any 1.21.x, and the failures are specific rather than uniform -- which is what an
+      // honest lane looks like.
+      "1.19.4", "1.19.2");
 
   /** Versions whose API is the same as another's, and which therefore share its tables.
    *

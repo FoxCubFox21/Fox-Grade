@@ -281,7 +281,10 @@ def main():
     print("\nDocumented coverage")
     # Every version claim a reader acts on. Writing this section by hand put 1.20 and 1.20.3 on the Modrinth page
     # as supported when they are only family entries -- a user on 1.20 would install Fox-Grade and be refused.
-    targets = (W / "repo/mod/src/main/java/foxgrade/Targets.java").read_text()
+    # The working source, which is what the jar under test was built from. Reading the repo's synced copy meant
+    # the check compared the docs against whatever Targets looked like at the last sync, so it failed on versions
+    # that had just been added and passed on ones that had just been removed.
+    targets = (W / "foxgrade-mod/src/main/java/foxgrade/Targets.java").read_text()
     supported = set(re.findall(r'"([^"]+)"', re.search(r"SUPPORTED\s*=\s*Set\.of\(([^)]*)\)", targets, re.S).group(1)))
     doc = (W / "repo/docs/versions.md").read_text()
     listed = {row.split("|")[1].strip() for row in doc.splitlines()
