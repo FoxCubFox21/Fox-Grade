@@ -236,6 +236,19 @@ public final class TransformPipeline {
     }
     int metaFixed = 0, awFiles = 0, awOwners = 0, awDescs = 0, refmapFiles = 0, refmapHits = 0, classesRemapped = 0, mixinsStripped = 0;
     PortVerifier verifier = new PortVerifier(auto);
+    // On a target that loads through intermediary the port is written in intermediary and the inventory is not.
+    // An inner class is not always in the table, so its outer is translated and the suffix put back.
+    if (!Targets.namespace(targetMc).equals("official")) {
+      java.util.Map<String, String> interToMojang = bridge.classTable();
+      verifier.inventoryNamespace((n) -> {
+        String direct = interToMojang.get(n);
+        if (direct != null) return direct;
+        int dollar = n.indexOf('$');
+        if (dollar <= 0) return n;
+        String outer = interToMojang.get(n.substring(0, dollar));
+        return outer == null ? n : outer + n.substring(dollar);
+      });
+    }
     // Every class of the jar, with its superclass in target names, so both the verifier and the
     // call rewrites can resolve members up a mod class's chain into the game's classes.
     try (ZipFile pre = new ZipFile(src.toFile())) {

@@ -51,12 +51,52 @@ public final class PortVerifier {
 
   public PortVerifier(AutoBlocklistFromRefmap inventory) { this.known = inventory.classNames(); }
 
+  /** Translates a name from the namespace the PORT is written in to the one the inventory is written in.
+   *
+   *  <p>The class inventory is Mojang-named for every version, including the ones that load through intermediary.
+   *  A port for such a version is written in intermediary, so asking the inventory whether it has class_2960 gets
+   *  "no" — and class_2960 is ResourceLocation, which every version has. Left alone, the verifier reported nearly
+   *  every Minecraft reference in a pre-26 port as unresolved: 248 of them for Architectury, all noise, drowning
+   *  the handful that were real and making the quality score meaningless on those targets. */
+  private java.util.function.UnaryOperator<String> toInventory = (n) -> n;
+
+  public void inventoryNamespace(java.util.function.UnaryOperator<String> f) { this.toInventory = f; this.namespaceDiffers = true; }
+
+  /** Whether the port and the inventory speak different namespaces at all. On 26.x they do not, so an
+   *  intermediary name in a 26.x port is not an unanswerable question -- it is a name the port failed to
+   *  translate, which is exactly what this verifier exists to catch. */
+  private boolean namespaceDiffers;
+
+  /** Does the target have this class, asked in whatever namespace the inventory speaks? */
+  private boolean inInventory(String cls) {
+    if (known.contains(cls)) return true;
+    String mapped = toInventory.apply(cls);
+    return mapped != null && !mapped.equals(cls) && known.contains(mapped);
+  }
+
+  /** An intermediary name this verifier has no way to look up, so it cannot say either way.
+   *
+   *  <p>The table wired in as the inventory namespace is a rename table rather than a complete map: it carries
+   *  net/minecraft/class_2960$class_2961 because that inner class needed renaming, and nothing at all for plain
+   *  class_2960. Judged against a Mojang-named inventory, every name it does not carry looked absent — and
+   *  class_2960 is ResourceLocation, which no version has ever lacked. Unknown is not missing, and reporting it as
+   *  missing buried the references that really were. */
+  private boolean unresolvableNamespace(String cls) {
+    if (!namespaceDiffers) return false;                      // see namespaceDiffers
+    if (!INTERMEDIARY.matcher(cls).matches()) return false;
+    String mapped = toInventory.apply(cls);
+    return mapped == null || mapped.equals(cls);
+  }
+
+  private static final java.util.regex.Pattern INTERMEDIARY =
+      java.util.regex.Pattern.compile("net/minecraft/class_\\d+(\\$class_\\d+)*");
+
   public boolean isActive() { return !known.isEmpty(); }
 
   // com/mojang covers several EXTERNAL libraries too (authlib, brigadier, serialization);
   // only the subpackages that ship inside the client jar are checkable here.
   /** True when the target game has this class (only meaningful for game-namespace names). */
-  public boolean knows(String cls) { return known.contains(cls); }
+  public boolean knows(String cls) { return inInventory(cls); }
   public static boolean isGameClass(String internalName) { return checkable(internalName); }
   private static boolean checkable(String internalName) {
     return internalName.startsWith("net/minecraft/")
@@ -101,8 +141,8 @@ public final class PortVerifier {
 
   /** Superclass of a class as far as this verifier can tell (mod classes seen, game classes read); null if unknown. */
   /** True/false when the target game has the class; null when it is unknown (a mod class, a missing class). */
-  public boolean isFinalClass(String cls) { if (!checkable(cls) || !known.contains(cls)) return false; Shape s = shape(cls); return s != UNKNOWN && s.finalClass(); }
-  public Boolean isInterface(String cls) { if (!checkable(cls) || !known.contains(cls)) return null; Shape s = shape(cls); return s == UNKNOWN ? null : s.isInterface(); }
+  public boolean isFinalClass(String cls) { if (!checkable(cls) || !inInventory(cls)) return false; Shape s = shape(cls); return s != UNKNOWN && s.finalClass(); }
+  public Boolean isInterface(String cls) { if (!checkable(cls) || !inInventory(cls)) return null; Shape s = shape(cls); return s == UNKNOWN ? null : s.isInterface(); }
   public String superOf(String cls) {
     Shape s = shape(cls);
     return s == UNKNOWN ? null : s.superName();
@@ -133,8 +173,8 @@ public final class PortVerifier {
         int dollar = internalName.indexOf('$');
         // A missing inner class counts when its outer is a real game class (ArmorMaterial$Layer vanished
         // while ArmorMaterial stayed); anonymous/synthetic inner refs of unknown outers stay noise.
-        boolean innerOfKnown = dollar > 0 && known.contains(internalName.substring(0, dollar)) && !internalName.substring(dollar + 1).chars().allMatch(Character::isDigit);
-        if (checkable(internalName) && (dollar < 0 || innerOfKnown || ShimGenerator.SHIMS.containsKey(internalName)) && !known.contains(internalName)) {
+        boolean innerOfKnown = dollar > 0 && inInventory(internalName.substring(0, dollar)) && !internalName.substring(dollar + 1).chars().allMatch(Character::isDigit);
+        if (checkable(internalName) && (dollar < 0 || innerOfKnown || ShimGenerator.SHIMS.containsKey(internalName)) && !inInventory(internalName) && !unresolvableNamespace(internalName)) {
           // inner classes are skipped as noise, except the ones Fox-Grade re-creates (VillagerTrades$ItemListing, GameRules$Key)
           missing.add(internalName);
         } else if (!checkable(internalName) && internalName.startsWith("net/fabricmc/fabric/api/") && !ShimGenerator.SHIMS.containsKey(internalName) && shape(internalName) == UNKNOWN) {
