@@ -20,14 +20,26 @@ CP=$(cat /tmp/fg-cp-$TARGET.txt)
 LOADERV=$(tr ':' '\n' <<< "$CP" | grep -oE "fabric-loader-[0-9.]+" | head -1 | sed 's/fabric-loader-//;s/\.$//')
 
 LOCK="$PT/.lane.lock"
-if ! mkdir "$LOCK" 2>/dev/null; then
-  echo "[$TARGET] SKIPPED: another lane already owns $PT (lock $LOCK)." >&2
-  echo "[$TARGET] Two lanes in one game dir wipe each other's mods and kill each other's game; the numbers that" >&2
-  echo "[$TARGET] come out are not about porting. Remove the lock by hand if no lane is really running." >&2
+# One lane at a time. A lock left behind by a killed run must not block every future one, and a lock held by a
+# live run must not be clearable by hand -- removing it by hand before a restart is exactly how two chains came to
+# write the same ledger, giving 1.20.3 every mod twice. The pid inside decides which case this is.
+if mkdir "$LOCK" 2>/dev/null; then
+  echo $$ > "$LOCK/pid"
+else
+  owner=$(cat "$LOCK/pid" 2>/dev/null || echo "")
+  if [[ -n $owner ]] && ! kill -0 "$owner" 2>/dev/null; then
+    rm -rf "$LOCK"
+    mkdir "$LOCK" 2>/dev/null && echo $$ > "$LOCK/pid"
+  fi
+fi
+if [[ $(cat "$LOCK/pid" 2>/dev/null) != $$ ]]; then
+  echo "[$TARGET] SKIPPED: another lane already owns $PT and is still running." >&2
+  echo "[$TARGET] Two lanes in one game dir wipe each other's mods and kill each other's game; the numbers" >&2
+  echo "[$TARGET] that come out are not about porting." >&2
   exit 4
 fi
-trap 'rmdir "$LOCK" 2>/dev/null' EXIT
-trap 'rmdir "$LOCK" 2>/dev/null; exit 130' INT TERM   # cleanup alone would let the script resume
+trap 'rm -rf "$LOCK" 2>/dev/null' EXIT
+trap 'rm -rf "$LOCK" 2>/dev/null; exit 130' INT TERM   # cleanup alone would let the script resume
 
 # A lane can only grade Fox-Grade if the game itself can start. Minecraft up to 1.18.2 ships LWJGL 3.2.x, which has
 # no arm64 macOS natives, so on Apple Silicon it dies at "Failed to locate library: liblwjgl.dylib" before a mod
@@ -64,8 +76,8 @@ sys.exit(0 if key('$TARGET') < key('1.20') else 1)
     exit 5
   fi
   ENTER_WORLD=(--server 127.0.0.1 --port "$SRVPORT")
-  trap 'kill $SRVPID 2>/dev/null; pkill -f "foxgrade.srv=$SLUG" 2>/dev/null; rmdir "$LOCK" 2>/dev/null' EXIT
-  trap 'kill $SRVPID 2>/dev/null; pkill -f "foxgrade.srv=$SLUG" 2>/dev/null; rmdir "$LOCK" 2>/dev/null; exit 130' INT TERM
+  trap 'kill $SRVPID 2>/dev/null; pkill -f "foxgrade.srv=$SLUG" 2>/dev/null; rm -rf "$LOCK" 2>/dev/null' EXIT
+  trap 'kill $SRVPID 2>/dev/null; pkill -f "foxgrade.srv=$SLUG" 2>/dev/null; rm -rf "$LOCK" 2>/dev/null; exit 130' INT TERM
   echo "[$TARGET] joining a local $TARGET server on port $SRVPORT (quickPlay does not exist before 1.20)" >&2
 else
   ENTER_WORLD=(--quickPlaySingleplayer TESTWORLD)

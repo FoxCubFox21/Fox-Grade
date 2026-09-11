@@ -16,12 +16,24 @@ set -u
 # One chain at a time. Two of these ran concurrently over the same version list and both wrote the same ledger,
 # so a 14-mod corpus came out as 28 rows and every number in it was wrong.
 CHAINLOCK=/tmp/fg-measure-all.lock
-if ! mkdir "$CHAINLOCK" 2>/dev/null; then
-  echo "[measure-all] another chain is already running (lock $CHAINLOCK); refusing to double up." >&2
+# One chain at a time. A lock left behind by a killed run must not block every future one, and a lock held by a
+# live run must not be clearable by hand -- removing it by hand before a restart is exactly how two chains came to
+# write the same ledger, giving 1.20.3 every mod twice. The pid inside decides which case this is.
+if mkdir "$CHAINLOCK" 2>/dev/null; then
+  echo $$ > "$CHAINLOCK/pid"
+else
+  owner=$(cat "$CHAINLOCK/pid" 2>/dev/null || echo "")
+  if [[ -n $owner ]] && ! kill -0 "$owner" 2>/dev/null; then
+    rm -rf "$CHAINLOCK"
+    mkdir "$CHAINLOCK" 2>/dev/null && echo $$ > "$CHAINLOCK/pid"
+  fi
+fi
+if [[ $(cat "$CHAINLOCK/pid" 2>/dev/null) != $$ ]]; then
+  echo "[measure-all] another chain is already running; refusing to double up." >&2
   exit 4
 fi
-trap 'rmdir "$CHAINLOCK" 2>/dev/null' EXIT
-trap 'rmdir "$CHAINLOCK" 2>/dev/null; exit 130' INT TERM   # cleanup alone would let the script resume
+trap 'rm -rf "$CHAINLOCK" 2>/dev/null' EXIT
+trap 'rm -rf "$CHAINLOCK" 2>/dev/null; exit 130' INT TERM   # cleanup alone would let the script resume
 
 setopt NULL_GLOB
 B=$HOME/foxgrade-work/batch2
