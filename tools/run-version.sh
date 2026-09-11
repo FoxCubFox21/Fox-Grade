@@ -76,11 +76,18 @@ sys.exit(0 if key('$TARGET') < key('1.20') else 1)
     exit 5
   fi
   ENTER_WORLD=(--server 127.0.0.1 --port "$SRVPORT")
+  # A client that joins a server logs its arrival as "Loaded N advancements"; it never prints "Preparing spawn
+  # area", which is the integrated server's line.
+  READY_RE="joined the game|Loaded [0-9]+ advancements"
   trap 'kill $SRVPID 2>/dev/null; pkill -f "foxgrade.srv=$SLUG" 2>/dev/null; rm -rf "$LOCK" 2>/dev/null' EXIT
   trap 'kill $SRVPID 2>/dev/null; pkill -f "foxgrade.srv=$SLUG" 2>/dev/null; rm -rf "$LOCK" 2>/dev/null; exit 130' INT TERM
   echo "[$TARGET] joining a local $TARGET server on port $SRVPORT (quickPlay does not exist before 1.20)" >&2
 else
   ENTER_WORLD=(--quickPlaySingleplayer TESTWORLD)
+  # And a singleplayer lane must NOT accept the advancements line. The integrated server logs it before the world
+  # is ready, so it fires on a client that then dies: Xaeros matched it, never reached a world, ended in a
+  # MinecraftServer stack trace, and was recorded PASS. Only the world actually starting counts here.
+  READY_RE="Preparing spawn area|Time elapsed"
 fi
 
 if [[ $(uname -m) == arm64 ]] && ! grep -q "natives-macos-arm64" /tmp/fg-cp-$TARGET.txt; then
@@ -166,10 +173,13 @@ sys.exit(1 if key(have) < key(m.group(0)) else 0)
   launch "$log" "${ENTER_WORLD[@]}"
   ( for i in $(seq 1 80); do sleep 2; for pid in $(pgrep -f "gameDir $PT"); do osascript -e "tell application \"System Events\" to set visible of (every process whose unix id is $pid) to false" >/dev/null 2>&1; done; pgrep -f "gameDir $PT" >/dev/null || break; done ) &
   local waited=0 ready=0
-  while [ $waited -lt 150 ]; do
+  # How long a world is given to start. The verdict is a timing judgement, so when lanes share a machine the
+  # budget has to grow with them: a lane that is merely waiting behind another lane's client looks exactly like a
+  # port that never reaches a world. measure-par.sh sets this; on its own a lane keeps the 150s it always had.
+  while [ $waited -lt ${LANE_TIMEOUT:-150} ]; do
     sleep 6; waited=$((waited+6))
     pgrep -f "gameDir $PT" >/dev/null || break
-    grep -qE "Preparing spawn area|Time elapsed|joined the game|Loaded [0-9]+ advancements" "$log" 2>/dev/null && { sleep 8; ready=1; break; }
+    grep -qE "$READY_RE" "$log" 2>/dev/null && { sleep 8; ready=1; break; }
   done
 
   local verdict
