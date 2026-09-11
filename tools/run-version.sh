@@ -185,5 +185,6 @@ sys.exit(1 if key(have) < key(m.group(0)) else 0)
   echo "$verdict	$name"
 }
 
+echo "# target $TARGET  loader $LOADERV  corpus $CORPUS_DIR  $(date -u +%Y-%m-%dT%H:%M:%SZ)" >> $LEDGER
 for jar in "$@"; do fg_run "$(basename ${jar%%--*})" "$jar"; done
 echo "RUN DONE $TARGET" >> $LEDGER
