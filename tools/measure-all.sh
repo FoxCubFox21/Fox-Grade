@@ -33,8 +33,10 @@ era_for() {
   case $1 in
     1.21.2|1.21.3|1.21.4|1.21.5|1.21.6|1.21.7|1.21.8|1.21.9|1.21.10|1.21.11) echo "$B/h2h" ;;   # 1.21.1-built
     1.21|1.21.1|1.20.5|1.20.6)  echo "$HOME/foxgrade-work/era-corpus/1.20.1" ;;
-    1.20.2|1.20.4)              echo "$HOME/foxgrade-work/era-corpus/1.19.4" ;;
-    1.20.1|1.19.4)              echo "$HOME/foxgrade-work/era-corpus/1.19.2" ;;
+    # 1.20 and 1.20.3 take the corpus their family host takes, so each row is directly comparable to the version
+    # it shares tables with: 1.20 against 1.20.1, 1.20.3 against 1.20.4. Anything else compares two things at once.
+    1.20.2|1.20.4|1.20.3)       echo "$HOME/foxgrade-work/era-corpus/1.19.4" ;;
+    1.20.1|1.19.4|1.20)         echo "$HOME/foxgrade-work/era-corpus/1.19.2" ;;
     1.19.2)                     echo "$HOME/foxgrade-work/era-corpus/1.18.2" ;;
     1.18.2)                     echo "$HOME/foxgrade-work/era-corpus/1.17.1" ;;
     1.17.1)                     echo "$HOME/foxgrade-work/era-corpus/1.16.5" ;;
@@ -71,6 +73,10 @@ for V in "$@"; do
   echo "[measure-all] === $V (assetIndex $ASSET, ${#CORPUS} mods from $(basename $CORPUS_DIR)) ==="
   rm -f "$LEDGER" $B/log-v$SLUG-*.log
   ./run-version.sh "$V" "$ASSET" $CORPUS
-  echo "[measure-all] $V done: $(grep -c '^PASS' $LEDGER) pass of $(grep -cE '^(PASS|CRASH|STALL|HELD|NOTFABRIC|NOMODID)' $LEDGER)"
+  # The denominator is the mods this lane could actually put the question to. NOTFABRIC (a jar with no
+  # fabric.mod.json), NOMODID and UNTESTABLE (a jar needing a newer loader than this lane runs) are all rows where
+  # the port was never tested, so counting them as failures understates every version by however many the corpus
+  # happens to contain.
+  echo "[measure-all] $V done: $(grep -c '^PASS' $LEDGER) pass of $(grep -cE '^(PASS|CRASH|STALL|HELD)' $LEDGER) testable"
 done
 echo "[measure-all] all versions finished"

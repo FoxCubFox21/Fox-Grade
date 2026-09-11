@@ -51,13 +51,15 @@ quoting one that measures the loader's bug instead of the tool.
 |---|---|---|
 | 26.2 | **86** | 130 |
 | 26.1.1 | **6** | 13 |
-| 1.20.2, 1.20.4 | **11** | 14 |
-| 1.19.4 | **10** | 14 |
-| 1.21.4, 1.20.5, 1.20.6 | **9** | 14 |
-| 1.19.2 | **9** | 14 |
-| 1.20.1 | **8** | 14 |
+| 1.20.2, 1.20.4 | **11** | 13 |
+| 1.19.4 | **10** | 13 |
+| 1.21.4 | **9** | 14 |
+| 1.20.5, 1.20.6 | **9** | 13 |
+| 1.19.2 | **9** | 13 |
+| 1.20.1 | **8** | 13 |
 | 1.21.2, 1.21.3 | **8** | 14 |
-| 1.21.1, 1.21.5 – 1.21.11 | **7** | 14 |
+| 1.21.5 – 1.21.11 | **7** | 14 |
+| 1.21.1 | **7** | 13 |
 
 26.1, 26.1.2 and 1.21 are supported too, sharing the tables of a release that declares an identical class set —
 checked, not assumed. The older lanes use 13–14 mods built for the version before them, because Fox-Grade ports forward and a

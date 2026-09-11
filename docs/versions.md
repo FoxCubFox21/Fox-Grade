@@ -4,6 +4,14 @@ Every version Fox-Grade will port for, and how a real corpus of mods fared on it
 after a corpus has been run against it on a real client launched into a real world — tables existing is not
 the same as knowing it works, and this file is the difference.
 
+**The denominator is the mods a lane could actually put the question to.** A jar with no `fabric.mod.json`, or one
+that demands a newer Fabric Loader than the lane runs, was never going to start whatever Fox-Grade did to it, so
+counting it as a failure would understate the version. Fabric Language Kotlin is the case: it tags a single 2026
+build for all 47 game versions it has ever supported, so a query for "the newest build tagged 1.19.2" returns a jar
+requiring loader 0.19.5 while these lanes run 0.18.6. It was recorded as a porting failure in fourteen ledgers
+before this was noticed, which is why the era rows below read out of 13 rather than 14. The 26.2 row is unaffected:
+that corpus carries an older build of it, needing only 0.16.9, which its lane satisfies.
+
 **Corpus sizes differ between versions and the numbers are not comparable across rows.** 26.2 is measured
 against 130 mods; the older lanes use 13–14 mods built for the version before them, because Fox-Grade ports
 forward and a target has to be measured with mods older than itself. A 7/14 and an 86/130 are both honest
@@ -23,14 +31,14 @@ and are not the same measurement.
 | 1.21.4 | **9** | 14 |
 | 1.21.3 | **8** | 14 |
 | 1.21.2 | **8** | 14 |
-| 1.21.1 | **7** | 14 |
-| 1.20.6 | **9** | 14 |
-| 1.20.4 | **11** | 14 |
-| 1.20.5 | **9** | 14 |
-| 1.20.2 | **11** | 14 |
-| 1.20.1 | **8** | 14 |
-| 1.19.4 | **10** | 14 |
-| 1.19.2 | **9** | 14 |
+| 1.21.1 | **7** | 13 |
+| 1.20.6 | **9** | 13 |
+| 1.20.4 | **11** | 13 |
+| 1.20.5 | **9** | 13 |
+| 1.20.2 | **11** | 13 |
+| 1.20.1 | **8** | 13 |
+| 1.19.4 | **10** | 13 |
+| 1.19.2 | **9** | 13 |
 
 ## How a version reaches a world
 

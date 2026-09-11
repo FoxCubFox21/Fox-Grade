@@ -148,7 +148,14 @@ fg_run() {
   # game stays up, and every check below passes. Guarding the "was the mod really loaded" test on a non-empty modid
   # meant that test was SKIPPED exactly when it mattered, so a Forge jar in the inbox scored a clean pass. It is
   # not a pass and not a failure of the port either — it is a corpus that should never have contained the jar.
-  if [[ -z $mainid ]]; then verdict=NOTFABRIC
+  # A corpus jar that demands a newer Fabric Loader than this lane runs was never going to start here, whatever
+  # Fox-Grade did to it. Fabric Language Kotlin tags a single 2026 build for all 47 game versions it has ever
+  # supported, so "newest build tagged for 1.19.2" is a jar needing loader 0.19.5 while these lanes run 0.18.6.
+  # It was recorded as a porting failure in fourteen ledgers -- one wrong row in every published denominator.
+  # Same shape as NOTFABRIC: not a pass, not a failure of the port, a jar this lane cannot put the question to.
+  if grep -q "of mod 'Fabric Loader' (fabricloader), but only the wrong version is present" "$log" 2>/dev/null; then
+    verdict=UNTESTABLE
+  elif [[ -z $mainid ]]; then verdict=NOTFABRIC
   elif [[ $verdict == PASS ]] && ! grep -qE "${mainid}(_fgport)?" "$log"; then verdict=HELD; fi
   local why=""
   [ "$verdict" != PASS ] && why=$(grep -m1 -E "NoClassDefFoundError|NoSuchMethodError|NoSuchFieldError|Mixin apply|Incompatible mods|requires" "$log" | sed 's/^\[[0-9:]*\] \[[^]]*\]: //' | head -c 150)
