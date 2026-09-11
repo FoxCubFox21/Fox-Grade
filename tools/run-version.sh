@@ -17,6 +17,7 @@ LOGPREFIX="${LOGPREFIX:-log-v$SLUG}"
 MC="$HOME/Library/Application Support/minecraft"
 CORPUS_DIR="${CORPUS_DIR:-$B/h2h}"
 CP=$(cat /tmp/fg-cp-$TARGET.txt)
+LOADERV=$(tr ':' '\n' <<< "$CP" | grep -oE "fabric-loader-[0-9.]+" | head -1 | sed 's/fabric-loader-//;s/\.$//')
 
 LOCK="$PT/.lane.lock"
 if ! mkdir "$LOCK" 2>/dev/null; then
@@ -109,6 +110,26 @@ launch() {
 
 fg_run() {
   local name=$1; shift
+  # Asked and answered before anything is launched. A jar that wants a newer Fabric Loader than this lane runs is
+  # refused at mod resolution: the loader puts up a modal "Incompatible mods found!" dialog, twice per mod, and the
+  # port is never tested. Reading the requirement out of the jar costs nothing and skips both launches.
+  local need=$(unzip -p "$1" fabric.mod.json 2>/dev/null | /usr/bin/python3 -c "
+import json,sys
+try: print((json.load(sys.stdin).get('depends') or {}).get('fabricloader',''))
+except Exception: print('')
+" 2>/dev/null)
+  if [[ -n $need ]] && ! python3 -c "
+import re, sys
+need, have = '$need', '$LOADERV'
+m = re.search(r'[0-9]+(?:\.[0-9]+)*', need)
+if not m or not have: sys.exit(0)
+key = lambda v: [int(x) for x in v.split('.')]
+sys.exit(1 if key(have) < key(m.group(0)) else 0)
+"; then
+    echo "UNTESTABLE\t$name\tneeds Fabric Loader $need; this lane runs $LOADERV" >> $LEDGER
+    echo "UNTESTABLE	$name"
+    return
+  fi
   pkill -f "gameDir $PT " 2>/dev/null; sleep 2
   rm -f $PT/mods/*.jar $PT/fox-grade-inbox/*.jar; rm -rf $PT/crash-reports
   cp $PT/fg.jar $PT/mods/foxgrade.jar
